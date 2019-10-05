@@ -1,10 +1,10 @@
 
 {
-  "name": "Flask VueJs Template",
-  "description": "",
-  "repository": "https://github.com/gtalarico/flask-vuejs-template",
+  "name": "AjouNICE",
+  "description": "아주대학교 차세대 학부 커뮤니티 서비스",
+  "repository": "https://github.com/bbansrun/AjouNICE",
   "logo": "https://github.com/gtalarico/flask-vuejs-template/raw/master/docs/project-logo.png",
-  "keywords": ["flask", "vue"],
+  "keywords": ["아주대", "아주대학교", "커뮤니티", "아주나이스"],
   "env": {
     "FLASK_ENV": {
       "description": "Flask Enviroment",
