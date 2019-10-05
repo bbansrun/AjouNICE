@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js + Flask App"/>
+    <HelloWorld msg="아주대학교 차세대 학부 커뮤니티 서비스"/>
   </div>
 </template>
 
