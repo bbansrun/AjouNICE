@@ -15,6 +15,10 @@ class SecureResource(Resource):
     """ Calls require_auth decorator on all requests """
     method_decorators = [require_auth]
 
+@api_rest.route('/info')
+class Bbansrun(Resource):    
+    def get(self):
+        return { 'title': 'bbansrun', 'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스' }
 
 @api_rest.route('/resource/<string:resource_id>')
 class ResourceOne(Resource):

@@ -4,8 +4,11 @@ from flask import Blueprint, current_app
 from flask_restplus import Api
 
 api_bp = Blueprint('api_bp', __name__, url_prefix='/api')
-api_rest = Api(api_bp)
-
+api_rest = Api(app=api_bp,
+    version="1.0",
+    title="아주나이스 API",
+    description="아주대학교 차세대 학부 커뮤니티 서비스"
+)
 
 @api_bp.after_request
 def add_header(response):
