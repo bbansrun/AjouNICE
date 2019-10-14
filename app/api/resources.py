@@ -325,13 +325,24 @@ class SecureResource(Resource):
 @api_rest.route('/notice/<string:code>')
 class Bbansrun(Resource):    
     def get(self, code):
-        return {
-            'title': 'bbansrun',
-            'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-            'APIName': '/notice/<code>',
-            'APIDescription': '본부대학급 공지사항 크롤러',
-            'result': parseContent(BeautifulSoup(requests.get(list(filter(lambda x: x['code'] == code, targetURLs['required']))[0]['link']).text, 'html.parser'), list(filter(lambda x: x['code'] == code, targetURLs['required']))[0])
-        }
+        if (code == 'A0001' or code == 'A0002' or code == 'A0003'):
+            return {
+                'title': 'bbansrun',
+                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+                'APIName': '/notice/<code>',
+                'APIDescription': '본부대학급 공지사항 크롤러',
+                'result': parseContent(BeautifulSoup(requests.get(list(filter(lambda x: x['code'] == code, targetURLs['required']))[0]['link']).text, 'html.parser'), list(filter(lambda x: x['code'] == code, targetURLs['required']))[0])
+            }
+        else:
+            return {
+                'title': 'bbansrun',
+                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+                'APIName': '/notice/<code>',
+                'APIDescription': '본부대학급 공지사항 크롤러',
+                'error': {
+                    'message': 'Code not exists'
+                }
+            }        
 
 @api_rest.route('/resource/<string:resource_id>')
 class ResourceOne(Resource):
