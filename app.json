@@ -3,26 +3,12 @@
   "name": "AjouNICE",
   "description": "아주대학교 차세대 학부 커뮤니티 서비스",
   "repository": "https://github.com/bbansrun/AjouNICE",
-  "logo": "https://github.com/gtalarico/flask-vuejs-template/raw/master/docs/project-logo.png",
+  "logo": "https://avatars2.githubusercontent.com/u/51874554?s=400&u=615ce312c371aa1785fcae1e3853dd6147ffdcdb&v=4",
   "keywords": ["아주대", "아주대학교", "커뮤니티", "아주나이스"],
   "env": {
-    "FLASK_ENV": {
-      "description": "Flask Enviroment",
-      "value": "production"
-    },
-    "SECRET": {
-      "description": "Flask Secret Key",
-      "value": "YourKeyHere"
-    }
    },
   "addons": [
    ],
   "buildpacks": [
-    {
-      "url": "heroku/nodejs"
-    },
-    {
-      "url": "heroku/python"
-    }
   ]
 }
