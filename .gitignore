@@ -1,5 +1,5 @@
 node_modules/
-*/.DS_Store
-*/__pycache__/
-db_config.json
 .vscode/
+__pycache__/
+.DS_Store
+db_config.json
