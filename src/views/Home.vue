@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <HelloWorld msg="아주대학교 차세대 학부 커뮤니티 서비스"/>
+    <AjouNICE />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import AjouNICE from '@/components/AjouNICE.vue'
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    AjouNICE
   }
 }
 </script>

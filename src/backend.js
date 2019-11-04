@@ -3,7 +3,7 @@ import axios from 'axios'
 let $axios = axios.create({
   baseURL: '/api/',
   timeout: 5000,
-  headers: {'Content-Type': 'application/json'}
+  headers: { 'Content-Type': 'application/json' }
 })
 
 // Request Interceptor
@@ -24,7 +24,7 @@ $axios.interceptors.response.use(function (response) {
 export default {
 
   fetchResource () {
-    return $axios.get(`resource/xxx`)
+    return $axios.get(`notice/A0001`)
       .then(response => response.data)
   },
 
