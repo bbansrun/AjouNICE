@@ -1,13 +1,11 @@
 import os
-from app import app
-
 import json
-from flask_sqlalchemy import SQLAlchemy
-from flask_graphql import GraphQLView
-import graphene
-from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
-
 import pymysql
+import graphene
+from app import app
+from flask_graphql import GraphQLView
+from flask_sqlalchemy import SQLAlchemy
+from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 pymysql.install_as_MySQLdb()
 
 # Database Connection (RDS)
@@ -44,8 +42,3 @@ schema = graphene.Schema(query=Query)
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
 app.run(port=5000)
-
-# To Run:
-# python run.py
-# or
-# python -m flask run
