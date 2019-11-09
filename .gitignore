@@ -3,3 +3,4 @@ node_modules/
 __pycache__/
 .DS_Store
 db_config.json
+dist/
