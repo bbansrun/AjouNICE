@@ -1,8 +1,0 @@
-{
-  "schemaPath": "schema.graphql",
-  "extensions": {
-    "endpoints": {
-      "RDS": "http://ajounice-dev-db-rds.ccj2f84oidqh.ap-northeast-2.rds.amazonaws.com"
-    }
-  }
-}
