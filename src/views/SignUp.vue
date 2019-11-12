@@ -3,7 +3,7 @@
         <section data-form class="form login">
             <header>
                 <h1 class="logo-font"><small>Welcome, </small><br />AjouNICE!</h1>
-                <small>아주대학교의 새로운 커뮤니티, 아주나이스에 오신 것을 환영합니다.</small>
+                <small>아주대학교의 새로운 커뮤니티,<br />아주나이스에 오신 것을 환영합니다.</small>
             </header>
             <form method="GET" action='/#/home'>
                 <header class="logo-font">SIGN UP</header>
@@ -82,7 +82,7 @@ export default {
         > header {
             display: flex;
             flex-direction: column;
-            width: 50%;
+            min-width: 300px;
             padding: 10px;
             justify-content: center;
             align-items: center;
@@ -109,7 +109,7 @@ export default {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 50%;
+            width: 100%;
             padding: 10px;
             text-align: center;
             background: #eee;
@@ -189,6 +189,18 @@ export default {
                         text-decoration: none;
                     }
                 }
+            }
+        }
+    }
+}
+
+@media (max-width: 720px) {
+    .wrapper {
+        [data-form] {
+            flex-direction: column;
+            > header, form {
+                width: calc(100% - 20px);
+                min-height: 150px;
             }
         }
     }

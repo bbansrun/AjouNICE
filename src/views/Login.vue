@@ -56,13 +56,15 @@ export default {
         min-height: 60vh;
         top: 50%;
         left: 50%;
+        text-align: center;
         background: #fff;
         box-shadow: 0 0 10px rgba(0,0,0,.24);
         transform: translate(-50%, -50%);
         > header {
             display: flex;
             flex-direction: column;
-            width: 50%;
+            flex-grow: 1;
+            min-width: 300px;
             padding: 10px;
             justify-content: center;
             align-items: center;
@@ -80,9 +82,10 @@ export default {
             position: relative;
             display: flex;
             flex-direction: column;
+            flex-grow: 2;
             justify-content: center;
             align-items: center;
-            width: 50%;
+            width: 100%;
             padding: 10px;
             text-align: center;
             background: #eee;
@@ -145,6 +148,18 @@ export default {
                         text-decoration: none;
                     }
                 }
+            }
+        }
+    }
+}
+
+@media (max-width: 720px) {
+    .wrapper {
+        [data-form] {
+            flex-direction: column;
+            > header, form {
+                width: calc(100% - 20px);
+                min-height: 150px;
             }
         }
     }
