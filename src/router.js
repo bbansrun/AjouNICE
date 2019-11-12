@@ -5,6 +5,7 @@ import About from './views/About.vue'
 import NotFound from './views/NotFound.vue'
 import ServError from './views/ServError.vue'
 import Login from './views/Login.vue'
+import Signup from './views/SignUp.vue'
 
 Vue.use(Router)
 
@@ -14,6 +15,11 @@ export default new Router({
       path: '/',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/auth/signup',
+      name: 'signup',
+      component: Signup
     },
     {
       path: '/home',

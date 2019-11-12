@@ -2,24 +2,44 @@
     <div class="wrapper">
         <section data-form class="form login">
             <header>
-                <h1 class="logo-font">AjouNICE!</h1>
-                <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
+                <h1 class="logo-font"><small>Welcome, </small><br />AjouNICE!</h1>
+                <small>아주대학교의 새로운 커뮤니티, 아주나이스에 오신 것을 환영합니다.</small>
             </header>
             <form method="GET" action='/#/home'>
-                <header class="logo-font">LOGIN</header>
+                <header class="logo-font">SIGN UP</header>
                 <div class="divider"></div>
+                <div class="input-form">
+                    <input type="text" placeholder="이름" required>
+                </div>
+                <div class="input-form">
+                    <input type="text" placeholder="학번" required pattern="[0-9]{9,}">
+                </div>
+                <div class="input-form">
+                    <select name="memberType" id="memberType" required>
+                        <option value>구성원 여부를 선택해주세요</option>
+                        <option value="1">학부생</option>
+                        <option value="2">대학원</option>
+                        <option value="3">졸업생</option>
+                        <option value="4">교직원</option>
+                        <option value="5">일반</option>
+                    </select>
+                </div>
                 <div class="input-form">
                     <input type="email" placeholder="이메일" required>
                 </div>
                 <div class="input-form">
                     <input type="password" placeholder="패스워드" required>
+                    <input type="password" placeholder="패스워드 재확인" required>
                 </div>
                 <div class="input-form">
-                    <input type="submit" value="로그인">
+                    <label for="policy">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
+                    <input type="checkbox" name="policy" id="policy" />
                 </div>
                 <div class="input-form">
-                    <a href="#">계정 재설정</a>
-                    <router-link to="/auth/signup">아직 회원이 아니신가요?</router-link>
+                    <input type="submit" value="회원가입">
+                </div>
+                <div class="input-form">
+                    <router-link to="/">로그인 화면으로</router-link>
                 </div>
                 <div class="divider"></div>
                 <footer>
@@ -32,7 +52,7 @@
 
 <script>
 export default {
-  name: 'login'
+  name: 'signup'
 }
 </script>
 
@@ -69,11 +89,18 @@ export default {
             background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
             > h1 {
+                line-height: 1.2;
                 font-size: 2.5rem;
+                text-align: center;
                 text-shadow: 0 0 8px rgba(0,0,0,.24);
+                > small {
+                    font-size: 1.6rem;
+                }
+                margin-bottom: .8rem;
             }
             > small {
                 font-size: .8rem;
+                text-align: center;
             }
         }
         > form {
@@ -97,7 +124,10 @@ export default {
             > .input-form {
                 position: relative;
                 width: 100%;
-                > input {
+                > input, select {
+                    font-size: .85em;
+                }
+                > input:not([type="checkbox"]) {
                     position: relative;
                     width: calc(90% - 20px);
                     padding: 5px 10px;
@@ -111,8 +141,18 @@ export default {
                         box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
                     }
                 }
-                > input[type="email"], input[type="password"], input[type="submit"] {
-                    font-size: .85em;
+                select {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    padding: 5px 10px;
+                    position: relative;
+                    width: 90%;
+                    margin-bottom: 15px;
+                    border-radius: .8rem;
+                    outline: none;
+                    border: none;
+                    box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
                 }
                 > input:valid {
                     color: #fff;
@@ -120,6 +160,10 @@ export default {
                         color: #fff;
                     }
                     background: #4b6ab9;
+                }
+                > label {
+                    font-size: .75rem;
+                    margin-bottom: .75rem;
                 }
                 > input[type="submit"] {
                     cursor: pointer;
