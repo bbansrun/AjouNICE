@@ -33,10 +33,10 @@
                 </div>
                 <div class="input-form">
                     <label for="policy">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
-                    <input type="checkbox" name="policy" id="policy" />
+                    <input type="checkbox" name="policy" id="policy" v-model="agree_policy" />
                 </div>
                 <div class="input-form">
-                    <input type="submit" value="회원가입">
+                    <input type="button" @click="signup" value="회원가입">
                 </div>
                 <div class="input-form">
                     <router-link to="/">로그인 화면으로</router-link>
@@ -51,8 +51,30 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
+Vue.use(VueSweetalert2)
 export default {
-  name: 'signup'
+  name: 'signup',
+  data () {
+    return {
+      agree_policy: false
+    }
+  },
+  methods: {
+    signup () {
+      if (!this.agree_policy) {
+        this.$swal({
+          title: '잠깐!',
+          text: '서비스 정책 및 개인정보 수집 이용에 동의하셔야 회원가입이 가능합니다.',
+          type: 'error',
+          width: '90vw',
+          animation: true
+        })
+      }
+    }
+  }
 }
 </script>
 
@@ -60,6 +82,11 @@ export default {
 @import "~@/assets/styles/reset";
 @import "~@/assets/styles/index";
 @import "~@/assets/styles/fonts";
+@import '~sweetalert2/src/variables';
+@import '~sweetalert2/src/sweetalert2';
+.swal2-container.swal2-center {
+    background: rgba(0,0,0,.65);
+}
 </style>
 
 <style lang="scss" scoped>
@@ -165,7 +192,7 @@ export default {
                     font-size: .75rem;
                     margin-bottom: .75rem;
                 }
-                > input[type="submit"] {
+                > input[type="button"] {
                     cursor: pointer;
                     color: #fff;
                     background: #6a11cb;
