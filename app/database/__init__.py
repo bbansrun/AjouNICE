@@ -25,7 +25,7 @@ class College(db.Model):
         return '<College %r>' % self.college_code
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'USER'
     user_idx = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(256), index=True, unique=True)
     user_id = db.Column(db.String(256), index=True, unique=True)
@@ -36,20 +36,18 @@ class User(db.Model):
     user_status = db.Column(db.String(1))
     policy_yn = db.Column(db.Boolean)
     college_code = db.Column(db.String(5))
-    college_nm = db.Column(db.String(256))
     dpt_code = db.Column(db.String(256))
-    dpt_nm = db.Column(db.String(256))
     auth_email_yn = db.Column(db.Boolean)
     auth_token = db.Column(db.String(256))
-    auth_status = db.Column(db.String(1))
     user_profile = db.Column(db.String(256))
     nick_nm = db.Column(db.String(50))
-    bamboo_spear = db.Column(db.Integer)
-    reg_ip = db.Column(db.String(15))
+    bamboo_stack = db.Column(db.Integer)
+    links = db.Column(db.String(50))
+    reg_ip = db.Column(db.String(40))
     reg_dt = db.Column(db.String(256))
-    upt_ip = db.Column(db.String(15))
+    upt_ip = db.Column(db.String(40))
     upt_dt = db.Column(db.String(256))
-    log_ip = db.Column(db.String(15))
+    log_ip = db.Column(db.String(40))
     log_dt = db.Column(db.String(256))
     
     def __repr__(self):
