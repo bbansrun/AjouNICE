@@ -48,6 +48,7 @@ export default {
 
 <style lang="scss">
 @import "~@/assets/styles/reset";
+@import "~@/assets/styles/media";
 @import "~@/assets/styles/index";
 @import "~@/assets/styles/fonts";
 </style>
