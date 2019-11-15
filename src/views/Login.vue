@@ -36,19 +36,18 @@
 export default {
   name: 'login',
   data () {
-      return {
-          formErrors: [],
-          email: ''
-      }
+    return {
+      formErrors: [],
+      email: ''
+    }
   },
   methods: {
-      checkValidation (e) {
-          let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          if (!re.test(String(this.email).toLowerCase())) {
-              this.formErrors.push('이메일 형식이 잘못되었습니다.')
-          }
-          
+    checkValidation (e) {
+      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (!re.test(String(this.email).toLowerCase())) {
+        this.formErrors.push('이메일 형식이 잘못되었습니다.')
       }
+    }
   }
 }
 </script>

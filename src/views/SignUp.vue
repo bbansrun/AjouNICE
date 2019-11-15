@@ -59,12 +59,12 @@ export default {
       agreePolicy: false,
       selectedUserType: null,
       userOptions: [
-          { disabled: true, value: null, name: '구성원 여부를 선택하여주세요' },
-          { disabled: false, value: 1, name: '학부생' },
-          { disabled: false, value: 2, name: '대학원' },
-          { disabled: false, value: 3, name: '교직원' },
-          { disabled: false, value: 4, name: '졸업생' },
-          { disabled: false, value: 5, name: '일반' },
+        { disabled: true, value: null, name: '구성원 여부를 선택하여주세요' },
+        { disabled: false, value: 1, name: '학부생' },
+        { disabled: false, value: 2, name: '대학원' },
+        { disabled: false, value: 3, name: '교직원' },
+        { disabled: false, value: 4, name: '졸업생' },
+        { disabled: false, value: 5, name: '일반' }
       ]
     }
   },
