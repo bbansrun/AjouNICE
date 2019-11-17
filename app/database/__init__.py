@@ -126,6 +126,7 @@ class Query(graphene.ObjectType):
     node = graphene.relay.Node.Field()
     all_users = SQLAlchemyConnectionField(UserObject)
     all_colleges = SQLAlchemyConnectionField(CollegeObject)
+    
 
     protected = graphene.String(token=graphene.String())
 

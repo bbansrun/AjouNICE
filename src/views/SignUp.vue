@@ -15,16 +15,19 @@
                     <input type="text" placeholder="학번" required pattern="[0-9]{9,}">
                 </div>
                 <div class="input-form">
-                    <select name="memberType" id="memberType" required v-model="this.selectedUserType">
+                    <select name="memberType" id="memberType" required @change="onUserTypeChange($event)" v-model="this.selectedUserType">
                         <option v-for="option in this.userOptions" :disabled="option.disabled" :value="option.value" :key="option.value">{{ option.name }}</option>
                     </select>
                 </div>
                 <div class="input-form">
-                    <input type="email" placeholder="이메일" required>
+                    <input type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
                 </div>
                 <div class="input-form">
-                    <input type="password" placeholder="패스워드" required>
-                    <input type="password" placeholder="패스워드 재확인" required>
+                    <input type="text" placeholder="아이디" @blur="checkDupID" required v-model="userID">
+                </div>
+                <div class="input-form">
+                    <input type="password" pattern=".{8,}" placeholder="패스워드" required>
+                    <input type="password" pattern=".{8,}" placeholder="패스워드 재확인" required>
                 </div>
                 <div class="input-form">
                     <label for="policy">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
@@ -56,6 +59,7 @@ export default {
   name: 'signup',
   data () {
     return {
+      userID: '',
       agreePolicy: false,
       selectedUserType: null,
       userOptions: [
@@ -69,6 +73,30 @@ export default {
     }
   },
   methods: {
+    checkDupID () {
+      if (this.userID) {
+        alert('ID 중복확인!')
+      }
+    },
+    onUserTypeChange (event) {
+      if (event.target.value == 5) {
+        this.$swal({
+          title: '주의!',
+          text: '아주대학교 구성원이 아니실 경우 서비스 기능 이용에 제한이 있을 수 있습니다.',
+          width: '90vw',
+          type: 'warning',
+          footer: '<a href="#/">아주나이스 서비스 정책 자세히보기</a>'
+        })
+      } else {
+        this.$swal({
+          title: '주의!',
+          text: '아주대학교 구성원은 @ajou.ac.kr 이메일을 통한 인증을 통해 차후 정상적인 서비스 이용이 가능합니다.',
+          width: '90vw',
+          type: 'warning',
+          footer: '<a href="#/">아주나이스 서비스 정책 자세히보기</a>'
+        })
+      }
+    },
     signup () {
       if (!this.agreePolicy) {
         this.$swal({
