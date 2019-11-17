@@ -6,6 +6,7 @@
   "devDependencies": {},
   "scripts": {
     "client:dev": "yarn workspace client serve",
+    "client:build": "yarn workspace client build",
     "server:dev": "yarn workspace server serve"
   },
   "workspaces": [
