@@ -1,65 +1,29 @@
 {
-  "name": "ajou_nice",
-  "version": "0.1.1",
+  "name": "ajounice",
+  "version": "0.0.1",
+  "description": "New Generation of Community Service for Ajou University",
   "private": true,
+  "devDependencies": {},
   "scripts": {
-    "serve": "vue-cli-service serve --open",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "postinstall": "yarn build"
+    "client:dev": "yarn workspace client serve",
+    "server:dev": "yarn workspace server serve"
   },
-  "dependencies": {
-    "axios": "^0.18.0",
-    "jshint": "^2.10.2",
-    "sweetalert2": "^9.3.1",
-    "vue": "^2.5.13",
-    "vue-router": "^3.0.1",
-    "vue-sweetalert2": "^2.1.5",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-beta.6",
-    "@vue/cli-plugin-eslint": "^3.0.0-beta.6",
-    "@vue/cli-service": "^3.0.0-beta.6",
-    "@vue/eslint-config-standard": "^3.0.0-beta.6",
-    "lint-staged": "^6.0.0",
-    "node-sass": "^4.7.2",
-    "sass-loader": "^6.0.6",
-    "vue-template-compiler": "^2.5.13"
-  },
-  "babel": {
-    "presets": [
-      "@vue/app"
-    ]
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard"
-    ]
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
+  "workspaces": [
+    "client",
+    "server"
   ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbansrun/AjouNICE.git"
   },
-  "lint-staged": {
-    "*.js": [
-      "vue-cli-service lint",
-      "git add"
-    ],
-    "*.vue": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  }
+  "keywords": [
+    "community",
+    "ajou"
+  ],
+  "author": "Bbansrun",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bbansrun/AjouNICE/issues"
+  },
+  "homepage": "https://github.com/bbansrun/AjouNICE#readme"
 }

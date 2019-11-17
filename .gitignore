@@ -2,5 +2,9 @@ node_modules/
 .vscode/
 __pycache__/
 .DS_Store
-db_config.json
-dist/*
+
+server/db_config.json
+server/dist/*
+server/bin/*
+
+yarn-error.log

@@ -1,0 +1,78 @@
+body {
+  font-family: 'KoPubDotumMedium', 'MalgeunGothic', 'AppleGothic', sans-serif;
+  font-size: 18px;
+}
+
+// Utils
+.divider {
+  margin: 1rem 0;
+}
+
+// Font
+.logo-font {
+  font-family: 'yg-jalnan' !important;
+}
+
+[text-divider] {
+  display: inline-block;
+  font-size: .8rem;
+  padding: 0 10px;
+}
+
+// Default
+
+nav.gnb {
+  color: #fff;
+  background: linear-gradient(to right, rgb(133, 91, 218), rgb(165, 135, 212));
+  padding: 10px 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .24);
+  > .logo {
+    padding: 0 20px;
+    > h1 {
+      display: inline-block;
+      font-weight: 100;
+      font-family: 'yg-jalnan';
+      font-size: 30px;
+      text-shadow: 0 0 10px rgba(0, 0, 0, .24);
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0 50px;
+  padding-top: 50px;
+}
+
+footer.card {
+  position: absolute;
+  left: 50%;
+  bottom: 50px;
+  transform: translate(-50%, 0);
+  width: calc(80vw - 100px);
+  margin: 0 auto;
+  padding: 50px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, .12);
+  background: #eee;
+  > article {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    > .wrapper {
+      text-align: center;
+      > span > strong > a {
+        font-size: 30px;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      > p > ul > li {
+        display: inline-block;
+        padding: 0 10px;
+      }
+    }
+  }
+}

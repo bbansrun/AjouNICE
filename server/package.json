@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "description": "New Generation of Community Service for Ajou University",
+  "scripts": {
+	"postinstall": "pipenv install",
+	"serve": "python3 run.py"
+  },
+  "keywords": [
+    "community",
+    "ajou"
+  ],
+  "author": "Bbansrun",
+  "license": "Apache-2.0"
+}
