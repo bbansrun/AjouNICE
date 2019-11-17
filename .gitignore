@@ -3,7 +3,7 @@ node_modules/
 __pycache__/
 .DS_Store
 
-server/app/database/db_config.json
+server/db_config.json
 server/dist/*
 server/bin/*
 
