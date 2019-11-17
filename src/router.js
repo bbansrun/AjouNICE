@@ -5,6 +5,7 @@ import About from './views/About.vue'
 import NotFound from './views/NotFound.vue'
 import ServError from './views/ServError.vue'
 import Login from './views/Login.vue'
+import RenewAccount from './views/RenewAccount.vue'
 import Signup from './views/SignUp.vue'
 
 Vue.use(Router)
@@ -35,6 +36,11 @@ export default new Router({
       path: '/error',
       name: 'serv_error',
       component: ServError
+    },
+    {
+      path: '/auth/reset',
+      name: 'reset',
+      component: RenewAccount
     },
     {
       path: '/404',

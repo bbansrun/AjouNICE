@@ -6,20 +6,13 @@
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
             <form @submit="checkValidation" method="GET" action='/#/home'>
-                <header class="logo-font">LOGIN</header>
+                <header class="logo-font">Reset Account</header>
                 <div class="divider"></div>
                 <div class="input-form">
                     <input type="email" placeholder="이메일" v-model="email" required>
                 </div>
                 <div class="input-form">
-                    <input type="password" placeholder="패스워드" required>
-                </div>
-                <div class="input-form">
-                    <input type="submit" value="로그인">
-                </div>
-                <div class="input-form">
-                    <router-link to="/auth/reset">계정 재설정</router-link>
-                    <router-link to="/auth/signup">아직 회원이 아니신가요?</router-link>
+                    <input type="submit" value="계정 재설정">
                 </div>
                 <div class="divider"></div>
                 <footer>
@@ -34,7 +27,7 @@
 
 <script>
 export default {
-  name: 'login',
+  name: 'reset',
   data () {
     return {
       formErrors: [],

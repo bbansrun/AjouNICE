@@ -17,6 +17,8 @@ flask-migrate = "*"
 graphene-sqlalchemy = "*"
 mysql-python = "*"
 pymysql = "*"
+pyjwt = "*"
+flask-graphql-auth = "*"
 
 [dev-packages]
 pytest = "*"

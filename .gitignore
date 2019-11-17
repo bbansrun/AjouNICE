@@ -4,3 +4,4 @@ __pycache__/
 .DS_Store
 db_config.json
 dist/*
+push_gitpages.sh
