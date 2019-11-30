@@ -39,11 +39,25 @@ def parseContent(soup, urlInfo):
     return posts
 
 
-def parseContentIT(soup, urlInfo):
+def parseContentSW(soup, urlInfo):
     posts = []
-    print(soup)
-    print(soup.select(
-        '#sub_content > div.conbody > table:nth-child(1) > tbody > tr[height]'))
+    lists = soup.select('tr[height]:not([bgcolor])')
+    for post in lists:
+        try:
+            print('shit')
+            print(post)
+            title = post.find('td', attrs={"align": "left"}).a.text.strip()
+            link = 'http://software.ajou.ac.kr' + \
+                post.find('td', attrs={"align": "left"}).a['href']
+            posts.append({
+                'unit': urlInfo['name'],
+                'code': urlInfo['code'],
+                'boardName': urlInfo['boardName'],
+                'title': title,
+                'link': link
+            })
+        except:
+            pass
     return posts
 
 
@@ -55,7 +69,7 @@ class SecureResource(Resource):
 @api_rest.route('/notice/<string:code>')
 class Bbansrun(Resource):
     def get(self, code):
-        if (code[:2] == 'IT'):
+        if (code == 'IT0004'):
             target = list(
                 filter(lambda x: x['code'] == code, url_list['unsolved']))[0]
             res = requests.get(target['link'])
@@ -65,7 +79,7 @@ class Bbansrun(Resource):
                 'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
                 'APIName': '/notice/<code>',
                 'APIDescription': '본부대학급 공지사항 크롤러',
-                'result': parseContentIT(BeautifulSoup(res.text, 'html.parser'), target)
+                'result': parseContentSW(BeautifulSoup(res.text, 'html.parser'), target)
             }
         if (code in list(map(lambda x: x['code'], url_list['resolved']))):
             target = list(
