@@ -18,6 +18,7 @@ graphene-sqlalchemy = "*"
 pymysql = "*"
 pyjwt = "*"
 flask-graphql-auth = "*"
+graphene-sqlalchemy-filter = "*"
 
 [dev-packages]
 pytest = "*"
