@@ -7,14 +7,13 @@
             </header>
             <form method="GET" action='/#/home'>
                 <header class="logo-font">SIGN UP</header>
-                <div class="divider"></div>
                 <div class="input-form">
                     <input type="text" placeholder="이름" required>
                 </div>
                 <div class="input-form">
-                    <input @blur="checkDupIDNum" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
-                    <p v-if="this.userIDNumDuplicated !== 'empty' && !this.userIDNumDuplicated">신규 회원가입이 가능합니다.</p>
-                    <p v-else-if="this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated">이미 가입된 계정입니다.</p>
+                    <input @blur="checkDupIDNum" :class="{ 'duplicated': this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated }" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
+                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated }" v-if="this.userIDNumDuplicated !== 'empty' && !this.userIDNumDuplicated">신규 회원가입이 가능합니다.</p>
+                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated }" v-else-if="this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated">이미 가입된 계정입니다.</p>
                 </div>
                 <div class="input-form">
                     <select name="memberType" id="memberType" required @change="onUserTypeChange($event)" v-model="this.selectedUserType">
@@ -22,12 +21,14 @@
                     </select>
                 </div>
                 <div class="input-form">
-                    <input @blur="checkDupEmail" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
-                    <p v-if="this.emailDuplicated !== 'empty' && !this.emailDuplicated">신규 회원가입이 가능합니다.</p>
-                    <p v-else-if="this.emailDuplicated !== 'empty' && this.emailDuplicated">이미 가입된 계정입니다.</p>
+                    <input @blur="checkDupEmail" :class="{ 'duplicated': this.emailDuplicated !== 'empty' && this.emailDuplicated }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
+                    <p class="auto-validate-noti" :class="{ 'duplicated': this.emailDuplicated !== 'empty' && this.emailDuplicated }" v-if="this.emailDuplicated !== 'empty' && !this.emailDuplicated">사용 가능한 이메일입니다.</p>
+                    <p class="auto-validate-noti" :class="{ 'duplicated': this.emailDuplicated !== 'empty' && this.emailDuplicated }" v-else-if="this.emailDuplicated !== 'empty' && this.emailDuplicated">이미 가입된 계정입니다.</p>
                 </div>
                 <div class="input-form">
-                    <input type="text" placeholder="아이디" @blur="checkDupID" required v-model="userID">
+                    <input type="text" placeholder="아이디" @blur="checkDupID"  :class="{ 'duplicated': this.userIDDuplicated !== 'empty' && this.userIDDuplicated }" required v-model="userID">
+                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDDuplicated !== 'empty' && this.userIDDuplicated }" v-if="this.userIDDuplicated !== 'empty' && !this.userIDDuplicated">사용 가능한 아이디입니다.</p>
+                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDDuplicated !== 'empty' && this.userIDDuplicated }" v-else-if="this.userIDDuplicated !== 'empty' && this.userIDDuplicated">이미 가입된 계정입니다.</p>
                 </div>
                 <div class="input-form">
                     <input type="password" pattern=".{8,}" placeholder="패스워드" required>
@@ -108,12 +109,18 @@ export default {
         this.$apollo.query({
           query: gql`
             query {
-              findIdNums(identityNum: ${this.userID}) {
+              findUserID(userId: "${this.userID}") {
                 id
               }
             }
           `
-        }).then(result => this.userIDDuplicated = false)
+        }).then(result => {
+          if (result.data.findUserID.length > 0) {
+            this.userIDDuplicated = true
+          } else {
+            this.userIDDuplicated = false
+          }
+        })
       }
     },
     checkDupIDNum () {
