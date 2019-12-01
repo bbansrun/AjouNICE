@@ -12,7 +12,9 @@
                     <input type="text" placeholder="이름" required>
                 </div>
                 <div class="input-form">
-                    <input type="text" placeholder="학번" required pattern="[0-9]{9,}">
+                    <input @blur="checkDupIDNum" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
+                    <p v-if="this.userIDNumDuplicated !== 'empty' && !this.userIDNumDuplicated">신규 회원가입이 가능합니다.</p>
+                    <p v-else-if="this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated">이미 가입된 계정입니다.</p>
                 </div>
                 <div class="input-form">
                     <select name="memberType" id="memberType" required @change="onUserTypeChange($event)" v-model="this.selectedUserType">
@@ -20,7 +22,9 @@
                     </select>
                 </div>
                 <div class="input-form">
-                    <input type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
+                    <input @blur="checkDupEmail" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
+                    <p v-if="this.emailDuplicated !== 'empty' && !this.emailDuplicated">신규 회원가입이 가능합니다.</p>
+                    <p v-else-if="this.emailDuplicated !== 'empty' && this.emailDuplicated">이미 가입된 계정입니다.</p>
                 </div>
                 <div class="input-form">
                     <input type="text" placeholder="아이디" @blur="checkDupID" required v-model="userID">
@@ -53,12 +57,20 @@
 <script>
 import Vue from 'vue'
 import VueSweetalert2 from 'vue-sweetalert2'
+import gql from 'graphql-tag'
+
 Vue.use(VueSweetalert2)
+
 export default {
   name: 'signup',
   data () {
     return {
+      email: '',
       userID: '',
+      userIDNum: '',
+      emailDuplicated: 'empty',
+      userIDDuplicated: 'empty',
+      userIDNumDuplicated: 'empty',
       agreePolicy: false,
       selectedUserType: null,
       userOptions: [
@@ -72,9 +84,49 @@ export default {
     }
   },
   methods: {
+    checkDupEmail () {
+      if (this.email) {
+        this.$apollo.query({
+          query: gql`
+          query {
+            findEmail(email: "${this.email}") {
+              id
+            }
+          }
+          `
+        }).then(result => {
+          if (result.data.findEmail.length > 0) {
+            this.emailDuplicated = true
+          } else {
+            this.emailDuplicated = false
+          }
+        })
+      }
+    },
     checkDupID () {
       if (this.userID) {
-        alert('ID 중복확인!')
+        this.$apollo.query({
+          query: gql`
+            query {
+              findIdNums(identityNum: ${this.userID}) {
+                id
+              }
+            }
+          `
+        }).then(result => this.userIDDuplicated = false)
+      }
+    },
+    checkDupIDNum () {
+      if (this.userIDNum) {
+        this.$apollo.query({
+          query: gql`{ findIdNums(identityNum: ${this.userIDNum}) { id } }`
+        }).then(result => {
+          if (result.data.findIdNums.length > 0) {
+            this.userIDNumDuplicated = true
+          } else {
+            this.userIDNumDuplicated = false
+          }
+        })
       }
     },
     onUserTypeChange (event) {
