@@ -4,7 +4,7 @@
   "description": "New Generation of Community Service for Ajou University",
   "scripts": {
 	"postinstall": "pipenv install",
-	"serve": "python3 run.py"
+	"serve": "flask run"
   },
   "keywords": [
     "community",
