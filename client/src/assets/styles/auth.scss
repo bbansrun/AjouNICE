@@ -61,14 +61,27 @@
             > .input-form {
                 position: relative;
                 width: 100%;
+                > a {
+                    margin-top: 5px;
+                }
                 > input, select {
                     font-size: .85em;
+                }
+                > input[name="IDNum"]:disabled {
+                    display: none;
+                }
+                > input[name="passwordConfirm"].error {
+                    background: red;
+                    color: white;
+                    &::placeholder {
+                        color: #fff;
+                    }
                 }
                 > input:not([type="checkbox"]) {
                     position: relative;
                     width: calc(90% - 20px);
                     padding: 5px 10px;
-                    margin-bottom: 15px;
+                    margin-top: 15px;
                     border-radius: .8rem;
                     outline: none;
                     border: none;
@@ -78,6 +91,19 @@
                         box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
                     }
                 }
+                > .auto-validate-noti {
+                    position: relative;
+                    font-size: .6em;
+                    width: calc(90% - 20px);
+                    text-align: left;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    margin: 5px 0;
+                    color: blue;
+                }
+                > .auto-validate-noti.error {
+                    color: red;
+                }
                 select {
                     -webkit-appearance: none;
                     -moz-appearance: none;
@@ -85,7 +111,7 @@
                     padding: 5px 10px;
                     position: relative;
                     width: 90%;
-                    margin-bottom: 15px;
+                    margin-top: 15px;
                     border-radius: .8rem;
                     outline: none;
                     border: none;
@@ -100,6 +126,13 @@
                         color: #fff;
                     }
                     background: #4b6ab9;
+                }
+                > input.duplicated {
+                    color: #fff;
+                    &::placeholder {
+                        color: #fff;
+                    }
+                    background: red;
                 }
                 > input[type="submit"] {
                     cursor: pointer;
@@ -158,5 +191,11 @@
                 width: calc(100% - 20px);
             }
         }
+    }
+}
+
+@media (min-width: 940px) {
+    [data-form] {
+        min-width: 60vw !important;
     }
 }

@@ -9,7 +9,7 @@
                 <header class="logo-font">LOGIN</header>
                 <div class="divider"></div>
                 <div class="input-form">
-                    <input type="email" placeholder="이메일" v-model="email" required>
+                    <input type="text" placeholder="아이디" v-model="userID" required>
                 </div>
                 <div class="input-form">
                     <input type="password" placeholder="패스워드" required>
@@ -38,15 +38,7 @@ export default {
   data () {
     return {
       formErrors: [],
-      email: ''
-    }
-  },
-  methods: {
-    checkValidation (e) {
-      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (!re.test(String(this.email).toLowerCase())) {
-        this.formErrors.push('이메일 형식이 잘못되었습니다.')
-      }
+      userID: ''
     }
   }
 }

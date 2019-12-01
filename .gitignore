@@ -8,3 +8,6 @@ server/dist/*
 server/bin/*
 
 yarn-error.log
+yarn.lock
+
+Pipfile.lock

@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="AjouNICE.png">
+    <img src="AjouNICE.png" width="100">
 </p>
 
 # AjouNICE (가제)
