@@ -8,31 +8,33 @@
             <form method="GET" action='/#/home'>
                 <header class="logo-font">SIGN UP</header>
                 <div class="input-form">
-                    <input type="text" placeholder="이름" required>
-                </div>
-                <div class="input-form">
-                    <input @blur="checkDupIDNum" :class="{ 'duplicated': this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated }" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
-                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated }" v-if="this.userIDNumDuplicated !== 'empty' && !this.userIDNumDuplicated">신규 회원가입이 가능합니다.</p>
-                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated }" v-else-if="this.userIDNumDuplicated !== 'empty' && this.userIDNumDuplicated">이미 가입된 계정입니다.</p>
-                </div>
-                <div class="input-form">
                     <select name="memberType" id="memberType" required @change="onUserTypeChange($event)" v-model="this.selectedUserType">
                         <option v-for="option in this.userOptions" :disabled="option.disabled" :value="option.value" :key="option.value">{{ option.name }}</option>
                     </select>
                 </div>
                 <div class="input-form">
-                    <input @blur="checkDupEmail" :class="{ 'duplicated': this.emailDuplicated !== 'empty' && this.emailDuplicated }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
-                    <p class="auto-validate-noti" :class="{ 'duplicated': this.emailDuplicated !== 'empty' && this.emailDuplicated }" v-if="this.emailDuplicated !== 'empty' && !this.emailDuplicated">사용 가능한 이메일입니다.</p>
-                    <p class="auto-validate-noti" :class="{ 'duplicated': this.emailDuplicated !== 'empty' && this.emailDuplicated }" v-else-if="this.emailDuplicated !== 'empty' && this.emailDuplicated">이미 가입된 계정입니다.</p>
+                    <input type="text" placeholder="이름" required>
                 </div>
                 <div class="input-form">
-                    <input type="text" placeholder="아이디" @blur="checkDupID"  :class="{ 'duplicated': this.userIDDuplicated !== 'empty' && this.userIDDuplicated }" required v-model="userID">
-                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDDuplicated !== 'empty' && this.userIDDuplicated }" v-if="this.userIDDuplicated !== 'empty' && !this.userIDDuplicated">사용 가능한 아이디입니다.</p>
-                    <p class="auto-validate-noti" :class="{ 'duplicated': this.userIDDuplicated !== 'empty' && this.userIDDuplicated }" v-else-if="this.userIDDuplicated !== 'empty' && this.userIDDuplicated">이미 가입된 계정입니다.</p>
+                    <input name="IDNum" @keyup="checkDupIDNum" @blur="checkDupIDNum" :disabled="this.condUserTypeNormal" :class="{ 'error': this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated }" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
+                    <p class="auto-validate-noti" v-if="this.userIDNumDuplicated.checked && !this.userIDNumDuplicated.duplicated">신규 회원가입이 가능합니다.</p>
+                    <p class="auto-validate-noti" :class="{ 'error': this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated }" v-else-if="this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated">이미 가입된 계정입니다. <router-link to="/">로그인</router-link></p>
                 </div>
                 <div class="input-form">
-                    <input type="password" pattern=".{8,}" placeholder="패스워드" required>
-                    <input type="password" pattern=".{8,}" placeholder="패스워드 재확인" required>
+                    <input name="email" @keyup="checkDupEmail" @blur="checkDupEmail" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
+                    <p class="auto-validate-noti" v-if="this.emailDuplicated.checked && !this.emailDuplicated.duplicated">사용 가능한 이메일입니다.</p>
+                    <p class="auto-validate-noti" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-else-if="this.emailDuplicated.checked && this.emailDuplicated.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
+                </div>
+                <div class="input-form">
+                    <input name="userID" @keyup="checkDupID" @blur="checkDupID" type="text" placeholder="아이디" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" required v-model="userID">
+                    <p class="auto-validate-noti" v-if="this.userIDDuplicated.checked && !this.userIDDuplicated.duplicated">사용 가능한 아이디입니다.</p>
+                    <p class="auto-validate-noti" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" v-else-if="this.userIDDuplicated.checked && this.userIDDuplicated.duplicated">이미 가입된 계정입니다.</p>
+                </div>
+                <div class="input-form">
+                    <input name="password" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="password" type="password" pattern=".{8,}" placeholder="패스워드" required>
+                    <input name="passwordConfirm" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="passwordConfirm" type="password" pattern=".{8,}" placeholder="패스워드 재확인" required :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }">
+                    <p class="auto-validate-noti" :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }" v-if="isPWConfirmMatches.typed && !(isPWConfirmMatches.matches)">패스워드 재확인이 일치하지 않습니다.</p>
+                    <p class="auto-validate-noti" v-else-if="isPWConfirmMatches.typed && (isPWConfirmMatches.matches)">패스워드 재확인이 일치합니다.</p>
                 </div>
                 <div class="input-form">
                     <label for="policy">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
@@ -66,12 +68,32 @@ export default {
   name: 'signup',
   data () {
     return {
+      signupAvailable: false,
       email: '',
+      password: '',
+      passwordConfirm: '',
+      isPWConfirmMatches: {
+        typed: false,
+        matches: false
+      },
       userID: '',
       userIDNum: '',
-      emailDuplicated: 'empty',
-      userIDDuplicated: 'empty',
-      userIDNumDuplicated: 'empty',
+      emailDuplicated: {
+        checked: false,
+        duplicated: false,
+        message: ''
+      },
+      userIDDuplicated: {
+        checked: false,
+        duplicated: false,
+        message: ''
+      },
+      userIDNumDuplicated: {
+        checked: false,
+        duplicated: false,
+        message: ''
+      },
+      condUserTypeNormal: false,
       agreePolicy: false,
       selectedUserType: null,
       userOptions: [
@@ -86,7 +108,8 @@ export default {
   },
   methods: {
     checkDupEmail () {
-      if (this.email) {
+      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (this.email && re.test(String(this.email).toLowerCase()) && (this.selectedUserType && (this.selectedUserType !== 5 && this.email.includes('ajou.ac.kr')))) {
         this.$apollo.query({
           query: gql`
           query {
@@ -96,10 +119,11 @@ export default {
           }
           `
         }).then(result => {
+          this.emailDuplicated.checked = true
           if (result.data.findEmail.length > 0) {
-            this.emailDuplicated = true
+            this.emailDuplicated.duplicated = true
           } else {
-            this.emailDuplicated = false
+            this.emailDuplicated.duplicated = false
           }
         })
       }
@@ -115,25 +139,37 @@ export default {
             }
           `
         }).then(result => {
+          this.userIDDuplicated.checked = true
           if (result.data.findUserID.length > 0) {
-            this.userIDDuplicated = true
+            this.userIDDuplicated.duplicated = true
           } else {
-            this.userIDDuplicated = false
+            this.userIDDuplicated.duplicated = false
           }
         })
       }
     },
     checkDupIDNum () {
-      if (this.userIDNum) {
+      if (this.userIDNum && this.userIDNum.length === 9) {
         this.$apollo.query({
           query: gql`{ findIdNums(identityNum: ${this.userIDNum}) { id } }`
         }).then(result => {
+          this.userIDNumDuplicated.checked = true
           if (result.data.findIdNums.length > 0) {
-            this.userIDNumDuplicated = true
+            this.userIDNumDuplicated.duplicated = true
           } else {
-            this.userIDNumDuplicated = false
+            this.userIDNumDuplicated.duplicated = false
           }
         })
+      }
+    },
+    checkConfirmCorrect () {
+      if (this.password.length > 0 && this.passwordConfirm.length > 0) {
+        this.isPWConfirmMatches.typed = true
+        if (this.passwordConfirm !== this.password) {
+          this.isPWConfirmMatches.matches = false
+        } else if (this.passwordConfirm === this.password) {
+          this.isPWConfirmMatches.matches = true
+        }
       }
     },
     onUserTypeChange (event) {
@@ -145,6 +181,7 @@ export default {
           type: 'warning',
           footer: '<a href="#/">아주나이스 서비스 정책 자세히보기</a>'
         })
+        this.condUserTypeNormal = true
       } else {
         this.$swal({
           title: '주의!',
@@ -153,9 +190,13 @@ export default {
           type: 'warning',
           footer: '<a href="#/">아주나이스 서비스 정책 자세히보기</a>'
         })
+        this.condUserTypeNormal = false
       }
     },
     signup () {
+      if (!this.signupAvailable) {
+        this.$swal('잠깐!', '회원가입에 필요한 데이터가 입력되지 않았습니다.', 'error')
+      }
       if (!this.agreePolicy) {
         this.$swal({
           title: '잠깐!',

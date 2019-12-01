@@ -14,6 +14,9 @@
                 <div class="input-form">
                     <input type="submit" value="계정 재설정">
                 </div>
+                <div class="input-form">
+                  <router-link to="/">처음으로</router-link>
+                </div>
                 <div class="divider"></div>
                 <footer>
                     <span>&copy; 2019 팀 <a href="http://github.com/bbansrun">빤스런</a>.</span>

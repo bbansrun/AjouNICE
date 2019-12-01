@@ -19,7 +19,7 @@ class Query(graphene.ObjectType):
     findIdNums = graphene.List(UserObject, identity_num=graphene.Int(required=True))
 
     def resolve_findEmail(self, info, **kwargs):
-        return UserObject.get_query(info).filter(UserModel.email.contains(kwargs.get('email')))
+        return UserObject.get_query(info).filter(UserModel.email == kwargs.get('email'))
 
     def resolve_findIdNums(self, info, **kwargs):
         return UserObject.get_query(info).filter(UserModel.identity_num == kwargs.get('identity_num'))

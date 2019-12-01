@@ -61,8 +61,21 @@
             > .input-form {
                 position: relative;
                 width: 100%;
+                > a {
+                    margin-top: 5px;
+                }
                 > input, select {
                     font-size: .85em;
+                }
+                > input[name="IDNum"]:disabled {
+                    display: none;
+                }
+                > input[name="passwordConfirm"].error {
+                    background: red;
+                    color: white;
+                    &::placeholder {
+                        color: #fff;
+                    }
                 }
                 > input:not([type="checkbox"]) {
                     position: relative;
@@ -88,7 +101,7 @@
                     margin: 5px 0;
                     color: blue;
                 }
-                > .auto-validate-noti.duplicated {
+                > .auto-validate-noti.error {
                     color: red;
                 }
                 select {
@@ -178,5 +191,11 @@
                 width: calc(100% - 20px);
             }
         }
+    }
+}
+
+@media (min-width: 940px) {
+    [data-form] {
+        min-width: 60vw !important;
     }
 }
