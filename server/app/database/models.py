@@ -12,7 +12,7 @@ with open('db_config.json', 'r') as t:
 app.config['JWT_SECRET_KEY'] = config['JWT_SECRET_KEY']
 app.config['REFRESH_EXP_LENGTH'] = config['REFRESH_EXP_LENGTH']
 app.config['ACCESS_EXP_LENGTH'] = config['ACCESS_EXP_LENGTH']
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://${config['DB_USER']}:${config['DB_PASSWORD']}@${config['RDS_ENDPOINT']}/${config['DB_INSTANCE']}"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{config['DB_USER']}:{config['DB_PASSWORD']}@{config['RDS_ENDPOINT']}/{config['DB_INSTANCE']}"
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
