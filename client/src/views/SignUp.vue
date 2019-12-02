@@ -108,8 +108,8 @@ export default {
   },
   methods: {
     checkDupEmail () {
-      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (this.email && re.test(String(this.email).toLowerCase()) && (this.selectedUserType && (this.selectedUserType !== 5 && this.email.includes('ajou.ac.kr')))) {
+      let re = /^(([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (this.email && re.test(String(this.email).toLowerCase())) {
         this.$apollo.query({
           query: gql`
           query {
@@ -173,7 +173,7 @@ export default {
       }
     },
     onUserTypeChange (event) {
-      if (event.target.value == 5) {
+      if (event.target.value === 5) {
         this.$swal({
           title: '주의!',
           text: '아주대학교 구성원이 아니실 경우 서비스 기능 이용에 제한이 있을 수 있습니다.',
