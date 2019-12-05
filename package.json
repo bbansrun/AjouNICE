@@ -11,7 +11,8 @@
   },
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "apollo-server"
   ],
   "repository": {
     "type": "git",
