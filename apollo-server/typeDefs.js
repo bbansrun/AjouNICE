@@ -52,7 +52,7 @@ type Department {
 scalar Date
 
 type Query {
-    findIdNums(identityNum: Int): User,
-    findEmail(email: String): User,
-    findUserID(userId: String): User
+    findIdNums(identityNum: Int): [User],
+    findEmail(email: String): [User],
+    findUserID(userId: String): [User]
 }`
