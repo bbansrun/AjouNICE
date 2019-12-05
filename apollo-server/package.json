@@ -1,20 +1,22 @@
 {
   "name": "apollo-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "GraphQL Endpoint for AjouNICE Auth & General Data Browsing",
+  "main": "apollo.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node apollo.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Bbansrun",
+  "license": "Apache-2.0",
   "dependencies": {
     "apollo-server": "^2.9.12",
     "apollo-server-cache-redis": "^1.1.4",
     "graphql": "^14.5.8",
+    "graphql-fields": "^2.0.3",
     "lodash": "^4.17.15",
     "mysql2": "^2.0.1",
-    "sequelize": "^5.21.2"
+    "sequelize": "^5.21.2",
+    "sequelize-cli": "^5.5.1"
   }
 }

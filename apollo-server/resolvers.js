@@ -1,21 +1,33 @@
-const Sequelize = require('sequelize')
-const { filter, find } = require('lodash')
+const { User, sequelize } = require('./models')
+const graphqlFields = require('graphql-fields')
 
-const sequelize = new Sequelize('ajounice_dev', 'ajounice_helper', 'bbansrun!', {
-    host: 'ajounice-dev-db-rds.ccj2f84oidqh.ap-northeast-2.rds.amazonaws.com',
-    dialect: 'mysql'
-})
+sequelize.sync()
 
 module.exports = {
     Query: {
-        findIdNums(parent, args, context, info) {
-            return find({ id: 1, test: 'bbansrun!', identity_num: 201621061 }, { identity_num: args.identityNum })
+        async findIdNums(parent, args, context, info) {
+            return (await User.findAll({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+                    identity_num: args.identityNum
+                }
+            }))[0]
         },
-        findEmail(parent, args, context, info) {
-            return find({ id: 1, test: 'bbansrun!', identity_num: 201621061 }, { email: args.email })
+        async findEmail(parent, args, context, info) {
+            return await User.findAll({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+                    email: args.email
+                }
+            })
         },
-        findUserID(parent, args, context, info) {
-            return find({ id: 1, test: 'bbansrun!', identity_num: 201621061 }, { user_id: args.user_id })
+        async findUserID(parent, args, context, info) {
+            return await User.findAll({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+                    user_id: args.userId
+                }
+            })
         }
     }
 }
