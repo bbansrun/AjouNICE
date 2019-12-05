@@ -120,14 +120,14 @@
                 > input[type="email"], input[type="password"], input[type="submit"] {
                     font-size: .85em;
                 }
-                > input:valid {
+                > input:not(.error):valid {
                     color: #fff;
                     &::placeholder{
                         color: #fff;
                     }
                     background: #4b6ab9;
                 }
-                > input.duplicated {
+                > input.error {
                     color: #fff;
                     &::placeholder {
                         color: #fff;

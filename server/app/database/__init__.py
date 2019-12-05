@@ -1,8 +1,8 @@
 import pymysql
 import graphene
-from flask_graphql_auth import GraphQLAuth
+from flask_graphql_auth import GraphQLAuth, query_jwt_required
 from graphene_sqlalchemy import SQLAlchemyConnectionField
-from .models import UserModel, CollegeModel, UserObject, CollegeObject
+from .models import UserModel, CollegeModel, UserObject, CollegeObject, Mutation, MessageField, ProtectedUnion
 from .. import app
 pymysql.install_as_MySQLdb()
 
@@ -18,6 +18,8 @@ class Query(graphene.ObjectType):
     findEmail = graphene.List(UserObject, email=graphene.String(required=True))
     findIdNums = graphene.List(UserObject, identity_num=graphene.Int(required=True))
 
+    protected = graphene.Field(type=ProtectedUnion, token=graphene.String())
+
     def resolve_findEmail(self, info, **kwargs):
         return UserObject.get_query(info).filter(UserModel.email == kwargs.get('email'))
 
@@ -27,4 +29,8 @@ class Query(graphene.ObjectType):
     def resolve_findUserID(self, info, **kwargs):
         return UserObject.get_query(info).filter(UserModel.user_id == kwargs.get('user_id'))
 
-schema = graphene.Schema(query=Query)
+    @query_jwt_required
+    def resolve_protected(self, info):
+        return MessageField(message="Hello World!")
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
