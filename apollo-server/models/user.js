@@ -2,7 +2,9 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('USER', {
         user_idx: {
             type: DataTypes.INTEGER.UNSIGNED,
+            primaryKey: true,
             allowNull: false,
+            autoIncrement: true,
             unique: true
         },
         email: {
