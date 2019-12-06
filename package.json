@@ -7,7 +7,8 @@
   "scripts": {
     "client:dev": "yarn workspace client serve",
     "client:build": "yarn workspace client build",
-    "server:dev": "yarn workspace server serve"
+    "server:dev": "yarn workspace server serve",
+    "apollo": "yarn workspace apollo-server start"
   },
   "workspaces": [
     "client",
