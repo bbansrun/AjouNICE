@@ -108,16 +108,10 @@ export default {
   },
   methods: {
     checkDupEmail () {
-      let re = /^(([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (this.email && re.test(String(this.email).toLowerCase())) {
+      let re = /^(([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (this.email && re.test(String(this.email).toLowerCase()) && (this.selectedUserType && (this.selectedUserType !== 5 && this.email.includes('ajou.ac.kr')))) {
         this.$apollo.query({
-          query: gql`
-          query {
-            findEmail(email: "${this.email}") {
-              id
-            }
-          }
-          `
+          query: gql`{ findEmail(email: "${this.email}") { email } }`
         }).then(result => {
           this.emailDuplicated.checked = true
           if (result.data.findEmail.length > 0) {
@@ -131,13 +125,7 @@ export default {
     checkDupID () {
       if (this.userID) {
         this.$apollo.query({
-          query: gql`
-            query {
-              findUserID(userId: "${this.userID}") {
-                id
-              }
-            }
-          `
+          query: gql`{ findUserID(userId: "${this.userID}") { user_id } }`
         }).then(result => {
           this.userIDDuplicated.checked = true
           if (result.data.findUserID.length > 0) {
@@ -151,7 +139,7 @@ export default {
     checkDupIDNum () {
       if (this.userIDNum && this.userIDNum.length === 9) {
         this.$apollo.query({
-          query: gql`{ findIdNums(identityNum: ${this.userIDNum}) { id } }`
+          query: gql`{ findIdNums(identityNum: ${this.userIDNum}) { identity_num } }`
         }).then(result => {
           this.userIDNumDuplicated.checked = true
           if (result.data.findIdNums.length > 0) {

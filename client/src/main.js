@@ -13,12 +13,8 @@ import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
 
-const httpLink = createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({
-  uri: 'http://localhost:5000/graphql'
-}))
-
 const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({ uri: 'http://localhost:5000/graphql' })),
   cache: new InMemoryCache()
 })
 
