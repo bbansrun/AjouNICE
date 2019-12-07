@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "New Generation of Community Service for Ajou University",
   "scripts": {
-	"postinstall": "pipenv install",
-	"serve": "FLASK_APP=run.py FLASK_ENV=development flask run"
+    "postinstall": "pipenv install",
+    "serve": "FLASK_APP=run.py FLASK_ENV=development flask run"
   },
   "keywords": [
     "community",
