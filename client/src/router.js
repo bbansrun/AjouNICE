@@ -18,6 +18,11 @@ export default new Router({
       component: Login
     },
     {
+      path: '/auth/login',
+      name: 'login',
+      component: Login
+    },
+    {
       path: '/auth/signup',
       name: 'signup',
       component: Signup

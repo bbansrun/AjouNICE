@@ -1,6 +1,25 @@
+::selection {
+  background: #667eea;
+  color: #fff;
+}
+
 body {
   font-family: 'KoPubDotumMedium', 'MalgeunGothic', 'AppleGothic', sans-serif;
   font-size: 18px;
+  line-height: 1.6;
+}
+
+body.auth {
+  overflow-x: hidden;
+  background: url('https://sso.ajou.ac.kr/common/css/images/bg.jpg') no-repeat center center/cover;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:not(:visited) {
+  font-weight: bold;
 }
 
 // Utils
@@ -17,6 +36,16 @@ body {
   display: inline-block;
   font-size: .8rem;
   padding: 0 10px;
+}
+
+[text-divider-block] {
+  display: block;
+  font-size: .4em;
+  padding: 0 10px;
+}
+
+small {
+  font-size: .4em;
 }
 
 // Default
@@ -47,32 +76,18 @@ nav.gnb {
   padding-top: 50px;
 }
 
-footer.card {
-  position: absolute;
-  left: 50%;
-  bottom: 50px;
-  transform: translate(-50%, 0);
-  width: calc(80vw - 100px);
-  margin: 0 auto;
-  padding: 50px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .12);
-  background: #eee;
-  > article {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    > .wrapper {
-      text-align: center;
-      > span > strong > a {
-        font-size: 30px;
-        font-weight: bold;
-        text-decoration: none;
-      }
-      > p > ul > li {
-        display: inline-block;
-        padding: 0 10px;
-      }
-    }
+footer.footer {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  font-size: .8em;
+  margin-top: auto;
+  padding: 10px;
+  background: rgb(23, 85, 62);
+  color: #fff;
+  text-align: left;
+  & a {
+    font-weight: bold;
+    color: #fff;
   }
 }

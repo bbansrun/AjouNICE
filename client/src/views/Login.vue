@@ -6,27 +6,26 @@
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
             <form @submit="checkValidation" method="GET" action='/#/home'>
-                <header class="logo-font">LOGIN</header>
+                <header class="logo-font"><span>LOGIN<small text-divider-block>로그인</small></span></header>
                 <div class="divider"></div>
-                <div class="input-form">
-                    <input type="text" placeholder="아이디" v-model="userID" required>
+                <div class="input-form-wrapper">
+                    <div class="input-form">
+                        <input type="text" placeholder="아이디" v-model="userID" required>
+                    </div>
+                    <div class="input-form">
+                        <input type="password" placeholder="패스워드" required>
+                    </div>
+                    <div class="input-form">
+                        <input type="submit" value="로그인">
+                    </div>
+                    <div class="input-form">
+                        <router-link to="/auth/reset">계정 재설정</router-link>
+                        
+                    </div>
                 </div>
-                <div class="input-form">
-                    <input type="password" placeholder="패스워드" required>
-                </div>
-                <div class="input-form">
-                    <input type="submit" value="로그인">
-                </div>
-                <div class="input-form">
-                    <router-link to="/auth/reset">계정 재설정</router-link>
-                    <router-link to="/auth/signup">아직 회원이 아니신가요?</router-link>
-                </div>
-                <div class="divider"></div>
                 <footer>
-                    <span>&copy; 2019 팀 <a href="http://github.com/bbansrun">빤스런</a>.</span>
+                    <router-link to="/auth/signup">아직 회원이 아니신가요? 회원가입 &rarr;</router-link>
                 </footer>
-                <hr>
-                <img src="@/assets/images/slogan_01.png" alt="CONNECTING MINDS @ AJOU" width="350" />
             </form>
         </section>
     </div>
@@ -40,6 +39,9 @@ export default {
       formErrors: [],
       userID: ''
     }
+  },
+  beforeCreate() {
+      document.body.className = 'auth'
   }
 }
 </script>

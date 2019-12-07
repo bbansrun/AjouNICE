@@ -1,6 +1,5 @@
 module.exports = `type User {
-    id: ID
-    user_idx: Int
+    user_idx: ID!
     email: String
     user_id: String
     password: String
@@ -27,7 +26,6 @@ module.exports = `type User {
 }
 
 type College {
-    id: ID
     college_cd: String
     college_nm: String
     exist_yn: String
@@ -38,7 +36,6 @@ type College {
 }
 
 type Department {
-    id: ID
     dpt_cd: String
     dpt_nm: String
     college_cd: String
@@ -55,4 +52,15 @@ type Query {
     findIdNums(identityNum: Int): [User],
     findEmail(email: String): [User],
     findUserID(userId: String): [User]
-}`
+}
+
+type Mutation {
+    register(email: String!, user_id: String!, password: String!, user_nm: String!, identity_num: Int, user_type: String!, reg_ip: String!): User!
+    login(user_id: String!, password: String!): LoginResponse!
+}
+
+type LoginResponse {
+    token: String
+    user: User
+}
+`
