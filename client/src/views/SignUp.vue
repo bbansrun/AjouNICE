@@ -6,52 +6,48 @@
                 <small>아주대학교의 새로운 커뮤니티,<br />아주나이스에 오신 것을 환영합니다.</small>
             </header>
             <form method="GET" action='/#/home'>
-                <header class="logo-font">SIGN UP</header>
-                <div class="input-form">
+                <header class="logo-font"><span>SIGN UP<small text-divider-block>회원가입</small></span></header>
+                <div class="input-form-wrapper">
+                  <div class="input-form">
                     <select name="memberType" id="memberType" required @change="onUserTypeChange($event)" v-model="this.selectedUserType">
                         <option v-for="option in this.userOptions" :disabled="option.disabled" :value="option.value" :key="option.value">{{ option.name }}</option>
                     </select>
+                  </div>
+                  <div class="input-form">
+                      <input type="text" placeholder="이름" required>
+                  </div>
+                  <div class="input-form">
+                      <input name="IDNum" @keyup="checkDupIDNum" @blur="checkDupIDNum" :disabled="this.condUserTypeNormal" :class="{ 'error': this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated }" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
+                      <p class="auto-validate-noti" v-if="this.userIDNumDuplicated.checked && !this.userIDNumDuplicated.duplicated">신규 회원가입이 가능합니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated }" v-else-if="this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated">이미 가입된 계정입니다. <router-link to="/">로그인</router-link></p>
+                  </div>
+                  <div class="input-form">
+                      <input name="email" @keyup="checkDupEmail" @blur="checkDupEmail" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
+                      <p class="auto-validate-noti" v-if="this.emailDuplicated.checked && !this.emailDuplicated.duplicated">사용 가능한 이메일입니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-else-if="this.emailDuplicated.checked && this.emailDuplicated.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
+                  </div>
+                  <div class="input-form">
+                      <input name="userID" @keyup="checkDupID" @blur="checkDupID" type="text" placeholder="아이디" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" required v-model="userID">
+                      <p class="auto-validate-noti" v-if="this.userIDDuplicated.checked && !this.userIDDuplicated.duplicated">사용 가능한 아이디입니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" v-else-if="this.userIDDuplicated.checked && this.userIDDuplicated.duplicated">이미 가입된 계정입니다.</p>
+                  </div>
+                  <div class="input-form">
+                      <input name="password" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="password" type="password" pattern=".{8,}" placeholder="패스워드" required>
+                      <input name="passwordConfirm" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="passwordConfirm" type="password" pattern=".{8,}" placeholder="패스워드 재확인" required :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }">
+                      <p class="auto-validate-noti" :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }" v-if="isPWConfirmMatches.typed && !(isPWConfirmMatches.matches)">패스워드 재확인이 일치하지 않습니다.</p>
+                      <p class="auto-validate-noti" v-else-if="isPWConfirmMatches.typed && (isPWConfirmMatches.matches)">패스워드 재확인이 일치합니다.</p>
+                  </div>
+                  <div class="input-form">
+                      <label for="policy">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
+                      <input type="checkbox" name="policy" id="policy" v-model="agreePolicy" />
+                  </div>
+                  <div class="input-form">
+                      <input type="button" @click="signup" value="회원가입">
+                  </div>
+                  <div class="input-form">
+                      <router-link to="/">로그인 화면으로</router-link>
+                  </div>
                 </div>
-                <div class="input-form">
-                    <input type="text" placeholder="이름" required>
-                </div>
-                <div class="input-form">
-                    <input name="IDNum" @keyup="checkDupIDNum" @blur="checkDupIDNum" :disabled="this.condUserTypeNormal" :class="{ 'error': this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated }" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
-                    <p class="auto-validate-noti" v-if="this.userIDNumDuplicated.checked && !this.userIDNumDuplicated.duplicated">신규 회원가입이 가능합니다.</p>
-                    <p class="auto-validate-noti" :class="{ 'error': this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated }" v-else-if="this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated">이미 가입된 계정입니다. <router-link to="/">로그인</router-link></p>
-                </div>
-                <div class="input-form">
-                    <input name="email" @keyup="checkDupEmail" @blur="checkDupEmail" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
-                    <p class="auto-validate-noti" v-if="this.emailDuplicated.checked && !this.emailDuplicated.duplicated">사용 가능한 이메일입니다.</p>
-                    <p class="auto-validate-noti" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-else-if="this.emailDuplicated.checked && this.emailDuplicated.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
-                </div>
-                <div class="input-form">
-                    <input name="userID" @keyup="checkDupID" @blur="checkDupID" type="text" placeholder="아이디" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" required v-model="userID">
-                    <p class="auto-validate-noti" v-if="this.userIDDuplicated.checked && !this.userIDDuplicated.duplicated">사용 가능한 아이디입니다.</p>
-                    <p class="auto-validate-noti" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" v-else-if="this.userIDDuplicated.checked && this.userIDDuplicated.duplicated">이미 가입된 계정입니다.</p>
-                </div>
-                <div class="input-form">
-                    <input name="password" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="password" type="password" pattern=".{8,}" placeholder="패스워드" required>
-                    <input name="passwordConfirm" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="passwordConfirm" type="password" pattern=".{8,}" placeholder="패스워드 재확인" required :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }">
-                    <p class="auto-validate-noti" :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }" v-if="isPWConfirmMatches.typed && !(isPWConfirmMatches.matches)">패스워드 재확인이 일치하지 않습니다.</p>
-                    <p class="auto-validate-noti" v-else-if="isPWConfirmMatches.typed && (isPWConfirmMatches.matches)">패스워드 재확인이 일치합니다.</p>
-                </div>
-                <div class="input-form">
-                    <label for="policy">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
-                    <input type="checkbox" name="policy" id="policy" v-model="agreePolicy" />
-                </div>
-                <div class="input-form">
-                    <input type="button" @click="signup" value="회원가입">
-                </div>
-                <div class="input-form">
-                    <router-link to="/">로그인 화면으로</router-link>
-                </div>
-                <div class="divider"></div>
-                <footer>
-                    <span>&copy; 2019 팀 <a href="http://github.com/bbansrun">빤스런</a>.</span>
-                </footer>
-                <hr>
-                <img src="@/assets/images/slogan_01.png" alt="CONNECTING MINDS @ AJOU" width="350" />
             </form>
         </section>
     </div>
@@ -195,6 +191,9 @@ export default {
         })
       }
     }
+  },
+  beforeCreate() {
+      document.body.className = 'auth'
   }
 }
 </script>

@@ -8,21 +8,17 @@
             <form @submit="checkValidation" method="GET" action='/#/home'>
                 <header class="logo-font">Reset Account</header>
                 <div class="divider"></div>
-                <div class="input-form">
-                    <input type="email" placeholder="이메일" v-model="email" required>
+                <div class="input-form-wrapper">
+                  <div class="input-form">
+                      <input type="email" placeholder="이메일" v-model="email" required>
+                  </div>
+                  <div class="input-form">
+                      <input type="submit" value="계정 재설정">
+                  </div>
+                  <div class="input-form">
+                    <router-link to="/">처음으로</router-link>
+                  </div>
                 </div>
-                <div class="input-form">
-                    <input type="submit" value="계정 재설정">
-                </div>
-                <div class="input-form">
-                  <router-link to="/">처음으로</router-link>
-                </div>
-                <div class="divider"></div>
-                <footer>
-                    <span>&copy; 2019 팀 <a href="http://github.com/bbansrun">빤스런</a>.</span>
-                </footer>
-                <hr>
-                <img src="@/assets/images/slogan_01.png" alt="CONNECTING MINDS @ AJOU" width="350" />
             </form>
         </section>
     </div>
@@ -44,6 +40,9 @@ export default {
         this.formErrors.push('이메일 형식이 잘못되었습니다.')
       }
     }
+  },
+  beforeCreate() {
+      document.body.className = 'auth'
   }
 }
 </script>
