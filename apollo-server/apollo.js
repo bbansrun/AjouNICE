@@ -6,7 +6,7 @@ const server = new ApolloServer({
     resolvers: require('./resolvers'),
     persistedQueries: {
         cache: new RedisCache({
-            host: '127.0.0.1'
+            host: require('./config/config.json')['development']['redis_host']
         })
     },
     cors: true
