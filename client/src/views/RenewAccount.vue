@@ -41,8 +41,8 @@ export default {
       }
     }
   },
-  beforeCreate() {
-      document.body.className = 'auth'
+  beforeCreate () {
+    document.body.className = 'auth'
   }
 }
 </script>
