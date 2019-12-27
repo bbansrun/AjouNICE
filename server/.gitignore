@@ -1,7 +1,12 @@
-node_modules/
-.vscode/
-__pycache__/
 .DS_Store
+node_modules/
+
+db_config.json
+dist/*
+bin/*
+
+__pycache__/
+Pipfile.lock
 
 yarn-error.log
 yarn.lock

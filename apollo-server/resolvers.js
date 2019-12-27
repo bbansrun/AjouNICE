@@ -32,9 +32,31 @@ module.exports = {
         }
     },
     Mutation: {
-        register: async (root, { email, user_id, password, user_nm, identity_num, user_type, reg_ip }) => {
+        register: async (root, { email, user_id, password, user_nm, identity_num, user_type, sex_gb, college_cd, dpt_cd, nick_nm, reg_ip }) => {
             const hashedPassword = await bcrypt.hash(password, 10)
-            const user = await User.create({ email, user_id, password: hashedPassword, user_nm, identity_num, user_type, user_status: 'N', auth_email_yn: 'N', reg_ip, upt_ip: '', upt_dt: '', log_ip: '', log_dt: '' })
+            const user = await User.create({
+                email,
+                user_id,
+                password: hashedPassword,
+                user_nm,
+                identity_num,
+                user_type,
+                sex_gb,
+                user_status: 'N',
+                policy_yn: 'Y',
+                college_cd,
+                dpt_cd,
+                auth_email_yn: 'N',
+                auth_token: '',
+                user_profile: '',
+                nick_nm,
+                links: '',
+                reg_ip,
+                upt_ip: '',
+                upt_dt: '',
+                log_ip: '',
+                log_dt: ''
+            })
             return user
         }
     }
