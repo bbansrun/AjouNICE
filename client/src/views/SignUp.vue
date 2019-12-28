@@ -195,7 +195,7 @@ export default {
         this.$apollo.query({
           query: gql`
             mutation {
-              register(email: ${this.email}, user_id: ${this.userID}, password: ${this.password}, user_nm: ${this.name}, identity_num: ${this.userIDNum}, user_type: ${this.selectedUserType}, sex_gb: '', college_cd: '', dpt_cd: '', nick_nm: '', reg_ip: ${client.ip}) {
+              register(email: ${this.email}, user_id: ${this.userID}, password: ${this.password}, user_nm: ${this.name}, identity_num: ${this.userIDNum}, user_type: ${this.selectedUserType}, sex_gb: '', college_cd: '', dpt_cd: '', nick_nm: '', reg_ip: ${client.result.ip}) {
 
               }
             }
