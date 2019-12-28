@@ -65,6 +65,19 @@ class SecureResource(Resource):
     """ Calls require_auth decorator on all requests """
     method_decorators = [require_auth]
 
+# Get Remote IP for signing up
+@api_rest.route('/reqClientIP')
+class Client(Resource):
+    def get(self):
+        return {
+            'title': 'AjouNICE!',
+            'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+            'APIName': '/reqClientIP/',
+            'APIDescription': '회원가입 처리 위한 클라이언트 Remote IP 확보',
+            'result': {
+                'ip': request.remote_addr
+            }
+        }
 
 @api_rest.route('/notice/<string:code>')
 class Bbansrun(Resource):
