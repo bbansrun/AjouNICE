@@ -20,7 +20,6 @@
                     </div>
                     <div class="input-form">
                         <router-link to="/auth/reset">계정 재설정</router-link>
-                        
                     </div>
                 </div>
                 <footer>
@@ -40,8 +39,8 @@ export default {
       userID: ''
     }
   },
-  beforeCreate() {
-      document.body.className = 'auth'
+  beforeCreate () {
+    document.body.className = 'auth'
   }
 }
 </script>

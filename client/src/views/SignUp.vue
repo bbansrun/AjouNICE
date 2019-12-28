@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Vue from 'vue'
 import VueSweetalert2 from 'vue-sweetalert2'
 import gql from 'graphql-tag'
@@ -177,10 +178,7 @@ export default {
         this.condUserTypeNormal = false
       }
     },
-    signup () {
-      if (!this.signupAvailable) {
-        this.$swal('잠깐!', '회원가입에 필요한 데이터가 입력되지 않았습니다.', 'error')
-      }
+    async signup () {
       if (!this.agreePolicy) {
         this.$swal({
           title: '잠깐!',
@@ -190,10 +188,24 @@ export default {
           animation: true
         })
       }
+      if (this.signupAvailable) {
+        this.$swal('잠깐!', '회원가입에 필요한 데이터가 입력되지 않았습니다.', 'error')
+      } else {
+        let client = await axios.get('/api/reqClientIP')
+        this.$apollo.query({
+          query: gql`
+            mutation {
+              register(email: ${this.email}, user_id: ${this.userID}, password: ${this.password}, user_nm: ${this.name}, identity_num: ${this.userIDNum}, user_type: ${this.selectedUserType}, sex_gb: '', college_cd: '', dpt_cd: '', nick_nm: '', reg_ip: ${client.result.ip}) {
+
+              }
+            }
+          `
+        })
+      }
     }
   },
-  beforeCreate() {
-      document.body.className = 'auth'
+  beforeCreate () {
+    document.body.className = 'auth'
   }
 }
 </script>
