@@ -9,9 +9,11 @@
                 <header class="logo-font"><span>SIGN UP<small text-divider-block>회원가입</small></span></header>
                 <div class="input-form-wrapper">
                   <div class="input-form">
-                    <select name="memberType" id="memberType" required @change="onUserTypeChange($event)" v-model="this.selectedUserType">
-                        <option v-for="option in this.userOptions" :disabled="option.disabled" :value="option.value" :key="option.value">{{ option.name }}</option>
-                    </select>
+                    <v-select placeholder="구성원 여부를 선택해주세요." v-model="this.selectedUserType" :value="this.selectedUserType" @input="selectedUser" :options="this.userOptions" :reduce="options => options.code" label="label"></v-select>
+                    <div class="notice">
+                      <span v-show="this.selectedUserType === 5">아주 구성원 외의 서비스 이용자는 서비스의 일부 기능이 제한됩니다.</span>
+                      <span v-show="this.selectedUserType !== 5">아주 구성원의 경우 인증을 위해 ajou.ac.kr 이메일을 사용하여주시기 바랍니다.</span>
+                    </div>
                   </div>
                   <div class="input-form">
                       <input type="text" placeholder="이름" required>
@@ -56,10 +58,14 @@
 <script>
 import axios from 'axios'
 import Vue from 'vue'
+import vSelect from 'vue-select'
 import VueSweetalert2 from 'vue-sweetalert2'
+import VueFlashMessage from 'vue-flash-message'
 import gql from 'graphql-tag'
 
+Vue.component('v-select', vSelect)
 Vue.use(VueSweetalert2)
+Vue.use(VueFlashMessage)
 
 export default {
   name: 'signup',
@@ -92,23 +98,24 @@ export default {
       },
       condUserTypeNormal: false,
       agreePolicy: false,
-      selectedUserType: null,
+      selectedUserType: 5,
       userOptions: [
-        { disabled: true, value: null, name: '구성원 여부를 선택하여주세요' },
-        { disabled: false, value: 1, name: '학부생' },
-        { disabled: false, value: 2, name: '대학원' },
-        { disabled: false, value: 3, name: '교직원' },
-        { disabled: false, value: 4, name: '졸업생' },
-        { disabled: false, value: 5, name: '일반' }
+        { code: 1, label: '학부생' },
+        { code: 2, label: '대학원' },
+        { code: 3, label: '교직원' },
+        { code: 4, label: '졸업생' },
+        { code: 5, label: '일반' }
       ]
     }
   },
   methods: {
+    selectedUser (value) {
+      this.selectedUserType = value
+    },
     checkDupEmail () {
-      let re = /^(([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (this.email && re.test(String(this.email).toLowerCase()) && (this.selectedUserType && (this.selectedUserType !== 5 && this.email.includes('ajou.ac.kr')))) {
+      let query = (email) => {
         this.$apollo.query({
-          query: gql`{ findEmail(email: "${this.email}") { email } }`
+          query: gql`{ findEmail(email: "${email}") { email } }`
         }).then(result => {
           this.emailDuplicated.checked = true
           if (result.data.findEmail.length > 0) {
@@ -117,6 +124,16 @@ export default {
             this.emailDuplicated.duplicated = false
           }
         })
+      }
+      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+      if (this.selectedUserType === 5) {
+        if (this.email && re.test(String(this.email).toLowerCase())) {
+          query(this.email)
+        }
+      } else {
+        if (this.email && re.test(String(this.email).toLowerCase()) && this.email.includes('ajou.ac.kr')) {
+          query(this.email)
+        }
       }
     },
     checkDupID () {
@@ -157,27 +174,6 @@ export default {
         }
       }
     },
-    onUserTypeChange (event) {
-      if (event.target.value === 5) {
-        this.$swal({
-          title: '주의!',
-          text: '아주대학교 구성원이 아니실 경우 서비스 기능 이용에 제한이 있을 수 있습니다.',
-          width: '90vw',
-          type: 'warning',
-          footer: '<a href="#/">아주나이스 서비스 정책 자세히보기</a>'
-        })
-        this.condUserTypeNormal = true
-      } else {
-        this.$swal({
-          title: '주의!',
-          text: '아주대학교 구성원은 @ajou.ac.kr 이메일을 통한 인증을 통해 차후 정상적인 서비스 이용이 가능합니다.',
-          width: '90vw',
-          type: 'warning',
-          footer: '<a href="#/">아주나이스 서비스 정책 자세히보기</a>'
-        })
-        this.condUserTypeNormal = false
-      }
-    },
     async signup () {
       if (!this.agreePolicy) {
         this.$swal({
@@ -191,15 +187,25 @@ export default {
       if (this.signupAvailable) {
         this.$swal('잠깐!', '회원가입에 필요한 데이터가 입력되지 않았습니다.', 'error')
       } else {
-        let client = await axios.get('/api/reqClientIP')
-        this.$apollo.query({
-          query: gql`
-            mutation {
-              register(email: ${this.email}, user_id: ${this.userID}, password: ${this.password}, user_nm: ${this.name}, identity_num: ${this.userIDNum}, user_type: ${this.selectedUserType}, sex_gb: '', college_cd: '', dpt_cd: '', nick_nm: '', reg_ip: ${client.result.ip}) {
-
+        axios.get('/api/reqClientIP').then(client => {
+          this.$apollo.mutate({
+            mutation: gql`mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.name}", identity_num: ${this.userIDNum}, user_type: "${this.selectedUserType}", sex_gb: "", college_cd: "", dpt_cd: "", nick_nm: "", reg_ip: "${client.data.result.ip}") { user_idx } }`
+          }).then(result => {
+            if (typeof result === 'object') {
+              if ('data' in result) {
+                this.flash('회원가입 성공! 로그인 후 서비스 이용이 가능합니다.', 'success')
+                this.$swal({
+                  title: '축하합니다!',
+                  text: '이제 아주나이스의 서비스를 이용하실 수 있습니다. 로그인 후 사용가능합니다.',
+                  type: 'success',
+                  width: '90vw',
+                  animation: true
+                })
               }
             }
-          `
+          }).catch(error => {
+            console.error(error)
+          })
         })
       }
     }
@@ -218,7 +224,25 @@ export default {
 @import "~@/assets/styles/auth";
 @import '~sweetalert2/src/variables';
 @import '~sweetalert2/src/sweetalert2';
+@import '~vue-select/src/scss/vue-select';
 .swal2-container.swal2-center {
     background: rgba(0,0,0,.65);
+}
+.v-select {
+  margin: 0 calc(5% + 10px);
+  background: #fff;
+  box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
+  +.notice {
+    font-size: 14px;
+  }
+  > .vs__dropdown-toggle + [role="listbox"] > li {
+    transition: .2s all ease;
+    &:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+  }
+  > .vs__dropdown-toggle + [role="listbox"] > .vs__dropdown-option--highlight {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
 }
 </style>

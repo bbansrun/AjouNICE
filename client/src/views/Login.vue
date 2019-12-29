@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper" data-form-wrapper>
+        <flash-message></flash-message>
         <section data-form class="form login">
             <header>
                 <h1 class="logo-font">AjouNICE!</h1>
@@ -31,6 +32,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueFlashMessage from 'vue-flash-message'
+
+Vue.use(VueFlashMessage)
+
 export default {
   name: 'login',
   data () {

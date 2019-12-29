@@ -12,7 +12,7 @@ const server = new ApolloServer({
     cors: true
 })
 
-server.listen({ port: 5000 }).then(({ url }) => {
+server.listen({ port: 455 }).then(({ url }) => {
     console.log('========================== AjouNICE! ==========================')
     console.log(`🚀  GraphQL Server ready at ${url}`)
 })
