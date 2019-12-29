@@ -200,6 +200,8 @@ export default {
                   type: 'success',
                   width: '90vw',
                   animation: true
+                }).then(result => {
+                  window.location = '/'
                 })
               }
             }
