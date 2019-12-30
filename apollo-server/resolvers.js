@@ -22,6 +22,14 @@ module.exports = {
                 }
             })
         },
+        async findNickName(parent, args, context, info) {
+            return await User.findAll({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+                    nick_nm: args.nick_nm
+                }
+            })
+        },
         async findIdNums(parent, args, context, info) {
             return await User.findAll({
                 attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),

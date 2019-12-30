@@ -51,6 +51,7 @@ scalar Date
 type Query {
     findDptByCollege(college_cd: String!): [Department],
     findColleges(exist_yn: String!): [College],
+    findNickName(nick_nm: String!): [User],
     findIdNums(identityNum: Int!): [User],
     findEmail(email: String!): [User],
     findUserID(userId: String!): [User]

@@ -55,11 +55,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0
         },
         college_cd: {
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING(9),
             allowNull: true
         },
         dpt_cd: {
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING(12),
             allowNull: true
         },
         auth_email_yn: {
@@ -101,7 +101,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         upt_dt: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: false,
+            defaultValue: DataTypes.NOW
         },
         log_ip: {
             type: DataTypes.STRING(40),
@@ -109,10 +110,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         log_dt: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: false,
+            defaultValue: DataTypes.NOW
         }
     }, {
-        timestamps: true,
+        timestamps: false,
         freezeTableName: true,
         charset: 'utf8',
         collate: 'utf8_unicode_ci'

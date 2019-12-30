@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        timestamps: true,
+        timestamps: false,
         freezeTableName: true,
         charset: 'utf8',
         collate: 'utf8_unicode_ci'
