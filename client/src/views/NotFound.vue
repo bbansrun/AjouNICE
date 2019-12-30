@@ -40,9 +40,11 @@ section[data-error] {
     height: 100vh;
     justify-content: center;
     align-items: center;
+    background: #fff;
     > header > h1 {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         font-size: 4rem;
         font-weight: bold;
         background-image: linear-gradient(to bottom, #a18cd1 0%, #fbc2eb 100%);

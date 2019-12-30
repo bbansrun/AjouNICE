@@ -66,7 +66,7 @@ module.exports = {
                 identity_num,
                 user_type,
                 sex_gb,
-                user_status: 'N',
+                user_status: 'Y',
                 policy_yn: 'Y',
                 college_cd,
                 dpt_cd,

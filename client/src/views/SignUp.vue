@@ -5,7 +5,7 @@
                 <h1 class="logo-font"><small>Welcome, </small><br />AjouNICE!</h1>
                 <small>아주대학교의 새로운 커뮤니티,<br />아주나이스에 오신 것을 환영합니다.</small>
             </header>
-            <form method="GET" action='/#/home'>
+            <form method="GET" action='/#/home' autocomplete="off">
                 <header class="logo-font"><span>SIGN UP<small text-divider-block>회원가입</small></span></header>
                 <div class="input-form-wrapper">
                   <div class="input-form">
@@ -32,14 +32,15 @@
                       <input name="IDNum" :disabled="this.condUserTypeNormal" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
                   </div>
                   <div class="input-form">
-                      <input name="email" @keyup="checkDupEmail" @blur="checkDupEmail" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
-                      <p class="auto-validate-noti" v-if="this.emailDuplicated.checked && !this.emailDuplicated.duplicated">사용 가능한 이메일입니다.</p>
-                      <p class="auto-validate-noti" :class="{ 'error': this.emailDuplicated.checked && this.emailDuplicated.duplicated }" v-else-if="this.emailDuplicated.checked && this.emailDuplicated.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
+                      <input name="email" @keyup.delete="checkDupEmail" @blur="checkDupEmail" :class="{ 'error': this.email && ((this.emailValidation.checked && this.emailValidation.duplicated) || this.emailValidation.checkedNormalButMember) }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
+                      <p class="auto-validate-noti" v-if="this.email && this.emailValidation.checked && !this.emailValidation.duplicated">사용 가능한 이메일입니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.email && this.emailValidation.checked && this.emailValidation.duplicated }" v-else-if="this.email && this.emailValidation.checked && this.emailValidation.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.email && this.emailValidation.checkedNormalButMember }" v-if="this.email && this.emailValidation.checkedNormalButMember">ajou.ac.kr 이메일 사용자는 아주 구성원(학부생/대학원생/졸업생/교직원) 자격으로 가입이 가능합니다.</p>
                   </div>
                   <div class="input-form">
-                      <input name="userID" @keyup="checkDupID" @blur="checkDupID" type="text" placeholder="아이디" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" required v-model="userID">
-                      <p class="auto-validate-noti" v-if="this.userIDDuplicated.checked && !this.userIDDuplicated.duplicated">사용 가능한 아이디입니다.</p>
-                      <p class="auto-validate-noti" :class="{ 'error': this.userIDDuplicated.checked && this.userIDDuplicated.duplicated }" v-else-if="this.userIDDuplicated.checked && this.userIDDuplicated.duplicated">이미 가입된 계정입니다.</p>
+                      <input name="userID" @keyup.delete="checkDupID" @blur="checkDupID" type="text" placeholder="아이디" :class="{ 'error': this.userID && this.userIDValidation.checked && this.userIDValidation.duplicated }" required v-model="userID">
+                      <p class="auto-validate-noti" v-if="this.userID && this.userIDValidation.checked && !this.userIDValidation.duplicated">사용 가능한 아이디입니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.userID && this.userIDValidation.checked && this.userIDValidation.duplicated }" v-else-if="this.userID && this.userIDValidation.checked && this.userIDValidation.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
                   </div>
                   <div class="input-form">
                       <input name="password" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="password" type="password" pattern=".{8,}" placeholder="패스워드" required>
@@ -104,30 +105,29 @@ export default {
       },
       userID: '',
       userIDNum: '',
-      emailDuplicated: {
+      emailValidation: {
         checked: false,
         duplicated: false,
-        message: ''
+        checkedNormalButMember: false
       },
-      userIDDuplicated: {
+      userIDValidation: {
         checked: false,
-        duplicated: false,
-        message: ''
+        duplicated: false
       },
-      userIDNumDuplicated: {
+      userIDNumValidation: {
         checked: false,
-        duplicated: false,
-        message: ''
+        duplicated: false
       },
       condUserTypeNormal: false,
       agreePolicy: false,
+      userTypes: ['R', 'R', 'E', 'G', 'U', 'A'],
       selectedUserType: 5,
       userOptions: [
-        { code: 1, label: '학부생' },
-        { code: 2, label: '대학원' },
-        { code: 3, label: '교직원' },
-        { code: 4, label: '졸업생' },
-        { code: 5, label: '일반' }
+        { code: 'R', label: '학부생' },
+        { code: 'R', label: '대학원' },
+        { code: 'E', label: '교직원' },
+        { code: 'G', label: '졸업생' },
+        { code: 'U', label: '일반' }
       ],
       collegeList: [],
       dptList: [],
@@ -206,22 +206,31 @@ export default {
       }
     },
     checkDupEmail () {
+      this.emailValidation = {
+        checked: false,
+        duplicated: false,
+        checkedNormalButMember: false
+      }
       let query = (email) => {
         this.$apollo.query({
           query: gql`{ findEmail(email: "${email}") { email } }`
         }).then(result => {
-          this.emailDuplicated.checked = true
+          this.emailValidation.checked = true
           if (result.data.findEmail.length > 0) {
-            this.emailDuplicated.duplicated = true
+            this.emailValidation.duplicated = true
           } else {
-            this.emailDuplicated.duplicated = false
+            this.emailValidation.duplicated = false
           }
         })
       }
       let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
       if (this.selectedUserType === 5) {
         if (this.email && re.test(String(this.email).toLowerCase())) {
-          query(this.email)
+          if (this.email.includes('ajou.ac.kr')) {
+            this.emailValidation.checkedNormalButMember = true
+          } else {
+            query(this.email)
+          }
         }
       } else {
         if (this.email && re.test(String(this.email).toLowerCase()) && this.email.includes('ajou.ac.kr')) {
@@ -230,15 +239,19 @@ export default {
       }
     },
     checkDupID () {
+      this.userIDValidation = {
+        checked: false,
+        duplicated: false
+      }
       if (this.userID) {
         this.$apollo.query({
           query: gql`{ findUserID(userId: "${this.userID}") { user_id } }`
         }).then(result => {
-          this.userIDDuplicated.checked = true
+          this.userIDValidation.checked = true
           if (result.data.findUserID.length > 0) {
-            this.userIDDuplicated.duplicated = true
+            this.userIDValidation.duplicated = true
           } else {
-            this.userIDDuplicated.duplicated = false
+            this.userIDValidation.duplicated = false
           }
         })
       }
@@ -248,11 +261,11 @@ export default {
         this.$apollo.query({
           query: gql`{ findIdNums(identityNum: ${this.userIDNum}) { identity_num } }`
         }).then(result => {
-          this.userIDNumDuplicated.checked = true
+          this.userIDNumValidation.checked = true
           if (result.data.findIdNums.length > 0) {
-            this.userIDNumDuplicated.duplicated = true
+            this.userIDNumValidation.duplicated = true
           } else {
-            this.userIDNumDuplicated.duplicated = false
+            this.userIDNumValidation.duplicated = false
           }
         })
       }
