@@ -1,4 +1,4 @@
-const { User, sequelize } = require('./models')
+const { User, College, Department, sequelize } = require('./models')
 const graphqlFields = require('graphql-fields')
 const bcrypt = require('bcrypt')
 
@@ -6,6 +6,22 @@ sequelize.sync()
 
 module.exports = {
     Query: {
+        async findDptByCollege(parent, args, context, info) {
+            return await Department.findAll({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+                    college_cd: args.college_cd
+                }
+            })
+        },
+        async findColleges(parent, args, context, info) {
+            return await College.findAll({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+                    exist_yn: args.exist_yn
+                }
+            })
+        },
         async findIdNums(parent, args, context, info) {
             return await User.findAll({
                 attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),

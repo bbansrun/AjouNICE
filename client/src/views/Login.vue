@@ -6,7 +6,7 @@
                 <h1 class="logo-font">AjouNICE!</h1>
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
-            <form @submit="checkValidation" method="GET" action='/#/home'>
+            <form method="POST" action='/api/auth/login'>
                 <header class="logo-font"><span>LOGIN<small text-divider-block>로그인</small></span></header>
                 <div class="divider"></div>
                 <div class="input-form-wrapper">

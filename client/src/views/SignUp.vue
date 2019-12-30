@@ -15,8 +15,12 @@
                       <span v-show="this.selectedUserType !== 5">아주 구성원의 경우 인증을 위해 ajou.ac.kr 이메일을 사용하여주시기 바랍니다.</span>
                     </div>
                   </div>
+                  <div class="input-form" v-if="this.selectedUserType === 1">
+                    <v-select placeholder="소속대학을 선택하여주세요." v-model="this.selectedCollege" :value="this.selectedCollege" @input="selectedCollegeCd" :options="this.collegeList" :reduce="college => college.college_cd" label="college_nm"></v-select>
+                    <v-select v-if="this.selectedCollege !== undefined" placeholder="소속학과를 선택하여주세요." v-model="this.selectedDpt" :value="this.selectedDpt" @input="selectedDptCd" :options="this.dptList" :reduce="dpt => dpt.dpt_cd" label="dpt_nm"></v-select>
+                  </div>
                   <div class="input-form">
-                      <input type="text" placeholder="이름" required>
+                      <input type="text" v-model="userName" placeholder="이름" required>
                   </div>
                   <div class="input-form">
                       <input name="IDNum" @keyup="checkDupIDNum" @blur="checkDupIDNum" :disabled="this.condUserTypeNormal" :class="{ 'error': this.userIDNumDuplicated.checked && this.userIDNumDuplicated.duplicated }" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
@@ -75,6 +79,7 @@ export default {
       email: '',
       password: '',
       passwordConfirm: '',
+      userName: '',
       isPWConfirmMatches: {
         typed: false,
         matches: false
@@ -105,12 +110,35 @@ export default {
         { code: 3, label: '교직원' },
         { code: 4, label: '졸업생' },
         { code: 5, label: '일반' }
-      ]
+      ],
+      collegeList: [],
+      dptList: [],
+      selectedCollege: '',
+      selectedDpt: ''
+    }
+  },
+  created () {
+    this.$apollo.query({
+      query: gql`{ findColleges(exist_yn: "Y") { college_cd college_nm } }`
+    }).then(result => {
+      this.collegeList = result['data']['findColleges']
+    })
+  },
+  watch: {
+    selectedCollege (value) {
+      this.$apollo.query({
+        query: gql`{ findDptByCollege(college_cd: "${value}") { dpt_nm dpt_cd college_cd } }`
+      }).then(result => {
+        this.dptList = result['data']['findDptByCollege']
+      })
     }
   },
   methods: {
     selectedUser (value) {
       this.selectedUserType = value
+    },
+    selectedCollegeCd (value) {
+      this.selectedCollege = value
     },
     checkDupEmail () {
       let query = (email) => {
@@ -189,7 +217,7 @@ export default {
       } else {
         axios.get('/api/reqClientIP').then(client => {
           this.$apollo.mutate({
-            mutation: gql`mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.name}", identity_num: ${this.userIDNum}, user_type: "${this.selectedUserType}", sex_gb: "", college_cd: "", dpt_cd: "", nick_nm: "", reg_ip: "${client.data.result.ip}") { user_idx } }`
+            mutation: gql`mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.userName}", identity_num: ${this.userIDNum}, user_type: "${this.selectedUserType}", sex_gb: "", college_cd: "", dpt_cd: "", nick_nm: "", reg_ip: "${client.data.result.ip}") { user_idx } }`
           }).then(result => {
             if (typeof result === 'object') {
               if ('data' in result) {
@@ -206,7 +234,16 @@ export default {
               }
             }
           }).catch(error => {
-            console.error(error)
+            if (error.message === 'GraphQL error: Validation error') {
+              this.$swal({
+                title: '실패하였습니다!',
+                text: '이미 입력하신 내용으로 가입된 계정이 존재합니다. 항목을 다시 확인하여주세요.',
+                width: '90vw',
+                type: 'error',
+                animation: true,
+                footer: '<a>가입에 문제가 있다면? 관리자에게 해당 내용을 문의하여주세요.</a>'
+              })
+            }
           })
         })
       }

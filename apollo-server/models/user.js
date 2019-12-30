@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(256),
             allowNull: true,
             unique: true,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isEmail: { args: true, msg: '이메일 형식이 올바르지 않습니다.' }
+            }
         },
         user_id: {
             type: DataTypes.STRING(50),
@@ -109,7 +112,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        timestamps: false,
-        freezeTableName: true
+        timestamps: true,
+        freezeTableName: true,
+        charset: 'utf8',
+        collate: 'utf8_unicode_ci'
     })
 }
