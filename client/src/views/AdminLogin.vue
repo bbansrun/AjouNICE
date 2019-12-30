@@ -7,7 +7,7 @@
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
             <form method="POST" action='/api/auth/login'>
-                <header class="logo-font"><span>LOGIN<small text-divider-block>로그인</small></span></header>
+                <header class="logo-font"><span>ADMIN<small text-divider-block>관리자</small></span></header>
                 <div class="divider"></div>
                 <div class="input-form-wrapper">
                     <div class="input-form">
@@ -23,9 +23,6 @@
                         <router-link to="/auth/reset">계정 재설정</router-link>
                     </div>
                 </div>
-                <footer>
-                    <router-link to="/auth/signup">아직 회원이 아니신가요? 회원가입 &rarr;</router-link>
-                </footer>
             </form>
         </section>
     </div>
@@ -38,7 +35,7 @@ import VueFlashMessage from 'vue-flash-message'
 Vue.use(VueFlashMessage)
 
 export default {
-  name: 'login',
+  name: 'admin_login',
   data () {
     return {
       formErrors: [],

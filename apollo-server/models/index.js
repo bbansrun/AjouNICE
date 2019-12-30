@@ -11,5 +11,7 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.User = require('./user')(sequelize, Sequelize)
+db.College = require('./college')(sequelize, Sequelize)
+db.Department = require('./department')(sequelize, Sequelize)
 
 module.exports = db;

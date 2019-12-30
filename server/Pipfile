@@ -12,6 +12,8 @@ flask-restplus = "*"
 flask-migrate = "*"
 python-dotenv = "*"
 authlib = "*"
+flask-restful = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 pytest = "*"

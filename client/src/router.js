@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import About from './views/About.vue'
 import NotFound from './views/NotFound.vue'
 import ServError from './views/ServError.vue'
+import AdminLogin from './views/AdminLogin.vue'
 import Login from './views/Login.vue'
 import RenewAccount from './views/RenewAccount.vue'
 import Signup from './views/SignUp.vue'
@@ -18,9 +19,9 @@ export default new Router({
       component: Login
     },
     {
-      path: '/auth/login',
+      path: '/auth/gate/manager/login',
       name: 'login',
-      component: Login
+      component: AdminLogin
     },
     {
       path: '/auth/signup',
