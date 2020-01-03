@@ -1,5 +1,6 @@
 {
-  "resolved": [{
+  "resolved": [
+    {
       "name": "대학본부",
       "code": "A0001",
       "boardName": "공지사항",
@@ -130,9 +131,8 @@
       "code": "IT0003",
       "boardName": "공지사항",
       "link": "http://security.ajou.ac.kr/security/board/board01.jsp"
-    }
-  ],
-  "unsolved": [{
+    },
+    {
       "name": "정보통신대학 - 소프트웨어학과",
       "code": "IT0004",
       "boardName": "공지사항",
@@ -184,13 +184,13 @@
       "name": "경영대학 - e-비즈니스학과",
       "code": "BZ0003",
       "boardName": "공지사항",
-      "link": "http://ebiz.ajou.ac.kr/ebiz/index.jsp"
+      "link": "http://ebiz.ajou.ac.kr/ebiz/board/board01.jsp"
     },
     {
       "name": "경영대학 - 글로벌경영학과",
       "code": "BZ0004",
       "boardName": "공지사항",
-      "link": "http://gb.ajou.ac.kr/gb/index.jsp"
+      "link": "http://gb.ajou.ac.kr/gb/info/08.jsp"
     },
     {
       "name": "인문대학 - 국어국문학과",
@@ -259,7 +259,8 @@
       "link": "http://slez.ajou.ac.kr/slez/community/community03.jsp"
     }
   ],
-  "united": [{
+  "united": [
+    {
       "name": "의과대학",
       "code": "MC0001",
       "boardName": "공지사항",
