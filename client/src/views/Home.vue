@@ -2,16 +2,13 @@
   <div class="home">
     <nav class="gnb">
       <div class="logo">
-        <h1>AjouNICE!</h1>&nbsp;|&nbsp;<span>아주대학교 차세대 커뮤니티 서비스</span>
+        <h1>AjouNICE!</h1> | <small>아주대학교 차세대 커뮤니티 서비스</small>
       </div>
     </nav>
     <div class="container">
       <AjouNICE />
     </div>
-    <a href="https://github.com/bbansrun/AjouNICE">
-      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub">
-    </a>
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 
@@ -35,4 +32,7 @@ export default {
 @import "~@/assets/styles/media";
 @import "~@/assets/styles/index";
 @import "~@/assets/styles/fonts";
+body {
+  background: #eaeaea;
+}
 </style>

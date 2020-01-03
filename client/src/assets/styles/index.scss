@@ -51,10 +51,21 @@ small {
 // Default
 
 nav.gnb {
+  position: fixed;
+  width: 90vw;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1rem 1rem 0 0;
   color: #fff;
+  text-align: center;
   background: linear-gradient(to right, rgb(133, 91, 218), rgb(165, 135, 212));
   padding: 10px 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, .24);
+  box-shadow: 0 0 10px rgba(0, 0, 0, .48);
+  transition: .2s all ease-in;
+  &:hover {
+    bottom: 5px;
+  }
   > .logo {
     padding: 0 20px;
     > h1 {

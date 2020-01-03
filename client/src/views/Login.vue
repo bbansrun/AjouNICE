@@ -11,10 +11,10 @@
                 <div class="divider"></div>
                 <div class="input-form-wrapper">
                     <div class="input-form">
-                        <input type="text" placeholder="아이디" v-model="userID" required>
+                        <input type="text" placeholder="아이디" v-model="userID" pattern=".{6,}" required>
                     </div>
                     <div class="input-form">
-                        <input type="password" placeholder="패스워드" v-model="password" required>
+                        <input type="password" placeholder="패스워드" @keyup.enter="signin" v-model="password" pattern=".{8,}" required>
                     </div>
                     <div class="input-form">
                         <input type="button" @click="signin" value="로그인">

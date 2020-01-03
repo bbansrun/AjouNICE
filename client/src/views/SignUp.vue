@@ -53,7 +53,7 @@
                       <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.email }" v-if="this.errorValidation.email">{{ this.errorMsg.email }}</p>
                   </div>
                   <div class="input-form">
-                      <input name="userID" type="text" placeholder="아이디" @blur="checkDupID" @keyup.delete="initError('user_id')" :class="{ 'error': this.errorValidation.user_id }" required v-model="userID" autocapitalize="none">
+                      <input name="userID" type="text" placeholder="아이디" @blur="checkDupID" @keyup.delete="initError('user_id')" :class="{ 'error': this.errorValidation.user_id }" required v-model="userID" autocapitalize="none" pattern="[0-9A-Za-z_]{6,}">
                       <p class="auto-validate-noti" v-if="this.userID && this.validatedUserID && !this.errorValidation.user_id">사용 가능한 아이디입니다.</p>
                       <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.user_id }" v-if="this.errorValidation.user_id">{{ this.errorMsg.user_id }}</p>
                   </div>
@@ -196,6 +196,16 @@ export default {
     userName (value) {
       if (value) {
         this.initError('user_nm')
+      }
+    },
+    userID (value) {
+      let re = /[0-9A-Za-z_]{6,}/
+      if (value) {
+        if (!re.test(value)) {
+          this.occurError('user_id', '아이디는 최소 6자 이상, 알파벳과 숫자 및 언더스코어(_)만 사용가능합니다.')
+        } else {
+          this.initError('user_id')
+        }
       }
     },
     userIDNum (value) {
@@ -394,7 +404,7 @@ export default {
       }
     },
     checkDupID () {
-      if (this.userID) {
+      if (this.userID && this.userID.length >= 6) {
         this.$apollo.query({
           query: gql`{ findUserID(userId: "${this.userID}") { user_id } }`
         }).then(result => {
