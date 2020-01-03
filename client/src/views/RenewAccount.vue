@@ -5,12 +5,13 @@
                 <h1 class="logo-font">AjouNICE!</h1>
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
-            <form @submit="checkValidation" method="GET" action='/#/home'>
+            <form method="POST">
                 <header class="logo-font">Reset Account</header>
                 <div class="divider"></div>
                 <div class="input-form-wrapper">
                   <div class="input-form">
-                      <input type="email" placeholder="이메일" v-model="email" required>
+                      <input type="email" @keyup.delete="initError()" placeholder="이메일" v-model="email" required :class="{ 'error': this.emailError }">
+                      <p class="auto-validate-noti" :class="{ 'error': this.emailError }" v-if="this.emailError">{{ this.emailErrorMsg }}</p>
                   </div>
                   <div class="input-form">
                       <input type="submit" value="계정 재설정">
@@ -29,16 +30,26 @@ export default {
   name: 'reset',
   data () {
     return {
-      formErrors: [],
-      email: ''
+      email: '',
+      emailError: false,
+      emailErrorMsg: ''
+    }
+  },
+  watch: {
+    email (value) {
+      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+      if (!re.test(String(this.email).toLowerCase())) {
+        this.emailError = true
+        this.emailErrorMsg = '이메일 형식이 잘못되었습니다.'
+      } else {
+        this.initError()
+      }
     }
   },
   methods: {
-    checkValidation (e) {
-      let re = /^(([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (!re.test(String(this.email).toLowerCase())) {
-        this.formErrors.push('이메일 형식이 잘못되었습니다.')
-      }
+    initError () {
+      this.emailError = false
+      this.emailErrorMsg = ''
     }
   },
   beforeCreate () {

@@ -69,8 +69,45 @@
                     > a {
                         margin-top: 5px;
                     }
-                    > input, select {
+                    > input, select, label {
                         font-size: .85em;
+                    }
+                    select {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        appearance: none;
+                        padding: 5px 10px;
+                        position: relative;
+                        width: 90%;
+                        margin-top: 15px;
+                        border-radius: .8rem;
+                        outline: none;
+                        border: none;
+                        box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
+                    }
+                    input[type="button"] {
+                        cursor: pointer;
+                        color: #fff;
+                        background: #6a11cb;
+                        &.radio {
+                            font-weight: bold;
+                            padding: 5px 1rem;
+                            margin-right: 5px;
+                            &:last-of-type {
+                                margin: 0;
+                            }
+                        }
+                        &:hover {
+                            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+                            box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
+                        }
+                        &:disabled, &.radio-selected {
+                            background: grey;
+                        }
+                        &.mini-inline {
+                            display: inline-block;
+                            font-size: .75em;
+                        }
                     }
                     > input[name="IDNum"]:disabled {
                         display: none;
@@ -82,7 +119,7 @@
                             color: #fff;
                         }
                     }
-                    > input:not([type="checkbox"]) {
+                    > input:not([type="checkbox"]):not(.mini-inline) {
                         position: relative;
                         width: calc(90% - 20px);
                         padding: 5px 10px;
@@ -116,19 +153,6 @@
                     > .auto-validate-noti.error {
                         color: red;
                     }
-                    select {
-                        -webkit-appearance: none;
-                        -moz-appearance: none;
-                        appearance: none;
-                        padding: 5px 10px;
-                        position: relative;
-                        width: 90%;
-                        margin-top: 15px;
-                        border-radius: .8rem;
-                        outline: none;
-                        border: none;
-                        box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
-                    }
                     > input[type="email"], input[type="password"], input[type="submit"] {
                         font-size: .85em;
                     }
@@ -158,20 +182,6 @@
                             box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
                         }
                     }
-                    > label {
-                        font-size: .75rem;
-                        margin-bottom: .75rem;
-                    }
-                    > input[type="button"] {
-                        cursor: pointer;
-                        color: #fff;
-                        background: #6a11cb;
-                        transition: background-color .2s ease-in .2s;
-                        &:hover {
-                            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-                            box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
-                        }
-                    }
                     > a {
                         display: block;
                         font-size: .8rem;
@@ -179,6 +189,27 @@
                     }
                     display: block;
                 }
+                > .input-form-horizontal {
+                    display: flex;
+                    font-size: .85em;
+                    flex-direction: row;
+                    margin: 0 calc(5% + 10px);
+                    margin-top: 5px;
+                    padding: 5px 10px;
+                    & .input-form-title {
+                        flex: 1;
+                        color: #333;
+                        text-align: left;
+                    }
+                    & div[class$="-wrapper"] {
+                        flex: 4;
+                        text-align: right;
+                    }
+                    + .input-form > input {
+                        margin-top: 5px;
+                    }
+                }
+
             }
             > footer {
                 margin-top: auto;
