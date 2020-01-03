@@ -1,4 +1,4 @@
-.wrapper[data-form-wrapper] {
+[data-form-wrapper] {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -109,17 +109,10 @@
                             font-size: .75em;
                         }
                     }
-                    > input[name="IDNum"]:disabled {
+                    & input[name="IDNum"]:disabled {
                         display: none;
                     }
-                    > input[name="passwordConfirm"].error {
-                        background: red;
-                        color: white;
-                        &::placeholder {
-                            color: #fff;
-                        }
-                    }
-                    > input:not([type="checkbox"]):not(.mini-inline) {
+                    & input:not([type="checkbox"]):not([type="search"]):not(.mini-inline) {
                         position: relative;
                         width: calc(90% - 20px);
                         padding: 5px 10px;
@@ -132,7 +125,7 @@
                             box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
                         }
                     }
-                    > input:not([type="checkbox"]):not([type="submit"]) {
+                    & input:not([type="checkbox"]):not([type="submit"]) {
                         border: 2px solid;
                         border-image-source: linear-gradient(135deg, transparent 0%, transparent 100%);
                         border-image-slice: 1;
@@ -140,7 +133,7 @@
                             border-image-source: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                         }
                     }
-                    > .auto-validate-noti {
+                    & .auto-validate-noti {
                         position: relative;
                         font-size: .6em;
                         width: calc(90% - 20px);
@@ -150,20 +143,20 @@
                         margin: 5px 0;
                         color: blue;
                     }
-                    > .auto-validate-noti.error {
+                    & .auto-validate-noti.error {
                         color: red;
                     }
-                    > input[type="email"], input[type="password"], input[type="submit"] {
+                    & input[type="email"], input[type="password"], input[type="submit"] {
                         font-size: .85em;
                     }
-                    > input:not(.error):valid {
+                    & input:not(.error):not([type="search"]):valid {
                         color: #fff;
                         &::placeholder{
                             color: #fff;
                         }
                         background: #4b6ab9;
                     }
-                    > input.error {
+                    & input.error {
                         color: #fff;
                         &::placeholder {
                             color: #fff;
@@ -189,7 +182,7 @@
                     }
                     display: block;
                 }
-                > .input-form-horizontal {
+                & .input-form-horizontal {
                     display: flex;
                     font-size: .85em;
                     flex-direction: row;
@@ -219,7 +212,7 @@
 }
 
 @media (max-width: 720px) {
-    .wrapper[data-form-wrapper] {
+    [data-form-wrapper] {
         [data-form] {
             flex-direction: column;
             > header {

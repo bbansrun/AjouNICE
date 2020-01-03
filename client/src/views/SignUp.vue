@@ -1,6 +1,6 @@
 <template>
-    <div class="wrapper" data-form-wrapper>
-        <section data-form class="form login">
+    <div data-form-wrapper>
+        <section data-form>
             <header>
                 <h1 class="logo-font"><small>Welcome to</small><br />AjouNICE!</h1>
                 <small>아주대학교의 새로운 커뮤니티,<br />아주나이스에 오신 것을 환영합니다.</small>
@@ -9,63 +9,90 @@
                 <header class="logo-font"><span>SIGN UP<small text-divider-block>회원가입</small></span></header>
                 <div class="input-form-wrapper">
                   <div class="input-form">
-                    <v-select placeholder="구성원 여부를 선택해주세요." v-model="this.selectedUserType" :value="this.selectedUserType" @input="selectedUser" :options="this.userOptions" :reduce="options => options.code" label="label"></v-select>
+                    <v-select placeholder="구성원 여부를 선택해주세요." v-model="selectedUserType" :value="this.selectedUserType" @input="selectedUser" :options="this.userOptions" :reduce="options => options.code" label="label"></v-select>
                     <div class="notice">
                       <span v-show="this.selectedUserType === 'U'"><strong>아주 구성원 외의 서비스 이용자는 서비스의 일부 기능이 제한됩니다.</strong></span>
-                      <span v-show="this.selectedUserType !== 'U'"><strong>아주 구성원의 경우 인증을 위해 ajou.ac.kr 이메일을 사용하여주시기 바랍니다.</strong></span>
+                      <span v-show="this.selectedUserType !== 'U'"><strong>아주 구성원은 인증을 위해 ajou.ac.kr 이메일로 가입해주세요.</strong></span>
                     </div>
                   </div>
                   <div class="input-form" v-if="this.selectedUserType === 'R'">
-                    <v-select placeholder="소속대학을 선택하여주세요." v-model="this.selectedCollege" :value="this.selectedCollege" @input="selectedCollegeCd" :options="this.collegeList" :reduce="college => college.college_cd" label="college_nm"></v-select>
-                    <v-select v-if="this.selectedCollege !== ''" placeholder="소속학과를 선택하여주세요." v-model="this.selectedDpt" :value="this.selectedDpt" @input="selectedDptCd" :options="this.dptList" :reduce="dpt => dpt.dpt_cd" label="dpt_nm"></v-select>
-                    <p class="auto-validate-noti" v-if="!this.selectedDpt">{{ this.errorMsg.dpt }}</p>
-                    <div class="input-form-sub" v-if="this.selectedCollege !== '' && this.selectedDpt !== ''">
-                      <label for="smajor">복수전공 혹은 부전공을 이수하고 있습니다.</label>
-                      <input type="checkbox" name="smajor" id="smajor" v-model="hasSubMajor" />
-                      <v-select v-if="this.hasSubMajor" placeholder="소속대학을 선택하여주세요." v-model="this.selectedSubCollege" :value="this.selectedSubCollege" @input="selectedSubCollegeCd" :options="this.collegeList" :reduce="college => college.college_cd" label="college_nm"></v-select>
-                      <v-select v-if="this.hasSubMajor && this.selectedSubCollege !== ''" placeholder="소속학과를 선택하여주세요." v-model="this.selectedSubDpt" :value="this.selectedSubDpt" @input="selectedSubDptCd" :options="this.dptSubList" :reduce="dpt => dpt.dpt_cd" label="dpt_nm"></v-select>
+                    <div class="input-group">
+                      <v-select :class="{ 'error': this.errorValidation.college }" placeholder="소속대학을 선택하여주세요." v-model="selectedCollege" :value="this.selectedCollege" @input="selectedCollegeCd" :options="this.collegeList" :reduce="college => college.college_cd" label="college_nm"></v-select>
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.college }" v-if="this.errorValidation.college">{{ this.errorMsg.college }}</p>
+                    </div>
+                    <div class="input-group">
+                      <v-select :class="{ 'error': this.errorValidation.dpt }" v-if="this.selectedCollege" placeholder="소속학과를 선택하여주세요." v-model="selectedDpt" :value="this.selectedDpt" @input="selectedDptCd" :options="this.dptList" :reduce="dpt => dpt.dpt_cd" label="dpt_nm"></v-select>
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.dpt }" v-if="this.errorValidation.dpt">{{ this.errorMsg.dpt }}</p>
+                      <div class="input-form input-form-horizontal" v-if="this.selectedCollege && this.selectedDpt">
+                        <label for="smajor" role="title" class="input-form-title">복수전공 혹은 부전공을 이수하고 있습니다.</label>
+                        <div class="input-form radio-wrapper">
+                          <input type="checkbox" name="smajor" id="smajor" v-model="hasSubMajor" />
+                        </div>
+                      </div>
+                      <div class="input-group">
+                        <v-select :class="{ 'error': this.errorValidation.subCollege }" v-if="this.hasSubMajor" placeholder="소속대학을 선택하여주세요." v-model="selectedSubCollege" :value="this.selectedSubCollege" @input="selectedSubCollegeCd" :options="this.collegeList" :reduce="college => college.college_cd" label="college_nm"></v-select>
+                        <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.subCollege }" v-if="this.errorValidation.subCollege">{{ this.errorMsg.subCollege }}</p>
+                      </div>
+                      <div class="input-group">
+                        <v-select :class="{ 'error': this.errorValidation.subDpt }" v-if="this.hasSubMajor && this.selectedSubCollege" placeholder="소속학과를 선택하여주세요." v-model="selectedSubDpt" :value="this.selectedSubDpt" @input="selectedSubDptCd" :options="this.dptSubList" :reduce="dpt => dpt.dpt_cd" label="dpt_nm"></v-select>
+                        <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.subDpt }" v-if="this.errorValidation.subDpt">{{ this.errorMsg.subDpt }}</p>
+                      </div>
                     </div>
                   </div>
                   <div class="input-form">
-                      <input type="text" v-model="userName" placeholder="이름" required>
+                      <input type="text" :class="{ 'error': this.errorValidation.user_nm }" v-model="userName" placeholder="이름" required>
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.user_nm }" v-if="this.errorValidation.user_nm">{{ this.errorMsg.user_nm }}</p>
                   </div>
                   <div class="input-form">
-                      <input name="IDNum" @keyup.delete="initError('user_st_id')" :class="{ 'error': this.errorValidation.user_st_id }" :disabled="this.condUserTypeNormal" v-model="userIDNum" type="text" placeholder="학번" required pattern="[0-9]{9,}">
+                      <input name="IDNum" :class="{ 'error': this.errorValidation.user_st_id }" :disabled="this.selectedUserType === 'U' || this.selectedUserType === 'E'" v-model="userIDNum" type="text" maxlength="9" placeholder="학번" required pattern="[0-9]{9,}">
                       <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.user_st_id }" v-if="this.errorValidation.user_st_id">{{ this.errorMsg.user_st_id }}</p>
                   </div>
                   <div class="input-form">
-                      <input name="email" @keyup.delete="checkDupEmail" @blur="checkDupEmail" :class="{ 'error': this.email && ((this.emailValidation.checked && this.emailValidation.duplicated) || this.emailValidation.checkedNormalButMember) }" v-model="email" type="email" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
-                      <p class="auto-validate-noti" v-if="this.email && this.emailValidation.checked && !this.emailValidation.duplicated">사용 가능한 이메일입니다.</p>
-                      <p class="auto-validate-noti" :class="{ 'error': this.email && this.emailValidation.checked && this.emailValidation.duplicated }" v-else-if="this.email && this.emailValidation.checked && this.emailValidation.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
-                      <p class="auto-validate-noti" :class="{ 'error': this.email && this.errorValidation.email }" v-if="this.email && this.errorValidation.email">{{ this.errorMsg.email }}</p>
+                      <input name="email" :class="{ 'error': this.errorValidation.email }" v-model="email" type="email" autocapitalize="none" placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)" required>
+                      <p class="auto-validate-noti" v-if="this.email && this.validatedEmail && !this.errorValidation.email">사용 가능한 이메일입니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.email }" v-if="this.errorValidation.email">{{ this.errorMsg.email }}</p>
                   </div>
                   <div class="input-form">
-                      <input name="userID" @keyup.delete="checkDupID" @blur="checkDupID" type="text" placeholder="아이디" :class="{ 'error': this.userID && this.userIDValidation.checked && this.userIDValidation.duplicated }" required v-model="userID">
-                      <p class="auto-validate-noti" v-if="this.userID && this.userIDValidation.checked && !this.userIDValidation.duplicated">사용 가능한 아이디입니다.</p>
-                      <p class="auto-validate-noti" :class="{ 'error': this.userID && this.userIDValidation.checked && this.userIDValidation.duplicated }" v-else-if="this.userID && this.userIDValidation.checked && this.userIDValidation.duplicated">이미 가입된 계정입니다. <router-link to="/auth/reset">패스워드가 생각나지 않는다면?</router-link></p>
+                      <input name="userID" type="text" placeholder="아이디" @blur="checkDupID" @keyup.delete="initError('user_id')" :class="{ 'error': this.errorValidation.user_id }" required v-model="userID" autocapitalize="none">
+                      <p class="auto-validate-noti" v-if="this.userID && this.validatedUserID && !this.errorValidation.user_id">사용 가능한 아이디입니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.user_id }" v-if="this.errorValidation.user_id">{{ this.errorMsg.user_id }}</p>
                   </div>
                   <div class="input-form">
-                      <input name="password" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="password" type="password" pattern=".{8,}" placeholder="패스워드" required>
-                      <input name="passwordConfirm" @blur="checkConfirmCorrect" @keypress="checkConfirmCorrect" v-model="passwordConfirm" type="password" pattern=".{8,}" placeholder="패스워드 재확인" required :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }">
-                      <p class="auto-validate-noti" :class="{ 'error': this.isPWConfirmMatches.typed && !(this.isPWConfirmMatches.matches) }" v-if="isPWConfirmMatches.typed && !(isPWConfirmMatches.matches)">패스워드 재확인이 일치하지 않습니다.</p>
-                      <p class="auto-validate-noti" v-else-if="isPWConfirmMatches.typed && (isPWConfirmMatches.matches)">패스워드 재확인이 일치합니다.</p>
-                  </div>
-                  <div class="input-form">
-                    <input type="text" name="nick_nm" id="nickNm" v-model="nick_nm" @keyup.delete="initError('nick_nm')" @blur="checkDupNickName" :class="{ 'error': this.nick_nm && this.errorValidation.nick_nm }" placeholder="서비스에서 사용하실 별명을 입력하여주세요." required />
-                    <p class="auto-validate-noti" v-if="this.nick_nm && !this.errorValidation.nick_nm">사용 가능한 별명입니다.</p>
-                    <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.nick_nm }" v-else-if="this.nick_nm && this.errorValidation.nick_nm">{{ this.errorMsg.nick_nm }}</p>
-                  </div>
-                  <div class="input-form input-form-horizontal">
-                    <span role="title" class="input-form-title">성별 선택</span>
-                    <div class="input-form button-wrapper">
-                      <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.M }" @click="selectedGender('M')" value="남성">
-                      <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.W }" @click="selectedGender('W')" value="여성">
+                    <div class="input-group">
+                      <input name="password" v-model="password" type="password" autocapitalize="none" pattern=".{8,}" placeholder="패스워드" required :class="{ 'error': this.errorValidation.user_pw }">
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.user_pw }" v-if="this.errorValidation.user_pw">{{ this.errorMsg.user_pw }}</p>
                     </div>
-                    <p class="auto-validate-noti" v-if="this.errorValidation.gender">{{ this.errorMsg.gender }}</p>
+                    <div class="input-group">
+                      <input name="passwordConfirm" v-model="passwordConfirm" type="password" autocapitalize="none" pattern=".{8,}" placeholder="패스워드 재확인" required :class="{ 'error': this.errorValidation.user_pw_confirm }">
+                      <p class="auto-validate-noti" v-if="this.passwordConfirm && this.validatedPWConfirm && !this.errorValidation.user_pw_confirm">패스워드 확인이 일치합니다.</p>
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.user_pw_confirm }" v-if="this.errorValidation.user_pw_confirm">{{ this.errorMsg.user_pw_confirm }}</p>
+                    </div>
                   </div>
-                  <div class="input-form input-form-horizontal">
+                  <div class="input-form">
+                    <input type="text" name="nick_nm" id="nickNm" v-model="nick_nm" pattern="[(0-9A-Za-z_ㄱ-ㅎ가-힇)]{1,}" @keyup.delete="initError('nick_nm')" @blur="checkDupNickName" autocapitalize="none" :class="{ 'error': this.errorValidation.nick_nm }" placeholder="서비스에서 사용하실 별명을 입력하여주세요." required />
+                    <p class="auto-validate-noti" v-if="this.nick_nm && this.validatedNickname && !this.errorValidation.nick_nm">사용 가능한 별명입니다.</p>
+                    <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.nick_nm }" v-else-if="this.errorValidation.nick_nm">{{ this.errorMsg.nick_nm }}</p>
+                  </div>
+                  <div class="input-form">
+                    <div class="input-group input-form-horizontal">
+                      <span role="title" class="input-form-title">성별 선택</span>
+                      <div class="input-form button-wrapper">
+                        <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.M }" @click="selectedGender('M')" value="남성">
+                        <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.W }" @click="selectedGender('W')" value="여성">
+                      </div>
+                    </div>
+                    <div class="notice">
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.gender }" v-if="this.errorValidation.gender">{{ this.errorMsg.gender }}</p>
+                    </div>
+                  </div>
+                  <div class="input-form">
+                    <div class="input-group input-form-horizontal">
                       <label for="policy" class="input-form-title">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
                       <input type="button" class="mini-inline" @click="showPolicy" :disabled="this.policy.agreed" :value="this.policy.msg" />
+                    </div>
+                    <div class="notice">
+                      <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.policy }" v-if="this.errorValidation.policy">{{ this.errorMsg.policy }}</p>
+                    </div>
                   </div>
                   <div class="input-form">
                       <input type="button" @click="signup" value="회원가입">
@@ -99,27 +126,13 @@ export default {
       password: '',
       passwordConfirm: '',
       userName: '',
-      isPWConfirmMatches: {
-        typed: false,
-        matches: false
-      },
       userID: '',
       userIDNum: '',
-      emailValidation: {
-        checked: false,
-        duplicated: false,
-        checkedNormalButMember: false
-      },
-      userIDValidation: {
-        checked: false,
-        duplicated: false
-      },
-      userIDNumValidation: {
-        checked: false,
-        duplicated: false
-      },
-      condUserTypeNormal: false,
-      userTypes: ['R', 'M', 'E', 'G', 'U', 'A'],
+      validatedEmail: false,
+      validatedUserID: false,
+      validatedPWConfirm: false,
+      validatedNickname: false,
+      userTypes: ['R', 'M', 'E', 'G', 'U'],
       selectedUserType: 'U',
       userOptions: [
         { code: 'R', label: '학부생' },
@@ -146,8 +159,11 @@ export default {
         agreed: false,
         msg: '약관 확인 및 동의'
       },
-      isNickNameDuplicated: false,
       errorValidation: {
+        college: false,
+        dpt: false,
+        subCollege: false,
+        subDpt: false,
         userType: false,
         user_nm: false,
         user_st_id: false,
@@ -160,6 +176,10 @@ export default {
         policy: false
       },
       errorMsg: {
+        college: '',
+        dpt: '',
+        subCollege: '',
+        subDpt: '',
         userType: '',
         user_nm: '',
         user_st_id: '',
@@ -174,31 +194,107 @@ export default {
     }
   },
   watch: {
+    userName (value) {
+      if (value) {
+        this.initError('user_nm')
+      }
+    },
     userIDNum (value) {
+      if (value) {
+        this.initError('user_st_id')
+      }
       if (!/((19|20)([0-9]{5}))/.test(value)) {
-        this.errorValidation.user_st_id = true
-        this.errorMsg.user_st_id = '학번 형식이 올바르지 않습니다.'
+        this.occurError('user_st_id', '학번 형식이 올바르지 않습니다.')
+      }
+    },
+    email (value) {
+      this.initError('email')
+      this.validatedEmail = false
+      this.email = value.toLowerCase()
+      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+      if (this.selectedUserType === 'U') {
+        if (value && re.test(value)) {
+          if (value.includes('@ajou.ac.kr')) {
+            this.occurError('email', 'ajou.ac.kr 이메일 사용자는 아주 구성원(학부생/대학원생/졸업생/교직원) 자격으로 가입이 가능합니다.')
+          } else {
+            this.queryEmailValid(value)
+          }
+        }
+      } else {
+        if (value && re.test(value)) {
+          if (value.includes('@ajou.ac.kr')) {
+            this.queryEmailValid(value)
+          } else {
+            this.occurError('email', '아주 구성원은 ajou.ac.kr 이메일로만 가입이 가능합니다.')
+          }
+        }
+      }
+    },
+    password (value) {
+      if (value) {
+        if (value.length >= 8) {
+          this.initError('user_pw')
+        } else {
+          this.occurError('user_pw', '패스워드는 8자 이상으로 입력해주세요.')
+        }
+      } else {
+        this.initError('user_pw')
+      }
+      if (this.passwordConfirm) {
+        if (value === this.passwordConfirm) {
+          this.validatedPWConfirm = true
+          this.initError('user_pw_confirm')
+        } else {
+          this.occurError('user_pw_confirm', '패스워드 확인이 일치하지 않습니다.')
+        }
+      } else {
+        this.initError('user_pw_confirm')
+      }
+    },
+    passwordConfirm (value) {
+      if (value) {
+        if (value === this.password) {
+          this.validatedPWConfirm = true
+          this.initError('user_pw_confirm')
+        } else {
+          this.occurError('user_pw_confirm', '패스워드 확인이 일치하지 않습니다.')
+        }
+      } else {
+        this.initError('user_pw_confirm')
       }
     },
     hasSubMajor (value) {
-      if (!value) {
+      if (value) {
         this.selectedSubCollege = ''
         this.selectedSubDpt = ''
       }
     },
+    gender (value) {
+      if (value) {
+        this.initError('gender')
+      }
+    },
     genderSelected (value) {
-      if (value === '') {
+      if (!value) {
         this.errorValidation.gender = true
         this.errorMsg.gender = '성별을 선택해주세요.'
       }
     },
     nick_nm (value) {
-      if (!/[0-9A-Za-z_ㄱ-ㅎ가-힇]/.test(value)) {
-        this.errorValidation.nick_nm = true
-        this.errorMsg.nick_nm = '별명에 언더스코어(_)를 제외한 특수문자 및 공백은 포함할 수 없습니다.'
+      if (value) {
+        if (/[^(0-9A-Za-z_ㄱ-ㅎ가-힇)]/.test(value)) {
+          this.occurError('nick_nm', '별명에 언더스코어(_)를 제외한 특수문자 및 공백, 한글 중성 단독은 포함할 수 없습니다.')
+        } else {
+          this.initError('nick_nm')
+        }
+      } else {
+        this.initError('nick_nm')
       }
     },
     selectedUserType (value) {
+      for (let key of Object.keys(this.errorValidation)) {
+        this.initError(key)
+      }
       if (value === 'R') {
         this.$apollo.query({
           query: gql`{ findColleges(exist_yn: "Y") { college_cd college_nm } }`
@@ -208,6 +304,9 @@ export default {
       }
     },
     selectedCollege (value) {
+      if (value) {
+        this.initError('college')
+      }
       this.$apollo.query({
         query: gql`{ findDptByCollege(college_cd: "${value}") { dpt_nm dpt_cd college_cd } }`
       }).then(result => {
@@ -215,11 +314,24 @@ export default {
       })
     },
     selectedSubCollege (value) {
+      if (value) {
+        this.initError('subCollege')
+      }
       this.$apollo.query({
         query: gql`{ findDptByCollege(college_cd: "${value}") { dpt_nm dpt_cd college_cd } }`
       }).then(result => {
         this.dptSubList = result['data']['findDptByCollege'].filter(item => (item.dpt_cd !== this.selectedDpt))
       })
+    },
+    selectedDpt (value) {
+      if (value) { 
+        this.initError('dpt')
+      }
+    },
+    selectedSubDpt (value) {
+      if (value) {
+        this.initError('subDpt')
+      }
     }
   },
   methods: {
@@ -230,6 +342,17 @@ export default {
     occurError (key, msg) {
       this.errorValidation[key] = true
       this.errorMsg[key] = msg
+    },
+    queryEmailValid (email) {
+      this.$apollo.query({
+        query: gql`{ findEmail(email: "${email}") { email } }`
+      }).then(result => {
+        if (result.data.findEmail.length > 0) {
+          this.occurError('email', '이미 가입된 계정입니다.')
+        } else {
+          this.validatedEmail = true
+        }
+      })
     },
     selectedGender (value) {
       if (value === 'M') {
@@ -258,97 +381,31 @@ export default {
       this.selectedSubDpt = value
     },
     checkDupNickName () {
-      let query = (nickname) => {
+      if (this.nick_nm && !this.errorValidation.nick_nm) {
         this.$apollo.query({
-          query: gql`{ findNickName(nick_nm: "${nickname}") { nick_nm } }`
+          query: gql`{ findNickName(nick_nm: "${this.nick_nm}") { nick_nm } }`
         }).then(result => {
-          if (result.data.findNickName.length > 0) { 
-            this.errorValidation.nick_nm = true
-            this.errorMsg.nick_nm = '중복된 별명입니다. 다른 별명을 사용해주세요.'
+          if (result.data.findNickName.length > 0) {
+            this.occurError('nick_nm', '중복된 별명입니다. 다른 별명을 사용해주세요.')
           } else {
-            this.errorValidation.nick_nm = false
-            this.errorMsg.nick_nm = ''
+            this.validatedNickname = true
+            this.initError('nick_nm')
           }
         })
-      }
-      if (this.nick_nm) {
-        query(this.nick_nm)
-      }
-    },
-    checkDupEmail () {
-      this.emailValidation = {
-        checked: false,
-        duplicated: false,
-        checkedNormalButMember: false
-      }
-      let query = (email) => {
-        this.$apollo.query({
-          query: gql`{ findEmail(email: "${email}") { email } }`
-        }).then(result => {
-          this.emailValidation.checked = true
-          if (result.data.findEmail.length > 0) {
-            this.emailValidation.duplicated = true
-          } else {
-            this.emailValidation.duplicated = false
-          }
-        })
-      }
-      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-      if (this.selectedUserType === 'R') {
-        if (this.email && re.test(String(this.email).toLowerCase())) {
-          if (this.email.includes('ajou.ac.kr')) {
-            this.errorValidation.email = true
-            this.errorMsg.email = 'ajou.ac.kr 이메일 사용자는 아주 구성원(학부생/대학원생/졸업생/교직원) 자격으로 가입이 가능합니다.'
-          } else {
-            query(this.email)
-          }
-        }
-      } else {
-        if (this.email && re.test(String(this.email).toLowerCase()) && this.email.includes('ajou.ac.kr')) {
-          query(this.email)
-        }
       }
     },
     checkDupID () {
-      this.userIDValidation = {
-        checked: false,
-        duplicated: false
-      }
       if (this.userID) {
         this.$apollo.query({
           query: gql`{ findUserID(userId: "${this.userID}") { user_id } }`
         }).then(result => {
-          this.userIDValidation.checked = true
           if (result.data.findUserID.length > 0) {
-            this.userIDValidation.duplicated = true
+            this.occurError('user_id', '이미 가입된 계정입니다.')
           } else {
-            this.userIDValidation.duplicated = false
+            this.validatedUserID = true
+            this.initError('user_id')
           }
         })
-      }
-    },
-    checkDupIDNum () {
-      if (this.userIDNum && this.userIDNum.length === 9) {
-        this.$apollo.query({
-          query: gql`{ findIdNums(identityNum: ${this.userIDNum}) { identity_num } }`
-        }).then(result => {
-          this.userIDNumValidation.checked = true
-          if (result.data.findIdNums.length > 0) {
-            this.userIDNumValidation.duplicated = true
-          } else {
-            this.userIDNumValidation.duplicated = false
-          }
-        })
-      }
-    },
-    checkConfirmCorrect () {
-      if (this.password.length > 0 && this.passwordConfirm.length > 0) {
-        this.isPWConfirmMatches.typed = true
-        if (this.passwordConfirm !== this.password) {
-          this.isPWConfirmMatches.matches = false
-        } else if (this.passwordConfirm === this.password) {
-          this.isPWConfirmMatches.matches = true
-        }
       }
     },
     async showPolicy () {
@@ -488,34 +545,62 @@ export default {
         allowOutsideClick: false
       })
       if (agreePolicy.value) {
+        this.initError('policy')
         this.policy.agreed = true
         this.policy.msg = '약관 동의 완료'
       }
     },
     checkValidation () {
+      if (this.selectedUserType === 'R' && !this.selectedCollege) {
+        this.occurError('college', '항목이 비어있습니다.')
+      }
+      if (this.selectedUserType !== 'U' && this.selectedCollege && !this.selectedDpt) {
+        this.occurError('dpt', '항목이 비어있습니다.')
+      }
+      if (this.hasSubMajor && !this.selectedSubCollege) {
+        this.occurError('subCollege', '항목이 비어있습니다.')
+      }
+      if (this.hasSubMajor && this.selectedSubCollege && !this.selectedSubDpt) {
+        this.occurError('subDpt', '항목이 비어있습니다.')
+      }
+      if (!this.userName) {
+        this.occurError('user_nm', '항목이 비어있습니다.')
+      }
       if (!this.email) {
         this.occurError('email', '항목이 비어있습니다.')
       }
-      if (!this.userName) {
-        this.occurError('userName', '항목이 비어있습니다.')
-      }
-      if (!this.userIDNum) {
+      if (!(this.selectedUserType === 'U' || this.selectedUserType === 'E') && !this.userIDNum) {
         this.occurError('user_st_id', '항목이 비어있습니다.')
       }
-      if (!this.genderSelected) {
+      if (!this.userID) {
+        this.occurError('user_id', '항목이 비어있습니다.')
+      }
+      if (!this.gender) {
         this.occurError('gender', '항목이 비어있습니다.')
       }
       if (!this.password) {
-        this.occurError('password', '항목이 비어있습니다.')
+        this.occurError('user_pw', '항목이 비어있습니다.')
       }
       if (!this.passwordConfirm) {
-        this.occurError('passwordConfirm', '항목이 비어있습니다.')
+        this.occurError('user_pw_confirm', '항목이 비어있습니다.')
+      }
+      if (!this.nick_nm) {
+        this.occurError('nick_nm', '항목이 비어있습니다.')
+      }
+      if (!this.policy.agreed) {
+        this.occurError('policy', '약관에 동의하지 않으셨습니다.')
       }
     },
     async signup () {
       this.checkValidation()
       if (Object.values(this.errorValidation).filter(item => item === true).length > 0) {
-        this.$swal('잠깐!', '회원가입에 필요한 데이터가 입력되지 않았습니다.', 'error')
+        this.$swal({
+          title: '잠깐!',
+          text: '회원가입에 필요한 데이터가 입력되지 않았습니다.',
+          type: 'error',
+          width: '90vw',
+          footer: '<span>누락된 항목을 확인 후 다시 시도하여주시기 바랍니다.<br />지속적으로 문제가 발생할 경우 관리자에게 문의하여주세요.</span>'
+        })
       } else {
         axios.get('/api/reqClientIP').then(client => {
           let college
@@ -615,6 +700,17 @@ export default {
   }
   > .vs__dropdown-toggle + [role="listbox"] > .vs__dropdown-option--highlight {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+}
+.v-select.error {
+  > .vs__dropdown-toggle {
+    background: red;
+    & input[type="search"] {
+      color: #fff;
+    }
+    & .vs__open-indicator {
+      fill: #fff;
+    }
   }
 }
 </style>

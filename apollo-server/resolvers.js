@@ -30,14 +30,6 @@ module.exports = {
                 }
             })
         },
-        async findIdNums(parent, args, context, info) {
-            return await User.findAll({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: {
-                    identity_num: args.identityNum
-                }
-            })
-        },
         async findEmail(parent, args, context, info) {
             return await User.findAll({
                 attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
