@@ -16,7 +16,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import AjouNICE from '@/components/AjouNICE.vue'
 import Footer from '@/components/Footer.vue'
 
@@ -24,6 +23,9 @@ export default {
   name: 'home',
   components: {
     AjouNICE, Footer
+  },
+  beforeCreate () {
+    document.body.classList.remove('auth')
   }
 }
 </script>

@@ -107,7 +107,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import Vue from 'vue'
 import vSelect from 'vue-select'
 import VueSweetalert2 from 'vue-sweetalert2'
@@ -602,7 +601,7 @@ export default {
           footer: '<span>누락된 항목을 확인 후 다시 시도하여주시기 바랍니다.<br />지속적으로 문제가 발생할 경우 관리자에게 문의하여주세요.</span>'
         })
       } else {
-        axios.get('/api/reqClientIP').then(client => {
+        this.$Axios.get('/api/reqClientIP').then(client => {
           let college
           let dpt
           if (this.hasSubMajor) {
