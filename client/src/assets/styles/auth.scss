@@ -1,4 +1,4 @@
-.wrapper[data-form-wrapper] {
+[data-form-wrapper] {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -69,52 +69,8 @@
                     > a {
                         margin-top: 5px;
                     }
-                    > input, select {
+                    > input, select, label {
                         font-size: .85em;
-                    }
-                    > input[name="IDNum"]:disabled {
-                        display: none;
-                    }
-                    > input[name="passwordConfirm"].error {
-                        background: red;
-                        color: white;
-                        &::placeholder {
-                            color: #fff;
-                        }
-                    }
-                    > input:not([type="checkbox"]) {
-                        position: relative;
-                        width: calc(90% - 20px);
-                        padding: 5px 10px;
-                        margin-top: 15px;
-                        outline: none;
-                        box-sizing: border-box;
-                        box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
-                        transition: box-shadow 0.25s ease 0s, transform 0.25s ease 0s, transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
-                        &:focus {
-                            box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
-                        }
-                    }
-                    > input:not([type="checkbox"]):not([type="submit"]) {
-                        border: 2px solid;
-                        border-image-source: linear-gradient(135deg, transparent 0%, transparent 100%);
-                        border-image-slice: 1;
-                        &:focus {
-                            border-image-source: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        }
-                    }
-                    > .auto-validate-noti {
-                        position: relative;
-                        font-size: .6em;
-                        width: calc(90% - 20px);
-                        text-align: left;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        margin: 5px 0;
-                        color: blue;
-                    }
-                    > .auto-validate-noti.error {
-                        color: red;
                     }
                     select {
                         -webkit-appearance: none;
@@ -129,17 +85,78 @@
                         border: none;
                         box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
                     }
-                    > input[type="email"], input[type="password"], input[type="submit"] {
+                    input[type="button"] {
+                        cursor: pointer;
+                        color: #fff;
+                        background: #6a11cb;
+                        &.radio {
+                            font-weight: bold;
+                            padding: 5px 1rem;
+                            margin-right: 5px;
+                            &:last-of-type {
+                                margin: 0;
+                            }
+                        }
+                        &:hover {
+                            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+                            box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
+                        }
+                        &:disabled, &.radio-selected {
+                            background: grey;
+                        }
+                        &.mini-inline {
+                            display: inline-block;
+                            font-size: .75em;
+                        }
+                    }
+                    & input[name="IDNum"]:disabled {
+                        display: none;
+                    }
+                    & input:not([type="checkbox"]):not([type="search"]):not(.mini-inline) {
+                        position: relative;
+                        width: calc(90% - 20px);
+                        padding: 5px 10px;
+                        margin-top: 15px;
+                        outline: none;
+                        box-sizing: border-box;
+                        box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
+                        transition: box-shadow 0.25s ease 0s, transform 0.25s ease 0s, transform 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.5s cubic-bezier(0.6, 0.2, 0.1, 1) 0s;
+                        &:focus {
+                            box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
+                        }
+                    }
+                    & input:not([type="checkbox"]):not([type="submit"]) {
+                        border: 2px solid;
+                        border-image-source: linear-gradient(135deg, transparent 0%, transparent 100%);
+                        border-image-slice: 1;
+                        &:focus {
+                            border-image-source: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        }
+                    }
+                    & .auto-validate-noti {
+                        position: relative;
+                        font-size: .6em;
+                        width: calc(90% - 20px);
+                        text-align: left;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        margin: 5px 0;
+                        color: blue;
+                    }
+                    & .auto-validate-noti.error {
+                        color: red;
+                    }
+                    & input[type="email"], input[type="password"], input[type="submit"] {
                         font-size: .85em;
                     }
-                    > input:not(.error):valid {
+                    & input:not(.error):not([type="search"]):valid {
                         color: #fff;
                         &::placeholder{
                             color: #fff;
                         }
                         background: #4b6ab9;
                     }
-                    > input.error {
+                    & input.error {
                         color: #fff;
                         &::placeholder {
                             color: #fff;
@@ -158,20 +175,6 @@
                             box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
                         }
                     }
-                    > label {
-                        font-size: .75rem;
-                        margin-bottom: .75rem;
-                    }
-                    > input[type="button"] {
-                        cursor: pointer;
-                        color: #fff;
-                        background: #6a11cb;
-                        transition: background-color .2s ease-in .2s;
-                        &:hover {
-                            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-                            box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
-                        }
-                    }
                     > a {
                         display: block;
                         font-size: .8rem;
@@ -179,6 +182,27 @@
                     }
                     display: block;
                 }
+                & .input-form-horizontal {
+                    display: flex;
+                    font-size: .85em;
+                    flex-direction: row;
+                    margin: 0 calc(5% + 10px);
+                    margin-top: 5px;
+                    padding: 5px 10px;
+                    & .input-form-title {
+                        flex: 1;
+                        color: #333;
+                        text-align: left;
+                    }
+                    & div[class$="-wrapper"] {
+                        flex: 4;
+                        text-align: right;
+                    }
+                    + .input-form > input {
+                        margin-top: 5px;
+                    }
+                }
+
             }
             > footer {
                 margin-top: auto;
@@ -188,7 +212,7 @@
 }
 
 @media (max-width: 720px) {
-    .wrapper[data-form-wrapper] {
+    [data-form-wrapper] {
         [data-form] {
             flex-direction: column;
             > header {

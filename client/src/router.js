@@ -20,7 +20,7 @@ export default new Router({
     },
     {
       path: '/auth/gate/manager/login',
-      name: 'login',
+      name: 'admin_login',
       component: AdminLogin
     },
     {

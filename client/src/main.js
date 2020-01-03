@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import axios from 'axios'
 import router from './router'
 import store from './store'
 
@@ -12,6 +13,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
+Vue.prototype.$Axios = axios
 
 const apolloClient = new ApolloClient({
   link: createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({ uri: 'http://localhost:455/graphql' })),
