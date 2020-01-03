@@ -44,7 +44,6 @@ def parseContentSW(soup, urlInfo):
     lists = soup.select('tr[height]:not([bgcolor])')
     for post in lists:
         try:
-            print('shit')
             print(post)
             title = post.find('td', attrs={"align": "left"}).a.text.strip()
             link = 'http://software.ajou.ac.kr' + \
@@ -78,42 +77,36 @@ class Client(Resource):
                 'ip': request.remote_addr
             }
         }
-
+# issues
+# 국디 공지사항 없음 code: IT0005
+# 수학과 html 깨져있음 ㅡㅡ
 @api_rest.route('/notice/<string:code>')
 class Bbansrun(Resource):
     def get(self, code):
+        api_response = {
+            'title': 'bbansrun',
+            'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+            'APIName': '/notice/<code>',
+            'APIDescription': '본부대학급 공지사항 크롤러',
+        }
         if (code == 'IT0004'):
             target = list(
-                filter(lambda x: x['code'] == code, url_list['unsolved']))[0]
+                filter(lambda x: x['code'] == code, url_list['resolved']))[0]
             res = requests.get(target['link'])
             res.encoding = 'euc-kr'
-            return {
-                'title': 'bbansrun',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/notice/<code>',
-                'APIDescription': '본부대학급 공지사항 크롤러',
-                'result': parseContentSW(BeautifulSoup(res.text, 'html.parser'), target)
-            }
+            api_response['result'] = parseContentSW(
+                BeautifulSoup(res.text, 'html.parser'), target)
         if (code in list(map(lambda x: x['code'], url_list['resolved']))):
             target = list(
                 filter(lambda x: x['code'] == code, url_list['resolved']))[0]
-            return {
-                'title': 'bbansrun',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/notice/<code>',
-                'APIDescription': '본부대학급 공지사항 크롤러',
-                'result': parseContent(BeautifulSoup(requests.get(target['link']).text, 'html.parser'), target)
-            }
+            api_response['result'] = parseContent(BeautifulSoup(
+                requests.get(target['link']).text, 'html.parser'), target)
+            print('asd')
         else:
-            return {
-                'title': 'bbansrun',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/notice/<code>',
-                'APIDescription': '본부대학급 공지사항 크롤러',
-                'error': {
-                    'message': 'Code not exists'
-                }
+            api_response['error'] = {
+                'message': 'Code not exists'
             }
+        return api_response
 
 
 @api_rest.route('/resource/<string:resource_id>')
