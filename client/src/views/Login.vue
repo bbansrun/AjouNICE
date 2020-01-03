@@ -14,10 +14,10 @@
                         <input type="text" placeholder="아이디" v-model="userID" required>
                     </div>
                     <div class="input-form">
-                        <input type="password" placeholder="패스워드" required>
+                        <input type="password" placeholder="패스워드" v-model="password" required>
                     </div>
                     <div class="input-form">
-                        <input type="submit" value="로그인">
+                        <input type="button" @click="signin" value="로그인">
                     </div>
                     <div class="input-form">
                         <router-link to="/auth/reset">계정 재설정</router-link>
@@ -42,8 +42,25 @@ export default {
   data () {
     return {
       formErrors: [],
-      userID: ''
+      userID: '',
+      password: ''
     }
+  },
+  methods: {
+      signin () {
+          if (this.userID && this.password) {
+              this.$Axios({
+                  url: '/api/auth/login',
+                  method: 'POST',
+                  data: {
+                      'user_id': this.userID,
+                      'password': this.password
+                  }
+              }).then(result => {
+                  window.location = '#/home'
+              })
+          }
+      }
   },
   beforeCreate () {
     document.body.className = 'auth'
