@@ -12,7 +12,3 @@ api_rest = Api(app=api_bp,
 def add_header(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
-
-# Import resources to ensure view is registered # NOQA
-from server.app.api.auth import *
-from server.app.api.resources import *

@@ -3,8 +3,9 @@ import json
 from flask import Response, request
 from flask_restplus import Resource
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
+from flask_sqlalchemy import SQLAlchemy
 
-from server import db
+from server import db, bcrypt
 from server.app.api import api_rest
 
 class User(db.Model):
@@ -34,22 +35,45 @@ class User(db.Model):
     log_dt = db.Column(db.DateTime)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.user_nm
 
 @api_rest.route("/auth/login")
 class LoginAPI(Resource):
     def post(self):
         if not request.is_json:
             return Response(json.dumps({ "err": "TypeError: Not JSON Type Request." }), status=400)
+        
         user_id = request.json.get('user_id', None)
         password = request.json.get('password', None)
 
-        user = User.query.filter_by(user_id=user_id).all()
-        token_identity = { 'user_id': user_id, 'password': password }
-        access_token = create_access_token(identity=token_identity)
-        refresh_token = create_refresh_token(identity=token_identity)
+        user = User.query.filter_by(user_id=user_id).first()
+        compare_pw = user.password
+        result = bcrypt.check_password_hash(compare_pw, password)
 
-        return {
-            'access_token': access_token,
-            'refresh_token': refresh_token
-        }
+        if result:
+            token_identity = { 'user_id': user_id, 'password': password }
+            access_token = create_access_token(identity=token_identity)
+            refresh_token = create_refresh_token(identity=token_identity)
+
+            return Response(json.dumps({
+                'title': 'AjouNICE!',
+                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+                'APIName': '/auth/login',
+                'APIDescription': '로그인 토큰처리',
+                'result': {
+                    'code': '200',
+                    'access_token': access_token,
+                    'refresh_token': refresh_token
+                }
+            }), status=200)
+        else:
+            return Response(json.dumps({
+                'title': 'AjouNICE!',
+                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+                'APIName': '/auth/login',
+                'APIDescription': '로그인 토큰처리',
+                'result': {
+                    'code': '500',
+                    'message': '비밀번호가 일치하지 않습니다.'
+                }
+            }), status=500)
