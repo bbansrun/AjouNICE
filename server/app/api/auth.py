@@ -74,6 +74,7 @@ class LoginAPI(Resource):
                 'APIDescription': '로그인 토큰처리',
                 'result': {
                     'code': '500',
+
                     'message': '비밀번호가 일치하지 않습니다.'
                 }
             }), status=500)

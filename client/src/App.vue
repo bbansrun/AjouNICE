@@ -15,7 +15,7 @@ export default {
     document.body.classList.add('loading')
   },
   mounted () {
-    document.body.classlist.remove('loading')
+    document.body.classList.remove('loading')
   }
 }
 </script>
