@@ -1,7 +1,4 @@
-""" Client App """
-
-import os
-from flask import Blueprint, render_template
+from flask import Blueprint
 
 client_bp = Blueprint('client_app', __name__,
                       url_prefix='',
