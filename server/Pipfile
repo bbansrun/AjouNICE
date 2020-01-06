@@ -14,7 +14,7 @@ python-dotenv = "*"
 authlib = "*"
 flask-restful = "*"
 flask-jwt-extended = "*"
-mysqldb = "*"
+pymysql = "*"
 
 [dev-packages]
 pytest = "*"

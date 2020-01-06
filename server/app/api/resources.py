@@ -1,8 +1,3 @@
-"""
-REST API Resource Routing
-http://flask-restplus.readthedocs.io
-"""
-
 from datetime import datetime
 from flask import request
 from flask_restplus import Resource
@@ -12,8 +7,8 @@ import requests
 import json
 import os
 
-from .security import require_auth
-from . import api_rest
+from server.app.api import api_rest
+from server.app.api.security import require_auth
 
 CURRENT_DIR = os.path.realpath(os.path.dirname(__file__))
 CONSTANTS_DIR = os.path.join(CURRENT_DIR, "../../constants/")
