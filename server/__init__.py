@@ -4,14 +4,12 @@ import pymysql
 from flask import Flask, current_app, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 
 from server.app.api import api_bp
 from server.app.client import client_bp
 
 pymysql.install_as_MySQLdb()
-
-db = SQLAlchemy()
-jwt = JWTManager()
 
 def create_app():
     app = Flask(__name__, static_folder='./dist/static')
@@ -46,12 +44,16 @@ def create_app():
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-    db.init_app(app)
-    jwt.init_app(app)
-
     return app
 
 app = create_app()
+db = SQLAlchemy(app)
+jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
+
+# Import resources to ensure view is registered # NOQA
+from server.app.api.auth import *
+from server.app.api.resources import *
 
 @app.route('/')
 def index_client():

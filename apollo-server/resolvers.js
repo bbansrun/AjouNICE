@@ -49,7 +49,8 @@ module.exports = {
     },
     Mutation: {
         register: async (root, { email, user_id, password, user_nm, identity_num, user_type, sex_gb, college_cd, dpt_cd, nick_nm, reg_ip }) => {
-            const hashedPassword = await bcrypt.hash(password, 10)
+            const salt = bcrypt.genSaltSync(10)
+            const hashedPassword = bcrypt.hashSync(password, salt)
             const user = await User.create({
                 email,
                 user_id,

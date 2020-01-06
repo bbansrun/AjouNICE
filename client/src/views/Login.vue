@@ -14,10 +14,10 @@
                         <input type="text" placeholder="아이디" v-model="userID" required>
                     </div>
                     <div class="input-form">
-                        <input type="password" placeholder="패스워드" v-model="password" required>
+                        <input type="password" @keyup.enter="signin" placeholder="패스워드" v-model="password" required pattern=".{8,}">
                     </div>
                     <div class="input-form">
-                        <input type="button" @click="signin" value="로그인">
+                        <input type="button" @click="signin" @submit.prevent value="로그인">
                     </div>
                     <div class="input-form">
                         <router-link to="/auth/reset">계정 재설정</router-link>
@@ -48,16 +48,28 @@ export default {
   },
   methods: {
       signin () {
-          if (this.userID && this.password) {
+          if (this.userID && this.password && this.password.length >= 8) {
+              document.body.classList.add('loading')
               this.$Axios({
-                  url: '/api/auth/login',
-                  method: 'POST',
-                  data: {
-                      'user_id': this.userID,
-                      'password': this.password
-                  }
+                url: '/api/auth/login',
+                method: 'POST',
+                data: {
+                    'user_id': this.userID,
+                    'password': this.password
+                }
               }).then(result => {
-                  window.location = '#/home'
+                document.body.classList.remove('loading')
+                window.location = '#/home'
+              }).catch(error => {
+                document.body.classList.remove('loading')
+                if (error.response.status === 500) {
+                    this.$swal({
+                        title: '오류!',
+                        text: '입력하신 정보가 올바르지 않습니다.',
+                        type: 'error',
+                        width: '90vw'
+                    })
+                }
               })
           }
       }

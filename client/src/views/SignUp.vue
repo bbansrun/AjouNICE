@@ -323,7 +323,7 @@ export default {
       })
     },
     selectedDpt (value) {
-      if (value) { 
+      if (value) {
         this.initError('dpt')
       }
     },
@@ -601,6 +601,7 @@ export default {
           footer: '<span>누락된 항목을 확인 후 다시 시도하여주시기 바랍니다.<br />지속적으로 문제가 발생할 경우 관리자에게 문의하여주세요.</span>'
         })
       } else {
+        document.body.classList.add('loading')
         this.$Axios.get('/api/reqClientIP').then(client => {
           let college
           let dpt
@@ -612,10 +613,11 @@ export default {
             dpt = this.selectedDpt
           }
           this.$apollo.mutate({
-            mutation: gql`mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.userName}", identity_num: ${this.userIDNum}, user_type: "${this.selectedUserType}", sex_gb: "${this.gender}", college_cd: "${college}", dpt_cd: "${dpt}", nick_nm: "${this.nick_nm}", reg_ip: "${client.data.result.ip}") { user_idx } }`
+            mutation: gql`mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.userName}", identity_num: ${this.userIDNum ? this.userIDNum : null}, user_type: "${this.selectedUserType}", sex_gb: "${this.gender}", college_cd: "${college}", dpt_cd: "${dpt}", nick_nm: "${this.nick_nm}", reg_ip: "${client.data.result.ip}") { user_idx } }`
           }).then(result => {
             if (typeof result === 'object') {
               if ('data' in result) {
+                document.body.classList.remove('loading')
                 this.flash('회원가입 성공! 로그인 후 서비스 이용이 가능합니다.', 'success')
                 this.$swal({
                   title: '축하합니다!',
@@ -629,6 +631,7 @@ export default {
               }
             }
           }).catch(error => {
+            document.body.classList.remove('loading')
             if (error.message === 'GraphQL error: Validation error') {
               this.$swal({
                 title: '실패하였습니다!',
