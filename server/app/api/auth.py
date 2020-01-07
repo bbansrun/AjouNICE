@@ -21,7 +21,7 @@ class User(db.Model):
     policy_yn = db.Column(db.Boolean)
     college_cd = db.Column(db.String(10))
     dpt_cd = db.Column(db.String(10))
-    auth_email_yn = db.Column(db.Boolean)
+    auth_email_yn = db.Column(db.String(1))
     auth_token = db.Column(db.String(20))
     user_profile = db.Column(db.String(100))
     nick_nm = db.Column(db.String(50))

@@ -59,7 +59,15 @@ export default {
               let password = this.password
               this.$store.dispatch('LOGIN', { user_id, password })
                 .then(() => {
-                    window.location = '/home'
+                    this.$Axios.get('/api/protected')
+                        .then((result) => {
+                            if (result.data.logged_in_as.auth_email_yn === 'N') {
+                                this.$store.dispatch('LOGOUT')
+                                window.location = '/auth/unauthorized'
+                            } else {
+                                window.location = '/home'
+                            }
+                        })
                 })
                 .catch(err => {
                     document.body.classList.toggle('loading')

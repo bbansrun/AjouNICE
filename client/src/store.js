@@ -11,6 +11,7 @@ export default new Vuex.Store({
     LOGIN (state, { result }) {
       state.accessToken = result.access_token
       localStorage.setItem('accessToken', result.access_token)
+      Vue.prototype.$Axios.defaults.headers.common['Authorization'] = `Bearer ${result.access_token}`
     },
     LOGOUT (state) {
       state.accessToken = null

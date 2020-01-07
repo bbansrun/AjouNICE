@@ -32,8 +32,6 @@ export default {
   },
   beforeCreate () {
     document.body.classList.remove('auth')
-  },
-  created () {
     this.$Axios.get('/api/protected').then(result => {
       this.userInfo = result.data.logged_in_as
     })
