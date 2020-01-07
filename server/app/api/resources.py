@@ -34,6 +34,25 @@ def parseContent(soup, urlInfo):
     return posts
 
 
+def parseContentUnited(soup, urlInfo):
+    posts = []
+    for post in soup.select('#contentsArea > table > tbody > tr'):
+        try:
+            title = post.find('td', class_='aleft').a.text.strip()
+            link = '/'.join(urlInfo['link'].split('/')[:-1]) + \
+                '/' + post.find('td', class_='aleft').a['href']
+            posts.append({
+                'unit': urlInfo['name'],
+                'code': urlInfo['code'],
+                'boardName': urlInfo['boardName'],
+                'title': title,
+                'link': link
+            })
+        except:
+            pass
+    return posts
+
+
 def parseContentSW(soup, urlInfo):
     posts = []
     lists = soup.select('tr[height]:not([bgcolor])')
@@ -82,24 +101,29 @@ class Bbansrun(Resource):
             'title': 'bbansrun',
             'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
             'APIName': '/notice/<code>',
-            'APIDescription': '본부대학급 공지사항 크롤러',
+            'APIDescription': '공지사항 크롤러',
         }
-        if (code == 'IT0004'):
+        if (code in list(map(lambda x: x['code'], url_list['type3']))):
             target = list(
-                filter(lambda x: x['code'] == code, url_list['resolved']))[0]
+                filter(lambda x: x['code'] == code, url_list['type3']))[0]
             res = requests.get(target['link'])
             res.encoding = 'euc-kr'
             api_response['result'] = parseContentSW(
                 BeautifulSoup(res.text, 'html.parser'), target)
-        if (code in list(map(lambda x: x['code'], url_list['resolved']))):
+        elif (code in list(map(lambda x: x['code'], url_list['type1']))):
             target = list(
-                filter(lambda x: x['code'] == code, url_list['resolved']))[0]
+                filter(lambda x: x['code'] == code, url_list['type1']))[0]
             api_response['result'] = parseContent(BeautifulSoup(
                 requests.get(target['link']).text, 'html.parser'), target)
-            print('asd')
+            print('ad')
+        elif (code in list(map(lambda x: x['code'], url_list['type2']))):
+            target = list(
+                filter(lambda x: x['code'] == code, url_list['type2']))[0]
+            api_response['result'] = parseContentUnited(BeautifulSoup(
+                requests.get(target['link']).text, 'html.parser'), target)
         else:
             api_response['error'] = {
-                'message': 'Code not exists'
+                'message': 'Code not exists '
             }
         return api_response
 
