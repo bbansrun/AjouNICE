@@ -36,6 +36,7 @@
 <script>
 import Vue from 'vue'
 import VueFlashMessage from 'vue-flash-message'
+import gql from 'graphql-tag'
 
 Vue.use(VueFlashMessage)
 
@@ -59,7 +60,12 @@ export default {
               let password = this.password
               this.$store.dispatch('LOGIN', { user_id, password })
                 .then(() => {
-                    this.$Axios.get('/api/protected')
+                    this.$Axios.get('/api/reqClientIP').then(client => {
+                        this.$apollo.mutate({
+                            mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
+                        })
+                    }).then(() => {
+                        this.$Axios.get('/api/protected')
                         .then((result) => {
                             if (result.data.logged_in_as.auth_email_yn === 'N') {
                                 this.$store.dispatch('LOGOUT')
@@ -68,6 +74,7 @@ export default {
                                 window.location = '/home'
                             }
                         })
+                    })
                 })
                 .catch(err => {
                     document.body.classList.toggle('loading')
