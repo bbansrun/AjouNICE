@@ -391,16 +391,20 @@ export default {
     },
     checkDupNickName () {
       if (this.nick_nm && !this.errorValidation.nick_nm) {
-        this.$apollo.query({
-          query: gql`{ findNickName(nick_nm: "${this.nick_nm}") { nick_nm } }`
-        }).then(result => {
-          if (result.data.findNickName.length > 0) {
-            this.occurError('nick_nm', '중복된 별명입니다. 다른 별명을 사용해주세요.')
-          } else {
-            this.validatedNickname = true
-            this.initError('nick_nm')
-          }
-        })
+        if (!/[^(0-9A-Za-z_ㄱ-ㅎ가-힇)]/.test(this.nick_nm)) {
+          this.$apollo.query({
+            query: gql`{ findNickName(nick_nm: "${this.nick_nm}") { nick_nm } }`
+          }).then(result => {
+            if (result.data.findNickName.length > 0) {
+              this.occurError('nick_nm', '중복된 별명입니다. 다른 별명을 사용해주세요.')
+            } else {
+              this.validatedNickname = true
+              this.initError('nick_nm')
+            }
+          })
+        } else {
+          this.occurError('nick_nm', '별명에 언더스코어(_)를 제외한 특수문자 및 공백, 한글 중성 단독은 포함할 수 없습니다.')
+        }
       }
     },
     checkDupID () {
@@ -605,10 +609,10 @@ export default {
       if (Object.values(this.errorValidation).filter(item => item === true).length > 0) {
         this.$swal({
           title: '잠깐!',
-          text: '회원가입에 필요한 데이터가 입력되지 않았습니다.',
+          text: '누락된 데이터가 있거나 입력된 항목의 내용이 올바른 형식이 아닙니다.',
           type: 'error',
           width: '90vw',
-          footer: '<span>누락된 항목을 확인 후 다시 시도하여주시기 바랍니다.<br />지속적으로 문제가 발생할 경우 관리자에게 문의하여주세요.</span>'
+          footer: '<span>해당 항목을 확인 후 다시 시도하여주시기 바랍니다.<br />지속적으로 문제가 발생할 경우 관리자에게 문의하여주세요.</span>'
         })
       } else {
         document.body.classList.toggle('loading')

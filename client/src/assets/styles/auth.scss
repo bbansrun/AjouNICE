@@ -218,6 +218,17 @@
     }
 }
 
+.btn {
+    background: linear-gradient(45deg, #F86F2E, #EE007A);
+    padding: 1rem 4rem;
+    box-shadow: 0 5px 5px rgba(0,0,0,.2);
+    color: #fff;
+    transition: .2s all ease;
+}
+.btn.btn-round {
+    border-radius: 2rem;
+}
+
 @media (max-width: 720px) {
     [data-form-wrapper] {
         [data-form] {

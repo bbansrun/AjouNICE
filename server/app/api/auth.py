@@ -21,7 +21,7 @@ class User(db.Model):
     policy_yn = db.Column(db.Boolean)
     college_cd = db.Column(db.String(10))
     dpt_cd = db.Column(db.String(10))
-    auth_email_yn = db.Column(db.Boolean)
+    auth_email_yn = db.Column(db.String(1))
     auth_token = db.Column(db.String(20))
     user_profile = db.Column(db.String(100))
     nick_nm = db.Column(db.String(50))
@@ -51,7 +51,7 @@ class LoginAPI(Resource):
         result = bcrypt.check_password_hash(compare_pw, password)
 
         if result:
-            token_identity = { 'user_id': user_id, 'password': password }
+            token_identity = { 'user_id': user_id, 'user_nm': user.user_nm, 'identity_num': user.identity_num, 'user_type': user.user_type, 'user_status': user.user_status, 'college_cd': user.college_cd, 'dpt_cd': user.dpt_cd, 'nick_nm': user.nick_nm, 'email': user.email, 'auth_email_yn': user.auth_email_yn }
             access_token = create_access_token(identity=token_identity)
             refresh_token = create_refresh_token(identity=token_identity)
 
@@ -74,8 +74,17 @@ class LoginAPI(Resource):
                 'APIName': '/auth/login',
                 'APIDescription': '로그인 토큰처리',
                 'result': {
-                    'code': '500',
+                    'code': '401',
 
                     'message': '비밀번호가 일치하지 않습니다.'
                 }
-            }), status=500)
+            }), status=401)
+
+@api_rest.route("/protected")
+class Protected(Resource):
+    @jwt_required
+    def get(self):
+        current_user = get_jwt_identity()
+        return Response(json.dumps({
+            'logged_in_as': current_user
+        }), status=200)

@@ -8,6 +8,7 @@ import AdminLogin from './views/AdminLogin.vue'
 import Login from './views/Login.vue'
 import RenewAccount from './views/RenewAccount.vue'
 import Signup from './views/SignUp.vue'
+import Unauthorized from './views/Unauthorized.vue'
 
 Vue.use(Router)
 
@@ -33,6 +34,11 @@ export default new Router({
       name: 'login',
       component: Login,
       // beforeEnter: alreadySignedIn
+    },
+    {
+      path: '/auth/unauthorized',
+      name: 'unauthorized',
+      component: Unauthorized
     },
     {
       path: '/auth/gate/manager/login',
