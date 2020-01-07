@@ -5,7 +5,7 @@
                 <h1 class="logo-font">AjouNICE!</h1>
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
-            <form autocomplete="off">
+            <form @submit.prevent autocomplete="off">
                 <header class="logo-font">Reset Account<small text-divider-block>계정 재설정</small></header>
                 <div class="divider"></div>
                 <div class="input-form-wrapper">
@@ -14,7 +14,7 @@
                       <p class="auto-validate-noti" :class="{ 'error': this.emailError }" v-if="this.emailError">{{ this.emailErrorMsg }}</p>
                   </div>
                   <div class="input-form">
-                      <input type="button" @submit.prevent @click="resetAccount" value="계정 재설정">
+                      <input type="button" @click="resetAccount" value="계정 재설정">
                   </div>
                   <div class="input-form">
                     <router-link to="/">처음으로</router-link>
@@ -71,7 +71,7 @@ export default {
                 text: '패스워드 재설정 이메일을 입력하신 주소로 발송하였습니다. 받은 문서함을 확인해주세요.',
                 footer: '스팸으로 분류되는 경우도 발생할 수 있으니 수신되지 않은 경우 해당 문서함을 확인해주세요.'
               }).then(result => {
-                window.location = '#/'
+                window.location = '/'
               })
             } else {
               this.emailError = true
@@ -86,7 +86,7 @@ export default {
     }
   },
   beforeCreate () {
-    document.body.className = 'auth'
+    document.body.classList.add('auth')
   }
 }
 </script>

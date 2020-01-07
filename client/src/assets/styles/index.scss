@@ -53,7 +53,8 @@ small {
 nav.gnb {
   position: fixed;
   width: 90vw;
-  bottom: -5px;
+  height: 90vh;
+  bottom: calc(-90vh + 40px);
   left: 50%;
   transform: translateX(-50%);
   border-radius: 1rem 1rem 0 0;
@@ -62,7 +63,8 @@ nav.gnb {
   background: linear-gradient(to right, rgb(133, 91, 218), rgb(165, 135, 212));
   padding: 10px 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, .48);
-  transition: .2s all ease-in;
+  transition: .2s all cubic-bezier(0.250, 0.460, 0.450, 0.940);
+  z-index: 100000;
   &:hover {
     bottom: 5px;
   }

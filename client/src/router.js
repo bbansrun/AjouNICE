@@ -11,12 +11,28 @@ import Signup from './views/SignUp.vue'
 
 Vue.use(Router)
 
+const requireAuth = (to, from, next) => {
+  if (localStorage.accessToken) return next()
+  next({
+    path: '/',
+    query: {
+      redirect: to.fullPath
+    }
+  })
+}
+
+const alreadySignedIn = (to, from, next) => {
+  if (localStorage.accessToken) next({ path: '/home' })
+}
+
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
       name: 'login',
-      component: Login
+      component: Login,
+      // beforeEnter: alreadySignedIn
     },
     {
       path: '/auth/gate/manager/login',
@@ -31,7 +47,8 @@ export default new Router({
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
+      beforeEnter: requireAuth
     },
     {
       path: '/about',

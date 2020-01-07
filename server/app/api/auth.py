@@ -63,7 +63,8 @@ class LoginAPI(Resource):
                 'result': {
                     'code': '200',
                     'access_token': access_token,
-                    'refresh_token': refresh_token
+                    'refresh_token': refresh_token,
+                    'auth_email_yn': user.auth_email_yn
                 }
             }), status=200)
         else:

@@ -15,8 +15,13 @@ import VueApollo from 'vue-apollo'
 Vue.use(VueApollo)
 Vue.prototype.$Axios = axios
 
+const token = localStorage.getItem('accessToken')
+if (token) {
+  Vue.prototype.$Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+}
+
 const apolloClient = new ApolloClient({
-  link: createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({ uri: 'http://localhost:455/graphql' })),
+  link: createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({ uri: `http://${require('ip').address()}:455/graphql` })),
   cache: new InMemoryCache()
 })
 
