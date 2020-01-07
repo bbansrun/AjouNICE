@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <footer>
-                    <router-link to="/auth/signup">아직 회원이 아니신가요? 회원가입 &rarr;</router-link>
+                    <router-link to="/auth/signup" class="btn btn-round">회원가입 &rarr;</router-link>
                 </footer>
             </form>
         </section>

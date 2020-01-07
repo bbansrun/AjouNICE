@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -21,7 +20,7 @@ export default new Vuex.Store({
   actions: {
     LOGIN ({ commit }, { user_id, password }) {
       return new Promise((resolve, reject) => {
-        axios({
+        Vue.prototype.$Axios({
           url: '/api/auth/login',
           method: 'POST',
           data: {
@@ -38,7 +37,6 @@ export default new Vuex.Store({
     },
     LOGOUT ({ commit }) {
       return new Promise((resolve, reject) => {
-        axios.defaults.headers.common['Authorization'] = undefined
         commit('LOGOUT')
         resolve()
       })

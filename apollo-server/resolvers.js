@@ -1,6 +1,7 @@
 const { User, College, Department, sequelize } = require('./models')
 const graphqlFields = require('graphql-fields')
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
 sequelize.sync()
 
@@ -51,6 +52,9 @@ module.exports = {
         register: async (root, { email, user_id, password, user_nm, identity_num, user_type, sex_gb, college_cd, dpt_cd, nick_nm, reg_ip }) => {
             const salt = bcrypt.genSaltSync(10)
             const hashedPassword = bcrypt.hashSync(password, salt)
+            const shasum = crypto.createHash('sha256')
+            shasum.update(hashedPassword)
+            const authToken = shasum.digest('hex')
             const user = await User.create({
                 email,
                 user_id,
@@ -64,17 +68,22 @@ module.exports = {
                 college_cd,
                 dpt_cd,
                 auth_email_yn: 'N',
-                auth_token: '',
+                auth_token: authToken,
                 user_profile: '',
                 nick_nm,
                 links: '',
                 reg_ip,
-                upt_ip: '',
-                upt_dt: '',
-                log_ip: '',
-                log_dt: ''
+                upt_ip: reg_ip,
+                upt_dt: Date.now(),
+                log_ip: reg_ip,
+                log_dt: Date.now()
             })
             return user
+        },
+        lastLogin: async (root, { userId, ip }) => {
+            const updateLastLogin = await User.update({ log_ip: ip, log_dt: Date.now() }, { where: { user_id: userId } })
+            if (updateLastLogin) return true
+            else return false
         }
     }
 }

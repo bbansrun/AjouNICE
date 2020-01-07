@@ -4,10 +4,10 @@
       <div class="logo">
         <h1>AjouNICE!</h1> | <small>아주대학교 차세대 커뮤니티 서비스</small>
       </div>
-      <div>
-        <header>안녕하세요 빤스런님 ^~^</header>
-        <input type="button" @click="logout" value="임시 로그아웃 버튼" />
+      <div v-if="userInfo">
+        <header>안녕하세요 {{ userInfo.user_nm }}님 ^~^</header>
       </div>
+      <input type="button" @click="logout" value="임시 로그아웃 버튼" />
     </nav>
     <div class="container">
       <AjouNICE />
@@ -22,11 +22,21 @@ import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'home',
+  data () {
+    return {
+      userInfo: null
+    }
+  },
   components: {
     AjouNICE, Footer
   },
   beforeCreate () {
     document.body.classList.remove('auth')
+  },
+  created () {
+    this.$Axios.get('/api/protected').then(result => {
+      this.userInfo = result.data.logged_in_as
+    })
   },
   methods: {
     logout () {

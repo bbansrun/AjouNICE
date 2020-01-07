@@ -18,6 +18,8 @@ Vue.prototype.$Axios = axios
 const token = localStorage.getItem('accessToken')
 if (token) {
   Vue.prototype.$Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+} else {
+  Vue.prototype.$Axios.defaults.headers.common['Authorization'] = undefined
 }
 
 const apolloClient = new ApolloClient({
