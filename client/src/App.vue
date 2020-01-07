@@ -12,10 +12,20 @@ export default {
     Loading
   },
   beforeMount () {
-    document.body.classList.add('loading')
+    document.body.classList.toggle('loading')
   },
   mounted () {
-    document.body.classlist.remove('loading')
+    document.body.classList.toggle('loading')
+  },
+  created () {
+    // this.$Axios.interceptors.response.use(undefined, (err) => {
+    //   return new Promise((resolve, reject) => {
+    //     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+    //       this.$store.dispatch('LOGOUT')
+    //     }
+    //     throw err
+    //   })
+    // })
   }
 }
 </script>

@@ -35,9 +35,10 @@ export default {
             margin-bottom: 1rem;
             > img {
                 width: 120px;
-                transform: perspective(1000px) rotateX(-10deg);
+                transform: perspective(1000px) rotateY(-10deg);
                 transform-style: preserve-3d;
-                animation: animate 2s linear infinite;
+                -webkit-animation: animate 1s cubic-bezier(0.455, 0.030, 0.515, 0.955) both infinite;
+                animation: animate 1s cubic-bezier(0.455, 0.030, 0.515, 0.955) both infinite;
             }
         }
     }
@@ -49,10 +50,22 @@ body.loading {
 }
 @keyframes animate {
     0% {
-        transform: perspective(1000px) rotate(0deg);
+    -webkit-transform: rotateY(0);
+            transform: rotateY(0);
     }
     100% {
-        transform: perspective(1000px) rotate(360deg);
+        -webkit-transform: rotateY(180deg);
+                transform: rotateY(180deg);
+    }
+}
+@-webkit-keyframes animate {
+    0% {
+    -webkit-transform: rotateY(0);
+            transform: rotateY(0);
+    }
+    100% {
+        -webkit-transform: rotateY(180deg);
+                transform: rotateY(180deg);
     }
 }
 </style>

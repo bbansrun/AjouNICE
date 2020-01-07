@@ -11,10 +11,12 @@
                 <div class="divider"></div>
                 <div class="input-form-wrapper">
                     <div class="input-form">
-                        <input type="text" placeholder="아이디" v-model="userID" pattern=".{6,}" required>
+                        <input type="text"  :class="{ 'error': this.errorValidation.userID && !this.userID }" placeholder="아이디" v-model="userID" pattern=".{6,}" required>
+                        <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.userID && !this.userID }" v-if="this.errorValidation.userID && !this.userID">칸이 비어있습니다.</p>
                     </div>
                     <div class="input-form">
-                        <input type="password" placeholder="패스워드" @keyup.enter="signin" v-model="password" pattern=".{8,}" required>
+                        <input type="password" placeholder="패스워드" @keyup.enter="signin" v-model="password" pattern=".{8,}" :class="{ 'error': this.errorValidation.password && !this.password }" required>
+                        <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.password && !this.password }" v-if="this.errorValidation.password && !this.password">칸이 비어있습니다.</p>
                     </div>
                     <div class="input-form">
                         <input type="button" @click="signin" @submit.prevent value="로그인">
@@ -41,41 +43,44 @@ export default {
   name: 'login',
   data () {
     return {
-      formErrors: [],
       userID: '',
-      password: ''
+      password: '',
+      errorValidation: {
+          userID: false,
+          password: false
+      }
     }
   },
   methods: {
       signin () {
           if (this.userID && this.password && this.password.length >= 8) {
-              document.body.classList.add('loading')
-              this.$Axios({
-                url: '/api/auth/login',
-                method: 'POST',
-                data: {
-                    'user_id': this.userID,
-                    'password': this.password
-                }
-              }).then(result => {
-                document.body.classList.remove('loading')
-                window.location = '#/home'
-              }).catch(error => {
-                document.body.classList.remove('loading')
-                if (error.response.status === 500) {
+              document.body.classList.toggle('loading')
+              let user_id = this.userID
+              let password = this.password
+              this.$store.dispatch('LOGIN', { user_id, password })
+                .then(() => {
+                    window.location = '/home'
+                })
+                .catch(err => {
+                    document.body.classList.toggle('loading')
                     this.$swal({
                         title: '오류!',
                         text: '입력하신 정보가 올바르지 않습니다.',
                         type: 'error',
                         width: '90vw'
                     })
-                }
-              })
+                })
+          }
+          if (!this.userID) {
+              this.errorValidation.userID = true
+          }
+          if (!this.password) {
+              this.errorValidation.password = true
           }
       }
   },
   beforeCreate () {
-    document.body.className = 'auth'
+    document.body.classList.add('auth')
   }
 }
 </script>
