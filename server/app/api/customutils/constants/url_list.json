@@ -1,5 +1,5 @@
 {
-  "resolved": [
+  "type1": [
     {
       "name": "대학본부",
       "code": "A0001",
@@ -133,12 +133,6 @@
       "link": "http://security.ajou.ac.kr/security/board/board01.jsp"
     },
     {
-      "name": "정보통신대학 - 소프트웨어학과",
-      "code": "IT0004",
-      "boardName": "공지사항",
-      "link": "http://software.ajou.ac.kr/bbs/board.php?tbl=notice"
-    },
-    {
       "name": "정보통신대학 - 국방디지털융합학과",
       "code": "IT0005",
       "boardName": "공지사항",
@@ -257,9 +251,15 @@
       "code": "SS0006",
       "boardName": "공지사항",
       "link": "http://slez.ajou.ac.kr/slez/community/community03.jsp"
+    },
+    {
+      "name": "약학대학",
+      "code": "PH0001",
+      "boardName": "공지사항",
+      "link": "http://pharm.ajou.ac.kr/pharm/community/community01.jsp"
     }
   ],
-  "united": [
+  "type2": [
     {
       "name": "의과대학",
       "code": "MC0001",
@@ -271,12 +271,14 @@
       "code": "MC0002",
       "boardName": "공지사항",
       "link": "http://ts.ajoumc.or.kr/Board/Retrieve.aspx?cp=1&sid=&rc=10&mc=UH00070080&ssc=0007&ssgc=UH&smpc=UH00070018&CCP=1"
-    },
+    }
+  ],
+  "type3": [
     {
-      "name": "약학대학",
-      "code": "PH0001",
+      "name": "정보통신대학 - 소프트웨어학과",
+      "code": "IT0004",
       "boardName": "공지사항",
-      "link": "http://pharm.ajou.ac.kr/pharm/community/community01.jsp"
+      "link": "http://software.ajou.ac.kr/bbs/board.php?tbl=notice"
     }
   ]
 }
