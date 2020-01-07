@@ -9,6 +9,7 @@ import os
 
 from server.app.api import api_rest
 from server.app.api.security import require_auth
+from ..customutils.crawl_utils import parse_content_type1, parse_content_type2, parse_content_type3
 
 CURRENT_DIR = os.path.realpath(os.path.dirname(__file__))
 CONSTANTS_DIR = os.path.join(CURRENT_DIR, "../../constants/")
@@ -113,7 +114,7 @@ class Bbansrun(Resource):
         elif (code in list(map(lambda x: x['code'], url_list['type1']))):
             target = list(
                 filter(lambda x: x['code'] == code, url_list['type1']))[0]
-            api_response['result'] = parseContent(BeautifulSoup(
+            api_response['result'] = parse_content_type1(BeautifulSoup(
                 requests.get(target['link']).text, 'html.parser'), target)
             print('ad')
         elif (code in list(map(lambda x: x['code'], url_list['type2']))):
