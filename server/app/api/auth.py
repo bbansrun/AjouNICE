@@ -1,8 +1,10 @@
+import jwt
 import json
+import base64
+from datetime import datetime, timedelta, timezone
 
 from flask import Response, request
 from flask_restplus import Resource
-from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from flask_sqlalchemy import SQLAlchemy
 
 from server import db, bcrypt
@@ -37,11 +39,72 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.user_nm
 
+class Tokenizer():
+    """
+    Token Manager for providing Single Sign On Service
+    """
+    def __init__(self, secret, access_token=None):
+        self.access_token = access_token
+        self.refresh_token = None
+        self.secret = secret
+        self.payload = None
+
+    def req_timestamp(self, now=False):
+        tz = timezone(timedelta(hours=9))
+        if now:
+            return int(datetime.timestamp(datetime.now(tz)))
+        else:
+            return int(datetime.timestamp(datetime.now(tz) + timedelta(seconds=3600)))
+
+    def create_payload(self, email):
+        self.payload = {
+            'exp': self.req_timestamp(),
+            'iss': 'AjouNICE!_APIserver',
+            'sub': 'AjouNICE!_SSO',
+            'aud': email,
+            'iat': self.req_timestamp(now=True)
+        }
+
+    def create_refresh_token(self, additional_data=None):
+        payload = self.validate_token()
+        if payload[0]:
+            payload[-1].update(dict(exp=self.req_timestamp()))
+            if additional_data is not None:
+                payload[-1].update(additional_data)
+            return (True, '201', jwt.encode(payload[-1], self.secret, algorithm='HS256').decode('utf-8'))
+        else:
+            return payload
+
+    def create_access_token(self):
+        return jwt.encode(self.payload, self.secret, algorithm='HS256').decode('utf-8')
+    
+    def validate_token(self, audience=None):
+        identity = None
+        try:
+            identity = jwt.decode(self.access_token, self.secret, audience=audience, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return (False, '401', 'Expired Token')
+        except jwt.InvalidAudienceError:
+            return (False, '401', 'Invalid Audience')
+        except jwt.InvalidSignatureError:
+            return (False, '401', 'Invalid Signature')
+        except jwt.InvalidTokenError:
+            return (False, '401', 'Invalid Token')
+        except Exception as e:
+            return (False, '500', str(e))
+        else:
+            return (True, '201', identity)
+
+SECRET_KEY = '4j0uN1ce1'
+
+def jsonResponse(payload, status_code):
+    return Response(json.dumps(payload), status=status_code, mimetype='application/json')
+
 @api_rest.route("/auth/login")
 class LoginAPI(Resource):
     def post(self):
         if not request.is_json:
-            return Response(json.dumps({ "err": "TypeError: Not JSON Type Request." }), status=400)
+            return jsonResponse({ "err": "TypeError: Not JSON Type Request." }, 400)
         
         user_id = request.json.get('user_id', None)
         password = request.json.get('password', None)
@@ -51,40 +114,97 @@ class LoginAPI(Resource):
         result = bcrypt.check_password_hash(compare_pw, password)
 
         if result:
-            token_identity = { 'user_id': user_id, 'user_nm': user.user_nm, 'identity_num': user.identity_num, 'user_type': user.user_type, 'user_status': user.user_status, 'college_cd': user.college_cd, 'dpt_cd': user.dpt_cd, 'nick_nm': user.nick_nm, 'email': user.email, 'auth_email_yn': user.auth_email_yn }
-            access_token = create_access_token(identity=token_identity)
-            refresh_token = create_refresh_token(identity=token_identity)
-
-            return Response(json.dumps({
+            tokenizer = Tokenizer(secret=SECRET_KEY)
+            tokenizer.create_payload(user.email)
+            access_token = tokenizer.create_access_token()
+            return jsonResponse({
                 'title': 'AjouNICE!',
                 'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
                 'APIName': '/auth/login',
                 'APIDescription': '로그인 토큰처리',
                 'result': {
-                    'code': '200',
+                    'code': '201',
                     'access_token': access_token,
-                    'refresh_token': refresh_token,
                     'auth_email_yn': user.auth_email_yn
                 }
-            }), status=200)
+            }, 201)
         else:
-            return Response(json.dumps({
+            return jsonResponse({
                 'title': 'AjouNICE!',
                 'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
                 'APIName': '/auth/login',
                 'APIDescription': '로그인 토큰처리',
                 'result': {
                     'code': '401',
-
-                    'message': '비밀번호가 일치하지 않습니다.'
+                    'message': '로그인 정보가 올바르지 않습니다.'
                 }
-            }), status=401)
+            }, 401)
+
+@api_rest.route("/auth/refresh")
+class RefreshAPI(Resource):
+    def get(self):
+        if 'Authorization' not in request.headers:
+            return jsonResponse({
+                'msg': 'Authorization Header Needed'
+            }, 401)
+        
+        token = request.headers.get('Authorization')
+        if 'Bearer' not in token:
+            return jsonResponse({
+                'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'
+            }, 401)
+        
+        try:
+            token = token.split(' ')[-1]
+        except:
+            return jsonResponse({
+                'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'
+            }, 401)
+        else:
+            tokenizer = Tokenizer(secret=SECRET_KEY, access_token=token)
+            identity = tokenizer.create_refresh_token()
+            if identity[0]:
+                return jsonResponse({
+                    'title': 'AjouNICE!',
+                    'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+                    'APIName': '/auth/refresh',
+                    'APIDescription': '토큰 연장처리',
+                    'result': {
+                        'code': '201',
+                        'refresh_token': identity[-1],
+                    }
+                }, 201)
+            else:
+                return jsonResponse({
+                    'msg': identity[-1]
+                }, int(identity[1]))
 
 @api_rest.route("/protected")
 class Protected(Resource):
-    @jwt_required
     def get(self):
-        current_user = get_jwt_identity()
-        return Response(json.dumps({
-            'logged_in_as': current_user
-        }), status=200)
+        if 'Authorization' not in request.headers:
+            return jsonResponse({
+                'msg': 'Authorization Header Needed'
+            }, 401)
+
+        token = request.headers.get('Authorization')
+        if 'Bearer' not in token:
+            return jsonResponse({
+                'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'
+            }, 401)
+
+        try:
+            token = token.split(' ')[-1]
+        except:
+            return jsonResponse({
+                'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'
+            }, 401)
+        else:
+            tokenizer = Tokenizer(secret=SECRET_KEY, access_token=token)
+            identity = tokenizer.validate_token()
+            if identity[0]:
+                return jsonResponse(identity[-1], 201)
+            else:
+                return jsonResponse({
+                    'msg': identity[-1]
+                }, int(identity[1]))

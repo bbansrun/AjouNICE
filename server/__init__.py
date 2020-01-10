@@ -3,7 +3,6 @@ import json
 import pymysql
 from flask import Flask, current_app, send_file
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 
 from server.app.api import api_bp
@@ -48,7 +47,6 @@ def create_app():
 
 app = create_app()
 db = SQLAlchemy(app)
-jwt = JWTManager(app)
 bcrypt = Bcrypt(app)
 
 # Import resources to ensure view is registered # NOQA
