@@ -1,21 +1,25 @@
-const mailgun = require("mailgun-js");
 const template = require('./emailConfirmTemplate')
+const sgMail = require('@sendgrid/mail');
 
-const mg = mailgun({ apiKey: require('../config/config.json')['development']['mailapikey'], domain: require('../config/config.json')['development']['maildomain'] });
+sgMail.setApiKey(require('../config/config.json')['development']['mailapikey']);
 
-
-const sendConfirmMail = (user_nm, email, authToken) => {
-  const data = {
-    from: 'Team Bbansrun <kingman330@gmail.com>',
+const sendConfirmMail = async (user_nm, email, authToken) => {
+  const msg = {
     to: email,
+    from: 'kingman330@gmail.com',
     subject: `${user_nm} 님, AJOUNICE 인증 메일 입니다.`,
     html: template(`http://localhost:8080/auth/authorize?authToken=${authToken}`),
+  };
+
+  try {
+    await sgMail.send(msg);
+  } catch (err) {
+    console.log(err)
   }
-  mg.messages().send(data, (err, body) => {
-    console.log(body);
-  });
+  return;
 }
-// sendConfirmMail('Nailer', 'kingman330@gmail.com', '뀨뀨꺄꺄'); testcode
+// test sendConfirmMail
+// sendConfirmMail('nailer', 'kingman330@gmail.com', '뀨꺆꺄뀨ㅑ뀪꺄ㅠ꺄');
 
 module.exports = {
   sendConfirmMail,
