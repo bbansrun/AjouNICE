@@ -6,6 +6,7 @@ module.exports = `type User {
     user_nm: String
     identity_num: String
     user_type: String
+    admin_type: String
     sex_gb: String
     user_status: String
     policy_yn: Boolean
@@ -53,11 +54,13 @@ type Query {
     findColleges(exist_yn: String!): [College],
     findNickName(nick_nm: String!): [User],
     findEmail(email: String!): [User],
-    findUserID(userId: String!): [User]
+    findUserID(userId: String!): [User],
+    findUserByToken(token: String!): User,
 }
 
 type Mutation {
     register(email: String!, user_id: String!, password: String!, user_nm: String!, identity_num: Int, user_type: String!, sex_gb: String!, college_cd: String, dpt_cd: String, nick_nm: String!, reg_ip: String!): User!,
-    lastLogin(userId: String!, ip: String!): Boolean 
+    lastLogin(userId: String!, ip: String!): Boolean,
+    authorize(user_idx: Int!): Boolean
 }
 `

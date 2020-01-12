@@ -1,3 +1,10 @@
+@for $i from 1 through 9 {
+    $flex: $i;
+    .flex-#{$i} { 
+        flex: $flex;
+    }
+}
+
 [data-form-wrapper] {
     position: relative;
     width: 100vw;
@@ -197,12 +204,10 @@
                     margin-top: 5px;
                     padding: 5px 10px;
                     & .input-form-title {
-                        flex: 1;
                         color: #333;
                         text-align: left;
                     }
                     & div[class$="-wrapper"] {
-                        flex: 4;
                         text-align: right;
                     }
                     + .input-form > input {

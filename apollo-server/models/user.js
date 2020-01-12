@@ -40,6 +40,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 'U'
         },
+        admin_type: {
+            type: DataTypes.STRING(10),
+            allowNull: false,
+            defalutValue: 'ORD'
+        },
         sex_gb: {
             type: DataTypes.STRING(1),
             allowNull: true,

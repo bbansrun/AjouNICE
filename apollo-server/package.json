@@ -4,7 +4,8 @@
   "description": "GraphQL Endpoint for AjouNICE Auth & General Data Browsing",
   "main": "apollo.js",
   "scripts": {
-    "start": "node apollo.js"
+    "start": "node apollo.js",
+    "dev": "NODE_ENV=development node apollo.js"
   },
   "keywords": [],
   "author": "Bbansrun",
@@ -13,11 +14,13 @@
     "apollo-server": "^2.9.12",
     "apollo-server-cache-redis": "^1.1.4",
     "bcrypt": "^3.0.7",
+    "config": "^3.2.4",
     "crypto": "^1.0.1",
     "graphql": "^14.5.8",
     "graphql-fields": "^2.0.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "mailgun-js": "^0.22.0",
     "mysql2": "^2.0.1",
     "sequelize": "^5.21.2",
     "sequelize-cli": "^5.5.1"
