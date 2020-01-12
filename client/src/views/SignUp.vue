@@ -15,7 +15,7 @@
                       <span v-show="this.selectedUserType !== 'U'"><strong>아주 구성원은 인증을 위해 ajou.ac.kr 이메일로 가입해주세요.</strong></span>
                     </div>
                   </div>
-                  <div class="input-form" v-if="this.selectedUserType === 'R'">
+                  <div class="input-form" v-if="this.selectedUserType === 'R' || this.selectedUserType === 'G'">
                     <div class="input-group">
                       <v-select :class="{ 'error': this.errorValidation.college }" placeholder="소속대학을 선택하여주세요." v-model="selectedCollege" :value="this.selectedCollege" @input="selectedCollegeCd" :options="this.collegeList" :reduce="college => college.college_cd" label="college_nm"></v-select>
                       <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.college }" v-if="this.errorValidation.college">{{ this.errorMsg.college }}</p>
@@ -24,7 +24,7 @@
                       <v-select :class="{ 'error': this.errorValidation.dpt }" v-if="this.selectedCollege" placeholder="소속학과를 선택하여주세요." v-model="selectedDpt" :value="this.selectedDpt" @input="selectedDptCd" :options="this.dptList" :reduce="dpt => dpt.dpt_cd" label="dpt_nm"></v-select>
                       <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.dpt }" v-if="this.errorValidation.dpt">{{ this.errorMsg.dpt }}</p>
                       <div class="input-form input-form-horizontal" v-if="this.selectedCollege && this.selectedDpt">
-                        <label for="smajor" role="title" class="input-form-title flex-9">복수전공 혹은 부전공을 이수하고 있습니다.</label>
+                        <label for="smajor" role="title" class="input-form-title flex-9">제2전공(복수전공/부전공)이 있습니다.</label>
                         <div class="input-form radio-wrapper flex-1">
                           <input type="checkbox" name="smajor" id="smajor" v-model="hasSubMajor" />
                         </div>
@@ -304,7 +304,7 @@ export default {
       for (let key of Object.keys(this.errorValidation)) {
         this.initError(key)
       }
-      if (value === 'R') {
+      if (value === 'R' || value === 'G') {
         this.$apollo.query({
           query: gql`{ findColleges(exist_yn: "Y") { college_cd college_nm } }`
         }).then(result => {
@@ -564,7 +564,7 @@ export default {
       }
     },
     checkValidation () {
-      if (this.selectedUserType === 'R' && !this.selectedCollege) {
+      if ((this.selectedUserType === 'R' || this.selectedUserType === 'G') && !this.selectedCollege) {
         this.occurError('college', '항목이 비어있습니다.')
       }
       if (this.selectedUserType !== 'U' && this.selectedCollege && !this.selectedDpt) {
