@@ -68,19 +68,19 @@ export default new Router({
       component: About
     },
     {
-      path: '/error',
-      name: 'serv_error',
-      component: ServError
-    },
-    {
       path: '/auth/reset',
       name: 'reset',
       component: RenewAccount
     },
     {
-      path: '/404',
+      path: '/error/404',
       name: 'not_found',
       component: NotFound
+    },
+    {
+      path: '/error/500',
+      name: 'serv_error',
+      component: ServError
     },
     {
       path: '*',
