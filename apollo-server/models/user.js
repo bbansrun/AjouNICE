@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         auth_token: {
-            type: DataTypes.STRING(20),
+            type: DataTypes.STRING(64),
             allowNull: true
         },
         user_profile: {
