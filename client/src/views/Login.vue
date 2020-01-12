@@ -47,48 +47,48 @@ export default {
       userID: '',
       password: '',
       errorValidation: {
-          userID: false,
-          password: false
+        userID: false,
+        password: false
       }
     }
   },
   methods: {
-      signin () {
-          if (this.userID && this.password && this.password.length >= 8) {
-              document.body.classList.toggle('loading')
-              let user_id = this.userID
-              let password = this.password
-              this.$store.dispatch('LOGIN', { user_id, password })
-                .then(({ result }) => {
-                    this.$Axios.get('/api/reqClientIP').then(client => {
-                        this.$apollo.mutate({
-                            mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
-                        })
-                    })
-                    if (result.auth_email_yn === 'N') {
-                        this.$store.dispatch('LOGOUT')
-                        window.location = '/auth/unauthorized'
-                    } else {
-                        window.location = '/home'
-                    }
+    signin () {
+      if (this.userID && this.password && this.password.length >= 8) {
+        document.body.classList.toggle('loading')
+        let user_id = this.userID
+        let password = this.password
+        this.$store.dispatch('LOGIN', { user_id, password })
+        .then(({ result }) => {
+            this.$Axios.get('/api/reqClientIP').then(client => {
+                this.$apollo.mutate({
+                    mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
                 })
-                .catch(err => {
-                    document.body.classList.toggle('loading')
-                    this.$swal({
-                        title: '오류!',
-                        text: '입력하신 정보가 올바르지 않습니다.',
-                        type: 'error',
-                        width: '90vw'
-                    })
-                })
-          }
-          if (!this.userID) {
-              this.errorValidation.userID = true
-          }
-          if (!this.password) {
-              this.errorValidation.password = true
-          }
+            })
+            if (result.auth_email_yn === 'N') {
+                this.$store.dispatch('LOGOUT')
+                window.location = '/auth/unauthorized'
+            } else {
+                window.location = '/home'
+            }
+        })
+        .catch(err => {
+            document.body.classList.toggle('loading')
+            this.$swal({
+                title: '오류!',
+                text: '입력하신 정보가 올바르지 않습니다.',
+                type: 'error',
+                width: '90vw'
+            })
+        })
       }
+      if (!this.userID) {
+        this.errorValidation.userID = true
+      }
+      if (!this.password) {
+        this.errorValidation.password = true
+      }
+    }
   },
   beforeCreate () {
     document.body.classList.add('auth')

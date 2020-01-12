@@ -24,8 +24,8 @@
                       <v-select :class="{ 'error': this.errorValidation.dpt }" v-if="this.selectedCollege" placeholder="소속학과를 선택하여주세요." v-model="selectedDpt" :value="this.selectedDpt" @input="selectedDptCd" :options="this.dptList" :reduce="dpt => dpt.dpt_cd" label="dpt_nm"></v-select>
                       <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.dpt }" v-if="this.errorValidation.dpt">{{ this.errorMsg.dpt }}</p>
                       <div class="input-form input-form-horizontal" v-if="this.selectedCollege && this.selectedDpt">
-                        <label for="smajor" role="title" class="input-form-title">복수전공 혹은 부전공을 이수하고 있습니다.</label>
-                        <div class="input-form radio-wrapper">
+                        <label for="smajor" role="title" class="input-form-title flex-9">복수전공 혹은 부전공을 이수하고 있습니다.</label>
+                        <div class="input-form radio-wrapper flex-1">
                           <input type="checkbox" name="smajor" id="smajor" v-model="hasSubMajor" />
                         </div>
                       </div>
@@ -75,8 +75,8 @@
                   </div>
                   <div class="input-form">
                     <div class="input-group input-form-horizontal">
-                      <span role="title" class="input-form-title">성별 선택</span>
-                      <div class="input-form button-wrapper">
+                      <span role="title" class="input-form-title flex-6">성별 선택</span>
+                      <div class="input-form button-wrapper flex-4">
                         <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.M }" @click="selectedGender('M')" value="남성">
                         <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.W }" @click="selectedGender('W')" value="여성">
                       </div>
@@ -87,8 +87,8 @@
                   </div>
                   <div class="input-form">
                     <div class="input-group input-form-horizontal">
-                      <label for="policy" class="input-form-title">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
-                      <input type="button" class="mini-inline" @click="showPolicy" :disabled="this.policy.agreed" :value="this.policy.msg" />
+                      <label for="policy" class="input-form-title flex-6">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
+                      <input type="button" class="mini-inline flex-4" @click="showPolicy" :disabled="this.policy.agreed" :value="this.policy.msg" />
                     </div>
                     <div class="notice">
                       <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.policy }" v-if="this.errorValidation.policy">{{ this.errorMsg.policy }}</p>
@@ -220,7 +220,7 @@ export default {
       this.initError('email')
       this.validatedEmail = false
       this.email = value.toLowerCase()
-      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+      let re = /^(([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
       if (this.selectedUserType === 'U') {
         if (value && re.test(value)) {
           if (value.includes('@ajou.ac.kr')) {
@@ -581,6 +581,9 @@ export default {
       }
       if (!this.email) {
         this.occurError('email', '항목이 비어있습니다.')
+      }
+      if (this.email && (this.selectedUserType === 'U' && this.email.includes('@ajou.ac.kr'))) {
+        this.occurError('email', 'ajou.ac.kr 이메일 사용자는 아주 구성원(학부생/대학원생/졸업생/교직원) 자격으로 가입이 가능합니다.')
       }
       if (!(this.selectedUserType === 'U' || this.selectedUserType === 'E') && !this.userIDNum) {
         this.occurError('user_st_id', '항목이 비어있습니다.')

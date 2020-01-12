@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         user_id: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRINxG(50),
             allowNull: false,
             unique: true
         },
