@@ -9,6 +9,7 @@ import Login from './views/Login.vue'
 import RenewAccount from './views/RenewAccount.vue'
 import Signup from './views/SignUp.vue'
 import Unauthorized from './views/Unauthorized.vue'
+import Authorize from './views/Authorize.vue'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       name: 'login',
       component: Login,
       // beforeEnter: alreadySignedIn
+    },
+    {
+      path: '/auth/authorize',
+      name: 'authorize',
+      component: Authorize
     },
     {
       path: '/auth/unauthorized',

@@ -1,0 +1,37 @@
+<template>
+    <div></div>
+</template>
+
+<script>
+import gql from 'graphql-tag'
+export default {
+    name: 'authorize',
+    methods: {
+        authorizeToken () {
+            let params = this.$route.query
+            if ('authorizeToken' in params) {
+                this.$apollo.query({
+                    query: gql`{ findUserByToken(token: "${params['authorizeToken']}") { user_idx } }`
+                }).then(result => {
+                    let user_idx = result.data.findUserByToken.user_idx
+                    this.$apollo.mutate({
+                        mutation: gql`mutation { authorize(user_idx: ${user_idx}) }`
+                    }).then(result => {
+                        if (result.data.authorize) {
+                            window.location = '/home'
+                        }
+                    })
+                })
+            } else {
+                window.location = '/404'
+            }
+        }
+    },
+    beforeCreate () {
+        document.body.classList.toggle('loading')
+    },
+    created () {
+        this.authorizeToken()
+    }
+}
+</script>
