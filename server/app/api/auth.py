@@ -56,13 +56,17 @@ class Tokenizer():
         else:
             return int(datetime.timestamp(datetime.now(tz) + timedelta(seconds=3600)))
 
-    def create_payload(self, email):
+    def create_payload(self, user):
         self.payload = {
             'exp': self.req_timestamp(),
             'iss': 'AjouNICE!_APIserver',
             'sub': 'AjouNICE!_SSO',
-            'aud': email,
-            'iat': self.req_timestamp(now=True)
+            'iat': self.req_timestamp(now=True),
+            'user': {
+                'email': user.email,
+                'name': user.user_nm,
+                'idx': user.user_idx
+            }
         }
 
     def create_refresh_token(self, additional_data=None):
@@ -115,7 +119,7 @@ class LoginAPI(Resource):
 
         if result:
             tokenizer = Tokenizer(secret=SECRET_KEY)
-            tokenizer.create_payload(user.email)
+            tokenizer.create_payload(user)
             access_token = tokenizer.create_access_token()
             return jsonResponse({
                 'title': 'AjouNICE!',

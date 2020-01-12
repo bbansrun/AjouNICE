@@ -59,22 +59,18 @@ export default {
               let user_id = this.userID
               let password = this.password
               this.$store.dispatch('LOGIN', { user_id, password })
-                .then(() => {
+                .then(({ result }) => {
                     this.$Axios.get('/api/reqClientIP').then(client => {
                         this.$apollo.mutate({
                             mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
                         })
-                    }).then(() => {
-                        this.$Axios.get('/api/protected')
-                        .then((result) => {
-                            if (result.data.logged_in_as.auth_email_yn === 'N') {
-                                this.$store.dispatch('LOGOUT')
-                                window.location = '/auth/unauthorized'
-                            } else {
-                                window.location = '/home'
-                            }
-                        })
                     })
+                    if (result.auth_email_yn === 'N') {
+                        this.$store.dispatch('LOGOUT')
+                        window.location = '/auth/unauthorized'
+                    } else {
+                        window.location = '/home'
+                    }
                 })
                 .catch(err => {
                     document.body.classList.toggle('loading')
