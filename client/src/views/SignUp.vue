@@ -379,9 +379,15 @@ export default {
     },
     selectedCollegeCd (value) {
       this.selectedCollege = value
+      if (this.selectedDpt) {
+        this.selectedDpt = ''
+      }
     },
     selectedSubCollegeCd (value) {
       this.selectedSubCollege = value
+      if (this.selectedSubDpt) {
+        this.selectedSubDpt = ''
+      }
     },
     selectedDptCd (value) {
       this.selectedDpt = value
