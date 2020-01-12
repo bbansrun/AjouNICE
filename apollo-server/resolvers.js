@@ -71,6 +71,7 @@ module.exports = {
                 user_nm,
                 identity_num,
                 user_type,
+                admin_type: 'ORD',
                 sex_gb,
                 user_status: 'Y',
                 policy_yn: 'Y',
@@ -87,7 +88,7 @@ module.exports = {
                 log_ip: reg_ip,
                 log_dt: Date.now()
             });
-            sendConfirmMail(user_nm, email, authToken);
+            sendConfirmMail(user_nm, email, authToken)
             return user
         },
         lastLogin: async (root, { userId, ip }) => {
