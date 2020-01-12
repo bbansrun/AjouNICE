@@ -47,6 +47,14 @@ module.exports = {
                     user_id: args.userId
                 }
             })
+        },
+        async findUserByToken(parent, args, context, info) {
+            return await User.findOne({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+                    auth_token: args.token
+                }
+            })
         }
     },
     Mutation: {
@@ -85,6 +93,11 @@ module.exports = {
         lastLogin: async (root, { userId, ip }) => {
             const updateLastLogin = await User.update({ log_ip: ip, log_dt: Date.now() }, { where: { user_id: userId } })
             if (updateLastLogin) return true
+            else return false
+        },
+        authorize: async (root, { user_idx }) => {
+            const updateAuthorized = await User.update({ auth_email_yn: 'Y' }, { where: { user_idx: user_idx } })
+            if (updateAuthorized) return true
             else return false
         }
     }

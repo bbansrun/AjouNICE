@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         user_id: {
-            type: DataTypes.STRINxG(50),
+            type: DataTypes.STRING(50),
             allowNull: false,
             unique: true
         },
@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(1),
             allowNull: false,
             defaultValue: 'U'
+        },
+        admin_type: {
+            type: DataTypes.STRING(10),
+            allowNull: false,
+            defalutValue: 'ORD'
         },
         sex_gb: {
             type: DataTypes.STRING(1),
