@@ -49,58 +49,101 @@ small {
 }
 
 // Default
-
 nav.gnb {
   position: fixed;
-  width: 90vw;
-  height: 90vh;
-  bottom: calc(-90vh + 40px);
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 1rem 1rem 0 0;
-  color: #fff;
-  text-align: center;
-  background: linear-gradient(to right, rgb(133, 91, 218), rgb(165, 135, 212));
-  padding: 10px 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, .48);
-  transition: .2s all cubic-bezier(0.250, 0.460, 0.450, 0.940);
-  z-index: 100000;
-  &:hover {
-    bottom: 5px;
-  }
-  > .logo {
-    padding: 0 20px;
-    > h1 {
-      display: inline-block;
-      font-weight: 100;
-      font-family: 'yg-jalnan';
-      font-size: 30px;
-      text-shadow: 0 0 10px rgba(0, 0, 0, .24);
+  z-index: 1000000;
+  box-shadow: 0 5px 5px rgba(0,0,0,.2);
+  & .section.always-open {
+    padding: 1rem 3rem;
+    & .title {
+      font-size: 1.5rem;
+      color: #17553E;
+      text-shadow: 0 3px 5px rgba(0,0,0,.24);
     }
+  }
+  & .section.open {
+      display: block;
+  }
+  & .section.closed {
+      display: none;
+  }
+}
+
+nav.gnb.deactivated {
+  > .section.always-open {
+    background: #fff;
+    border-radius: 1rem;
   }
 }
 
 .container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0 50px;
-  padding-top: 50px;
+  padding: 2rem 0;
+  position: relative;
+  min-height: 100vh;
+  z-index: 0;
 }
 
-footer.footer {
-  box-sizing: border-box;
+// Landing
+.landing {
   position: relative;
-  width: 100%;
-  font-size: .8em;
-  margin-top: auto;
-  padding: 10px;
-  background: rgb(23, 85, 62);
+  text-align: center;
   color: #fff;
-  text-align: left;
-  & a {
-    font-weight: bold;
-    color: #fff;
+  padding: 20vh 0;
+  z-index: 0;
+  > .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.8);
+    z-index: -1;
+    + header {
+      > h2.title {
+        font-weight: bold;
+        font-size: 4vw;
+      }
+      > small {
+        font-size: 2vw;
+      }
+    }
+  }
+}
+
+// Footer
+footer.footer {
+  padding: 2rem 0 0 0;
+  background: #2c2c2c;
+  color: #fff;
+  & .footer-wrapper {
+    width: 75%;
+    margin: auto;
+    & .footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      min-height: 2rem;
+      + hr {
+        border: .5px solid rgba(255, 255, 255, 0.5);
+      }
+      & ul {
+        & li {
+          display: inline-block;
+          margin-right: 5px;
+          & a {
+            font-size: .8rem;
+            color: #fff;
+            &:visited {
+              color: inherit;
+            }
+          }
+        }
+      }
+    }
+  }
+  & p {
+    font-size: .8rem;
+    padding-block-start: 1em;
+    padding-block-end: 1em;
   }
 }

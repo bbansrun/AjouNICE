@@ -1,17 +1,38 @@
 <template>
     <footer class="footer">
-        <header class="logo-font">
-            <img width="50" src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" alt="bbansrun" />
-            <p>bbansrun!</p>
-        </header>
-        <p>아주나이스 개발팀 <a href="http://github.com/bbansrun">빤스런</a></p>
-        <p id="copyright">
-            <ul>
-                <li>김호영</li>
-                <li>최성흠</li>
-                <li>전지원</li>
-                <li>오현희</li>
-            </ul>
-        </p>
+        <div class="footer-wrapper">
+            <section class="footer">
+                <header>
+                    <h2 class="logo-font">AjouNICE!</h2>
+                    <small>아주대학교 학부 커뮤니티 서비스</small>
+                </header>
+                <ul class="copyright">
+                    <li>
+                        <router-link to="/about">서비스소개</router-link>
+                    </li>
+                    <li>
+                        <router-link to="/contact">연락</router-link>
+                    </li>
+                </ul>
+            </section>
+            <hr />
+            <p>
+                <span>&copy; {{ year }} bbansrun.</span>
+            </p>
+        </div>
     </footer>
 </template>
+
+<script>
+export default {
+    name: 'footer',
+    data () {
+        return {
+            year: null
+        }
+    },
+    mounted () {
+        this.year = new Date().getUTCFullYear()
+    }
+}
+</script>

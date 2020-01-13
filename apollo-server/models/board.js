@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     upt_dt: {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: DateTypes.NOW,
+      defaultValue: DataTypes.NOW,
     },
   }, {
     hooks: {

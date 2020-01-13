@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('BOARD', {
+  return sequelize.define('BOARD_CATEGORY', {
     category_idx: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
     upt_dt: {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: DateTypes.NOW,
+      defaultValue: DataTypes.NOW,
     },
   }, {
     hooks: {
@@ -69,5 +69,5 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     charset: 'utf8',
     collate: 'utf8_unicode_ci'
-  });
+  })
 }
