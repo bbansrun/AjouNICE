@@ -64,14 +64,20 @@ export default {
             query: gql`{ findEmail(email: "${this.email}") { email } }`
           }).then(result => {
             if (result.data.findEmail.length > 0) {
-              this.$swal({
-                type: 'success',
-                width: '90vw',
-                title: '재설정 이메일 발송',
-                text: '패스워드 재설정 이메일을 입력하신 주소로 발송하였습니다. 받은 문서함을 확인해주세요.',
-                footer: '스팸으로 분류되는 경우도 발생할 수 있으니 수신되지 않은 경우 해당 문서함을 확인해주세요.'
+              this.$apollo.mutate({
+                mutation: gql`mutation { resetEmailToken(email: "${this.email}") }`
               }).then(result => {
-                window.location = '/'
+                if (result.data.resetEmailToken) {
+                  this.$swal({
+                    type: 'success',
+                    width: '90vw',
+                    title: '재설정 이메일 발송',
+                    text: '패스워드 재설정 이메일을 입력하신 주소로 발송하였습니다. 받은 문서함을 확인해주세요.',
+                    footer: '스팸으로 분류되는 경우도 발생할 수 있으니 수신되지 않은 경우 해당 문서함을 확인해주세요.'
+                  }).then(result => {
+                    window.location = '/'
+                  })
+                }
               })
             } else {
               this.emailError = true

@@ -8,6 +8,7 @@ import Contact from './views/base/Contact.vue'
 import AdminLogin from './views/auth/AdminLogin.vue'
 import Login from './views/auth/Login.vue'
 import RenewAccount from './views/auth/RenewAccount.vue'
+import Modifier from './views/auth/ModifyAccount.vue'
 import Signup from './views/auth/SignUp.vue'
 import Unauthorized from './views/auth/Unauthorized.vue'
 import Authorize from './views/auth/Authorize.vue'
@@ -102,6 +103,10 @@ export default new Router({
       path: '/auth/authorize',
       name: 'authorize',
       component: Authorize
+    },
+    {
+      path: '/auth/reset/authorize',
+      component: Modifier
     },
     {
       path: '/auth/unauthorized',
