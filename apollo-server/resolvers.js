@@ -73,14 +73,22 @@ module.exports = {
                 }
             })
         },
+        async findUserByIdx(parent, args, context, info) {
+            return await User.findOne({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => elem !== '__typename'),
+                where: {
+                    user_idx: args.user_idx,
+                }
+            });
+        },
         async findBoardCategories(parent, args, context, info) {
-            let searchOption = { depth: args.depth }
-            if (args.title) searchOption.title = args.title
-            if (args.parent) searchOption.parent = args.parent
+            let searchOption = { depth: args.depth };
+            if (args.title) searchOption.title = args.title;
+            if (args.parent) searchOption.parent = args.parent; 3
             return await BoardCategory.findAll({
                 attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
                 where: searchOption
-            })
+            });
         }
     },
     Mutation: {
