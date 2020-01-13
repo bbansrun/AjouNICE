@@ -55,6 +55,9 @@ module.exports = {
                     auth_token: args.token
                 }
             })
+        },
+        async findBoardCategories(parent, args, context, info) {
+            return;
         }
     },
     Mutation: {
