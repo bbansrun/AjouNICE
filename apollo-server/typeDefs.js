@@ -12,7 +12,7 @@ module.exports = `type User {
     policy_yn: Boolean
     college_cd: String
     dpt_cd: String
-    auth_email_yn: Boolean
+    auth_email_yn: String
     auth_token: String
     user_profile: String
     nick_nm: String

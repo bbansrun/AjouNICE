@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <footer>
-                    <router-link to="/auth/signup">아직 회원이 아니신가요? 회원가입 &rarr;</router-link>
+                    <router-link to="/auth/signup" class="btn btn-round">회원가입 &rarr;</router-link>
                 </footer>
             </form>
         </section>
@@ -36,48 +36,65 @@
 <script>
 import Vue from 'vue'
 import VueFlashMessage from 'vue-flash-message'
+import gql from 'graphql-tag'
 
 Vue.use(VueFlashMessage)
 
 export default {
-  name: 'admin_login',
+  name: 'login',
   data () {
     return {
       userID: '',
       password: '',
       errorValidation: {
-          userID: false,
-          password: false
+        userID: false,
+        password: false
       }
     }
   },
   methods: {
-      signin () {
-          if (this.userID && this.password && this.password.length >= 8) {
-              document.body.classList.toggle('loading')
-              let user_id = this.userID
-              let password = this.password
-              this.$store.dispatch('LOGIN', { user_id, password })
-                .then(() => {
-                    window.location = '/home'
+    signin () {
+      let params = this.$route.params
+      if (this.userID && this.password && this.password.length >= 8) {
+        document.body.classList.toggle('loading')
+        let user_id = this.userID
+        let password = this.password
+        this.$store.dispatch('LOGIN', { user_id, password })
+        .then(({ result }) => {
+            this.$Axios.get('/api/reqClientIP').then(client => {
+                this.$apollo.mutate({
+                    mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
                 })
-                .catch(err => {
-                    document.body.classList.toggle('loading')
-                    this.$swal({
-                        title: '오류!',
-                        text: '입력하신 정보가 올바르지 않습니다.',
-                        type: 'error',
-                        width: '90vw'
-                    })
-                })
-          }
-          if (!this.userID) {
-              this.errorValidation.userID = true
-          }
-          if (!this.password) {
-              this.errorValidation.password = true
-          }
+            })
+            if (result.auth_email_yn === 'N') {
+                this.$store.dispatch('LOGOUT')
+                window.location = '/auth/unauthorized'
+            } else {
+                if ('redirect' in params) {
+                  window.location = params['redirect']
+                } else {
+                  window.location = '/gate/manager'
+                }
+            }
+        })
+        .catch(err => {
+            console.error(err)
+            document.body.classList.toggle('loading')
+            this.$swal({
+                title: '오류!',
+                text: '입력하신 정보가 올바르지 않습니다.',
+                type: 'error',
+                width: '90vw'
+            })
+        })
       }
+      if (!this.userID) {
+        this.errorValidation.userID = true
+      }
+      if (!this.password) {
+        this.errorValidation.password = true
+      }
+    }
   },
   beforeCreate () {
     document.body.classList.add('auth')

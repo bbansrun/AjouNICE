@@ -2,7 +2,7 @@ const { User, College, Department, sequelize } = require('./models')
 const graphqlFields = require('graphql-fields')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
-const { sendConfirmMail } = require('./mailer/mailUtils');
+const { sendConfirmMail } = require('./mailer/mailUtils')
 
 sequelize.sync()
 

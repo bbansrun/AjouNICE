@@ -69,7 +69,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         auth_email_yn: {
             type: DataTypes.STRING(1),
-            allowNull: false
+            allowNull: false,
+            defaultValue: 'N'
         },
         auth_token: {
             type: DataTypes.STRING(64),

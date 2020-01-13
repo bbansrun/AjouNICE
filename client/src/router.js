@@ -10,6 +10,7 @@ import RenewAccount from './views/RenewAccount.vue'
 import Signup from './views/SignUp.vue'
 import Unauthorized from './views/Unauthorized.vue'
 import Authorize from './views/Authorize.vue'
+import Board from './views/Board.vue'
 
 Vue.use(Router)
 
@@ -17,6 +18,16 @@ const requireAuth = (to, from, next) => {
   if (localStorage.accessToken) return next()
   next({
     path: '/',
+    query: {
+      redirect: to.fullPath
+    }
+  })
+}
+
+const requireAdminAuth = (to, from, next) => {
+  if (localStorage.accessToken) return next()
+  next({
+    path: '/gate/manager/auth/login',
     query: {
       redirect: to.fullPath
     }
@@ -33,8 +44,17 @@ export default new Router({
     {
       path: '/',
       name: 'login',
-      component: Login,
-      // beforeEnter: alreadySignedIn
+      component: Login
+    },
+    {
+      path: '/board/:category',
+      component: Board,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/board/:category/:name',
+      component: Board,
+      beforeEnter: requireAuth
     },
     {
       path: '/auth/authorize',
@@ -47,9 +67,14 @@ export default new Router({
       component: Unauthorized
     },
     {
-      path: '/auth/gate/manager/login',
+      path: '/gate/manager/auth/login',
       name: 'admin_login',
       component: AdminLogin
+    },
+    {
+      path: '/gate/manager',
+      name: 'admin',
+      beforeEnter: requireAdminAuth
     },
     {
       path: '/auth/signup',
@@ -84,7 +109,7 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/404'
+      redirect: '/error/404'
     }
   ]
 })
