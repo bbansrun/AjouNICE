@@ -11,6 +11,7 @@ import Signup from './views/SignUp.vue'
 import Unauthorized from './views/Unauthorized.vue'
 import Authorize from './views/Authorize.vue'
 import Board from './views/Board.vue'
+import Contact from './views/Contact.vue'
 
 Vue.use(Router)
 
@@ -45,6 +46,11 @@ export default new Router({
       path: '/',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/board',
+      component: Board,
+      beforeEnter: requireAuth
     },
     {
       path: '/board/:category',
@@ -91,6 +97,11 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: About
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: Contact
     },
     {
       path: '/auth/reset',

@@ -85,7 +85,7 @@ type Query {
     findEmail(email: String!): [User],
     findUserID(userId: String!): [User],
     findUserByToken(token: String!): User,
-    findBoardCategories(depth: Int!, parent: Int): [BoardCategory],
+    findBoardCategories(depth: Int!, title: String, parent: Int): [BoardCategory],
 }
 
 type Mutation {

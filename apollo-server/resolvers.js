@@ -1,11 +1,27 @@
-const { User, College, Department, Board, BoardCateory, sequelize } = require('./models')
-const { Op } = require('sequelize');
+const { User, College, Department, Board, BoardCategory, sequelize } = require('./models')
+const { Op } = require('sequelize')
 const graphqlFields = require('graphql-fields')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const { sendConfirmMail } = require('./mailer/mailUtils')
 
 sequelize.sync()
+
+// Query Trigger 압축
+let resolver = (model, findOne, conditions) => async (parent, args, context, info) => {
+    let attributes = Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename'))
+    if (findOne) {
+        return await model.findOne({
+            attributes: attributes,
+            where: conditions
+        })
+    } else {
+        return await model.findAll({
+            attributes: attributes,
+            where: conditions
+        })
+    }
+}
 
 module.exports = {
     Query: {
@@ -58,12 +74,13 @@ module.exports = {
             })
         },
         async findBoardCategories(parent, args, context, info) {
-            const searchOption = { depth: args.depth };
-            if (args.parent) searchOption.parent = args.parent;
+            let searchOption = { depth: args.depth }
+            if (args.title) searchOption.title = args.title
+            if (args.parent) searchOption.parent = args.parent
             return await BoardCategory.findAll({
                 attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: searchOption,
-            });
+                where: searchOption
+            })
         }
     },
     Mutation: {
@@ -96,7 +113,7 @@ module.exports = {
                 upt_dt: Date.now(),
                 log_ip: reg_ip,
                 log_dt: Date.now()
-            });
+            })
             sendConfirmMail(user_nm, email, authToken)
             return user
         },

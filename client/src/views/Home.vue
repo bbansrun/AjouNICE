@@ -1,22 +1,17 @@
 <template>
   <div class="home">
-    <nav class="gnb">
-      <div class="logo">
-        <h1>AjouNICE!</h1> | <small>아주대학교 차세대 커뮤니티 서비스</small>
-      </div>
-      <div v-if="userInfo">
-        <header>안녕하세요 {{ userInfo.user_nm }}님 ^~^</header>
-      </div>
-      <input type="button" @click="logout" value="임시 로그아웃 버튼" />
-    </nav>
+    <Nav />
     <div class="container">
       <AjouNICE />
     </div>
-    <!-- <Footer /> -->
+    <header v-if="userInfo">안녕하세요 {{ userInfo.user_nm }}님 ^~^</header>
+    <input type="button" @click="logout" value="임시 로그아웃 버튼" />
+    <Footer />
   </div>
 </template>
 
 <script>
+import Nav from '@/components/Navigation.vue'
 import AjouNICE from '@/components/AjouNICE.vue'
 import Footer from '@/components/Footer.vue'
 
@@ -28,7 +23,7 @@ export default {
     }
   },
   components: {
-    AjouNICE, Footer
+    Nav, AjouNICE, Footer
   },
   beforeCreate () {
     document.body.classList.remove('auth')
