@@ -17,6 +17,7 @@ import Edit from './views/board/Edit.vue'
 import Dashboard from './views/admin/Dashboard.vue'
 import Profile from './views/user/Profile.vue'
 import ProfileEdit from './views/user/Edit.vue'
+import Gourmet from './views/place/Gourmet.vue'
 
 Vue.use(Router)
 
@@ -90,6 +91,11 @@ export default new Router({
     {
       path: '/profile/:user_id/edit',
       component: ProfileEdit,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/place/gourmet',
+      component: Gourmet,
       beforeEnter: requireAuth
     },
     {

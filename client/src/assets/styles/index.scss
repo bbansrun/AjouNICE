@@ -79,9 +79,9 @@ nav.gnb.deactivated {
 
 // Icon Navigation
 nav.icon-nav {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 1rem;
   padding: 2rem 0;
   background: #17553E;
   color: #fff;
