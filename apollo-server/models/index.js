@@ -10,8 +10,10 @@ let sequelize = new Sequelize(config.database, config.username, config.password,
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.User = require('./user')(sequelize, Sequelize)
-db.College = require('./college')(sequelize, Sequelize)
-db.Department = require('./department')(sequelize, Sequelize)
+db.User = require('./user')(sequelize, Sequelize);
+db.College = require('./college')(sequelize, Sequelize);
+db.Department = require('./department')(sequelize, Sequelize);
+db.Board = require('./board')(sequelize, Sequelize);
+db.BoardCategory = require('./board_category')(sequelize, Sequelize);
 
 module.exports = db;
