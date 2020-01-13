@@ -1,4 +1,4 @@
-const { User, College, Department, sequelize } = require('./models')
+const { User, College, Department, Board, BoardCateory, sequelize } = require('./models')
 const graphqlFields = require('graphql-fields')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
@@ -57,7 +57,12 @@ module.exports = {
             })
         },
         async findBoardCategories(parent, args, context, info) {
-            return;
+            return await BoardCateory.findAll({
+                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                where: {
+
+                },
+            })
         }
     },
     Mutation: {
