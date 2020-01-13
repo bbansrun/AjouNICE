@@ -1,177 +1,197 @@
-module.exports = confirmLink => `<!DOCTYPE html>
-<html
-  style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+module.exports = confirmLink => `
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <style type="text/css">
+            html, body, div, span, applet, object, iframe,
+            h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+            a, abbr, acronym, address, big, cite, code,
+            del, dfn, em, img, ins, kbd, q, s, samp,
+            small, strike, strong, sub, sup, tt, var,
+            b, u, i, center,
+            dl, dt, dd, ol, ul, li,
+            fieldset, form, label, legend,
+            table, caption, tbody, tfoot, thead, tr, th, td,
+            article, aside, canvas, details, embed, 
+            figure, figcaption, footer, header, hgroup, 
+            menu, nav, output, ruby, section, summary,
+            time, mark, audio, video {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                vertical-align: baseline;
+            }
+            article, aside, details, figcaption, figure, 
+            footer, header, hgroup, menu, nav, section {
+                display: block;
+            }
+            ol, ul {
+                list-style: none;
+            }
+            blockquote, q {
+                quotes: none;
+            }
+            blockquote:before, blockquote:after,
+            q:before, q:after {
+                content: '';
+                content: none;
+            }
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
 
-<head>
-  <meta name="viewport" content="width=device-width" />
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>AJOU NICE 메일 인증</title>
+            img {
+              max-width: 100%;
+            }
 
+            body {
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              box-sizing: border-box;
+              font-size: 14px;
+              text-align: center;
+              margin: 0;
+              padding: 0;
+              -webkit-font-smoothing: antialiased;
+              -webkit-text-size-adjust: none;
+              width: 100% !important;
+              height: 100%;
+              line-height: 1.6em;
+              background: #f6f6f6;
+            }
+        
+            h1, h2 {
+                text-align: center;
+            }
 
-  <style type="text/css">
-    img {
-      max-width: 100%;
-    }
+            footer {
+                text-align: center;
+                margin-top: auto;
+                background: #17553E;
+                color: #fff;
+                padding: .5rem 0;
+            }
 
-    body {
-      -webkit-font-smoothing: antialiased;
-      -webkit-text-size-adjust: none;
-      width: 100% !important;
-      height: 100%;
-      line-height: 1.6em;
-    }
+            footer > span {
+                font-weight: 400;
+            }
 
-    body {
-      background-color: #f6f6f6;
-    }
+            header.title {
+                line-height: 1.6;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                padding: .5rem 0;
+            }
 
-    @media only screen and (max-width: 640px) {
-      body {
-        padding: 0 !important;
-      }
+            .invoice {
+                padding: 2rem 0;
+                background: #eee;
+            }
 
-      h1 {
-        font-weight: 800 !important;
-        margin: 20px 0 5px !important;
-      }
+            h2 {
+              text-align: center;
+              margin-bottom: 1rem;
+            }
 
-      h2 {
-        font-weight: 800 !important;
-        margin: 20px 0 5px !important;
-      }
+            p {
+              text-align: center;
+              padding: 0 2rem;
+            }
 
-      h3 {
-        font-weight: 800 !important;
-        margin: 20px 0 5px !important;
-      }
+            article {
+              text-align: center;
+            }
 
-      h4 {
-        font-weight: 800 !important;
-        margin: 20px 0 5px !important;
-      }
+            .btn {
+                text-align: center;
+                display: inline-block;
+                background: linear-gradient(45deg, #F86F2E, #EE007A);
+                padding: 1rem 4rem;
+                -webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+                color: #fff !important;
+                -webkit-transition: .2s all ease;
+                transition: .2s all ease;
+                margin-top: 2rem;
+                text-decoration: none;
+            }
 
-      h1 {
-        font-size: 22px !important;
-      }
+            .btn:hover {
+              text-decoration: none;
+            }
 
-      h2 {
-        font-size: 18px !important;
-      }
+            .btn:visited {
+              color: #fff !important;
+            }
 
-      h3 {
-        font-size: 16px !important;
-      }
-
-      .container {
-        padding: 0 !important;
-        width: 100% !important;
-      }
-
-      .content {
-        padding: 0 !important;
-      }
-
-      .content-wrap {
-        padding: 10px !important;
-      }
-
-      .invoice {
-        width: 100% !important;
-      }
-    }
-  </style>
-</head>
-
-<body itemscope itemtype="http://schema.org/EmailMessage"
-  style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;"
-  bgcolor="#f6f6f6">
-
-  <table class="body-wrap"
-    style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;"
-    bgcolor="#f6f6f6">
-    <tr
-      style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-      <td
-        style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;"
-        valign="top"></td>
-      <td class="container" width="600"
-        style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;"
-        valign="top">
-        <div class="content"
-          style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">
-          <table class="main" width="100%" cellpadding="0" cellspacing="0" itemprop="action" itemscope
-            itemtype="http://schema.org/ConfirmAction"
-            style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;"
-            bgcolor="#fff">
-            <tr
-              style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-              <td class="content-wrap"
-                style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;"
-                valign="top">
-                <meta itemprop="name" content="Confirm Email"
-                  style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;" />
-                <table width="100%" cellpadding="0" cellspacing="0"
-                  style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                  <tr
-                    style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                    <td class="content-block"
-                      style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
-                      valign="top">
-                      E-mail 인증을 진행하시려면 아래 링크를 클릭해주세요.
-                    </td>
-                  </tr>
-                  <tr
-                    style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                    <td class="content-block"
-                      style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
-                      valign="top">
-                      본인이 요청한 메일 인증이 아닌 경우 링크를 클릭하지 마시고 문의주시기 바랍니다.
-                    </td>
-                  </tr>
-                  <tr
-                    style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                    <td class="content-block" itemprop="handler" itemscope
-                      itemtype="http://schema.org/HttpActionHandler"
-                      style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
-                      valign="top">
-                      <a href=${confirmLink} class="btn-primary" itemprop="url"
-                        style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #348eda; margin: 0; border-color: #348eda; border-style: solid; border-width: 10px 20px;">메일
-                        인증 </a>
-                    </td>
-                  </tr>
-                  <tr
-                    style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                    <td class="content-block"
-                      style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
-                      valign="top">
-                      &mdash; Team Bbansrun
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-          <div class="footer"
-            style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; clear: both; color: #999; margin: 0; padding: 20px;">
-            <table width="100%"
-              style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-              <tr
-                style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                <td class="aligncenter content-block"
-                  style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; vertical-align: top; color: #999; text-align: center; margin: 0; padding: 0 0 20px;"
-                  align="center" valign="top">Follow <a href="http://twitter.com/mail_gun"
-                    style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;">@Mail_Gun</a>
-                  on Twitter.</td>
-              </tr>
-            </table>
-          </div>
+            @media only screen and (max-width: 640px) {
+              body {
+                padding: 0 !important;
+              }
+        
+              h1 {
+                font-weight: 800 !important;
+              }
+        
+              h2 {
+                font-weight: 800 !important;
+              }
+        
+              h3 {
+                font-weight: 800 !important;
+              }
+        
+              h4 {
+                font-weight: 800 !important;
+              }
+        
+              h1 {
+                font-size: 22px !important;
+              }
+        
+              h2 {
+                font-size: 18px !important;
+              }
+        
+              h3 {
+                font-size: 16px !important;
+              }
+        
+              .container {
+                padding: 0 !important;
+                width: 100% !important;
+              }
+        
+              .content {
+                padding: 0 !important;
+              }
+        
+              .content-wrap {
+                padding: 10px !important;
+              }
+        
+              .invoice {
+                width: 100% !important;
+              }
+            }
+        </style>
+    </head>
+    <body itemscope itemtype="http://schema.org/EmailMessage">
+        <header class="title">
+            <h1>AjouNICE!</h1>
+        </header>
+        <div class="invoice">
+            <article>
+                <h2>서비스 인증을 위한 이메일 발송</h2>
+                <p>아주나이스 서비스에 관심을 가져주셔서 대단히 감사합니다.<br />서비스 사용을 위해서 이메일 인증이 요구되오니, 잠깐의 시간을 내주시어 아래 이메일 인증을 진행해주시기 바랍니다.<br />본인이 해당 서비스 회원가입을 진행하신 이력이 없는 경우, <a href="mailto:jwurbane97@ajou.ac.kr">개발팀</a>으로 신고하여주시기 바랍니다.</p>
+                <a class="btn" href="${confirmLink}" target="_blank">인증하기 →</a>
+            </article>
         </div>
-      </td>
-      <td
-        style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;"
-        valign="top"></td>
-    </tr>
-  </table>
-</body>
-
-</html>`
+        <footer>
+            <span>&copy; Copyright bbansrun.</span>
+        </footer>
+    </body>
+</html>
+`

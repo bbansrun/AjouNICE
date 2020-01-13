@@ -9,21 +9,29 @@ export default {
     methods: {
         authorizeToken () {
             let params = this.$route.query
-            if ('authorizeToken' in params) {
+            if ('authToken' in params) {
                 this.$apollo.query({
-                    query: gql`{ findUserByToken(token: "${params['authorizeToken']}") { user_idx } }`
+                    query: gql`{ findUserByToken(token: "${params['authToken']}") { user_idx auth_email_yn } }`
                 }).then(result => {
-                    let user_idx = result.data.findUserByToken.user_idx
-                    this.$apollo.mutate({
-                        mutation: gql`mutation { authorize(user_idx: ${user_idx}) }`
-                    }).then(result => {
-                        if (result.data.authorize) {
-                            window.location = '/home'
-                        }
-                    })
+                    let { user_idx, auth_email_yn } = result.data.findUserByToken
+                    if (auth_email_yn === 'Y') {
+                        alert('유효하지 않는 토큰입니다.')
+                        window.location = '/error/500'
+                    } else {
+                        this.$apollo.mutate({
+                            mutation: gql`mutation { authorize(user_idx: ${user_idx}) }`
+                        }).then(result => {
+                            if (result.data.authorize) {
+                                window.location = '/'
+                            }
+                        })
+                    }
+                }).catch(error => {
+                    console.error(error)
+                    window.location = '/error/500'
                 })
             } else {
-                window.location = '/404'
+                window.location = '/error/404'
             }
         }
     },

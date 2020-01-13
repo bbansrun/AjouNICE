@@ -12,7 +12,7 @@ module.exports = `type User {
     policy_yn: Boolean
     college_cd: String
     dpt_cd: String
-    auth_email_yn: Boolean
+    auth_email_yn: String
     auth_token: String
     user_profile: String
     nick_nm: String
@@ -41,6 +41,35 @@ type Department {
     dpt_nm: String
     college_cd: String
     exist_yn: String
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
+}
+
+type board {
+    board_idx: ID!
+    category_idx: Int
+    user_idx: Int
+    title: String
+    body: String
+    view_cnt: Int
+    cmt_cnt: Int
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
+}
+
+type board_category {
+    category_idx: ID!
+    category_nm: String
+    title: String
+    parent: Int
+    depth: Int
+    access_auth: String
+    private_yn: String
+    desc: String
     reg_ip: String
     reg_dt: Date
     upt_ip: String

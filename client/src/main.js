@@ -23,7 +23,7 @@ if (token) {
 }
 
 const apolloClient = new ApolloClient({
-  link: createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({ uri: `http://${require('ip').address()}:455/graphql` })),
+  link: createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({ uri: `http://${require('ip').address()}:455/` })),
   cache: new InMemoryCache()
 })
 

@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     signin () {
+      let params = this.$route.params
       if (this.userID && this.password && this.password.length >= 8) {
         document.body.classList.toggle('loading')
         let user_id = this.userID
@@ -69,10 +70,15 @@ export default {
                 this.$store.dispatch('LOGOUT')
                 window.location = '/auth/unauthorized'
             } else {
-                window.location = '/home'
+                if ('redirect' in params) {
+                  window.location = params['redirect']
+                } else {
+                  window.location = '/home'
+                }
             }
         })
         .catch(err => {
+            console.error(err)
             document.body.classList.toggle('loading')
             this.$swal({
                 title: '오류!',
