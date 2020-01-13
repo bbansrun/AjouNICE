@@ -1,37 +1,43 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('BOARD', {
-    board_idx: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
+    category_idx: {
+      type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
-    category_idx: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
-      allowNull: false,
-    },
-    user_idx: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
-      allowNull: false,
+    category_nm: {
+      type: DataTypes.STRING(50, true),
+      allowNull: true,
+      defaultValue: null,
     },
     title: {
-      type: DataTypes.STRING(100, true),
+      type: DataTypes.STRING(50, true),
+      allowNull: true,
+      defaultValue: 'title',
+    },
+    parent: {
+      type: DataTypes.TINYINT(20).UNSIGNED.ZEROFILL, // length가 20에 zerofill 거는데 왜??
       allowNull: true,
       defaultValue: null,
     },
-    body: {
-      type: DataTypes.STRING(20000, true),
+    depth: {
+      type: DataTypes.TINYINT(3).UNSIGNED,
+      allowNull: false,
+    },
+    access_auth: {
+      type: DataTypes.STRING(50, true),
       allowNull: true,
       defaultValue: null,
     },
-    view_cnt: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
+    private_yn: {
+      type: DataTypes.STRING(1, true),
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 'Y',
     },
-    cmt_cnt: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
+    desc: {
+      type: DataTypes.STRING(50, true),
+      allowNull: true,
+      defaultValue: null,
     },
     reg_ip: {
       type: DataTypes.STRING(40, true),
@@ -55,13 +61,13 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     hooks: {
-      afterUpdate: (board, options) => {
-        board.upt_dt = DataTypes.NOW
+      afterUpdate: (board_category, options) => {
+        board_category.upt_dt = DataTypes.NOW
       },
     },
     timestamps: false,
     freezeTableName: true,
     charset: 'utf8',
     collate: 'utf8_unicode_ci'
-  })
+  });
 }
