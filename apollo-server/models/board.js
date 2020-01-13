@@ -1,41 +1,58 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('BOARD', {
     board_idx: {
-      type: DataTypes.INTEGER(10),
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
       primaryKey: true,
     },
-
-    college_cd: {
-      type: DataTypes.STRING(4),
+    category_idx: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
-      unique: true
     },
-    college_nm: {
-      type: DataTypes.STRING(6),
+    user_idx: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
-      unique: true
     },
-    exist_yn: {
-      type: DataTypes.STRING(1),
-      allowNull: false
+    title: {
+      type: DataTypes.STRING(100, true),
+      allowNull: true,
+      defaultValue: null,
+    },
+    body: {
+      type: DataTypes.STRING(20000, true),
+      allowNull: true,
+      defaultValue: null,
+    },
+    view_cnt: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    cmt_cnt: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      defaultValue: 0,
     },
     reg_ip: {
-      type: DataTypes.STRING(40),
-      allowNull: false
+      type: DataTypes.STRING(40, true),
+      allowNull: true,
+      defaultValue: null,
     },
     reg_dt: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,            // 왜 allowNull??
       defaultValue: DataTypes.NOW
     },
     upt_ip: {
-      type: DataTypes.STRING(40),
-      allowNull: false
+      type: DataTypes.STRING(40, true),
+      allowNull: true,
+      defaultValue: null,
     },
     upt_dt: {
       type: DataTypes.DATE,
-      allowNull: false
-    }
+      allowNull: true,
+      defaultValue: DateTypes.NOW,
+    },
   }, {
     timestamps: false,
     freezeTableName: true,
