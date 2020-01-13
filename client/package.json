@@ -30,6 +30,7 @@
     "vue-body-class": "^2.0.0-beta.2",
     "vue-flash": "^2.1.3",
     "vue-flash-message": "^0.7.2",
+    "vue-gallery-slideshow": "^1.5.0",
     "vue-router": "^3.1.3",
     "vue-select": "^3.4.0",
     "vue-sweetalert2": "^2.1.5",

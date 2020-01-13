@@ -2,8 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import About from './views/About.vue'
-import NotFound from './views/NotFound.vue'
-import ServError from './views/ServError.vue'
+import ErrorPage from './views/ErrorPage.vue'
 import AdminLogin from './views/AdminLogin.vue'
 import Login from './views/Login.vue'
 import RenewAccount from './views/RenewAccount.vue'
@@ -11,6 +10,7 @@ import Signup from './views/SignUp.vue'
 import Unauthorized from './views/Unauthorized.vue'
 import Authorize from './views/Authorize.vue'
 import Board from './views/Board.vue'
+import Policy from './views/Policy.vue'
 import Contact from './views/Contact.vue'
 
 Vue.use(Router)
@@ -104,19 +104,19 @@ export default new Router({
       component: Contact
     },
     {
+      path: '/policy',
+      name: 'policy',
+      component: Policy
+    },
+    {
       path: '/auth/reset',
       name: 'reset',
       component: RenewAccount
     },
     {
-      path: '/error/404',
-      name: 'not_found',
-      component: NotFound
-    },
-    {
-      path: '/error/500',
-      name: 'serv_error',
-      component: ServError
+      path: '/error/:code',
+      name: 'error_by_code',
+      component: ErrorPage
     },
     {
       path: '*',

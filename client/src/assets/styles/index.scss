@@ -49,6 +49,7 @@ small {
 }
 
 // Default
+// GNB Navigation
 nav.gnb {
   position: fixed;
   z-index: 1000000;
@@ -76,10 +77,45 @@ nav.gnb.deactivated {
   }
 }
 
+// Icon Navigation
+nav.icon-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 2rem 0;
+  background: #17553E;
+  color: #fff;
+  & .icon-wrapper {
+    text-align: center;
+    & a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;      
+    }
+    &:hover {
+      & .icon {
+        border-radius: 1rem;
+      }
+    }
+    & .icon {
+      width: 10vw;
+      height: 10vw;
+      transition: .2s all ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,.4);
+    }
+    & a {
+      color: #fff;
+    }
+    & p {
+      margin-top: 8px;
+    }
+  }
+}
+
 .container {
   padding: 2rem 0;
   position: relative;
-  min-height: 100vh;
+  min-height: 70vh;
   z-index: 0;
 }
 
@@ -110,11 +146,40 @@ nav.gnb.deactivated {
   }
 }
 
+// Board
+ul.board-nav {
+  background: #fff;
+  & li {
+    display: inline-block;
+    & a {
+      display: inherit;
+      font-size: .8rem;
+      color: #000;
+      padding: .5rem;
+      border-right: 1px solid rgba(0,0,0,.1);
+      transition: .2s all ease;
+      &:hover {
+        background: #17355e;
+        color: #fff;
+      }
+    }
+  }
+  & li.active {
+    background: #17355e;
+    & a {
+      color: #fff;
+    }
+  }
+}
+
 // Footer
 footer.footer {
   padding: 2rem 0 0 0;
   background: #2c2c2c;
   color: #fff;
+  & a {
+    color: #fff;
+  }
   & .footer-wrapper {
     width: 75%;
     margin: auto;

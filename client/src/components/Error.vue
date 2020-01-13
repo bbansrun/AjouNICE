@@ -1,10 +1,12 @@
 <template>
     <section data-error>
         <header>
-            <h1 class="logo-font">X_X</h1>
+            <h1 class="logo-font">
+                <span>X_X</span>
+                <div class="code" v-if="code">{{ code }}</div>
+            </h1>
         </header>
         <div align="center" data-description>
-            <h2>{{ title }}</h2>
             <p>{{ description }}</p>
             <p>{{ sub_description }}</p>
         </div>
@@ -25,9 +27,9 @@
 export default {
   name: 'error',
   props: {
-    title: String,
     description: String,
-    sub_description: String
+    sub_description: String,
+    code: Number
   }
 }
 </script>
