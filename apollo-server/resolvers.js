@@ -23,70 +23,58 @@ let resolver = (model, findOne, conditions) => async (parent, args, context, inf
     }
 }
 
+const selectAttributes = (info) => Object.keys(graphqlFields(info)).filter(elem => elem !== '__typename');
+
 module.exports = {
     Query: {
         async findDptByCollege(parent, args, context, info) {
             return await Department.findAll({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: {
-                    college_cd: args.college_cd
-                }
-            })
+                attributes: selectAttributes(info),
+                where: { college_cd: args.college_cd, }
+            });
         },
         async findColleges(parent, args, context, info) {
             return await College.findAll({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: {
-                    exist_yn: args.exist_yn
-                }
-            })
+                attributes: selectAttributes(info),
+                where: { exist_yn: args.exist_yn, }
+            });
         },
         async findNickName(parent, args, context, info) {
             return await User.findAll({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: {
-                    nick_nm: args.nick_nm
-                }
-            })
+                attributes: selectAttributes(info),
+                where: { nick_nm: args.nick_nm, }
+            });
         },
         async findEmail(parent, args, context, info) {
             return await User.findAll({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: {
-                    email: args.email
-                }
-            })
+                attributes: selectAttributes(info),
+                where: { email: args.email, }
+            });
         },
         async findUserID(parent, args, context, info) {
             return await User.findAll({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: {
-                    user_id: args.userId
-                }
-            })
+                attributes: selectAttributes(info),
+                where: { user_id: args.userId, }
+            });
         },
         async findUserByToken(parent, args, context, info) {
             return await User.findOne({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
-                where: {
-                    auth_token: args.token
-                }
-            })
+                attributes: selectAttributes(info),
+                where: { auth_token: args.token, }
+            });
         },
         async findUserByIdx(parent, args, context, info) {
             return await User.findOne({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => elem !== '__typename'),
-                where: {
-                    user_idx: args.user_idx,
-                }
-            })
+                attributes: selectAttributes(info),
+                where: { user_idx: args.user_idx, }
+            });
         },
         async findBoardCategories(parent, args, context, info) {
             let searchOption = { depth: args.depth }
             if (args.title) searchOption.title = args.title
             if (args.parent) searchOption.parent = args.parent
             return await BoardCategory.findAll({
-                attributes: Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename')),
+                attributes: selectAttributes(info),
                 where: searchOption
             })
         }
