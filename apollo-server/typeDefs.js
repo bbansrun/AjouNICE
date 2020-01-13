@@ -85,6 +85,7 @@ type Query {
     findEmail(email: String!): [User],
     findUserID(userId: String!): [User],
     findUserByToken(token: String!): User,
+    findUserByIdx(user_idx: ID!): User,
     findBoardCategories(depth: Int!, title: String, parent: Int): [BoardCategory],
 }
 
