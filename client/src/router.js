@@ -1,17 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import About from './views/About.vue'
-import NotFound from './views/NotFound.vue'
-import ServError from './views/ServError.vue'
-import AdminLogin from './views/AdminLogin.vue'
-import Login from './views/Login.vue'
-import RenewAccount from './views/RenewAccount.vue'
-import Signup from './views/SignUp.vue'
-import Unauthorized from './views/Unauthorized.vue'
-import Authorize from './views/Authorize.vue'
-import Board from './views/Board.vue'
-import Contact from './views/Contact.vue'
+import Home from './views/base/Home.vue'
+import Sitemap from './views/base/Sitemap.vue'
+import About from './views/base/About.vue'
+import ErrorPage from './views/base/ErrorPage.vue'
+import Policy from './views/base/Policy.vue'
+import Contact from './views/base/Contact.vue'
+import AdminLogin from './views/auth/AdminLogin.vue'
+import Login from './views/auth/Login.vue'
+import RenewAccount from './views/auth/RenewAccount.vue'
+import Modifier from './views/auth/ModifyAccount.vue'
+import Signup from './views/auth/SignUp.vue'
+import Unauthorized from './views/auth/Unauthorized.vue'
+import Authorize from './views/auth/Authorize.vue'
+import Board from './views/board/Board.vue'
+import PostView from './views/board/View.vue'
+import Edit from './views/board/Edit.vue'
+import Dashboard from './views/admin/Dashboard.vue'
+import Profile from './views/user/Profile.vue'
+import ProfileEdit from './views/user/Edit.vue'
+import Gourmet from './views/place/Gourmet.vue'
+import LectureHome from './views/function/lecture/Home.vue'
 
 Vue.use(Router)
 
@@ -48,6 +57,15 @@ export default new Router({
       component: Login
     },
     {
+      path: '/lecture',
+      component: LectureHome,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/sitemap',
+      component: Sitemap,
+    },
+    {
       path: '/board',
       component: Board,
       beforeEnter: requireAuth
@@ -63,9 +81,43 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
+      path: '/board/:category/:name/:post_id/view',
+      component: PostView,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/board/:category/:name/new',
+      component: Edit,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/board/:category/:name/:post_id/edit',
+      component: Edit,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/profile/:user_id/',
+      component: Profile,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/profile/:user_id/edit',
+      component: ProfileEdit,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/place/gourmet',
+      component: Gourmet,
+      beforeEnter: requireAuth
+    },
+    {
       path: '/auth/authorize',
       name: 'authorize',
       component: Authorize
+    },
+    {
+      path: '/auth/reset/authorize',
+      component: Modifier
     },
     {
       path: '/auth/unauthorized',
@@ -80,6 +132,7 @@ export default new Router({
     {
       path: '/gate/manager',
       name: 'admin',
+      component: Dashboard,
       beforeEnter: requireAdminAuth
     },
     {
@@ -104,23 +157,26 @@ export default new Router({
       component: Contact
     },
     {
+      path: '/policy',
+      name: 'policy',
+      component: Policy
+    },
+    {
       path: '/auth/reset',
       name: 'reset',
       component: RenewAccount
     },
     {
-      path: '/error/404',
-      name: 'not_found',
-      component: NotFound
-    },
-    {
-      path: '/error/500',
-      name: 'serv_error',
-      component: ServError
+      path: '/error/:code',
+      name: 'error_by_code',
+      component: ErrorPage
     },
     {
       path: '*',
       redirect: '/error/404'
     }
-  ]
+  ],
+  scrollBehavior () {
+    window.scrollTo(0, 0)
+  }
 })

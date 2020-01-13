@@ -13,11 +13,14 @@
                     <li>
                         <router-link to="/contact">연락</router-link>
                     </li>
+                    <li>
+                        <router-link to="/policy">이용약관</router-link>
+                    </li>
                 </ul>
             </section>
             <hr />
             <p>
-                <span>&copy; {{ year }} bbansrun.</span>
+                <span>&copy; {{ year }} <a target="_blank" href="http://github.com/bbansrun">bbansrun</a>. 아주나이스의 모든 관련 권리는 bbansrun 팀에 있습니다.</span>
             </p>
         </div>
     </footer>

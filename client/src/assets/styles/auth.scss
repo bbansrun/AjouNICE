@@ -79,6 +79,10 @@
                     > input, select, label {
                         font-size: .85em;
                     }
+                    input[disabled] {
+                        background: grey;
+                        color: #fff;
+                    }
                     select {
                         -webkit-appearance: none;
                         -moz-appearance: none;

@@ -13,6 +13,9 @@
   "author": "Bbansrun",
   "license": "Apache-2.0",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/vue-fontawesome": "^0.1.9",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
     "apollo-link-http": "^1.5.16",
@@ -30,6 +33,7 @@
     "vue-body-class": "^2.0.0-beta.2",
     "vue-flash": "^2.1.3",
     "vue-flash-message": "^0.7.2",
+    "vue-gallery-slideshow": "^1.5.0",
     "vue-router": "^3.1.3",
     "vue-select": "^3.4.0",
     "vue-sweetalert2": "^2.1.5",
