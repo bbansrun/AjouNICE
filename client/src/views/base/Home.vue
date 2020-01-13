@@ -2,22 +2,111 @@
   <div class="home">
     <!-- <Nav /> -->
     <div class="container">
-      <!-- 주요 메뉴 영역 -->
+      <Welcome :username="userInfo.name" :user_id="userInfo.idx" />
       <IconNav :data="iconNav" />
-      <!-- 게시글 리스트 영역 -->
-      <!-- 맛집 리스트 영역 -->
-      <!-- <AjouNICE /> -->
+      <section class="popular">
+        <header>
+          <small>핫이슈</small>
+          <h2>주목해야할 게시물</h2>
+        </header>
+        <div class="posts summary">
+          <a href="/board/community/anonymous/1/view">
+            <article class="post">
+              <header>
+                <h3>카페에 자리가 없어서 어느날 빤스런한 김*영씨</h3>
+                <p>
+                  <small><span>2019.10.11</span>&nbsp;<span>익명의 오리</span></small>
+                </p>
+              </header>
+              <div class="thumbnail">
+                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
+              </div>
+            </article>
+          </a>
+          <a href="/board/community/anonymous/1/view">
+            <article class="post">
+              <header>
+                <h3>카페에 자리가 없어서 어느날 빤스런한 김*영씨</h3>
+                <p>
+                  <small><span>2019.10.11</span>&nbsp;<span>익명의 오리</span></small>
+                </p>
+              </header>
+              <div class="thumbnail">
+                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
+              </div>
+            </article>
+          </a>
+          <a href="/board/community/anonymous/1/view">
+            <article class="post">
+              <header>
+                <h3>카페에 자리가 없어서 어느날 빤스런한 김*영씨</h3>
+                <p>
+                  <small><span>2019.10.11</span>&nbsp;<span>익명의 오리</span></small>
+                </p>
+              </header>
+              <div class="thumbnail">
+                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
+              </div>
+            </article>
+          </a>
+        </div>
+      </section>
+      <section class="popular">
+        <header>
+          <small>핫이슈</small>
+          <h2>주목해야할 게시물</h2>
+        </header>
+        <div class="posts summary">
+          <a href="/board/community/anonymous/1/view">
+            <article class="post">
+              <header>
+                <h3>카페에 자리가 없어서 어느날 빤스런한 김*영씨</h3>
+                <p>
+                  <small><span>2019.10.11</span>&nbsp;<span>익명의 오리</span></small>
+                </p>
+              </header>
+              <div class="thumbnail">
+                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
+              </div>
+            </article>
+          </a>
+          <a href="/board/community/anonymous/1/view">
+            <article class="post">
+              <header>
+                <h3>카페에 자리가 없어서 어느날 빤스런한 김*영씨</h3>
+                <p>
+                  <small><span>2019.10.11</span>&nbsp;<span>익명의 오리</span></small>
+                </p>
+              </header>
+              <div class="thumbnail">
+                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
+              </div>
+            </article>
+          </a>
+          <a href="/board/community/anonymous/1/view">
+            <article class="post">
+              <header>
+                <h3>카페에 자리가 없어서 어느날 빤스런한 김*영씨</h3>
+                <p>
+                  <small><span>2019.10.11</span>&nbsp;<span>익명의 오리</span></small>
+                </p>
+              </header>
+              <div class="thumbnail">
+                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
+              </div>
+            </article>
+          </a>
+        </div>
+      </section>
     </div>
-    <header v-if="userInfo">안녕하세요 {{ userInfo.user_nm }}님 ^~^</header>
-    <input type="button" @click="logout" value="임시 로그아웃 버튼" />
     <Footer />
   </div>
 </template>
 
 <script>
 import Nav from '@/components/Navigation.vue'
+import Welcome from '@/components/Welcome.vue'
 import IconNav from '@/components/IconNav.vue'
-import AjouNICE from '@/components/AjouNICE.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
@@ -34,26 +123,14 @@ export default {
     }
   },
   components: {
-    Nav, IconNav, AjouNICE, Footer
+    Nav, Welcome, IconNav, Footer
   },
   beforeCreate () {
     document.body.classList.remove('auth')
     this.$Axios.get('/api/protected').then(result => {
-      this.userInfo = result.data.logged_in_as
+      this.userInfo = result.data.user
     })
   },
-  methods: {
-    logout () {
-      this.$store.dispatch('LOGOUT')
-        .then(() => {
-          document.body.classList.toggle('loading')
-          window.location = '/'
-        })
-        .catch(error => {
-          console.error(error)
-        })
-    }
-  }
 }
 </script>
 
@@ -64,5 +141,39 @@ export default {
 @import "~@/assets/styles/fonts";
 body {
   background: #eaeaea;
+}
+
+section.popular {
+  background: #fff;
+  > header {
+    line-height: 1;
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(0,0,0,.2);
+    border-bottom: 1px solid rgba(0,0,0,.2);
+  }
+  > .posts.summary {
+    & a {
+      display: inline-block;
+      color: #000;
+    }
+    & article {
+      width: 100vw;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      > header {
+        width: 100%;
+        padding: 1rem;
+        > p {
+          margin-top: auto;
+        }
+      }
+      > .thumbnail {
+        max-width: 100px;
+        max-height: 100px;
+      }
+    }
+  }
 }
 </style>

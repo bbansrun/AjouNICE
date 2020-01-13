@@ -6,6 +6,10 @@ import store from './store'
 
 import './filters'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
@@ -21,6 +25,10 @@ if (token) {
 } else {
   Vue.prototype.$Axios.defaults.headers.common['Authorization'] = undefined
 }
+
+library.add(faSignOutAlt)
+library.add(faUser)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const apolloClient = new ApolloClient({
   link: createPersistedQueryLink({ useGETForHashedQueries: true }).concat(createHttpLink({ uri: `http://${require('ip').address()}:455/` })),

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/base/Home.vue'
+import Sitemap from './views/base/Sitemap.vue'
 import About from './views/base/About.vue'
 import ErrorPage from './views/base/ErrorPage.vue'
 import Policy from './views/base/Policy.vue'
@@ -19,6 +20,7 @@ import Dashboard from './views/admin/Dashboard.vue'
 import Profile from './views/user/Profile.vue'
 import ProfileEdit from './views/user/Edit.vue'
 import Gourmet from './views/place/Gourmet.vue'
+import LectureHome from './views/function/lecture/Home.vue'
 
 Vue.use(Router)
 
@@ -53,6 +55,15 @@ export default new Router({
       path: '/',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/lecture',
+      component: LectureHome,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/sitemap',
+      component: Sitemap,
     },
     {
       path: '/board',
@@ -164,5 +175,8 @@ export default new Router({
       path: '*',
       redirect: '/error/404'
     }
-  ]
+  ],
+  scrollBehavior () {
+    window.scrollTo(0, 0)
+  }
 })
