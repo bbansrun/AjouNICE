@@ -70,13 +70,13 @@ module.exports = {
             });
         },
         async findBoardCategories(parent, args, context, info) {
-            let searchOption = { depth: args.depth };
-            if (args.title) searchOption.title = args.title;
-            if (args.parent) searchOption.parent = args.parent; 3
+            let searchOption = { depth: args.depth }
+            if (args.title) searchOption.title = args.title
+            if (args.parent) searchOption.parent = args.parent
             return await BoardCategory.findAll({
                 attributes: selectAttributes(info),
                 where: searchOption
-            });
+            })
         }
     },
     Mutation: {
@@ -121,6 +121,14 @@ module.exports = {
         authorize: async (root, { user_idx }) => {
             const updateAuthorized = await User.update({ auth_email_yn: 'Y' }, { where: { user_idx: user_idx } })
             if (updateAuthorized) return true
+            else return false
+        },
+        resetEmailToken: async (root, { email }) => {
+            const salt = bcrypt.genSaltSync(10)
+            const newToken = crypto.createHash('sha256').update(bcrypt.hashSync(email + Date.now(), salt)).digest('hex')
+            const user = await User.update({ auth_token: newToken, auth_email_yn: 'N' }, { where: { email: email } })
+            sendConfirmMail(undefined, email, newToken, true)
+            if (user) return true
             else return false
         }
     }

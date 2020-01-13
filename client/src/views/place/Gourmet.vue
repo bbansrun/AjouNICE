@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <Landing title="Ajou맛집" description="아주대의 맛집을 소개합니다." background="" />
+        <Landing title="아주맛집" description="여기여기, 아주맛집이야..." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg" />
         <IconNav :data="iconNav" />
         <Footer />
     </div>
