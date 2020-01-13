@@ -47,7 +47,7 @@ type Department {
     upt_dt: Date
 }
 
-type board {
+type Board {
     board_idx: ID!
     category_idx: Int
     user_idx: Int
@@ -61,7 +61,7 @@ type board {
     upt_dt: Date
 }
 
-type board_category {
+type BoardCategory {
     category_idx: ID!
     category_nm: String
     title: String
@@ -85,6 +85,7 @@ type Query {
     findEmail(email: String!): [User],
     findUserID(userId: String!): [User],
     findUserByToken(token: String!): User,
+    findBoardCategories(depth: Int!, parent: Int): [BoardCategory],
 }
 
 type Mutation {
