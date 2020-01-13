@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('BOARD', {
+  return sequelize.define('BOARD_CATEGORY', {
     category_idx: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
