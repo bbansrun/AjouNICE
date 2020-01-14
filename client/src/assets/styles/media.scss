@@ -1,11 +1,53 @@
+// Media for responsive web
 @media (max-width: 720px) {
     body {
         font-size: 14px;
+    }
+
+    br[media] {
+        display: block !important;
+    }
+
+    footer {
+        > .wrapper {
+            > .content {
+                flex-direction: column !important;
+                > .copyright {
+                    margin: .5rem 0;
+                }
+            }
+        }
     }
 }
 
 @media (max-width: 360px) {
     body {
         font-size: 10px;
+    }
+}
+
+@media (max-width: 720px) {
+    [data-form-center] {
+        flex-direction: column;
+        > header {
+            min-height: 150px;
+            > h1 {
+                line-height: 1;
+            }
+        }
+    }
+}
+
+@media (min-width: 940px) {
+    [data-auth-form] {
+        min-width: 60vw !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    [data-auth-form] {
+        > header {
+            min-width: 300px;
+        }
     }
 }

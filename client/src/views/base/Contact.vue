@@ -1,19 +1,25 @@
 <template>
     <div class="wrapper">
-        <Landing title="연락" description="개발팀에 궁금한 것이 있으시면 연락주시기 바랍니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
-        <div class="container" data-form-wrapper>
-            <section data-form>
-                <form action="">
-                    <div class="input-form-wrapper">
-                        <div class="input-form">
-                            <input type="text" v-model="name" name="name" id="name" placeholder="이름을 입력해주세요" required pattern=".{1,}" />
+        <Landing title="광고/제휴/기타문의" description="개발팀에 궁금한 것이 있으시면 연락주시기 바랍니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
+        <div class="container">
+            <article>
+                <header class="underline underline-inline-block">문의폼 작성</header>
+                <section>
+                    <form>
+                        <div class="input-form-wrapper">
+                            <div class="input-form">
+                                <input type="text" v-model="name" name="name" id="name" placeholder="이름을 입력해주세요" required pattern=".{1,}" />
+                            </div>
+                            <div class="input-form">
+                                <input type="email" v-model="email" name="email" id="email" placeholder="이메일 주소를 입력해주세요" required />
+                            </div>
+                            <div class="input-form">
+                                <input type="button" class="btn" value="이메일 발송">
+                            </div>
                         </div>
-                        <div class="input-form">
-                            <input type="email" v-model="email" name="email" id="email" placeholder="이메일 주소를 입력해주세요" required />
-                        </div>
-                    </div>
-                </form>
-            </section>
+                    </form>
+                </section>
+            </article>
         </div>
         <Footer />
     </div>
@@ -37,5 +43,28 @@ export default {
 </script>
 
 <style lang="scss">
-    @import "~@/assets/styles/auth";
+
+article {
+    margin-top: 2rem !important;
+    padding: 0 2rem !important;
+    & header {
+        font-weight: bold;
+        font-size: 1.5rem;
+        & span {
+            position: relative;
+            &::before {
+                content: "";
+                display: block;
+                position: absolute;
+                left: 0;
+                z-index: -1;
+                bottom: 1px;
+                height: 10px;
+                background-color: #667eea;
+                transition: all .4s cubic-bezier(0.57, 0.02, 0.06, 1);
+                width: 100%;
+            }
+        }
+    }
+}
 </style>

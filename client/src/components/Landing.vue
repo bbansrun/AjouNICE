@@ -2,7 +2,9 @@
     <section class="landing" :style="{ 'background': `url(${background}) center/cover fixed` }">
         <div class="cover"></div>
         <header>
-            <h2 class="title" :class="{ 'logo-font': isLogo }">{{ title }}</h2>
+            <h2 class="title" :data-logo="isLogo">
+                <span class="underline underline-animated underline-inline-block">{{ title }}</span>
+            </h2>
             <small>{{ description }}</small>
         </header>
     </section>
@@ -19,3 +21,11 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.underline {
+    &::before {
+        background: #17553E;
+    }
+}
+</style>

@@ -4,22 +4,38 @@
       <div class="container">
         <section class="about">
           <article>
-            <header>정보공유에 차별점을 두어, </header>
-            <p>이러쿵 저러쿵</p>
+            <header>차세대 학부 커뮤니티 서비스를 지향합니다.</header>
+            <p>Mobile First와 정보공유에 초점을 두고 개발된 프로젝트입니다.</p>
           </article>
           <hr />
-          <h2>서비스 공지사항</h2>
-          <table class="notice">
-            <thead>
-              <tr></tr>
-            </thead>
-            <tbody>
-              <tr></tr>
-            </tbody>
-            <tfoot>
-              <tr></tr>
-            </tfoot>
-          </table>
+          <article>
+            <header class="underline underline-inline-block">서비스 공지사항</header>
+            <table class="notice">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>유형</th>
+                  <th>제목</th>
+                  <th>일시</th>
+                  <th>작성</th>
+                  <th>조회</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>공지</td>
+                  <td>서비스 소개</td>
+                  <td>2020. 1. 1.</td>
+                  <td>빤스런 팀</td>
+                  <td>100</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr></tr>
+              </tfoot>
+            </table>
+          </article>
         </section>
       </div>
       <Footer />
@@ -33,16 +49,29 @@ export default {
   name: 'about',
   components: {
     Landing, Footer
+  },
+  data () {
+    return {
+      columns: ['id', 'name', 'age'],
+      tableData: [
+          { id: 1, name: "John", age: "20" },
+          { id: 2, name: "Jane", age: "24" },
+          { id: 3, name: "Susan", age: "16" },
+          { id: 4, name: "Chris", age: "55" },
+          { id: 5, name: "Dan", age: "40" }
+      ],
+      options: {}
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 article {
-    padding: 0 2rem;
-    & header {
-        font-weight: bold;
-        font-size: 1.5rem;
-    }
+  padding: 0 2rem;
+  & header {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
 }
 </style>

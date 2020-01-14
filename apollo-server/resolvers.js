@@ -8,75 +8,57 @@ const { sendConfirmMail } = require('./mailer/mailUtils')
 sequelize.sync()
 
 // Query Trigger 압축
-let resolver = (model, findOne, conditions) => async (parent, args, context, info) => {
-    let attributes = Object.keys(graphqlFields(info)).filter((elem) => (elem !== '__typename'))
-    if (findOne) {
-        return await model.findOne({
-            attributes: attributes,
-            where: conditions
-        })
-    } else {
-        return await model.findAll({
-            attributes: attributes,
-            where: conditions
-        })
-    }
+const selectAttributes = (info) => Object.keys(graphqlFields(info)).filter(elem => elem !== '__typename');
+
+const getOne = (model, conditions) => async (parent, args, context, info) => {
+    const attributes = selectAttributes(info);
+    return await model.findOne({ attributes: attributes, where: conditions, });
 }
 
-const selectAttributes = (info) => Object.keys(graphqlFields(info)).filter(elem => elem !== '__typename');
+const getAll = (model, conditions) => async (parent, args, context, info) => {
+    const attributes = selectAttributes(info);
+    return await model.findAll({ attributes: attributes, where: conditions, });
+}
 
 module.exports = {
     Query: {
+        // Department
         async findDptByCollege(parent, args, context, info) {
-            return await Department.findAll({
-                attributes: selectAttributes(info),
-                where: { college_cd: args.college_cd, }
-            });
+            const conditions = { college_cd: args.college_cd, };
+            return await getAll(Department, conditions)(parent, args, context, info);
         },
+        // College
         async findColleges(parent, args, context, info) {
-            return await College.findAll({
-                attributes: selectAttributes(info),
-                where: { exist_yn: args.exist_yn, }
-            });
+            const conditions = { exist_yn: args.exist_yn, };
+            return await getAll(College, conditions)(parent, args, context, info);
         },
+        // User
         async findNickName(parent, args, context, info) {
-            return await User.findAll({
-                attributes: selectAttributes(info),
-                where: { nick_nm: args.nick_nm, }
-            });
+            const conditions = { nick_nm: args.nick_nm, };
+            return await getAll(User, conditions)(parent, args, context, info);
         },
         async findEmail(parent, args, context, info) {
-            return await User.findAll({
-                attributes: selectAttributes(info),
-                where: { email: args.email, }
-            });
+            const conditions = { email: args.email, };
+            return await getAll(User, conditions)(parent, args, context, info);
         },
         async findUserID(parent, args, context, info) {
-            return await User.findAll({
-                attributes: selectAttributes(info),
-                where: { user_id: args.userId, }
-            });
+            const conditions = { user_id: args.userId, };
+            return await getAll(User, conditions)(parent, args, context, info);
         },
         async findUserByToken(parent, args, context, info) {
-            return await User.findOne({
-                attributes: selectAttributes(info),
-                where: { auth_token: args.token, }
-            });
+            const conditions = { auth_token: args.token, };
+            return await getOne(User, conditions)(parent, args, context, info);
         },
         async findUserByIdx(parent, args, context, info) {
-            return await User.findOne({
-                attributes: selectAttributes(info),
-                where: { user_idx: args.user_idx, }
-            });
+            const conditions = { user_idx: args.user_idx, };
+            return await getOne(User, conditions)(parent, args, context, info);
         },
+        // BoardCategory
         async findBoardCategories(parent, args, context, info) {
-            let searchOption = { depth: args.depth }
-            if (args.title) searchOption.title = args.title
-            if (args.parent) searchOption.parent = args.parent
-            return await BoardCategory.findAll({
-                attributes: selectAttributes(info),
-                where: searchOption
-            })
+            let conditions = { depth: args.depth }
+            if (args.title) conditions.title = args.title
+            if (args.parent) conditions.parent = args.parent
+            return await getAll(BoardCategory, conditions)(parent, args, context, info);
         }
     },
     Mutation: {

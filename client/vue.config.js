@@ -8,5 +8,6 @@ module.exports = {
         target: `http://localhost:5000/`
       }
     }
-  }
+  },
+  runtimeCompiler: true,
 }

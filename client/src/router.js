@@ -11,14 +11,13 @@ import Login from './views/auth/Login.vue'
 import RenewAccount from './views/auth/RenewAccount.vue'
 import Modifier from './views/auth/ModifyAccount.vue'
 import Signup from './views/auth/SignUp.vue'
-import Unauthorized from './views/auth/Unauthorized.vue'
 import Authorize from './views/auth/Authorize.vue'
 import Board from './views/board/Board.vue'
 import PostView from './views/board/View.vue'
 import Edit from './views/board/Edit.vue'
 import Dashboard from './views/admin/Dashboard.vue'
 import Profile from './views/user/Profile.vue'
-import ProfileEdit from './views/user/Edit.vue'
+import BusStation from './views/place/BusStation.vue'
 import Gourmet from './views/place/Gourmet.vue'
 import LectureHome from './views/function/lecture/Home.vue'
 
@@ -45,7 +44,10 @@ const requireAdminAuth = (to, from, next) => {
 }
 
 const alreadySignedIn = (to, from, next) => {
-  if (localStorage.accessToken) next({ path: '/home' })
+  if (!localStorage.accessToken) return next()
+  next({
+    path: '/home'
+  })
 }
 
 export default new Router({
@@ -54,7 +56,8 @@ export default new Router({
     {
       path: '/',
       name: 'login',
-      component: Login
+      component: Login,
+      beforeEnter: alreadySignedIn
     },
     {
       path: '/lecture',
@@ -102,7 +105,12 @@ export default new Router({
     },
     {
       path: '/profile/:user_id/edit',
-      component: ProfileEdit,
+      component: Modifier,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/place/bus',
+      component: BusStation,
       beforeEnter: requireAuth
     },
     {
@@ -118,11 +126,6 @@ export default new Router({
     {
       path: '/auth/reset/authorize',
       component: Modifier
-    },
-    {
-      path: '/auth/unauthorized',
-      name: 'unauthorized',
-      component: Unauthorized
     },
     {
       path: '/gate/manager/auth/login',
