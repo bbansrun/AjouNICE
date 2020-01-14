@@ -1,22 +1,35 @@
 <template>
     <div class="wrapper">
-        <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+        <Landing :title="title" description="" background="" />
+        <div class="container"></div>
+        <Footer />
     </div>
 </template>
 
 <script>
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-
-    export default {
-        name: 'app',
-        data() {
-            return {
-                editor: ClassicEditor,
-                editorData: '<p>Content of the editor.</p>',
-                editorConfig: {
-                    // The configuration of the editor.
-                }
-            }
+import gql from 'graphql-tag'
+import Landing from '@/components/Landing.vue'
+import Footer from '@/components/Footer.vue'
+export default {
+    name: 'app',
+    components: {
+        Landing, Footer
+    },
+    data () {
+        return {
+            title: '',
+            meta: {},
+            body: '',
         }
+    },
+    beforeMount () {
+        // this.$apollo.query({
+        //     query: gql``
+        // }).then(result => {
+            
+        // }).catch(error => {
+        //     console.error(error)
+        // })
     }
+}
 </script>

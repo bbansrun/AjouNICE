@@ -7,7 +7,7 @@ import store from './store'
 import './filters'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faSignOutAlt, faUser, faPen } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import CKEditor from '@ckeditor/ckeditor5-vue'
@@ -31,6 +31,7 @@ if (token) {
 
 library.add(faSignOutAlt)
 library.add(faUser)
+library.add(faPen)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const apolloClient = new ApolloClient({

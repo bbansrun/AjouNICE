@@ -19,6 +19,7 @@ import Edit from './views/board/Edit.vue'
 import Dashboard from './views/admin/Dashboard.vue'
 import Profile from './views/user/Profile.vue'
 import ProfileEdit from './views/user/Edit.vue'
+import BusStation from './views/place/BusStation.vue'
 import Gourmet from './views/place/Gourmet.vue'
 import LectureHome from './views/function/lecture/Home.vue'
 
@@ -103,6 +104,11 @@ export default new Router({
     {
       path: '/profile/:user_id/edit',
       component: ProfileEdit,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/place/bus',
+      component: BusStation,
       beforeEnter: requireAuth
     },
     {
