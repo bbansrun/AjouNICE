@@ -1,17 +1,19 @@
 <template>
-    <div class="wrapper" data-form-wrapper>
+    <div class="wrapper" fix-page>
         <flash-message></flash-message>
-        <section data-form class="form login">
+        <section data-form-center>
             <header>
-                <h1 class="logo-font">AjouNICE!</h1>
+                <h1 data-logo>AjouNICE!</h1>
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
-            <form method="POST" action="/api/auth/login">
-                <header class="logo-font"><span>LOGIN<small text-divider-block>로그인</small></span></header>
-                <div class="divider"></div>
+            <form data-auth-form @submit.prevent autocomplete="off">
+                <header data-logo>
+                    <h2>LOGIN</h2>
+                    <small>로그인</small>
+                </header>
                 <div class="input-form-wrapper">
                     <div class="input-form">
-                        <input type="text"  :class="{ 'error': this.errorValidation.userID && !this.userID }" placeholder="아이디" v-model="userID" pattern=".{6,}" required>
+                        <input type="text" :class="{ 'error': this.errorValidation.userID && !this.userID }" placeholder="아이디" v-model="userID" pattern=".{6,}" required>
                         <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.userID && !this.userID }" v-if="this.errorValidation.userID && !this.userID">칸이 비어있습니다.</p>
                     </div>
                     <div class="input-form">
@@ -21,13 +23,11 @@
                     <div class="input-form">
                         <input type="button" @click="signin" @submit.prevent value="로그인">
                     </div>
-                    <div class="input-form">
-                        <router-link to="/auth/reset">계정 재설정</router-link>
-                    </div>
                 </div>
-                <footer>
+                <div class="input-form-controls">
+                    <router-link to="/auth/reset" class="underline underline-inline-block">계정 재설정</router-link>
                     <router-link to="/auth/signup" class="btn btn-round">회원가입 &rarr;</router-link>
-                </footer>
+                </div>
             </form>
         </section>
     </div>
@@ -41,67 +41,64 @@ import gql from 'graphql-tag'
 Vue.use(VueFlashMessage)
 
 export default {
-  name: 'login',
-  data () {
-    return {
-      userID: '',
-      password: '',
-      errorValidation: {
-        userID: false,
-        password: false
-      }
-    }
-  },
-  methods: {
-    signin () {
-      let params = this.$route.params
-      if (this.userID && this.password && this.password.length >= 8) {
-        document.body.classList.toggle('loading')
-        let user_id = this.userID
-        let password = this.password
-        this.$store.dispatch('LOGIN', { user_id, password })
-        .then(({ result }) => {
-            this.$Axios.get('/api/reqClientIP').then(client => {
-                this.$apollo.mutate({
-                    mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
-                })
-            })
-            if (result.auth_email_yn === 'N') {
-                this.$store.dispatch('LOGOUT')
-                window.location = '/auth/unauthorized'
-            } else {
-                if ('redirect' in params) {
-                  window.location = params['redirect']
-                } else {
-                  window.location = '/home'
-                }
+    name: 'login',
+    data() {
+        return {
+            userID: '',
+            password: '',
+            errorValidation: {
+                userID: false,
+                password: false
             }
-        })
-        .catch(err => {
-            console.error(err)
-            document.body.classList.toggle('loading')
-            this.$swal({
-                title: '오류!',
-                text: '입력하신 정보가 올바르지 않습니다.',
-                type: 'error',
-                width: '90vw'
-            })
-        })
-      }
-      if (!this.userID) {
-        this.errorValidation.userID = true
-      }
-      if (!this.password) {
-        this.errorValidation.password = true
-      }
-    }
-  },
-  beforeCreate () {
-    document.body.classList.add('auth')
-    if (this.$store.state.accessToken) {
-      window.location = '/home'
-    }
-  },
+        }
+    },
+    methods: {
+        signin() {
+            let params = this.$route.params
+            if (this.userID && this.password && this.password.length >= 8) {
+                document.body.classList.toggle('loading')
+                let user_id = this.userID
+                let password = this.password
+                this.$store.dispatch('LOGIN', { user_id, password })
+                    .then(({ result }) => {
+                        this.$Axios.get('/api/reqClientIP').then(client => {
+                            this.$apollo.mutate({
+                                mutation: gql `mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
+                            })
+                        })
+                        if (result.auth_email_yn === 'N') {
+                            this.$store.dispatch('LOGOUT')
+                            window.location = '/error/401'
+                        } else {
+                            if ('redirect' in params) {
+                                window.location = params['redirect']
+                            } else {
+                                window.location = '/home'
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        document.body.classList.toggle('loading')
+                        this.$swal({
+                            title: '오류!',
+                            text: '입력하신 정보가 올바르지 않습니다.',
+                            type: 'error',
+                            width: '90vw'
+                        })
+                    })
+            }
+            if (!this.userID) {
+                this.errorValidation.userID = true
+            }
+            if (!this.password) {
+                this.errorValidation.password = true
+            }
+        }
+    },
+    beforeCreate() {
+        document.body.classList.add('auth')
+    },
 }
 </script>
 
@@ -110,5 +107,5 @@ export default {
 @import "~@/assets/styles/media";
 @import "~@/assets/styles/index";
 @import "~@/assets/styles/fonts";
-@import "~@/assets/styles/auth";
+
 </style>

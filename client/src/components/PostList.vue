@@ -61,6 +61,8 @@ section.popular {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      padding: 0 !important;
+      margin: 0 !important;
       > header {
         width: 100%;
         padding: 1rem;

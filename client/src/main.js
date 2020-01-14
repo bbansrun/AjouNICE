@@ -7,15 +7,12 @@ import store from './store'
 import './filters'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSignOutAlt, faUser, faPen } from '@fortawesome/free-solid-svg-icons'
+import { faSignOutAlt, faUser, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import CKEditor from '@ckeditor/ckeditor5-vue'
 
 import VueCarousel from '@chenfengyuan/vue-carousel'
 import VueFeather from 'vue-feather'
-
-import {ServerTable, ClientTable, Event} from 'vue-tables-2'
 
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
@@ -24,7 +21,6 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
-Vue.use(CKEditor)
 Vue.use(VueCarousel)
 Vue.use(VueFeather)
 
@@ -39,6 +35,7 @@ if (token) {
 library.add(faSignOutAlt)
 library.add(faUser)
 library.add(faPen)
+library.add(faPlus)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const apolloClient = new ApolloClient({

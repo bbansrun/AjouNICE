@@ -7,7 +7,7 @@
                 <span></span>
             </span>
             <header class="title">
-                <h1 class="logo-font">AjouNICE!</h1>
+                <h1 data-logo>AjouNICE!</h1>
             </header>
         </div>
         <ul class="section closed">

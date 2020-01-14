@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~@/assets/styles/auth";
+
 article {
     margin-top: 2rem !important;
     padding: 0 2rem !important;

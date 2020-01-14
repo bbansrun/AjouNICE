@@ -1,13 +1,13 @@
 <template>
-    <div class="wrapper" data-form-wrapper>
+    <div class="wrapper" fix-page>
         <flash-message></flash-message>
-        <section data-form class="form login">
+        <section data-form-center>
             <header>
-                <h1 class="logo-font">AjouNICE!</h1>
+                <h1 data-logo>AjouNICE!</h1>
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
-            <form method="POST" action="/api/auth/login">
-                <header class="logo-font"><span>ADMIN<small text-divider-block>관리자 로그인</small></span></header>
+            <form data-auth-form @submit.prevent autocomplete="off">
+                <header data-logo><span>ADMIN<small text-divider-block>관리자 로그인</small></span></header>
                 <div class="divider"></div>
                 <div class="input-form-wrapper">
                     <div class="input-form">
@@ -68,7 +68,7 @@ export default {
             })
             if (result.auth_email_yn === 'N') {
                 this.$store.dispatch('LOGOUT')
-                window.location = '/auth/unauthorized'
+                window.location = '/error/401'
             } else {
                 if ('redirect' in params) {
                   window.location = params['redirect']
@@ -107,5 +107,5 @@ export default {
 @import "~@/assets/styles/media";
 @import "~@/assets/styles/index";
 @import "~@/assets/styles/fonts";
-@import "~@/assets/styles/auth";
+
 </style>
