@@ -1,8 +1,9 @@
 <template>
     <div class="wrapper">
         <Landing :title="boardTitle" :description="boardDescription" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif" />
+        <BoardNav :writeUrl="write_url" v-if="$route.params.category && $route.params.name" />
         <section v-if="$route.params.category">
-            <ul class="board-nav">
+            <ul class="board-nav" v-if="sub_categories">
                 <li class="active">
                     <a href="#">전체</a>
                 </li>
@@ -17,7 +18,7 @@
             </table>
         </section>
         <section v-else>
-            <ul class="board-nav">
+            <ul class="board-nav" v-if="categories">
                 <li class="active">
                     <a href="#">전체</a>
                 </li>
@@ -27,6 +28,7 @@
             </ul>
         </section>
         <div class="container">
+            <PostList items="" />
         </div>
         <Footer />
     </div>
@@ -34,12 +36,15 @@
 
 <script>
 import gql from 'graphql-tag'
+import urljoin from 'url-join'
 import Landing from '@/components/Landing.vue'
+import PostList from '@/components/PostList.vue'
+import BoardNav from '@/components/BoardNav.vue'
 import Footer from '@/components/Footer.vue'
 export default {
     name: 'board',
     components: {
-        Landing, Footer
+        Landing, PostList, BoardNav, Footer
     },
     data () {
         return {
@@ -50,7 +55,8 @@ export default {
             category_idx: null,
             sub_category: '',
             sub_category_desc: '',
-            sub_category_idx: null
+            sub_category_idx: null,
+            write_url: ''
         }
     },
     methods: {},
@@ -58,6 +64,7 @@ export default {
         document.body.classList.toggle('loading')
     },
     beforeMount () {
+        this.write_url = urljoin(this.$route.path, '/new')
         let _this = this
         if (this.$route.params.category) {
             this.$apollo.query({

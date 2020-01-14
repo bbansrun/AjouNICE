@@ -98,7 +98,10 @@ export default {
   },
   beforeCreate () {
     document.body.classList.add('auth')
-  }
+    if (this.$store.state.accessToken) {
+      window.location = '/home'
+    }
+  },
 }
 </script>
 

@@ -16,6 +16,9 @@
                     <li>
                         <router-link to="/policy">이용약관</router-link>
                     </li>
+                    <li>
+                        <router-link to="/sitemap">사이트맵</router-link>
+                    </li>
                 </ul>
             </section>
             <hr />

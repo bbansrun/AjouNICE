@@ -7,8 +7,10 @@ import store from './store'
 import './filters'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faSignOutAlt, faUser, faPen } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+import CKEditor from '@ckeditor/ckeditor5-vue'
 
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
@@ -17,8 +19,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
-Vue.prototype.$Axios = axios
+Vue.use(CKEditor)
 
+Vue.prototype.$Axios = axios
 const token = localStorage.getItem('accessToken')
 if (token) {
   Vue.prototype.$Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -28,6 +31,7 @@ if (token) {
 
 library.add(faSignOutAlt)
 library.add(faUser)
+library.add(faPen)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const apolloClient = new ApolloClient({
