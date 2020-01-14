@@ -22,6 +22,11 @@
             </article>
           </a>
         </div>
+        <div class="view-more">
+          <a href="#">
+            <small>게시물 더보기</small> 
+          </a>
+        </div>
     </section>
 </template>
 
@@ -43,9 +48,10 @@ section.popular {
     text-align: center;
     padding: 1rem 0;
     border-top: 1px solid rgba(0,0,0,.2);
-    border-bottom: 1px solid rgba(0,0,0,.2);
   }
   > .posts {
+    border-top: 1px solid rgba(0,0,0,.2);
+    border-bottom: 1px solid rgba(0,0,0,.2);
     & a {
       display: inline-block;
       color: #000;
@@ -66,6 +72,15 @@ section.popular {
         max-width: 100px;
         max-height: 100px;
       }
+    }
+  }
+  > .view-more {
+    & a {
+      display: inline-block;
+      width: 100%;
+      color: #000;
+      text-align: center;
+      padding: .5rem 0;
     }
   }
 }

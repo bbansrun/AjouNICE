@@ -1,7 +1,14 @@
 <template>
     <div class="wrapper">
         <Landing title="사이트맵" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg" />
-        <div class="container"></div>
+        <div class="container">
+            <article class="sitemap-wrapper">
+                <header>
+                    <span>사이트맵</span>
+                </header>
+                <div class="sitemap"></div>
+            </article>
+        </div>
         <Footer />
     </div>
 </template>

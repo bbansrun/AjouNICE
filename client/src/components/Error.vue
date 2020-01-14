@@ -2,8 +2,7 @@
     <section data-error>
         <header>
             <h1 class="logo-font">
-                <span>X_X</span>
-                <div class="code" v-if="code">{{ code }}</div>
+                <span>X_X</span> | <span class="code" v-if="code">{{ code }}</span>
             </h1>
         </header>
         <div align="center" data-description>

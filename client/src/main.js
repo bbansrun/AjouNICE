@@ -15,6 +15,8 @@ import CKEditor from '@ckeditor/ckeditor5-vue'
 import VueCarousel from '@chenfengyuan/vue-carousel'
 import VueFeather from 'vue-feather'
 
+import {ServerTable, ClientTable, Event} from 'vue-tables-2'
+
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
