@@ -22,16 +22,17 @@ const getAll = (model, conditions) => async (parent, args, context, info) => {
 
 module.exports = {
     Query: {
+        // Department
         async findDptsByCollege(parent, args, context, info) {
             const conditions = { college_cd: args.college_cd, };
             return await getAll(Department, conditions)(parent, args, context, info);
         },
-
+        // College
         async findColleges(parent, args, context, info) {
             const conditions = { exist_yn: args.exist_yn, };
             return await getAll(College, conditions)(parent, args, context, info);
         },
-
+        // User
         async findNickName(parent, args, context, info) {
             const conditions = { nick_nm: args.nick_nm, };
             return await getAll(User, conditions)(parent, args, context, info);
@@ -52,7 +53,7 @@ module.exports = {
             const conditions = { user_idx: args.user_idx, };
             return await getOne(User, conditions)(parent, args, context, info);
         },
-
+        // BoardCategory
         async findBoardCategories(parent, args, context, info) {
             let conditions = { depth: args.depth }
             if (args.title) conditions.title = args.title
