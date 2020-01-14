@@ -121,54 +121,51 @@ class LoginAPI(Resource):
         password = request.json.get('password', None)
 
         user = User.query.filter_by(user_id=user_id).first()
-        compare_pw = user.password
-        result = bcrypt.check_password_hash(compare_pw, password)
+        match = bcrypt.check_password_hash(user.password, password)
+        res = {
+            'title': 'AjouNICE!',
+            'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+            'APIName': '/auth/login',
+            'APIDescription': '로그인 토큰처리',
+        }
 
-        if result:
+        if match:
             tokenizer = Tokenizer(secret=SECRET_KEY)
             tokenizer.create_payload(user)
             access_token = tokenizer.create_access_token()
-            return jsonResponse({
-                'title': 'AjouNICE!',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/auth/login',
-                'APIDescription': '로그인 토큰처리',
-                'result': {
-                    'code': '201',
-                    'access_token': access_token,
-                    'auth_email_yn': user.auth_email_yn
-                }
-            }, 201)
-        else:
-            return jsonResponse({
-                'title': 'AjouNICE!',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/auth/login',
-                'APIDescription': '로그인 토큰처리',
-                'result': {
-                    'code': '401',
-                    'message': '로그인 정보가 올바르지 않습니다.'
-                }
-            }, 401)
+            res['result'] = {
+                'code': '201',
+                'access_token': access_token,
+                'auth_email_yn': user.auth_email_yn
+            }
+            return jsonResponse(res, 201)
+
+        res['result'] = {
+            'code': '401',
+            'message': '로그인 정보가 올바르지 않습니다.'
+        }
+        return jsonResponse(res, 401)
 
 
 @api_rest.route("/auth/updatepw")
 class UpdatepwAPI(Resource):
     def post(self):
-        confirmed_request = False
-        headers = request.headers
         if not request.is_json:
             return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
-        # new_password, new_password_confirm matching
+
+        confirmed_request = False
+        headers = request.headers
         new_password = request.json.get('new_password', None)
         new_password_confirm = request.json.get('new_password_confirm', None)
+        auth_token = request.args.get('auth_token', None)
+
+        # new_password, new_password_confirm matching
         if not new_password or new_password != new_password_confirm:
             return jsonResponse({
                 'msg': 'new_password confirm doesn\'t match'
             }, 400)
 
         # password 분실
-        auth_token = request.args.get('auth_token', None)
         if auth_token:
             user = User.query.filter_by(auth_token=auth_token).first()
             if not user:
@@ -180,6 +177,7 @@ class UpdatepwAPI(Resource):
 
         # password 변경
         if 'Authorization' in headers and 'Bearer' in headers.get('Authorization'):
+            # jwt 확인
             token = request.headers.get('Authorization')
             try:
                 token = token.split(' ')[-1]
@@ -192,12 +190,12 @@ class UpdatepwAPI(Resource):
             validate_result = tokenizer.validate_token()
             isValid = validate_result[0]
             identity = validate_result[2]
-            print(identity)
+
             if not isValid:
                 return jsonResponse({
                     'msg': identity[-1]
                 }, int(identity[1]))
-            # password 변경 old_password 확인 로직
+            # old_password 확인 로직
             user_idx = identity['user']['idx']
             user = User.query.filter_by(user_idx=user_idx).first()
             old_password = request.json.get('old_password', None)
