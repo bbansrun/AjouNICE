@@ -1,3 +1,5 @@
+$auth: auth;
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -8,23 +10,17 @@
 }
 
 body {
-  font-family: 'KoPubDotumMedium', 'MalgeunGothic', 'AppleGothic', sans-serif;
-  font-size: 18px;
+  font: {
+    family: 'Source Sans Pro', 'KoPub Dotum', 'MalgeunGothic', 'AppleGothic', sans-serif;
+    weight: 300;
+    size: 18px;
+  }
   line-height: 1.6;
   overflow-x: hidden;
-}
-
-body.auth {
-  overflow-x: hidden;
-  background: url('https://sso.ajou.ac.kr/common/css/images/bg.jpg') no-repeat center center/cover;
-}
-
-a {
-  text-decoration: none;
-}
-
-a:not(:visited) {
-  font-weight: bold;
+  &.#{$auth} {
+    background: url('https://sso.ajou.ac.kr/common/css/images/bg.jpg') no-repeat center center/cover;
+  }
+  box-sizing: border-box;
 }
 
 // Utils
@@ -33,6 +29,10 @@ a:not(:visited) {
 }
 
 // Font
+[data-logo] {
+  font-family: 'yg-jalnan' !important;
+}
+
 .logo-font {
   font-family: 'yg-jalnan' !important;
 }
@@ -54,6 +54,36 @@ small {
 }
 
 // Default
+.underline {
+  position: relative;
+  &-inline-block {
+    display: inline-block;
+  }
+  &-block {
+    display: block;
+  }
+  &-animated {
+    &::before {
+      animation: {
+        duration: 1s;
+        name: underline;
+      }
+    }
+  }
+  &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      z-index: -1;
+      bottom: 1px;
+      height: 10px;
+      background-color: #667eea;
+      transition: all .4s cubic-bezier(0.57, 0.02, 0.06, 1);
+      width: 100%;
+  }
+}
+
 // GNB Navigation
 nav.gnb {
   position: fixed;
@@ -182,6 +212,7 @@ footer.footer {
   background: #2c2c2c;
   color: #fff;
   & a {
+    font-weight: 300;
     color: #fff;
   }
   & .footer-wrapper {
@@ -198,6 +229,7 @@ footer.footer {
       & ul {
         & li {
           display: inline-block;
+          position: relative;
           margin-right: 5px;
           & a {
             font-size: .8rem;
@@ -214,5 +246,53 @@ footer.footer {
     font-size: .8rem;
     padding-block-start: 1em;
     padding-block-end: 1em;
+  }
+}
+
+// Error
+#error {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  > #error_code {
+      margin-top: 2rem;
+      > h1 {
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-size: 4rem;
+          font-weight: bold;
+          background-image: linear-gradient(to bottom, #a18cd1 0%, #fbc2eb 100%);
+          text-shadow: 0 2px 2px rgba(0,0,0,.1);
+      }
+  }
+  > #error_desc {
+      padding: 2rem 0;
+      > header {
+          font-size: 1.6rem;
+          font-weight: 600;
+      }
+  }
+  > #error_nav {
+      padding: 0 0 2rem 0;
+  }
+  > .logo {
+      position: absolute;
+      bottom: 2rem;
+      text-align: center;
+      > h2 {
+          display: inline-block;
+          font-size: 1.5rem;
+          color: rgb(41, 61, 81);
+      }
+      > span {
+          font-size: .8rem;
+      }
   }
 }
