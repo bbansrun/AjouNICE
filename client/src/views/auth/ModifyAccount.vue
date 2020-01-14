@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import pathParser from 'path-parse'
 import gql from 'graphql-tag'
 export default {
     data () {
@@ -99,18 +100,25 @@ export default {
             this.errorMsg[key] = msg
         },
         authorizeToken () {
-            let params = this.$route.query
-            if ('authToken' in params) {
-                this.$apollo.query({
-                    query: gql`{ findUserByToken(token: "${params['authToken']}") { user_idx email } }`
-                }).then(result => {
-                    this.email = result.data.findUserByToken.email
-                }).catch(error => {
-                    console.error(error)
-                    window.location = '/error/500'
-                })
-            } else {
-                window.location = '/error/404'
+            let pParser = pathParser(this.$route.path)
+            let reset = (pParser.dir === '/auth/reset' && pParser.name === 'authorize')
+            let modify = (pParser.dir.split('/')[1] === 'profile' && pParser.name === 'edit')
+            if (reset || modify) {
+                if (reset && 'authToken' in this.$route.query) {
+                    this.$apollo.query({
+                        query: gql`{ findUserByToken(token: "${params['authToken']}") { user_idx email } }`
+                    }).then(result => {
+                        this.email = result.data.findUserByToken.email
+                    }).catch(error => {
+                        console.error(error)
+                        window.location = '/error/500'
+                    })
+                }
+                else if (modify) {
+
+                } else {
+                    window.location = '/error/404'
+                }
             }
         },
         resetAccount () {
