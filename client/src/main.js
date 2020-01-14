@@ -12,6 +12,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import CKEditor from '@ckeditor/ckeditor5-vue'
 
+import VueCarousel from '@chenfengyuan/vue-carousel'
+import VueFeather from 'vue-feather'
+
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
@@ -20,6 +23,8 @@ import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
 Vue.use(CKEditor)
+Vue.use(VueCarousel)
+Vue.use(VueFeather)
 
 Vue.prototype.$Axios = axios
 const token = localStorage.getItem('accessToken')
