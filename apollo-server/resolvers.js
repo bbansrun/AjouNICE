@@ -23,7 +23,7 @@ const getAll = (model, conditions) => async (parent, args, context, info) => {
 module.exports = {
     Query: {
         // Department
-        async findDptsByCollege(parent, args, context, info) {
+        async findDptByCollege(parent, args, context, info) {
             const conditions = { college_cd: args.college_cd, };
             return await getAll(Department, conditions)(parent, args, context, info);
         },

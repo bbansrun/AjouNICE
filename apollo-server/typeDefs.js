@@ -79,7 +79,7 @@ type BoardCategory {
 scalar Date
 
 type Query {
-    findDptsByCollege(college_cd: String!): [Department],
+    findDptByCollege(college_cd: String!): [Department],
     findColleges(exist_yn: String!): [College],
     findNickName(nick_nm: String!): [User],
     findEmail(email: String!): [User],

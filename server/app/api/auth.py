@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from server import db, bcrypt
 from server.app.api import api_rest
 
+
 class User(db.Model):
     __tablename__ = 'USER'
     user_idx = db.Column(db.Integer, primary_key=True)
@@ -39,10 +40,12 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.user_nm
 
+
 class Tokenizer():
     """
     Token Manager for providing Single Sign On Service
     """
+
     def __init__(self, secret, access_token=None):
         self.access_token = access_token
         self.refresh_token = None
@@ -81,11 +84,12 @@ class Tokenizer():
 
     def create_access_token(self):
         return jwt.encode(self.payload, self.secret, algorithm='HS256').decode('utf-8')
-    
+
     def validate_token(self, audience=None):
         identity = None
         try:
-            identity = jwt.decode(self.access_token, self.secret, audience=audience, algorithms=['HS256'])
+            identity = jwt.decode(
+                self.access_token, self.secret, audience=audience, algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             return (False, '401', 'Expired Token')
         except jwt.InvalidAudienceError:
@@ -99,17 +103,20 @@ class Tokenizer():
         else:
             return (True, '201', identity)
 
+
 SECRET_KEY = '4j0uN1ce1'
+
 
 def jsonResponse(payload, status_code):
     return Response(json.dumps(payload), status=status_code, mimetype='application/json')
+
 
 @api_rest.route("/auth/login")
 class LoginAPI(Resource):
     def post(self):
         if not request.is_json:
-            return jsonResponse({ "err": "TypeError: Not JSON Type Request." }, 400)
-        
+            return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
+
         user_id = request.json.get('user_id', None)
         password = request.json.get('password', None)
 
@@ -144,6 +151,76 @@ class LoginAPI(Resource):
                 }
             }, 401)
 
+
+@api_rest.route("/auth/updatepw")
+class UpdatepwAPI(Resource):
+    def post(self):
+        confirmed_request = False
+        headers = request.headers
+        if not request.is_json:
+            return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
+        # new_password, new_password_confirm matching
+        new_password = request.json.get('new_password', None)
+        new_password_confirm = request.json.get('new_password_confirm', None)
+        if not new_password or new_password != new_password_confirm:
+            return jsonResponse({
+                'msg': 'new_password confirm doesn\'t match'
+            }, 400)
+
+        # password 분실
+        auth_token = request.args.get('auth_token', None)
+        if auth_token:
+            user = User.query.filter_by(auth_token=auth_token).first()
+            if not user:
+                return jsonResponse({
+                    'msg': 'Invalid auth token'
+                }, 400)
+
+            confirmed_request = True
+
+        # password 변경
+        if 'Authorization' in headers and 'Bearer' in headers.get('Authorization'):
+            token = request.headers.get('Authorization')
+            try:
+                token = token.split(' ')[-1]
+            except:
+                return jsonResponse({
+                    'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'
+                }, 401)
+
+            tokenizer = Tokenizer(secret=SECRET_KEY, access_token=token)
+            validate_result = tokenizer.validate_token()
+            isValid = validate_result[0]
+            identity = validate_result[2]
+            print(identity)
+            if not isValid:
+                return jsonResponse({
+                    'msg': identity[-1]
+                }, int(identity[1]))
+            # password 변경 old_password 확인 로직
+            user_idx = identity['user']['idx']
+            user = User.query.filter_by(user_idx=user_idx).first()
+            old_password = request.json.get('old_password', None)
+            match = bcrypt.check_password_hash(user.password, old_password)
+            if not match:
+                return jsonResponse({
+                    'msg': 'Wrong Old Password'
+                }, 401)
+            confirmed_request = True
+
+        if confirmed_request:
+            print(new_password)
+            user.password = bcrypt.generate_password_hash(new_password, 10)
+            db.session.commit()
+            return jsonResponse({
+                'msg': 'password updated'
+            }, 201)
+
+        return jsonResponse({
+            'msg': 'Bad Request'
+        }, 400)
+
+
 @api_rest.route("/auth/refresh")
 class RefreshAPI(Resource):
     def get(self):
@@ -151,13 +228,13 @@ class RefreshAPI(Resource):
             return jsonResponse({
                 'msg': 'Authorization Header Needed'
             }, 401)
-        
+
         token = request.headers.get('Authorization')
         if 'Bearer' not in token:
             return jsonResponse({
                 'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'
             }, 401)
-        
+
         try:
             token = token.split(' ')[-1]
         except:
@@ -182,6 +259,7 @@ class RefreshAPI(Resource):
                 return jsonResponse({
                     'msg': identity[-1]
                 }, int(identity[1]))
+
 
 @api_rest.route("/protected")
 class Protected(Resource):
