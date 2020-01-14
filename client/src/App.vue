@@ -31,6 +31,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~@/assets/styles/reset.scss";
+@import "~@/assets/styles/fonts.scss";
+@import "~@/assets/styles/index.scss";
+@import "~@/assets/styles/media.scss";
+@import "~@/assets/styles/auth.scss";
+@import "~@/assets/styles/keyframes.scss";
+@import "~@/assets/styles/components/Button.scss";
+@import "~@/assets/styles/components/Link.scss";
 #app {
   min-height: 100%;
   margin: 0 auto;

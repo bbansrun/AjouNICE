@@ -1,11 +1,9 @@
 <template>
     <div class="wrapper">
-        <Landing title="연락" description="개발팀에 궁금한 것이 있으시면 연락주시기 바랍니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
+        <Landing title="광고/제휴/기타문의" description="개발팀에 궁금한 것이 있으시면 연락주시기 바랍니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
         <div class="container">
             <article>
-                <header>
-                    <span>문의폼 작성</span>
-                </header>
+                <header class="underline underline-inline-block">문의폼 작성</header>
                 <section>
                     <form>
                         <div class="input-form-wrapper">
@@ -14,6 +12,9 @@
                             </div>
                             <div class="input-form">
                                 <input type="email" v-model="email" name="email" id="email" placeholder="이메일 주소를 입력해주세요" required />
+                            </div>
+                            <div class="input-form">
+                                <input type="button" class="btn" value="이메일 발송">
                             </div>
                         </div>
                     </form>

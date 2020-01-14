@@ -1,7 +1,5 @@
 <template>
-    <section>
-        <Error :code="$route.params.code" :description="description" :sub_description="sub_description" />
-    </section>
+    <Error :code="code" :description="description" :sub_description="sub_description" />
 </template>
 
 <script>
@@ -30,6 +28,13 @@ export default {
     }
   },
   computed: {
+      code () {
+          if (this.$route.params.code in this.errData) {
+              return this.$route.params.code
+          } else {
+              window.location = '/error/404'
+          }
+      },
       description () {
           return this.errData[this.$route.params.code]['title']
       },

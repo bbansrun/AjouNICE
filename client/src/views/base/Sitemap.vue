@@ -1,11 +1,9 @@
 <template>
     <div class="wrapper">
-        <Landing title="사이트맵" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg" />
+        <Landing title="사이트맵" description="아주나이스 전체 페이지 구성을 보여드립니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg" />
         <div class="container">
             <article class="sitemap-wrapper">
-                <header>
-                    <span>사이트맵</span>
-                </header>
+                <header class="underline underline-inline-block">사이트맵</header>
                 <div class="sitemap"></div>
             </article>
         </div>

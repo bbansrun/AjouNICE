@@ -9,9 +9,7 @@
           </article>
           <hr />
           <article>
-            <header>
-              <span>서비스 공지사항</span>
-            </header>
+            <header class="underline underline-inline-block">서비스 공지사항</header>
             <table class="notice">
               <thead>
                 <tr>
@@ -74,21 +72,6 @@ article {
   & header {
     font-weight: bold;
     font-size: 1.5rem;
-    & span {
-      position: relative;
-      &::before {
-          content: "";
-          display: block;
-          position: absolute;
-          left: 0;
-          z-index: -1;
-          bottom: 1px;
-          height: 10px;
-          background-color: #667eea;
-          transition: all .4s cubic-bezier(0.57, 0.02, 0.06, 1);
-          width: 100%;
-      }
-    }
   }
 }
 </style>

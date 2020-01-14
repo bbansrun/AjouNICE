@@ -3,9 +3,7 @@
         <Landing title="이용약관" description="" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
         <div class="container">
             <article class="policy-wrapper">
-                <header>
-                    <span>서비스 이용약관</span>
-                </header>
+                <header class="underline underline-inline-block">서비스 이용약관</header>
                 <div class="policy policy-content">
                     <h3>제 1 장 환영합니다!</h3>
                     <br />

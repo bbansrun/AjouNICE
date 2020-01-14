@@ -1,0 +1,42 @@
+// Styles for button component
+input[type="button"].btn {
+    border: 0;
+    outline: 0;
+    background: transparent;
+}
+
+.btn {
+    display: block;
+    position: relative;
+    font-size: .8rem;
+    color: #000;
+    box-sizing: border-box;
+    transition: .4s all cubic-bezier(.22,.93,.42,.89);
+    &.rounded {
+        border-radius: 2rem;
+        &-on-hover:hover {
+            border-radius: 2rem;
+        }
+    }
+    &.circle {
+        border-radius: 50%;       
+    }
+    &.full {
+        width: 100%;
+    }
+    &.box-shadow {
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        &-on-hover:hover {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        }
+    }
+    &.text-inverse {
+        color: #fff;
+    }
+    &.inline {
+        display: inline;
+    }
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
