@@ -25,7 +25,9 @@
                     </div>
                 </div>
                 <div class="input-form-controls">
-                    <router-link to="/auth/reset" class="underline underline-inline-block">계정 재설정</router-link>
+                    <router-link to="/auth/reset" class="underline underline-inline-block">
+                        <small>계정 재설정</small>
+                    </router-link>
                     <router-link to="/auth/signup" class="btn btn-round">회원가입 &rarr;</router-link>
                 </div>
             </form>

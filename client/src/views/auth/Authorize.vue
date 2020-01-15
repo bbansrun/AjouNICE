@@ -15,7 +15,7 @@ export default {
                 }).then(result => {
                     let { user_idx, auth_email_yn } = result.data.findUserByToken
                     if (auth_email_yn === 'Y') {
-                        alert('유효하지 않는 토큰입니다.')
+                        alert('유효하지 않은 토큰입니다.')
                         window.location = '/error/401'
                     } else {
                         this.$apollo.mutate({

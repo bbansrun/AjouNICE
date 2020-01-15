@@ -6,15 +6,21 @@
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
             <form data-auth-form @submit.prevent autocomplete="off">
-                <header data-logo>Reset Account<small text-divider-block>계정 재설정</small></header>
-                <div class="divider"></div>
+                <header data-logo>
+                    <h2>Reset Account</h2>
+                    <small>계정 재설정</small>
+                </header>
                 <div class="input-form-wrapper">
                     <div class="input-form">
                         <input type="email" placeholder="이메일" :value="email" disabled>
                     </div>
                     <div class="input-form">
+                        <div class="input-group" v-if="this.mode.modify">
+                            <input name="password" autofocus v-model="pre_password" type="password" autocapitalize="none" pattern=".{8,}" placeholder="기존 패스워드" required :class="{ 'error': this.errorValidation.pre_user_pw }">
+                            <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.pre_user_pw }" v-if="this.errorValidation.pre_user_pw">{{ this.errorMsg.pre_user_pw }}</p>
+                        </div>
                         <div class="input-group">
-                            <input name="password" autofocus v-model="password" type="password" autocapitalize="none" pattern=".{8,}" placeholder="패스워드" required :class="{ 'error': this.errorValidation.user_pw }">
+                            <input name="password" autofocus v-model="password" type="password" autocapitalize="none" pattern=".{8,}" placeholder="신규 패스워드" required :class="{ 'error': this.errorValidation.user_pw }">
                             <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.user_pw }" v-if="this.errorValidation.user_pw">{{ this.errorMsg.user_pw }}</p>
                         </div>
                         <div class="input-group">
@@ -26,9 +32,11 @@
                     <div class="input-form">
                         <input type="button" @click="resetAccount" value="계정 재설정">
                     </div>
-                    <div class="input-form">
-                        <router-link to="/">처음으로</router-link>
-                    </div>
+                </div>
+                <div class="input-form-controls">
+                    <router-link to="/" class="underline underline-inline-block">
+                        <small>처음으로</small>
+                    </router-link>
                 </div>
             </form>
         </section>
@@ -39,24 +47,31 @@
 import pathParser from 'path-parse'
 import gql from 'graphql-tag'
 export default {
-    data() {
+    data () {
         return {
             email: '',
+            pre_password: '',
             password: '',
             passwordConfirm: '',
             validatedPWConfirm: false,
             errorValidation: {
+                pre_user_pw: false,
                 user_pw: false,
                 user_pw_confirm: false
             },
             errorMsg: {
+                pre_user_pw: '',
                 user_pw: '',
                 user_pw_confirm: ''
+            },
+            mode: {
+                reset: false,
+                modify: false
             }
         }
     },
     watch: {
-        password(value) {
+        password (value) {
             if (value) {
                 if (value.length >= 8) {
                     this.initError('user_pw')
@@ -91,22 +106,23 @@ export default {
         },
     },
     methods: {
-        initError(key) {
+        initError (key) {
             this.errorValidation[key] = false
             this.errorMsg[key] = ''
         },
-        occurError(key, msg) {
+        occurError (key, msg) {
             this.errorValidation[key] = true
             this.errorMsg[key] = msg
         },
-        authorizeToken() {
+        authorizeToken () {
+            let _this = this
             let pParser = pathParser(this.$route.path)
-            let reset = (pParser.dir === '/auth/reset' && pParser.name === 'authorize')
-            let modify = (pParser.dir.split('/')[1] === 'profile' && pParser.name === 'edit')
-            if (reset || modify) {
-                if (reset && 'authToken' in this.$route.query) {
+            this.mode.reset = (pParser.dir === '/auth/reset' && pParser.name === 'authorize')
+            this.mode.modify = (pParser.dir.split('/')[1] === 'profile' && pParser.name === 'edit')
+            if (this.mode.reset || this.mode.modify) {
+                if (this.mode.reset && 'authToken' in this.$route.query) {
                     this.$apollo.query({
-                        query: gql `{ findUserByToken(token: "${params['authToken']}") { user_idx email } }`
+                        query: gql `{ findUserByToken(token: "${_this.$route.query.authToken}") { user_idx email } }`
                     }).then(result => {
                         this.email = result.data.findUserByToken.email
                     }).catch(error => {
@@ -120,7 +136,7 @@ export default {
                 }
             }
         },
-        resetAccount() {
+        resetAccount () {
             if (!this.password) {
                 this.occurError('user_pw', '항목이 비어있습니다.')
             }
@@ -137,13 +153,40 @@ export default {
                 })
             } else {
                 // 비밀번호 재설정 진행
+                let data = {
+                    authToken: this.$route.query.authToken,
+                    password: this.password,
+                    passwordConfirm: this.passwordConfirm,
+                }
+                if (this.mode.reset) {
+                    data.mode = 'reset'
+                } else if (this.mode.modify) {
+                    data.mode = 'modify'
+                    data.prePassword = this.pre_password
+                }
+                this.$Axios({
+                    method: 'POST',
+                    url: '/api/auth/update',
+                    data: data
+                }).then(result => {
+                    if (result.status === 201) {
+                        this.$swal('성공!', '패스워드가 변경되었습니다.', 'success').then(() => {
+                            window.location = '/'
+                        })
+                    } else {
+                        throw Error(result)
+                    }
+                }).catch(error => {
+                    this.$swal('실패!', error, 'error')
+                    console.error(error)
+                })
             }
         }
     },
-    beforeCreate() {
+    beforeCreate () {
         document.body.classList.add('auth')
     },
-    beforeMount() {
+    beforeMount () {
         this.authorizeToken()
     }
 }

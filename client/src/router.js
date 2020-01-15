@@ -74,6 +74,11 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
+      path: '/board/new',
+      component: Edit,
+      beforeEnter: requireAuth
+    },
+    {
       path: '/board/:category',
       component: Board,
       beforeEnter: requireAuth

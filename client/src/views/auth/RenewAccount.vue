@@ -6,8 +6,10 @@
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
             <form data-auth-form @submit.prevent autocomplete="off">
-                <header data-logo>Reset Account<small text-divider-block>계정 재설정</small></header>
-                <div class="divider"></div>
+                <header data-logo>
+                    <h2>Reset Account</h2>
+                    <small>계정 재설정</small>
+                </header>
                 <div class="input-form-wrapper">
                     <div class="input-form">
                         <input type="email" placeholder="이메일" v-model="email" @keyup.enter="resetAccount" @submit.prevent required :class="{ 'error': this.emailError }">
@@ -16,9 +18,11 @@
                     <div class="input-form">
                         <input type="button" @click="resetAccount" value="계정 재설정">
                     </div>
-                    <div class="input-form">
-                        <router-link to="/">처음으로</router-link>
-                    </div>
+                </div>
+                <div class="input-form-controls">
+                    <router-link to="/" class="underline underline-inline-block">
+                        <small>처음으로</small>
+                    </router-link>
                 </div>
             </form>
         </section>

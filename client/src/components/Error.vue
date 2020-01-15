@@ -15,7 +15,7 @@
         </nav>
         <div class="logo">
             <h2 data-logo>AjouNICE!</h2>
-            <span text-divider>|</span>
+            <span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
             <span>아주대학교 커뮤니티 서비스</span>
         </div>
     </section>

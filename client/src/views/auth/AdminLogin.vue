@@ -7,7 +7,10 @@
                 <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
             </header>
             <form data-auth-form @submit.prevent autocomplete="off">
-                <header data-logo><span>ADMIN<small text-divider-block>관리자 로그인</small></span></header>
+                <header data-logo>
+                    <h2>ADMIN</h2>
+                    <small>관리자 로그인</small>
+                </header>
                 <div class="divider"></div>
                 <div class="input-form-wrapper">
                     <div class="input-form">
@@ -21,13 +24,7 @@
                     <div class="input-form">
                         <input type="button" @click="signin" @submit.prevent value="로그인">
                     </div>
-                    <div class="input-form">
-                        <router-link to="/auth/reset">계정 재설정</router-link>
-                    </div>
                 </div>
-                <footer>
-                    <router-link to="/auth/signup" class="btn btn-round">회원가입 &rarr;</router-link>
-                </footer>
             </form>
         </section>
     </div>

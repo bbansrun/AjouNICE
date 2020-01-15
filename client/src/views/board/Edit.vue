@@ -3,9 +3,12 @@
         <Landing :title="title" :description="`${category} - ${sub_category}`" background="https://faculty.ajou.ac.kr/_resources/faculty/img/main_visual02.jpg" />
         <div class="container">
             <form @submit.prevent data-post-form>
-                <div class="input-form">
+                <div class="input-form" v-if="mode.new">
                     <label for="category">게시판명</label>
-                    <!-- <v-select /> -->
+                    <div class="input-form-group">
+                        <v-select placeholder="게시판 분류 선택" v-model="selectedCategory" @input="getCateDepth1()" :value="selectedCategory" :options="categories" :reduce="options => options.category_idx" label="category_nm"></v-select>
+                        <v-select v-if="sub_categories" placeholder="게시판 하위 분류 선택" v-model="selectedSubCategory" :value="selectedSubCategory" :options="sub_categories" :reduce="options => options.category_idx" label="category_nm"></v-select>
+                    </div>
                 </div>
                 <div class="input-form">
                     <label for="title">제목</label>
@@ -65,6 +68,9 @@ export default {
     },
     data () {
         return {
+            selectedCategory: '',
+            selectedSubCategory: '',
+            categories: [],
             category: '',
             category_idx: null,
             sub_category: '',
@@ -123,6 +129,15 @@ export default {
             this.form.submitButton = '수정'
         }
         let _this = this
+        if (!this.$route.params.category) {
+             this.$apollo.query({
+                query: gql`{ findBoardCategories(depth: 0) { category_idx category_nm title access_auth private_yn desc } }`
+            }).then(result => {
+                _this.categories = result.data.findBoardCategories.filter((elem) => (elem.access_auth === 'ALL' && elem.private_yn === 'N'))
+            }).catch(error => {
+
+            })
+        }
         this.$apollo.query({
             query: gql`{ findBoardCategories(depth: 0, title: "${_this.$route.params.category}") { category_idx category_nm title access_auth private_yn desc } }`
         }).then(result => {
@@ -137,6 +152,16 @@ export default {
     methods: {
         goBack () {
             this.$router.go(-1)
+        },
+        getCateDepth1 () {
+            this.sub_categories = []
+            this.selectedSubCategory = ''
+            let _this = this
+            this.$apollo.query({
+                query: gql`{ findBoardCategories(depth: 1, parent: ${_this.selectedCategory}) { category_idx category_nm title parent access_auth private_yn desc } }`
+            }).then(result => {
+                _this.sub_categories = result.data.findBoardCategories.filter((elem) => (elem.access_auth === 'ALL' && elem.private_yn === 'N'))
+            })
         }
     }
 }

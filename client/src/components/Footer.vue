@@ -4,7 +4,7 @@
             <div class="content">
                 <header>
                     <h2 data-logo>AjouNICE!</h2>
-                    <small>아주대학교 학부 커뮤니티 서비스</small>
+                    <small>아주나이스는 아주대학교의 커뮤니티 서비스입니다.</small>
                 </header>
                 <ul class="copyright">
                     <li><router-link to="/about" class="underline">서비스소개</router-link></li>
