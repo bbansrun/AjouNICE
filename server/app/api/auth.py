@@ -147,76 +147,70 @@ class LoginAPI(Resource):
         return jsonResponse(res, 401)
 
 
-@api_rest.route("/auth/updatepw")
-class UpdatepwAPI(Resource):
+@api_rest.route("/auth/update")
+class UpdateAPI(Resource):
     def post(self):
         if not request.is_json:
             return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
 
-        confirmed_request = False
-        headers = request.headers
-        new_password = request.json.get('new_password', None)
-        new_password_confirm = request.json.get('new_password_confirm', None)
-        auth_token = request.args.get('auth_token', None)
+        confirmed = False
 
-        # new_password, new_password_confirm matching
-        if not new_password or new_password != new_password_confirm:
+        mode = request.json.get('mode', None)
+        authToken = request.json.get('authToken', None)
+        prePassword = request.json.get('prePassword', None)
+        password = request.json.get('password', None)
+        passwordConfirm = request.json.get('passwordConfirm', None)
+
+        if not (password and passwordConfirm) and (password is not passwordConfirm):
             return jsonResponse({
-                'msg': 'new_password confirm doesn\'t match'
+                'title': 'AjouNICE!',
+                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+                'APIName': '/auth/update',
+                'APIDescription': '계정 정보 수정',
+                'result': {
+                    'code': '400',
+                    'message': '정보가 올바르지 않습니다.'
+                }
             }, 400)
 
-        # password 분실
-        if auth_token:
-            user = User.query.filter_by(auth_token=auth_token).first()
-            if not user:
-                return jsonResponse({
-                    'msg': 'Invalid auth token'
-                }, 400)
-
-            confirmed_request = True
-
-        # password 변경
-        if 'Authorization' in headers and 'Bearer' in headers.get('Authorization'):
-            # jwt 확인
+        if mode == 'reset':
+            # Password 분실에 대한 수정 - 이메일 인증 토큰 유효성 검증
+            if authToken:
+                user = User.query.filter_by(auth_token=authToken).first()
+                if not user:
+                    return jsonResponse({'msg': 'Invalid auth token'}, 400)
+                confirmed = True
+        elif mode == 'modify':
+            # 로그인된 계정의 Password 변경
             token = request.headers.get('Authorization')
-            try:
-                token = token.split(' ')[-1]
-            except:
-                return jsonResponse({
-                    'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'
-                }, 401)
+            if token and 'Bearer' in token:
+                try:
+                    token = token.split(' ')[-1]
+                except:
+                    return jsonResponse({'msg': 'Authorization Value Format doesn\'t matched with the value server requires.'}, 401)
 
-            tokenizer = Tokenizer(secret=SECRET_KEY, access_token=token)
-            validate_result = tokenizer.validate_token()
-            isValid = validate_result[0]
-            identity = validate_result[2]
+                tokenizer = Tokenizer(secret=SECRET_KEY, access_token=token)
+                validate_result = tokenizer.validate_token()
+                isValid = validate_result[0]
+                identity = validate_result[2]
+                if not isValid:
+                    return jsonResponse({'msg': identity[-1]}, int(identity[1]))
 
-            if not isValid:
-                return jsonResponse({
-                    'msg': identity[-1]
-                }, int(identity[1]))
-            # old_password 확인 로직
-            user_idx = identity['user']['idx']
-            user = User.query.filter_by(user_idx=user_idx).first()
-            old_password = request.json.get('old_password', None)
-            match = bcrypt.check_password_hash(user.password, old_password)
-            if not match:
-                return jsonResponse({
-                    'msg': 'Wrong Old Password'
-                }, 401)
-            confirmed_request = True
+                # prePassword 일치 여부 확인
+                user_idx = identity['user']['idx']
+                user = User.query.filter_by(user_idx=user_idx).first()
+                match = bcrypt.check_password_hash(user.password, prePassword)
+                if not match:
+                    return jsonResponse({'msg': 'Wrong Old Password'}, 401)
+                confirmed = True
 
-        if confirmed_request:
-            print(new_password)
-            user.password = bcrypt.generate_password_hash(new_password, 10)
+        if confirmed:
+            user.auth_email_yn = 'Y'
+            user.password = bcrypt.generate_password_hash(password, 10)
             db.session.commit()
-            return jsonResponse({
-                'msg': 'password updated'
-            }, 201)
+            return jsonResponse({'msg': 'password updated'}, 201)
 
-        return jsonResponse({
-            'msg': 'Bad Request'
-        }, 400)
+        return jsonResponse({'msg': 'Bad Request'}, 400)
 
 
 @api_rest.route("/auth/refresh")

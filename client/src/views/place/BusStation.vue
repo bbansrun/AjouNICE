@@ -3,7 +3,9 @@
 		<Landing title="Ajou버스" description="학교 주변에서 이용할 수 있는 교통수단을 알려드립니다." background="" />
 		<div class="container">
 			<section class="shuttle">
-				<header>학교 셔틀버스</header>
+				<header class="underline underline-inline-block">
+					<strong>학교 셔틀버스</strong>	
+				</header>
 				<table cellpadding="0" cellspacing="0" class="ajou_table" summary="학교버스의 등하교노선을 보여주는 표">
 					<caption>
 						학교버스 등하교노선</caption>
@@ -642,7 +644,9 @@
 				</table>
 			</section>
 			<section class="ord-bus">
-				<header>일반 시내/광역/마을버스</header>
+				<header class="underline underline-inline-block">
+					<strong>일반 시내/광역/마을버스</strong>
+				</header>
 				<div id="map"></div>
 			</section>
 		</div>

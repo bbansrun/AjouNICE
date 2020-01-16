@@ -39,7 +39,6 @@
     "jshint": "^2.10.3",
     "node-sass": "^4.13.0",
     "path-parse": "^1.0.6",
-    "postcss-loader": "3",
     "raw-loader": "0.5.1",
     "request-ip": "^2.1.3",
     "sass-loader": "^8.0.0",
@@ -51,11 +50,12 @@
     "vue-flash": "^2.1.3",
     "vue-flash-message": "^0.7.2",
     "vue-gallery-slideshow": "^1.5.0",
+    "vue-loader": "^15.8.3",
     "vue-router": "^3.1.3",
     "vue-select": "^3.4.0",
     "vue-sweetalert2": "^2.1.5",
-    "vue-tables-2": "^1.6.23",
     "vue-template-compiler": "^2.6.11",
+    "vue-upload-component": "^2.8.20",
     "vuex": "^3.1.2"
   },
   "devDependencies": {

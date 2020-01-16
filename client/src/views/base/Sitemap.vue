@@ -4,7 +4,9 @@
         <div class="container">
             <article class="sitemap-wrapper">
                 <header class="underline underline-inline-block">사이트맵</header>
-                <div class="sitemap"></div>
+                <div class="sitemap">
+                    <router-link to="/">홈</router-link>
+                </div>
             </article>
         </div>
         <Footer />

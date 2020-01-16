@@ -21,36 +21,62 @@ body {
     background: url('https://sso.ajou.ac.kr/common/css/images/bg.jpg') no-repeat center center/cover;
   }
   box-sizing: border-box;
+  &.loading {
+    > #app > .loader {
+        display: block;
+    }
+  }
+}
+
+// Loading
+.loader {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  color: #fff;
+  background: rgba(0,0,0,.95);
+  z-index: 10000000000;
+  > .wrapper {
+      position: relative;
+      top: 50%;
+      text-align: center;
+      transform: translateY(-50%);
+      > .logo {
+          margin-bottom: 1rem;
+          > img {
+              width: 120px;
+              transform: perspective(1000px) rotateY(-10deg);
+              transform-style: preserve-3d;
+              -webkit-animation: load-spinner 1s cubic-bezier(0.455, 0.030, 0.515, 0.955) both infinite;
+              animation: load-spinner 1s cubic-bezier(0.455, 0.030, 0.515, 0.955) both infinite;
+          }
+      }
+  }
 }
 
 // Utils
-.divider {
-  margin: 1rem 0;
+[fix-page] {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
-// Font
-[data-logo] {
-  font-family: 'yg-jalnan' !important;
+@for $i from 1 through 9 {
+  $flex: $i;
+  .flex-#{$i} { 
+      flex: $flex;
+  }
 }
 
-.logo-font {
-  font-family: 'yg-jalnan' !important;
-}
-
-[text-divider] {
-  display: inline-block;
-  font-size: .8rem;
-  padding: 0 10px;
-}
-
-[text-divider-block] {
-  display: block;
-  font-size: .4em;
-  padding: 0 10px;
+br[media] {
+  display: none;
 }
 
 small {
-  font-size: .4em;
+  font-size: .6rem;
 }
 
 // Default
@@ -207,45 +233,44 @@ ul.board-nav {
 }
 
 // Footer
-footer.footer {
+footer {
   padding: 2rem 0 0 0;
   background: #2c2c2c;
   color: #fff;
   & a {
-    font-weight: 300;
-    color: #fff;
+    font: {
+      size: .8rem;
+      weight: 300 !important;
+    }
+    color: inherit;
+    &:visited {
+      color: inherit;
+    }
   }
-  & .footer-wrapper {
+  > .wrapper {
     width: 75%;
     margin: auto;
-    & .footer {
+    > .content {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       min-height: 2rem;
       + hr {
-        border: .5px solid rgba(255, 255, 255, 0.5);
+        border: .5px solid rgba(255,255,255,.5);
+        + p {
+          font-size: .8rem;
+          padding-block-start: 1em;
+          padding-block-end: 1em;
+        }
       }
-      & ul {
-        & li {
+      > .copyright {
+        > li {
           display: inline-block;
           position: relative;
           margin-right: 5px;
-          & a {
-            font-size: .8rem;
-            color: #fff;
-            &:visited {
-              color: inherit;
-            }
-          }
         }
       }
     }
-  }
-  & p {
-    font-size: .8rem;
-    padding-block-start: 1em;
-    padding-block-end: 1em;
   }
 }
 

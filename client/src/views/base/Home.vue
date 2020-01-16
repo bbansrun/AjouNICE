@@ -21,6 +21,7 @@ import Nav from '@/components/Navigation.vue'
 import Welcome from '@/components/Welcome.vue'
 import IconNav from '@/components/IconNav.vue'
 import PostList from '@/components/PostList.vue'
+import Slide from '@/components/Slide.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
@@ -35,9 +36,18 @@ export default {
                 { id: 4, title: '아주맛집', background: 'http://imagescdn.gettyimagesbank.com/500/19/169/345/0/1141991229.jpg', link: '/place/gourmet' },
             ],
             carouselItems: [
-                '<div class="example-slide">Slide 1</div>',
-                '<div class="example-slide">Slide 2</div>',
-                '<div class="example-slide">Slide 3</div>',
+                `<div class="home-slide">
+                    <a href="/">
+                        <h2 data-logo>AjouNICE!</h2>
+                        <p><small>아주대학교의 대표 커뮤니티 서비스입니다.</small></p>
+                    </a>
+                </div>`,
+                `<div class="home-slide">
+                    <a href="/about">
+                        <h2 data-logo>AjouNICE!</h2>
+                        <p><small>서비스 오픈 일정 안내</small></p>
+                    </a>
+                </div>`,
             ],
             carouselRadio: [{
                     id: 1,
@@ -110,6 +120,7 @@ export default {
         Welcome,
         IconNav,
         PostList,
+        Slide,
         Footer
     },
     beforeCreate() {
@@ -134,7 +145,7 @@ body {
     background: #eaeaea;
 }
 
-.example-slide {
+.home-slide {
     align-items: center;
     background-color: #666;
     color: #999;
@@ -142,6 +153,9 @@ body {
     font-size: 1.5rem;
     justify-content: center;
     min-height: 10rem;
+    & a {
+        color: #999 !important;
+    }
 }
 
 .broadcast {
