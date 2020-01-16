@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
-      <Landing title="AjouNICE!" description="아주나이스 서비스를 소개합니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif" isLogo />
+      <Navigation :scrollBase="scrollBase" />
+      <Landing ref="scrollBase" title="AjouNICE!" description="아주나이스 서비스를 소개합니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif" isLogo />
       <div class="container">
         <section class="about">
           <article>
@@ -43,15 +44,17 @@
 </template>
 
 <script>
+import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   name: 'about',
   components: {
-    Landing, Footer
+    Navigation, Landing, Footer
   },
   data () {
     return {
+      scrollBase: null,
       columns: ['id', 'name', 'age'],
       tableData: [
           { id: 1, name: "John", age: "20" },
@@ -62,6 +65,9 @@ export default {
       ],
       options: {}
     }
+  },
+  mounted () {
+    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   }
 }
 </script>

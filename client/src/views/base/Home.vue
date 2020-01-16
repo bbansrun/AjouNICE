@@ -1,8 +1,8 @@
 <template>
     <div class="home">
-        <!-- <Nav /> -->
+        <Nav :scrollBase="scrollBase" />
         <div class="container">
-            <carousel :data="carouselItems"></carousel>
+            <carousel ref="scrollBase" :data="carouselItems"></carousel>
             <Welcome :username="userInfo.name" :user_id="userInfo.idx" />
             <IconNav :data="iconNav" />
             <div class="broadcast">
@@ -28,6 +28,7 @@ export default {
     name: 'home',
     data() {
         return {
+            scrollBase: null,
             userInfo: {},
             iconNav: [
                 { id: 1, title: '커뮤니티', background: 'https://i.pinimg.com/originals/41/5d/0e/415d0e858d30604063794897fbffd048.png', link: '/board/' },
@@ -36,18 +37,20 @@ export default {
                 { id: 4, title: '아주맛집', background: 'http://imagescdn.gettyimagesbank.com/500/19/169/345/0/1141991229.jpg', link: '/place/gourmet' },
             ],
             carouselItems: [
-                `<div class="home-slide">
-                    <a href="/">
+                `<a data-slide-item href="/">
+                    <div class="cover"></div>
+                    <div class="slide-content">
                         <h2 data-logo>AjouNICE!</h2>
-                        <p><small>아주대학교의 대표 커뮤니티 서비스입니다.</small></p>
-                    </a>
-                </div>`,
-                `<div class="home-slide">
-                    <a href="/about">
+                        <small>아주대학교의 대표 커뮤니티 서비스입니다.</small>
+                    </div>
+                </a>`,
+                `<a data-slide-item href="/about">
+                    <div class="cover"></div>
+                    <div class="slide-content">
                         <h2 data-logo>AjouNICE!</h2>
-                        <p><small>서비스 오픈 일정 안내</small></p>
-                    </a>
-                </div>`,
+                        <small>서비스 오픈 일정 안내</small>
+                    </div>
+                </a>`,
             ],
             carouselRadio: [{
                     id: 1,
@@ -133,6 +136,9 @@ export default {
             })
         })
     },
+    mounted () {
+        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom
+    },
 }
 </script>
 
@@ -145,17 +151,34 @@ body {
     background: #eaeaea;
 }
 
-.home-slide {
-    align-items: center;
-    background-color: #666;
-    color: #999;
-    display: flex;
-    font-size: 1.5rem;
-    justify-content: center;
-    min-height: 10rem;
-    & a {
-        color: #999 !important;
+[data-slide-item] {
+    display: block;
+    position: relative;
+    z-index: 0;
+    > .cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.4);
+        z-index: -1;
     }
+    > .slide-content {
+        position: absolute;
+        line-height: 1;
+        bottom: 1rem;
+        left: 1rem;
+        z-index: 1;
+        > h2 {
+            margin-block-start: 0;
+            margin-block-end: 0;
+        }
+    }
+    background: url('http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual03.jpg') no-repeat center center/cover;
+    color: #fff;
+    font-size: 1.5rem;
+    min-height: 10rem;
 }
 
 .broadcast {

@@ -7,7 +7,7 @@
             </header>
             <form data-auth-form @submit.prevent autocomplete="off">
                 <header data-logo>
-                    <h2>Reset Account</h2>
+                    <h2>Recovery</h2>
                     <small>계정 재설정</small>
                 </header>
                 <div class="input-form-wrapper">
@@ -170,7 +170,13 @@ export default {
                     data: data
                 }).then(result => {
                     if (result.status === 201) {
-                        this.$swal('성공!', '패스워드가 변경되었습니다.', 'success').then(() => {
+                        this.$swal({
+                            title: '패스워드 변경 완료',
+                            text: '패스워드가 변경되었습니다.',
+                            type: 'success',
+                            width: '90vw',
+                            footer: '<p>입력하신 새로운 비밀번호로 로그인하시면 서비스 이용이 가능합니다.</p>'
+                        }).then(() => {
                             window.location = '/'
                         })
                     } else {

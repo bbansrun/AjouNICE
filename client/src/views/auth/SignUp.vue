@@ -680,10 +680,11 @@ export default {
                                 document.body.classList.toggle('loading')
                                 this.flash('회원가입 성공! 로그인 후 서비스 이용이 가능합니다.', 'success')
                                 this.$swal({
-                                    title: '축하합니다!',
-                                    text: '이제 아주나이스의 서비스를 이용하실 수 있습니다. 로그인 후 사용가능합니다.',
+                                    title: '회원가입 완료!',
+                                    text: '기입하신 이메일 주소로 인증 메일을 발송하였습니다. 인증 후 서비스 이용이 가능합니다.',
                                     type: 'success',
                                     width: '90vw',
+                                    footer: '<p>기입하신 이메일 수신함을 확인하여 주시기 바랍니다.</p>',
                                     animation: true
                                 }).then(result => {
                                     window.location = '/'

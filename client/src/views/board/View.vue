@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
-        <Landing :title="title" description="" background="" />
+        <Navigation :scrollBase="scrollBase" />
+        <Landing ref="scrollBase" :title="title" description="" background="" />
         <div class="container"></div>
         <Footer />
     </div>
@@ -8,28 +9,24 @@
 
 <script>
 import gql from 'graphql-tag'
+import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 export default {
     name: 'app',
     components: {
-        Landing, Footer
+        Navigation, Landing, Footer
     },
     data () {
         return {
+            scrollBase: null,
             title: '',
             meta: {},
             body: '',
         }
     },
-    beforeMount () {
-        // this.$apollo.query({
-        //     query: gql``
-        // }).then(result => {
-            
-        // }).catch(error => {
-        //     console.error(error)
-        // })
+    mounted () {
+        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
     }
 }
 </script>

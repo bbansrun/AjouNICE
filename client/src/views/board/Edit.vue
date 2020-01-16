@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
-        <Landing :title="title" :description="`${category} - ${sub_category}`" background="https://faculty.ajou.ac.kr/_resources/faculty/img/main_visual02.jpg" />
+        <Navigation :scrollBase="scrollBase" />
+        <Landing ref="scrollBase" :title="title" :description="`${category} - ${sub_category}`" background="https://faculty.ajou.ac.kr/_resources/faculty/img/main_visual02.jpg" />
         <div class="container">
             <form @submit.prevent data-post-form>
                 <div class="input-form" v-if="mode.new">
@@ -58,16 +59,18 @@ import pathParser from 'path-parse'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import FileUpload from 'vue-upload-component'
+import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 
 Vue.use(CKEditor)
 export default {
     components: {
-        Landing, Footer, FileUpload
+        Navigation, Landing, Footer, FileUpload
     },
     data () {
         return {
+            scrollBase: null,
             selectedCategory: '',
             selectedSubCategory: '',
             categories: [],
@@ -163,6 +166,9 @@ export default {
                 _this.sub_categories = result.data.findBoardCategories.filter((elem) => (elem.access_auth === 'ALL' && elem.private_yn === 'N'))
             })
         }
+    },
+    mounted () {
+        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
     }
 }
 </script>

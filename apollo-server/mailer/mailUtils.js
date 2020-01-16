@@ -15,7 +15,7 @@ const sendConfirmMail = async (user_nm, email, authToken, isResetEmail = false) 
   }
   const msg = {
     to: email,
-    from: 'kingman330@gmail.com',
+    from: 'team.ajounice@gmail.com',
     subject: subject,
     html: template(url),
   }

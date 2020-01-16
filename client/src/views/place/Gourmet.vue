@@ -1,38 +1,47 @@
 <template>
     <div class="wrapper">
-        <Landing title="아주맛집" description="여기여기, 아주맛집이야..." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg" />
+        <Navigation :scrollBase="scrollBase" />
+        <Landing ref="scrollBase" title="아주맛집" description="여기여기, 아주맛집이야..." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg" />
         <IconNav :data="iconNav" />
         <Footer />
     </div>
 </template>
 
 <script>
+import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import IconNav from '@/components/IconNav.vue'
 import Footer from '@/components/Footer.vue'
 export default {
- components: {
-     Landing, IconNav, Footer
- },
- data () {
-     return {
-      iconNav: [
-        { id: 1, title: '한식', background: 'https://i.pinimg.com/originals/41/5d/0e/415d0e858d30604063794897fbffd048.png', link: '/board/' },
-        { id: 2, title: '일식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 3, title: '중식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 4, title: '양식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 5, title: '치킨', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 6, title: '피자', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 7, title: '족발&보쌈', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 8, title: '아시안&양식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 9, title: '도시락', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 10, title: '패스트푸드', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 11, title: '프랜차이즈', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 12, title: '야식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 13, title: '찜&탕', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-        { id: 14, title: '맛집랭킹', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
-      ]
-     }
- }
+    components: {
+        Navigation,
+        Landing,
+        IconNav,
+        Footer
+    },
+    data() {
+        return {
+            scrollBase: null,
+            iconNav: [
+                { id: 1, title: '한식', background: 'https://i.pinimg.com/originals/41/5d/0e/415d0e858d30604063794897fbffd048.png', link: '/board/' },
+                { id: 2, title: '일식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 3, title: '중식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 4, title: '양식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 5, title: '치킨', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 6, title: '피자', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 7, title: '족발&보쌈', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 8, title: '아시안&양식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 9, title: '도시락', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 10, title: '패스트푸드', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 11, title: '프랜차이즈', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 12, title: '야식', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 13, title: '찜&탕', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+                { id: 14, title: '맛집랭킹', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/' },
+            ]
+        }
+    },
+    mounted () {
+        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+    }
 }
 </script>

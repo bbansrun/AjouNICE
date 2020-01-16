@@ -7,12 +7,12 @@
             </header>
             <form data-auth-form @submit.prevent autocomplete="off">
                 <header data-logo>
-                    <h2>Reset Account</h2>
+                    <h2>Recovery</h2>
                     <small>계정 재설정</small>
                 </header>
                 <div class="input-form-wrapper">
                     <div class="input-form">
-                        <input type="email" placeholder="이메일" v-model="email" @keyup.enter="resetAccount" @submit.prevent required :class="{ 'error': this.emailError }">
+                        <input type="email" placeholder="이메일" v-model="email" @keyup.enter="resetAccount" required :class="{ 'error': this.emailError }">
                         <p class="auto-validate-noti" :class="{ 'error': this.emailError }" v-if="this.emailError">{{ this.emailErrorMsg }}</p>
                     </div>
                     <div class="input-form">
@@ -76,8 +76,8 @@ export default {
                                         type: 'success',
                                         width: '90vw',
                                         title: '재설정 이메일 발송',
-                                        text: '패스워드 재설정 이메일을 입력하신 주소로 발송하였습니다. 받은 문서함을 확인해주세요.',
-                                        footer: '스팸으로 분류되는 경우도 발생할 수 있으니 수신되지 않은 경우 해당 문서함을 확인해주세요.'
+                                        text: '패스워드 재설정 이메일을 입력하신 주소로 발송하였습니다. 수신함을 확인해주세요.',
+                                        footer: '<p>스팸으로 분류되는 경우도 발생할 수 있으니 수신되지 않은 경우 해당 문서함을 확인해주세요.</p>'
                                     }).then(result => {
                                         window.location = '/'
                                     })

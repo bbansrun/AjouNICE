@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
-        <Landing title="광고/제휴/기타문의" description="개발팀에 궁금한 것이 있으시면 연락주시기 바랍니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
+        <Navigation :scrollBase="scrollBase" />
+        <Landing ref="scrollBase" title="광고/제휴/기타문의" description="개발팀에 궁금한 것이 있으시면 연락주시기 바랍니다." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
         <div class="container">
             <article>
                 <header class="underline underline-inline-block">문의폼 작성</header>
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 import CKEditor from '@ckeditor/ckeditor5-vue'
@@ -39,10 +41,11 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 export default {
     name: 'contact',
     components: {
-        Landing, Footer
+        Navigation, Landing, Footer
     },
     data () {
         return {
+            scrollBase: null,
             name: '',
             email: '',
             editor: ClassicEditor,
@@ -51,6 +54,9 @@ export default {
                 toolbar: []
             },
         }
+    },
+    mounted () {
+        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
     }
 }
 </script>

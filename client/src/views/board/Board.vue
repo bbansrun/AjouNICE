@@ -1,6 +1,7 @@
 <template>
     <div class="wrapper">
-        <Landing :title="boardTitle" :description="boardDescription" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif" />
+        <Navigation :scrollBase="scrollBase" />
+        <Landing ref="scrollBase" :title="boardTitle" :description="boardDescription" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif" />
         <BoardNav :writeUrl="write_url" />
         <section v-if="$route.params.category">
             <ul class="board-nav" v-if="sub_categories">
@@ -38,16 +39,18 @@
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import Landing from '@/components/Landing.vue'
+import Navigation from '@/components/Navigation.vue'
 import PostList from '@/components/PostList.vue'
 import BoardNav from '@/components/BoardNav.vue'
 import Footer from '@/components/Footer.vue'
 export default {
     name: 'board',
     components: {
-        Landing, PostList, BoardNav, Footer
+        Landing, Navigation, PostList, BoardNav, Footer
     },
     data () {
         return {
+            scrollBase: null,
             categories: null,
             sub_categories: null,
             category: '',
@@ -106,6 +109,9 @@ export default {
     created () {
         document.body.classList.toggle('loading')
     },
+    mounted () {
+        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+    },
     computed: {
         boardTitle () {
             if (!this.$route.params.category) {
@@ -128,7 +134,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss">
-
-</style>

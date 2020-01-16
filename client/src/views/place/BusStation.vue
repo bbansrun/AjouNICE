@@ -1,6 +1,7 @@
 <template>
 	<div class="wrapper">
-		<Landing title="Ajou버스" description="학교 주변에서 이용할 수 있는 교통수단을 알려드립니다." background="" />
+		<Navigation :scrollBase="scrollBase" />
+		<Landing ref="scrollBase" title="Ajou버스" description="학교 주변에서 이용할 수 있는 교통수단을 알려드립니다." background="" />
 		<div class="container">
 			<section class="shuttle">
 				<header class="underline underline-inline-block">
@@ -656,15 +657,18 @@
 
 <script>
 import axios from 'axios'
+import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 export default {
 	components: {
+		Navigation,
 		Landing,
 		Footer
 	},
 	data() {
 		return {
+			scrollBase: null,
 			apiCallback: 'https://map.kakao.com/bus/stop.json?busstopid=',
 			stops: ['BS72693', 'BS72549', 'BS72694', 'BS72548', 'BS320880', 'BS320876', 'BS320881'],
 			stopsInfo: []
@@ -674,6 +678,7 @@ export default {
 
 	},
 	mounted() {
+		this.scrollBase = this.$refs.scrollBase.$el.getBoudningClientRect().bottom / 3
 		let kakaoMap = document.createElement('script')
 		kakaoMap.setAttribute('src', '//dapi.kakao.com/v2/maps/sdk.js?appkey=57ca092a89b95b1726db4a29813a43c5&autoload=false')
 		document.body.appendChild(kakaoMap)

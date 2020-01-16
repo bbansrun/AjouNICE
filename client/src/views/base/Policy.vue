@@ -1,6 +1,7 @@
 <template>
     <div clas="wrapper">
-        <Landing title="이용약관" description="" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
+        <Navigation :scrollBase="scrollBase" />
+        <Landing ref="scrollBase" title="이용약관" description="" background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg" />
         <div class="container">
             <article class="policy-wrapper">
                 <header class="underline underline-inline-block">서비스 이용약관</header>
@@ -160,12 +161,21 @@
 </template>
 
 <script>
+import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 export default {
     name: 'policy',
     components: {
-        Landing, Footer
+        Navigation, Landing, Footer
+    },
+    data () {
+        return {
+            scrollBase: null
+        }
+    },
+    mounted () {
+        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
     }
 }
 </script>
