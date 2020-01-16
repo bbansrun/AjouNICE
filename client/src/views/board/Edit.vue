@@ -42,9 +42,9 @@
                             <font-awesome-icon icon="plus" />
                         </file-upload>
                 </div>
-                <div class="input-form controls">
-                    <input type="button" :value="form.submitButton">
-                    <input type="button" value="취소" @click="goBack()">
+                <div class="input-form-controls">
+                    <input type="button" class="btn box-shadow text-inverse btn-submit" :value="form.submitButton">
+                    <input type="button" class="btn box-shadow text-inverse btn-cancel" value="취소" @click="goBack()">
                 </div>
             </form>
         </div>
@@ -172,3 +172,9 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.v-select {
+    margin-bottom: 5px;
+}
+</style>

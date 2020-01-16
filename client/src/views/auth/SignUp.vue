@@ -723,19 +723,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import "~@/assets/styles/reset";
-@import "~@/assets/styles/media";
-@import "~@/assets/styles/index";
-@import "~@/assets/styles/fonts";
-
-@import '~sweetalert2/src/variables';
-@import '~sweetalert2/src/sweetalert2';
-@import '~vue-select/src/scss/vue-select';
-.swal2-container.swal2-center {
-    background: rgba(0, 0, 0, .65);
-}
-
+<style lang="scss" scoped>
 #swal2-content {
     >.policy-wrapper {
         >header {
@@ -750,33 +738,9 @@ export default {
 }
 
 .v-select {
-    font-size: 1rem;
     margin: 5px calc(5% + 10px);
-    background: #fff;
-    box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
     +.notice {
         font-size: 14px;
-    }
-    >.vs__dropdown-toggle+[role="listbox"]>li {
-        transition: .2s background-color ease;
-        &:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-    }
-    >.vs__dropdown-toggle+[role="listbox"]>.vs__dropdown-option--highlight {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-}
-
-.v-select.error {
-    >.vs__dropdown-toggle {
-        background: red;
-        & input[type="search"] {
-            color: #fff;
-        }
-        & .vs__open-indicator {
-            fill: #fff;
-        }
     }
 }
 </style>

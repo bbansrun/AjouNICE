@@ -18,13 +18,35 @@ import Edit from './views/board/Edit.vue'
 import Dashboard from './views/admin/Dashboard.vue'
 import Profile from './views/user/Profile.vue'
 import BusStation from './views/place/BusStation.vue'
-import Gourmet from './views/place/Gourmet.vue'
+import Gourmet from './views/place/gourmet/Home.vue'
+import GourmetList from './views/place/gourmet/List.vue'
 import LectureHome from './views/function/lecture/Home.vue'
+import ScheduleHome from './views/function/schedule/Home.vue'
 
+import store from './store.js'
+import jwt from 'jsonwebtoken'
 Vue.use(Router)
 
 const requireAuth = (to, from, next) => {
-  if (localStorage.accessToken) return next()
+  if (localStorage.accessToken) {
+    if (!store.state.user) {
+      Vue.prototype.$Axios({
+        method: 'GET',
+        url: '/api/protected'
+      }).then(result => {
+        store.state.user = result.data.user
+      })
+    } else {
+      // JWT Verify
+      jwt.verify(localStorage.accessToken, '4j0uN1ce1', (err, decoded) => {
+        if (err) {
+          store.dispatch('LOGOUT')
+          return next({ path: '/' })
+        }
+      })
+    }
+    return next()
+  }
   next({
     path: '/',
     query: {
@@ -60,8 +82,13 @@ export default new Router({
       beforeEnter: alreadySignedIn
     },
     {
-      path: '/lecture',
+      path: '/lectures',
       component: LectureHome,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/schedule',
+      component: ScheduleHome,
       beforeEnter: requireAuth
     },
     {
@@ -131,6 +158,11 @@ export default new Router({
     {
       path: '/place/gourmet',
       component: Gourmet,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/place/gourmet/:category',
+      component: GourmetList,
       beforeEnter: requireAuth
     },
     {

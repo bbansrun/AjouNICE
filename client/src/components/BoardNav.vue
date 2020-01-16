@@ -1,7 +1,7 @@
 <template>
     <section class="board-menu">
         <header>
-            <h2>옆의 아이콘을 클릭하여 게시물을 작성할 수 있습니다.</h2>
+            <h4>옆의 아이콘을 클릭하여 게시물을 작성할 수 있습니다.</h4>
         </header>
         <nav class="board-nav">
             <ul class="menu menu-horizontal">

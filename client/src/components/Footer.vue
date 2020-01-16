@@ -3,7 +3,7 @@
         <section class="wrapper">
             <div class="content">
                 <header>
-                    <h2 data-logo>AjouNICE!</h2>
+                    <h4 data-logo>AjouNICE!</h4>
                     <small>아주나이스는 아주대학교의 커뮤니티 서비스입니다.</small>
                 </header>
                 <ul class="copyright">

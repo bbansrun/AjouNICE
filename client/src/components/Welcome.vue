@@ -1,7 +1,7 @@
 <template>
     <section class="welcome">
         <header>
-            <h2>{{ username }}님, 환영합니다.</h2>
+            <h4>{{ username }}님, 환영합니다.</h4>
         </header>
         <nav class="welcome-nav">
             <ul class="menu menu-horizontal">

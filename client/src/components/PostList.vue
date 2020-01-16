@@ -70,6 +70,17 @@ section.popular {
           margin-top: auto;
         }
       }
+      > .replies {
+        height: inherit;
+        width: auto;
+        position: relative;
+        background: #e2e2e2;
+        font-size: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
       > .thumbnail {
         max-width: 100px;
         max-height: 100px;

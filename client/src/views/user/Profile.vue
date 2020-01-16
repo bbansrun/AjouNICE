@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <Navigation :scrollBase="scrollBase" />
-        <Landing ref="scrollBase" :title="user_nm" />
+        <Landing ref="scrollBase" :title="user_nm" background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg" />
         <div class="container"></div>
         <Footer />
     </div>

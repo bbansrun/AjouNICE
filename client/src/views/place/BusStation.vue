@@ -1,7 +1,7 @@
 <template>
 	<div class="wrapper">
 		<Navigation :scrollBase="scrollBase" />
-		<Landing ref="scrollBase" title="Ajou버스" description="학교 주변에서 이용할 수 있는 교통수단을 알려드립니다." background="" />
+		<Landing ref="scrollBase" title="Ajou버스" description="학교 주변에서 이용할 수 있는 교통수단을 알려드립니다." background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg" />
 		<div class="container">
 			<section class="shuttle">
 				<header class="underline underline-inline-block">
@@ -678,7 +678,7 @@ export default {
 
 	},
 	mounted() {
-		this.scrollBase = this.$refs.scrollBase.$el.getBoudningClientRect().bottom / 3
+		this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
 		let kakaoMap = document.createElement('script')
 		kakaoMap.setAttribute('src', '//dapi.kakao.com/v2/maps/sdk.js?appkey=57ca092a89b95b1726db4a29813a43c5&autoload=false')
 		document.body.appendChild(kakaoMap)

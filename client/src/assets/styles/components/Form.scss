@@ -236,7 +236,8 @@ form {
     &[data-post-form] {
         margin: 1rem;
         padding: 1rem;
-        background: #fff;
+        color: #666;
+        background: #eaeaea;
         box-shadow: 0 5px 5px rgba(0,0,0,.12);
         > .input-form {
             padding: .5rem 0;
@@ -250,6 +251,30 @@ form {
         }
         & .ck-content {
             min-height: 50vh;
+        }
+        > .input-form-controls {
+            text-align: right;
+            > .btn {
+                display: inline-block;
+                font: {
+                    size: 1rem;
+                    weight: 700;
+                }
+                padding: .5rem 2rem;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                transition: .4s all ease;
+                &-submit {
+                    background: blue;
+                }
+                &-cancel {
+                    background: #cd5c5c;
+                }
+                &:not(:last-child) {
+                    margin-right: .5rem;
+                }
+            }
         }
     }
 }

@@ -1,3 +1,5 @@
+$logo: #062A5F;
+$logo_aux: #17553E;
 $auth: auth;
 
 ::-webkit-scrollbar {
@@ -121,7 +123,7 @@ nav {
     z-index: 1000000;
     transition: .5s all ease-out;
     &.active {
-      background: #17355e;
+      background: $logo;
     }
     > .fixed-nav {
       position: relative;
@@ -220,7 +222,7 @@ nav {
     grid-template-columns: repeat(4, 1fr);
     row-gap: 1rem;
     padding: 2rem 0;
-    background: #17553E;
+    background: $logo_aux;
     color: #fff;
     & .icon-wrapper {
       text-align: center;
@@ -296,13 +298,13 @@ ul.board-nav {
       border-right: 1px solid rgba(0,0,0,.1);
       transition: .2s all ease;
       &:hover {
-        background: #17355e;
+        background: $logo;
         color: #fff;
       }
     }
   }
   & li.active {
-    background: #17355e;
+    background: $logo;
     & a {
       color: #fff;
     }
@@ -396,5 +398,84 @@ footer {
       > span {
           font-size: .8rem;
       }
+  }
+}
+
+// Components
+// v-select
+.v-select {
+  font-size: 1rem;
+  background: #fff;
+  box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
+  >.vs__dropdown-toggle+[role="listbox"]>li {
+    transition: .2s background-color ease;
+    &:hover {
+      color: #fff !important;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+  }
+  >.vs__dropdown-toggle+[role="listbox"]>.vs__dropdown-option--highlight {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  &.error {
+    >.vs__dropdown-toggle {
+      background: red;
+      & input[type="search"] {
+          color: #fff;
+      }
+      & .vs__open-indicator {
+          fill: #fff;
+      }
+    }
+  }
+}
+
+// Slide
+[data-slide-item] {
+  display: block;
+  position: relative;
+  z-index: 0;
+  > .cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,.4);
+      z-index: -1;
+  }
+  > .slide-content {
+      position: absolute;
+      line-height: 1;
+      bottom: 1rem;
+      left: 1rem;
+      z-index: 1;
+      > h2 {
+          margin-block-start: 0;
+          margin-block-end: 0;
+      }
+  }
+  background: url('http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual03.jpg') no-repeat center center/cover;
+  color: #fff;
+  font-size: 1.5rem;
+  min-height: 10rem;
+}
+
+// Broadcast
+.broadcast {
+  border: 1px solid #eee;
+  border-radius: 0.25rem;
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  > .feather {
+      margin-right: 0.5rem;
+  }
+  > .carousel {
+      flex: 1;
+  }
+  &-content {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
   }
 }

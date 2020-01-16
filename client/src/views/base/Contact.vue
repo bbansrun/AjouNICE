@@ -7,22 +7,20 @@
                 <header class="underline underline-inline-block">문의폼 작성</header>
                 <section>
                     <form data-post-form>
-                        <div class="input-form-wrapper">
-                            <div class="input-form">
-                                <label for="name">이름</label>
-                                <input type="text" v-model="name" name="name" id="name" placeholder="이름을 입력해주세요" required pattern=".{1,}" />
-                            </div>
-                            <div class="input-form">
-                                <label for="email">이메일</label>
-                                <input type="email" v-model="email" name="email" id="email" placeholder="이메일 주소를 입력해주세요" required />
-                            </div>
-                            <div class="input-form">
-                                <label for="textarea">내용</label>
-                                <ckeditor name="textarea" :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
-                            </div>
-                            <div class="input-form">
-                                <input type="button" class="btn" value="이메일 발송">
-                            </div>
+                        <div class="input-form">
+                            <label for="name">이름</label>
+                            <input type="text" v-model="name" name="name" id="name" placeholder="이름을 입력해주세요" required pattern=".{1,}" />
+                        </div>
+                        <div class="input-form">
+                            <label for="email">이메일</label>
+                            <input type="email" v-model="email" name="email" id="email" placeholder="이메일 주소를 입력해주세요" required />
+                        </div>
+                        <div class="input-form editor">
+                            <label for="textarea">내용</label>
+                            <ckeditor name="textarea" :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+                        </div>
+                        <div class="input-form-controls">
+                            <input type="button" class="btn btn-submit text-inverse" value="이메일 발송">
                         </div>
                     </form>
                 </section>
