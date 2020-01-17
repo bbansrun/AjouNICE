@@ -10,7 +10,7 @@
 
 서비스 기능 추가, 의견 있으신 분들의 많은 조언 부탁드립니다.
 
-[서비스 관련 제안접수](mailto:jwurbane97@ajou.ac.kr)
+[서비스 관련 제안접수](mailto:team.ajounice@gmail.com)
 
 ![Tech Stack](./AjouNICE_stack_flow.png)
 
