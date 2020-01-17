@@ -78,7 +78,11 @@ module.exports = {
                 };
             }
             return await getAll(Board, conditions)(parent, args, context, info);
-        }
+        },
+        async findBoardByBoardIdx(parent, args, context, info) {
+            const conditions = { board_idx: args.board_idx };
+            return await getOne(Board, conditions)(parent, args, context, info);
+        },
     },
     Mutation: {
         register: async (root, { email, user_id, password, user_nm, identity_num, user_type, sex_gb, college_cd, dpt_cd, nick_nm, reg_ip }) => {
@@ -131,6 +135,18 @@ module.exports = {
             sendConfirmMail(undefined, email, newToken, true)
             if (user) return true
             else return false
-        }
+        },
+        // BOARD
+        writeBoard: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip }) => {
+            const board = await Board.create({
+                category_idx,
+                user_idx,
+                nick_nm: nick_nm,
+                title,
+                body,
+                reg_ip,
+            });
+            return board;
+        },
     }
 }
