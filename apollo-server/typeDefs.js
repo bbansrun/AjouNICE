@@ -91,7 +91,7 @@ type Query {
 }
 
 type Mutation {
-    register(email: String!, user_id: String!, password: String!, user_nm: String!, identity_num: Int, user_type: String!, sex_gb: String!, college_cd: String, dpt_cd: String, nick_nm: String!, reg_ip: String!): User!,
+    sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean,
     lastLogin(userId: String!, ip: String!): Boolean,
     authorize(user_idx: Int!): Boolean,
     resetEmailToken(email: String!): Boolean

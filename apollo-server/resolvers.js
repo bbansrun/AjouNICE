@@ -8,111 +8,82 @@ const { sendConfirmMail } = require('./mailer/mailUtils')
 sequelize.sync()
 
 // Query Trigger 압축
-const selectAttributes = (info) => Object.keys(graphqlFields(info)).filter(elem => elem !== '__typename');
+const selectAttributes = (info) => Object.keys(graphqlFields(info)).filter(elem => elem !== '__typename')
 
 const getOne = (model, conditions) => async (parent, args, context, info) => {
-    const attributes = selectAttributes(info);
-    return await model.findOne({ attributes: attributes, where: conditions, });
+    const attributes = selectAttributes(info)
+    return await model.findOne({ attributes: attributes, where: conditions, })
 }
 
 const getAll = (model, conditions) => async (parent, args, context, info) => {
-    const attributes = selectAttributes(info);
-    return await model.findAll({ attributes: attributes, where: conditions, });
+    const attributes = selectAttributes(info)
+    return await model.findAll({ attributes: attributes, where: conditions, })
 }
 
 module.exports = {
     Query: {
         // Department
         async findDptByCollege(parent, args, context, info) {
-            const conditions = { college_cd: args.college_cd, };
-            return await getAll(Department, conditions)(parent, args, context, info);
+            const conditions = { college_cd: args.college_cd, }
+            return await getAll(Department, conditions)(parent, args, context, info)
         },
         // College
         async findColleges(parent, args, context, info) {
-            const conditions = { exist_yn: args.exist_yn, };
-            return await getAll(College, conditions)(parent, args, context, info);
+            const conditions = { exist_yn: args.exist_yn, }
+            return await getAll(College, conditions)(parent, args, context, info)
         },
         // User
         async findNickName(parent, args, context, info) {
-            const conditions = { nick_nm: args.nick_nm, };
-            return await getAll(User, conditions)(parent, args, context, info);
+            const conditions = { nick_nm: args.nick_nm, }
+            return await getAll(User, conditions)(parent, args, context, info)
         },
         async findEmail(parent, args, context, info) {
-            const conditions = { email: args.email, };
-            return await getAll(User, conditions)(parent, args, context, info);
+            const conditions = { email: args.email, }
+            return await getAll(User, conditions)(parent, args, context, info)
         },
         async findUserID(parent, args, context, info) {
-            const conditions = { user_id: args.userId, };
-            return await getAll(User, conditions)(parent, args, context, info);
+            const conditions = { user_id: args.userId, }
+            return await getAll(User, conditions)(parent, args, context, info)
         },
         async findUserByToken(parent, args, context, info) {
-            const conditions = { auth_token: args.token, };
-            return await getOne(User, conditions)(parent, args, context, info);
+            const conditions = { auth_token: args.token, }
+            return await getOne(User, conditions)(parent, args, context, info)
         },
         async findUserByIdx(parent, args, context, info) {
-            const conditions = { user_idx: args.user_idx, };
-            return await getOne(User, conditions)(parent, args, context, info);
+            const conditions = { user_idx: args.user_idx, }
+            return await getOne(User, conditions)(parent, args, context, info)
         },
         // BoardCategory
         async findBoardCategories(parent, args, context, info) {
             let conditions = { depth: args.depth }
             if (args.title) conditions.title = args.title
             if (args.parent) conditions.parent = args.parent
-            return await getAll(BoardCategory, conditions)(parent, args, context, info);
+            return await getAll(BoardCategory, conditions)(parent, args, context, info)
         },
         // Board
         async findBoardsByBoardCategories(parent, args, context, info) {
-            let targetCategories = args.category_idx;
+            let targetCategories = args.category_idx
             let conditions = {
                 category_idx: targetCategories,
-            };
-            let category_indice = [];
+            }
+            let category_indice = []
             if (args.depth === 0) {
                 targetCategories = await BoardCategory.findAll({
                     attributes: ['category_idx'],
                     where: { parent: args.category_idx }
-                });
-                category_indice = targetCategories.map(model => model.category_idx);
+                })
+                category_indice = targetCategories.map(model => model.category_idx)
                 conditions = {
                     category_idx: { [Op.in]: category_indice, },
-                };
+                }
             }
-            return await getAll(Board, conditions)(parent, args, context, info);
+            return await getAll(Board, conditions)(parent, args, context, info)
         }
     },
     Mutation: {
-        register: async (root, { email, user_id, password, user_nm, identity_num, user_type, sex_gb, college_cd, dpt_cd, nick_nm, reg_ip }) => {
-            const salt = bcrypt.genSaltSync(10)
-            const hashedPassword = bcrypt.hashSync(password, salt)
-            const shasum = crypto.createHash('sha256')
-            shasum.update(hashedPassword)
-            const authToken = shasum.digest('hex')
-            const user = await User.create({
-                email,
-                user_id,
-                password: hashedPassword,
-                user_nm,
-                identity_num,
-                user_type,
-                admin_type: 'ORD',
-                sex_gb,
-                user_status: 'Y',
-                policy_yn: 'Y',
-                college_cd,
-                dpt_cd,
-                auth_email_yn: 'N',
-                auth_token: authToken,
-                user_profile: '',
-                nick_nm,
-                links: '',
-                reg_ip,
-                upt_ip: reg_ip,
-                upt_dt: Date.now(),
-                log_ip: reg_ip,
-                log_dt: Date.now()
-            })
-            sendConfirmMail(user_nm, email, authToken)
-            return user
+        sendRegisterAuthEmail: async (root, { user_nm, email, auth_token }) => {
+            sendConfirmMail(user_nm, email, auth_token, false)
+            return true
         },
         lastLogin: async (root, { userId, ip }) => {
             const updateLastLogin = await User.update({ log_ip: ip, log_dt: Date.now() }, { where: { user_id: userId } })
