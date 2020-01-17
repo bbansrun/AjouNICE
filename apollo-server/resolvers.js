@@ -65,7 +65,7 @@ module.exports = {
     // Board
     async findBoardsByBigCategory(parent, args, context, info) {
       const targetCategories = await BoardCategory.findAll({
-        attributes: ['category_idx',],
+        attributes: ['category_idx', ], 
         where: { parent: args.category_idx, },
       });
       const categoryIndice = targetCategories.map((model) => model.category_idx);
