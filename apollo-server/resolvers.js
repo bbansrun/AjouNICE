@@ -77,8 +77,12 @@ module.exports = {
                     category_idx: { [Op.in]: category_indice, },
                 }
             }
-            return await getAll(Board, conditions)(parent, args, context, info)
-        }
+            return await getAll(Board, conditions)(parent, args, context, info);
+        },
+        async findBoardByBoardIdx(parent, args, context, info) {
+            const conditions = { board_idx: args.board_idx };
+            return await getOne(Board, conditions)(parent, args, context, info);
+        },
     },
     Mutation: {
         sendRegisterAuthEmail: async (root, { user_nm, email, auth_token }) => {
@@ -102,6 +106,18 @@ module.exports = {
             sendConfirmMail(undefined, email, newToken, true)
             if (user) return true
             else return false
-        }
+        },
+        // BOARD
+        writeBoard: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip }) => {
+            const board = await Board.create({
+                category_idx,
+                user_idx,
+                nick_nm: nick_nm,
+                title,
+                body,
+                reg_ip,
+            });
+            return board;
+        },
     }
 }
