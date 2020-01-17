@@ -15,5 +15,16 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "semi": "error",
+        "camelcase": 0,
+        "max-len": 0,
+        "object-curly-spacing": 0,
+        "comma-dangle": [
+            "error",
+            {
+                "arrays": "always",
+                "objects": "always"
+            }
+        ]
     }
 }
