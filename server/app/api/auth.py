@@ -121,35 +121,30 @@ class LoginAPI(Resource):
         password = request.json.get('password', None)
 
         user = User.query.filter_by(user_id=user_id).first()
-        compare_pw = user.password
-        result = bcrypt.check_password_hash(compare_pw, password)
+        match = bcrypt.check_password_hash(user.password, password)
+        res = {
+            'title': 'AjouNICE!',
+            'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+            'APIName': '/auth/login',
+            'APIDescription': '로그인 토큰처리',
+        }
 
-        if result:
+        if match:
             tokenizer = Tokenizer(secret=SECRET_KEY)
             tokenizer.create_payload(user)
             access_token = tokenizer.create_access_token()
-            return jsonResponse({
-                'title': 'AjouNICE!',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/auth/login',
-                'APIDescription': '로그인 토큰처리',
-                'result': {
-                    'code': '201',
-                    'access_token': access_token,
-                    'auth_email_yn': user.auth_email_yn
-                }
-            }, 201)
-        else:
-            return jsonResponse({
-                'title': 'AjouNICE!',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/auth/login',
-                'APIDescription': '로그인 토큰처리',
-                'result': {
-                    'code': '401',
-                    'message': '로그인 정보가 올바르지 않습니다.'
-                }
-            }, 401)
+            res['result'] = {
+                'code': '201',
+                'access_token': access_token,
+                'auth_email_yn': user.auth_email_yn
+            }
+            return jsonResponse(res, 201)
+
+        res['result'] = {
+            'code': '401',
+            'message': '로그인 정보가 올바르지 않습니다.'
+        }
+        return jsonResponse(res, 401)
 
 
 @api_rest.route("/auth/update")
@@ -157,7 +152,7 @@ class UpdateAPI(Resource):
     def post(self):
         if not request.is_json:
             return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
-        
+
         confirmed = False
 
         mode = request.json.get('mode', None)
@@ -200,7 +195,7 @@ class UpdateAPI(Resource):
                 identity = validate_result[2]
                 if not isValid:
                     return jsonResponse({'msg': identity[-1]}, int(identity[1]))
-                
+
                 # prePassword 일치 여부 확인
                 user_idx = identity['user']['idx']
                 user = User.query.filter_by(user_idx=user_idx).first()
