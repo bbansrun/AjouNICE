@@ -88,6 +88,7 @@ type Query {
     findUserByIdx(user_idx: ID!): User,
     findBoardCategories(depth: Int!, title: String, parent: Int): [BoardCategory],
     findBoardsByBoardCategories(depth: Int!, category_idx: ID!): [Board],
+    findBoardByBoardIdx(board_idx: ID!): Board,
 }
 
 type Mutation {
