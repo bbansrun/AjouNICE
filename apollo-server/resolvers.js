@@ -135,6 +135,18 @@ module.exports = {
             sendConfirmMail(undefined, email, newToken, true)
             if (user) return true
             else return false
-        }
+        },
+        // BOARD
+        writeBoard: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip }) => {
+            const board = await Board.create({
+                category_idx,
+                user_idx,
+                nick_nm: nick_nm,
+                title,
+                body,
+                reg_ip,
+            });
+            return board;
+        },
     }
 }
