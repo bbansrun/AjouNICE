@@ -662,7 +662,7 @@ export default {
                 })
             } else {
                 document.body.classList.toggle('loading')
-                this.$Axios.get('/api/reqClientIP').then(client => {
+                this.$Axios.get('https://api.ipify.org/?format=json').then(client => {
                     let college
                     let dpt
                     if (this.hasSubMajor) {
@@ -673,7 +673,7 @@ export default {
                         dpt = this.selectedDpt
                     }
                     this.$apollo.mutate({
-                        mutation: gql `mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.userName}", identity_num: ${this.userIDNum ? this.userIDNum : null}, user_type: "${this.selectedUserType}", sex_gb: "${this.gender}", college_cd: "${college}", dpt_cd: "${dpt}", nick_nm: "${this.nick_nm}", reg_ip: "${client.data.result.ip}") { user_idx } }`
+                        mutation: gql `mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.userName}", identity_num: ${this.userIDNum ? this.userIDNum : null}, user_type: "${this.selectedUserType}", sex_gb: "${this.gender}", college_cd: "${college}", dpt_cd: "${dpt}", nick_nm: "${this.nick_nm}", reg_ip: "${client.data.ip}") { user_idx } }`
                     }).then(result => {
                         if (typeof result === 'object') {
                             if ('data' in result) {

@@ -10,7 +10,6 @@ from flask_sqlalchemy import SQLAlchemy
 from server import db, bcrypt
 from server.app.api import api_rest
 
-
 class User(db.Model):
     __tablename__ = 'USER'
     user_idx = db.Column(db.Integer, primary_key=True)
@@ -117,7 +116,7 @@ class LoginAPI(Resource):
         if not request.is_json:
             return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
 
-        user_id = request.json.get('user_id', None)
+        user_id = request.json.get('userId', None)
         password = request.json.get('password', None)
 
         user = User.query.filter_by(user_id=user_id).first()
@@ -130,6 +129,11 @@ class LoginAPI(Resource):
         }
 
         if match:
+            # 사용자 마지막 로그인 IP 및 일시 업데이트
+            user.log_ip = request.remote_addr
+            user.log_dt = datetime.now(tz=timezone(timedelta(hours=9)))
+            db.session.commit()
+
             tokenizer = Tokenizer(secret=SECRET_KEY)
             tokenizer.create_payload(user)
             access_token = tokenizer.create_access_token()

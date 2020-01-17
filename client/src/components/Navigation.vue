@@ -17,17 +17,26 @@
                 </span>
             </header>
         </div>
-        <ul class="slide-nav" :class="{ 'active': isSlideNavActive }">
-            <li v-for="service in services" :key="service.id">
-                <router-link :to="service.link">{{ service.label }}</router-link>
-            </li>
-        </ul>
+        <div class="slide-nav" :class="{ 'active': isSlideNavActive }">
+            <header>
+                <h3>주요 메뉴</h3>
+            </header>
+            <hr />
+            <ul class="slide-nav-menus">
+                <li v-for="service in services" :key="service.id">
+                    <router-link :to="service.link">{{ service.label }}</router-link>
+                </li>
+                <hr />
+                <li>
+                    <a @click="logout" class="underline underline-inline-block">로그아웃</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 </template>
 
 <script>
 export default {
-    name: 'nav',
     props: {
         services: Array,
         scrollBase: Number
@@ -45,6 +54,15 @@ export default {
             } else {
                 this.isSlideNavActive = true
             }
+        },
+        logout () {
+            this.$store.dispatch('LOGOUT').then(() => {
+                document.body.classList.toggle('loading')
+                window.location = '/'
+            })
+            .catch(error => {
+                console.error(error)
+            })
         }
     },
     mounted () {

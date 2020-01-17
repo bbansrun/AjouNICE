@@ -4,8 +4,8 @@ module.exports = {
   devServer: {
     proxy: {
       '/api*': {
-        // target: `http://${require('ip').address()}:5000/`
-        target: `http://localhost:5000/`
+        target: `http://${require('ip').address()}:5000/`
+        // target: `http://localhost:5000/`
       }
     }
   },

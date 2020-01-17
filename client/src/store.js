@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import jwt from 'jsonwebtoken'
 
 Vue.use(Vuex)
 
@@ -17,16 +18,19 @@ export default new Vuex.Store({
     LOGOUT (state) {
       state.accessToken = null
       localStorage.removeItem('accessToken')
+    },
+    verifiedToken (state, payload) {
+      state.user = payload.user
     }
   },
   actions: {
-    LOGIN ({ commit }, { user_id, password }) {
+    LOGIN ({ commit }, { userId, password }) {
       return new Promise((resolve, reject) => {
         Vue.prototype.$Axios({
           url: '/api/auth/login',
           method: 'POST',
           data: {
-            'user_id': user_id,
+            'userId': userId,
             'password': password
           }
         }).then(({ data }) => {
@@ -41,6 +45,34 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('LOGOUT')
         resolve()
+      })
+    },
+    checkTokenStatus ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        if (!state.user) {
+          Vue.prototype.$Axios({
+            url: '/api/protected',
+            method: 'GET'
+          }).then(({ data }) => {
+            // Completely Decoded
+            commit('verifiedToken', data)
+            resolve(data)
+          }).catch(error => {
+            // Expired or etc,.
+            commit('LOGOUT')
+            reject(error)
+          })
+        } else {
+          // Validate possessed token
+          jwt.verify(state.accessToken, '4j0uN1ce1', (err, decoded) => {
+            if (err) {
+              commit('LOGOUT')
+              reject(err)
+            } else {
+              resolve(decoded)
+            }
+          })
+        }
       })
     }
   }
