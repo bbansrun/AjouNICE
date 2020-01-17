@@ -61,22 +61,17 @@ module.exports = {
             return await getAll(BoardCategory, conditions)(parent, args, context, info)
         },
         // Board
-        async findBoardsByBoardCategories(parent, args, context, info) {
-            let targetCategories = args.category_idx
-            let conditions = {
-                category_idx: targetCategories,
-            }
-            let category_indice = []
-            if (args.depth === 0) {
-                targetCategories = await BoardCategory.findAll({
-                    attributes: ['category_idx'],
-                    where: { parent: args.category_idx }
-                })
-                category_indice = targetCategories.map(model => model.category_idx)
-                conditions = {
-                    category_idx: { [Op.in]: category_indice, },
-                }
-            }
+        async findBoardsByBigCategory(parent, args, context, info) {
+            const targetCategories = await BoardCategory.findAll({
+                attributes: ['category_idx'],
+                where: { parent: args.category_idx }
+            });
+            const category_indice = targetCategories.map(model => model.category_idx);
+            const conditions = { category_idx: { [Op.in]: category_indice, }, };
+            return await getAll(Board, conditions)(parent, args, context, info);
+        },
+        async findBoardsBySmallCategory(parent, args, context, info) {
+            const conditions = { category_idx: args.category_idx, };
             return await getAll(Board, conditions)(parent, args, context, info);
         },
         async findBoardByBoardIdx(parent, args, context, info) {
