@@ -21,7 +21,7 @@
                 </div>
                 <div class="input-form uploads">
                     <label for="images">이미지 삽입</label>
-                    <file-upload
+                    <!-- <file-upload
                         :post-action="postAction"
                         :put-action="putAction"
                         :extensions="extensions"
@@ -40,10 +40,10 @@
                         @input-file="inputFile"
                         ref="upload">
                             <font-awesome-icon icon="plus" />
-                        </file-upload>
+                        </file-upload> -->
                 </div>
                 <div class="input-form-controls">
-                    <input type="button" class="btn box-shadow text-inverse btn-submit" :value="form.submitButton">
+                    <input type="button" class="btn box-shadow text-inverse btn-submit" :value="form.submitButton" @click="writePost">
                     <input type="button" class="btn box-shadow text-inverse btn-cancel" value="취소" @click="goBack()">
                 </div>
             </form>
@@ -73,9 +73,12 @@ export default {
             scrollBase: null,
             selectedCategory: '',
             selectedSubCategory: '',
+            selectedCategoryTitle: '',
+            selectedSubCategoryTitle: '',
             categories: [],
             category: '',
             category_idx: null,
+            sub_categories: [],
             sub_category: '',
             sub_category_idx: null,
             editor: ClassicEditor,
@@ -140,19 +143,61 @@ export default {
             }).catch(error => {
 
             })
-        }
-        this.$apollo.query({
-            query: gql`{ findBoardCategories(depth: 0, title: "${_this.$route.params.category}") { category_idx category_nm title access_auth private_yn desc } }`
-        }).then(result => {
-            _this.category = result.data.findBoardCategories[0].category_nm
+        } else {
             this.$apollo.query({
-                query: gql`{ findBoardCategories(depth: 1, title: "${_this.$route.params.name}", parent: ${_this.category_idx}) { category_idx category_nm title parent access_auth private_yn desc } }`
+                query: gql`{ findBoardCategories(depth: 0, title: "${_this.$route.params.category}") { category_idx category_nm title access_auth private_yn desc } }`
             }).then(result => {
-                _this.sub_category = result.data.findBoardCategories[0].category_nm
+                _this.category = result.data.findBoardCategories[0].category_nm
+                _this.category_idx = result.data.findBoardCategories[0].category_idx
+                this.$apollo.query({
+                    query: gql`{ findBoardCategories(depth: 1, title: "${_this.$route.params.name}", parent: ${_this.category_idx}) { category_idx category_nm title parent access_auth private_yn desc } }`
+                }).then(result => {
+                    _this.sub_category = result.data.findBoardCategories[0].category_nm
+                    _this.sub_category_idx = result.data.findBoardCategories[0].category_idx
+                })
             })
-        })
+        }
+    },
+    watch: {
+        selectedCategory (value) {
+            if (value) {
+                this.selectedCategoryTitle = this.categories.filter((elem) => elem.category_idx === value )[0].title
+            }
+        },
+        selectedSubCategory (value) {
+            if (value) {
+                this.selectedSubCategoryTitle = this.sub_categories.filter((elem) => elem.category_idx === value )[0].title
+            }
+        }
     },
     methods: {
+        writePost () {
+            let user = this.$store.state.user
+            if (this.selectedCategory && this.selectedSubCategory && this.form.title && this.form.editorData) {
+                this.$apollo.mutate({
+                    mutation: gql`mutation { writeBoard(category_idx: ${this.selectedSubCategory}, user_idx: ${user.idx}, nick_nm: "${user.nick_nm}", title: "${this.form.title}", body: "${this.form.editorData}", reg_ip: "${user.access_loc}") { board_idx } }`
+                }).then(({ data }) => {
+                    // Flash
+                    this.$swal({
+                        type: 'success',
+                        title: '게시!',
+                        text: '게시되었습니다.',
+                        width: '90vw',
+                        allowOutsideClick: false
+                    }).then(() => {
+                        window.location = `/board/${this.selectedCategoryTitle}/${this.selectedSubCategoryTitle}/${data.writeBoard.board_idx}/view`
+                    })
+                })
+            } else {
+                this.$swal({
+                    title: '잠깐!',
+                    text: '작성하지 않은 항목이 있습니다.',
+                    type: 'error',
+                    footer: '<p>누락된 항목을 확인하신 후 다시 시도하여주시기 바랍니다.</p>',
+                    width: '90vw'
+                })
+            }
+        },
         goBack () {
             this.$router.go(-1)
         },

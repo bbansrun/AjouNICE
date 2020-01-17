@@ -94,7 +94,7 @@ class Tokenizer():
         else:
             return int(datetime.timestamp(datetime.now(tz) + timedelta(seconds=3600)))
 
-    def create_payload(self, user):
+    def create_payload(self, user, remote_addr):
         self.payload = {
             'exp': self.req_timestamp(),
             'iss': 'AjouNICE!_APIserver',
@@ -103,7 +103,9 @@ class Tokenizer():
             'user': {
                 'email': user.email,
                 'name': user.user_nm,
-                'idx': user.user_idx
+                'idx': user.user_idx,
+                'nick_nm': user.user_nm,
+                'access_loc': remote_addr
             }
         }
 
@@ -210,7 +212,7 @@ class LoginAPI(Resource):
             db.session.commit()
 
             tokenizer = Tokenizer(secret=SECRET_KEY)
-            tokenizer.create_payload(user)
+            tokenizer.create_payload(user, request.remote_addr)
             access_token = tokenizer.create_access_token()
             res['result'] = {
                 'code': '201',
