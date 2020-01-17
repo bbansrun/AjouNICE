@@ -59,6 +59,25 @@ module.exports = {
             if (args.title) conditions.title = args.title
             if (args.parent) conditions.parent = args.parent
             return await getAll(BoardCategory, conditions)(parent, args, context, info);
+        },
+        // Board
+        async findBoardsByBoardCategories(parent, args, context, info) {
+            let targetCategories = args.category_idx;
+            let conditions = {
+                category_idx: targetCategories,
+            };
+            let category_indice = [];
+            if (args.depth === 0) {
+                targetCategories = await BoardCategory.findAll({
+                    attributes: ['category_idx'],
+                    where: { parent: args.category_idx }
+                });
+                category_indice = targetCategories.map(model => model.category_idx);
+                conditions = {
+                    category_idx: { [Op.in]: category_indice, },
+                };
+            }
+            return await getAll(Board, conditions)(parent, args, context, info);
         }
     },
     Mutation: {
