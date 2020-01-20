@@ -13,27 +13,27 @@ import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 export default {
-    components: {
-        Navigation,
-        Landing,
-        Footer
-    },
-    data() {
-        return {
-            scrollBase: null,
-            user_nm: null
-        }
-    },
-    beforeMount() {
-        let _this = this
-        this.$apollo.query({
-            query: gql `{ findUserByIdx(user_idx: ${_this.$route.params.user_id}) { user_nm } }`
-        }).then(result => {
-            _this.user_nm = result.data.findUserByIdx.user_nm
-        })
-    },
-    mounted () {
-        this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+  components: {
+    Navigation,
+    Landing,
+    Footer
+  },
+  data () {
+    return {
+      scrollBase: null,
+      user_nm: null
     }
+  },
+  beforeMount () {
+    let _this = this
+    this.$apollo.query({
+      query: gql`{ findUserByIdx(user_idx: ${_this.$route.params.user_id}) { user_nm } }`
+    }).then(result => {
+      _this.user_nm = result.data.findUserByIdx.user_nm
+    })
+  },
+  mounted () {
+    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+  }
 }
 </script>
