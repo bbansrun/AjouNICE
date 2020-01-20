@@ -91,7 +91,7 @@ const encryptedFetchImplementation = async (url, options) => {
   }
   // options.credentials == 'include'  자격 증명 인증서 포함
   const res = await fetch(url, options)
-  const responseText = await res.text()
+  const responseText = await res.body
   if (isCrypting) {
     res.text = await decodeTextBody(responseText)
     res.json = JSON.parse(await decodeTextBody(responseText))
