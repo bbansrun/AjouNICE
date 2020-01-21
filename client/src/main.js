@@ -72,8 +72,12 @@ const encryptedFetchImplementation = async (url, options) => {
   let isCrypting = false
   const iv = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
   const key = await self.crypto.subtle.importKey(
-    'jwk',
-    { kty: 'oct', k: '4j0uN1ce1', alg: 'A256GCM', ext: true },
+    'jwk', {
+      kty: 'oct',
+      kid: 'b48e9af0-34c1-4179-9ee3-c2ccab3c2786',
+      k: 'Qtisu1fz9NZ0lTsBfTD8hMqRTWJnnpdqhDXGNwUoPfI',
+      alg: 'A256GCM'
+    },
     { name: 'AES-GCM' },
     false,
     ['encrypt', 'decrypt']
@@ -84,10 +88,11 @@ const encryptedFetchImplementation = async (url, options) => {
     options.headers['Content-Type'] = 'text/plain; charset=UTF-8'
     options.headers['Content-Transfer-Encoding'] = 'base64'
     options.body = encodeTextBody(options.body, key, iv)
+    isCrypting = true
   }
   // options.credentials == 'include'  자격 증명 인증서 포함
   const res = await fetch(url, options)
-  const responseText = await res.body
+  const responseText = res.body
   if (isCrypting) {
     res.text = await decodeTextBody(responseText, key, iv)
     res.json = JSON.parse(await decodeTextBody(responseText, key, iv))
