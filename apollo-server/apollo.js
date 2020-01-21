@@ -9,7 +9,10 @@ const server = new ApolloServer({
             host: require('./config/config.json')['development']['redis_host']
         })
     },
-    cors: true
+    cors: true,
+    context: ({ req, res}) => {
+
+    },
 })
 
 server.listen({ port: 455 }).then(({ url }) => {
