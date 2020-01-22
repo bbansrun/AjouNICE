@@ -11,6 +11,12 @@
           <hr />
           <article>
             <header class="underline underline-inline-block">서비스 공지사항</header>
+            <VueTable
+              :api-mode="false"
+              :fields="columns"
+              :data="tableData"
+              :css="tableStyles.table"
+            ></VueTable>
             <table class="notice">
               <thead>
                 <tr>
@@ -44,13 +50,14 @@
 </template>
 
 <script>
+import VueTable from 'vuetable-2'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
 export default {
   name: 'about',
   components: {
-    Navigation, Landing, Footer
+    Navigation, Landing, Footer, VueTable
   },
   data () {
     return {
@@ -63,6 +70,42 @@ export default {
           { id: 4, name: "Chris", age: "55" },
           { id: 5, name: "Dan", age: "40" }
       ],
+      tableStyles: {
+        table: {
+          tableWrapper: '',
+          tableHeaderClass: 'fixed',
+          tableBodyClass: 'vuetable-semantic-no-top fixed',
+          tableClass: 'ui blue selectable unstackable celled table',
+          loadingClass: 'loading',
+          ascendingIcon: 'blue chevron up icon',
+          descendingIcon: 'blue chevron down icon',
+          ascendingClass: 'sorted-asc',
+          descendingClass: 'sorted-desc',
+          sortableIcon: 'grey sort icon',
+          handleIcon: 'grey sidebar icon',
+        },
+
+        pagination: {
+          wrapperClass: 'ui right floated pagination menu',
+          activeClass: 'active large',
+          disabledClass: 'disabled',
+          pageClass: 'item',
+          linkClass: 'icon item',
+          paginationClass: 'ui bottom attached segment grid',
+          paginationInfoClass: 'left floated left aligned six wide column',
+          dropdownClass: 'ui search dropdown',
+          icons: {
+            first: 'angle double left icon',
+            prev: 'left chevron icon',
+            next: 'right chevron icon',
+            last: 'angle double right icon',
+          }
+        },
+
+        paginationInfo: {
+          infoClass: 'left floated left aligned six wide column',
+        }
+      },
       options: {}
     }
   },

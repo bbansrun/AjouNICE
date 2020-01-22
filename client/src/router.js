@@ -22,37 +22,27 @@ import Gourmet from './views/place/gourmet/Home.vue'
 import GourmetList from './views/place/gourmet/List.vue'
 import LectureHome from './views/function/lecture/Home.vue'
 import ScheduleHome from './views/function/schedule/Home.vue'
+import Invitation from './views/base/Invitation.vue'
 
 import store from './store.js'
-import jwt from 'jsonwebtoken'
+
 Vue.use(Router)
 
 const requireAuth = (to, from, next) => {
   if (localStorage.accessToken) {
-    if (!store.state.user) {
-      Vue.prototype.$Axios({
-        method: 'GET',
-        url: '/api/protected'
-      }).then(result => {
-        store.state.user = result.data.user
-      })
-    } else {
-      // JWT Verify
-      jwt.verify(localStorage.accessToken, '4j0uN1ce1', (err, decoded) => {
-        if (err) {
-          store.dispatch('LOGOUT')
-          return next({ path: '/' })
-        }
-      })
-    }
-    return next()
+    store.dispatch('checkTokenStatus').then(result => {
+      return next()
+    }).catch(error => {
+      return next('/')
+    })
+  } else {
+    return next({
+      path: '/',
+      query: {
+        redirect: to.fullPath
+      }
+    })
   }
-  next({
-    path: '/',
-    query: {
-      redirect: to.fullPath
-    }
-  })
 }
 
 const requireAdminAuth = (to, from, next) => {
@@ -80,6 +70,10 @@ export default new Router({
       name: 'login',
       component: Login,
       beforeEnter: alreadySignedIn
+    },
+    {
+      path: '/invitation',
+      component: Invitation,
     },
     {
       path: '/lectures',

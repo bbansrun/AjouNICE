@@ -29,7 +29,7 @@
             </ul>
         </section>
         <div class="container">
-            <PostList items="" />
+            <PostList :items="posts" />
         </div>
         <Footer />
     </div>
@@ -59,51 +59,72 @@ export default {
             sub_category: '',
             sub_category_desc: '',
             sub_category_idx: null,
-            write_url: '',
+            write_url: urljoin(this.$route.path, '/new'),
+            posts: []
         }
     },
-    methods: {},
+    methods: {
+        getAllCategories (options) {
+            if (options && options.parent) {
+                this.$apollo.query({
+                    query: gql`{ findBoardCategories(depth: 1, parent: ${options.parent}) { category_nm title desc access_auth private_yn } }`
+                }).then(({ data }) => {
+                    this.sub_categories = data.findBoardCategories
+                })
+            } else {
+                this.$apollo.query({
+                    query: gql`{ findBoardCategories(depth: 0) { category_nm title desc access_auth private_yn } }`
+                }).then(({ data }) => {
+                    this.categories = data.findBoardCategories
+                })
+            }
+        },
+        getCateInfo (name) {
+            this.$apollo.query({
+                query: gql`{ findBoardCategories(depth: 0, title: "${name}") { category_idx category_nm title access_auth private_yn desc } }`
+            }).then(({ data }) => {
+                this.category = data.findBoardCategories[0].category_nm
+                this.category_desc = data.findBoardCategories[0].desc
+                this.category_idx = data.findBoardCategories[0].category_idx
+                this.getAllCategories({ parent: this.category_idx })
+            })
+        },
+        getSubCateInfo (parent, name) {
+            this.$apollo.query({
+                query: gql`{ findBoardCategories(depth: 1, title: "${name}", parent: ${parent}) { category_idx category_nm title parent access_auth private_yn desc } }`
+            }).then(({ data }) => {
+                this.sub_category = data.findBoardCategories[0].category_nm
+                this.sub_category_desc = data.findBoardCategories[0].desc
+                this.sub_category_idx = data.findBoardCategories[0].category_idx
+                this.getPosts(1, this.sub_category_idx)
+            })
+        },
+        getPosts (depth, category_idx) {
+            this.$apollo.query({
+                query: gql`{ findBoardsByBoardCategories(depth: ${depth}, category_idx: ${category_idx}) { category_idx board_idx user_idx nick_nm title } }`
+            }).then(({ data }) => {
+                this.posts = data.findBoardsByBoardCategories
+            })
+        }
+    },
     beforeCreate () {
         document.body.classList.toggle('loading')
     },
     beforeMount () {
-        this.write_url = urljoin(this.$route.path, '/new')
-        let _this = this
         if (this.$route.params.category) {
-            this.$apollo.query({
-                query: gql`{ findBoardCategories(depth: 0, title: "${_this.$route.params.category}") { category_idx category_nm title access_auth private_yn desc } }`
-            }).then(result => {
-                _this.category = result.data.findBoardCategories[0].category_nm
-                _this.category_desc = result.data.findBoardCategories[0].desc
-                _this.category_idx = result.data.findBoardCategories[0].category_idx
-            })
+            // 특정 Depth 카테고리 내 전체 게시물 조회
+            this.getCateInfo(this.$route.params.category)
             if (this.$route.params.name) {
-                this.$apollo.query({
-                    query: gql`{ findBoardCategories(depth: 1, title: "${_this.$route.params.name}", parent: ${_this.category_idx}) { category_idx category_nm title parent access_auth private_yn desc } }`
-                }).then(result => {
-                    if (result.data.findBoardCategories.length === 0) {
-                        window.location = '/error/404'
-                    } else {
-                        _this.sub_category = result.data.findBoardCategories[0].category_nm
-                        _this.sub_category_desc = result.data.findBoardCategories[0].desc
-                        _this.sub_category_idx = result.data.findBoardCategories[0].category_idx
-                    }
-                })
+                // 특정 Depth 하위 카테고리 내 전체 게시물 조회
+                this.getSubCateInfo(this.category_idx, this.$route.params.name)
             } else {
-                this.$apollo.query({
-                    query: gql`{ findBoardCategories(depth: 1, parent: ${_this.category_idx}) { category_idx category_nm title parent access_auth private_yn desc } }`
-                }).then(result => {
-                    _this.sub_categories = result.data.findBoardCategories.filter((elem) => (elem.access_auth === 'ALL' && elem.private_yn === 'N'))
-                })
+
             }
         } else {
-            this.$apollo.query({
-                query: gql`{ findBoardCategories(depth: 0) { category_idx category_nm title access_auth private_yn desc } }`
-            }).then(result => {
-                _this.categories = result.data.findBoardCategories.filter((elem) => (elem.access_auth === 'ALL' && elem.private_yn === 'N'))
-            }).catch(error => {
-
-            })
+            // 전체 게시판 조회
+            this.getAllCategories()
+            // 전체 게시판 게시물 조회
+            // 미구현
         }
     },
     created () {

@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <Nav :scrollBase="scrollBase" />
+        <Navigation :scrollBase="scrollBase" />
         <div class="container">
             <carousel ref="scrollBase" :data="carouselItems"></carousel>
             <Welcome :username="$store.state.user.name" :user_id="$store.state.user.idx" />
@@ -18,7 +18,7 @@
 
 <script>
 import Vue from 'vue'
-import Nav from '@/components/Navigation.vue'
+import Navigation from '@/components/Navigation.vue'
 import Welcome from '@/components/Welcome.vue'
 import IconNav from '@/components/IconNav.vue'
 import PostList from '@/components/PostList.vue'
@@ -120,7 +120,7 @@ export default {
         }
     },
     components: {
-        Nav,
+        Navigation,
         Welcome,
         IconNav,
         PostList,

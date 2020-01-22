@@ -51,6 +51,7 @@ type Board {
     board_idx: ID!
     category_idx: Int
     user_idx: Int
+    nick_nm: String
     title: String
     body: String
     view_cnt: Int
@@ -87,12 +88,16 @@ type Query {
     findUserByToken(token: String!): User,
     findUserByIdx(user_idx: ID!): User,
     findBoardCategories(depth: Int!, title: String, parent: Int): [BoardCategory],
+    findBoardsByBigCategory(category_idx: ID!): [Board],
+    findBoardsBySmallCategory(category_idx: ID!): [Board],
+    findBoardByBoardIdx(board_idx: ID!): Board,
 }
 
 type Mutation {
-    register(email: String!, user_id: String!, password: String!, user_nm: String!, identity_num: Int, user_type: String!, sex_gb: String!, college_cd: String, dpt_cd: String, nick_nm: String!, reg_ip: String!): User!,
+    sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean,
     lastLogin(userId: String!, ip: String!): Boolean,
     authorize(user_idx: Int!): Boolean,
-    resetEmailToken(email: String!): Boolean
+    resetEmailToken(email: String!): Boolean,
+    writeBoard(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
 }
 `
