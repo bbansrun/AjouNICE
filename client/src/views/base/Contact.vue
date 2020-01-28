@@ -98,7 +98,7 @@ export default {
             if (this.name && (this.email && !this.emailError)) {
                 if (this.editorData) {
                     this.$apollo.mutate({
-                        mutation: gql`{ sendContactMail(name: "${this.name}", email: "${this.email}", content: "${this.editorData}") }`
+                        mutation: gql`mutation { sendContactMail(name: "${this.name}", email: "${this.email}", content: "${this.editorData}") }`
                     }).then(({ data }) => {
                         if (data) {
                             this.$swal({
