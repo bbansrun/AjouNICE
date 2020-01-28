@@ -1,4 +1,14 @@
-module.exports = `type User {
+module.exports = `
+scalar Date
+
+enum Role {
+    ADMIN
+    USER
+}
+
+directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
+
+type User {
     user_idx: ID!
     email: String
     user_id: String
@@ -77,8 +87,6 @@ type BoardCategory {
     upt_dt: Date
 }
 
-scalar Date
-
 type Query {
     findDptByCollege(college_cd: String!): [Department],
     findColleges(exist_yn: String!): [College],
@@ -91,6 +99,7 @@ type Query {
     findBoardsByBigCategory(category_idx: ID!): [Board],
     findBoardsBySmallCategory(category_idx: ID!): [Board],
     findBoardByBoardIdx(board_idx: ID!): Board,
+    boards(depth: Int!): [BoardCategory]
 }
 
 type Mutation {
