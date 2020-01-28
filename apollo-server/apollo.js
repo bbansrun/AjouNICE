@@ -1,5 +1,6 @@
 
 const { ApolloServer, gql } = require('apollo-server')
+const { LoggerExtension } = require('apollo-server-logger')
 const { RedisCache } = require('apollo-server-cache-redis')
 const server = new ApolloServer({
   typeDefs: gql(require('./typeDefs')),
@@ -13,6 +14,9 @@ const server = new ApolloServer({
   cacheControl: {
     defaultMaxAge: 10
   },
+  extensions: [() => new LoggerExtension({
+    tracing: true
+  })],
   context: ({ req, res }) => {
     // const token = req.headers.authorization || ''
     // Get User JWT Token

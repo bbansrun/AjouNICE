@@ -17,9 +17,9 @@ const getOne = (model, conditions) => async (parent, args, context, info) => {
   return await model.findOne({ attributes: attributes, where: conditions })
 }
 
-const getAll = (model, conditions) => async (parent, args, context, info) => {
+const getAll = (model, conditions, include = []) => async (parent, args, context, info) => {
   const attributes = selectAttributes(info)
-  return await model.findAll({ attributes: attributes, where: conditions })
+  return await model.findAll({ attributes: attributes, where: conditions, include: include })
 }
 
 module.exports = {
@@ -79,11 +79,7 @@ module.exports = {
     async findBoardByBoardIdx (parent, args, context, info) {
       const conditions = { board_idx: args.board_idx }
       return await getOne(Board, conditions)(parent, args, context, info)
-    },
-    // async boards (parent, args, context, info) {
-    //   const conditions = { depth: args.depth }
-    //   return await getAll(BoardCategory, conditions)(parent, args, context, info)
-    // }
+    }
   },
   Mutation: {
     sendRegisterAuthEmail: async (root, { user_nm, email, auth_token }) => {
