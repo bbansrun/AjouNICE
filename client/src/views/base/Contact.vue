@@ -96,6 +96,7 @@ export default {
         contact () {
             if (this.name && (this.email && !this.emailError)) {
                 if (this.editorData) {
+                    // 이메일 발송
                     this.$swal({
                         title: '성공!',
                         text: '이메일 발신에 성공하였습니다.',

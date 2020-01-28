@@ -11,6 +11,10 @@ $auth: auth;
   color: #fff;
 }
 
+a:hover {
+  color: #fff !important;
+}
+
 body {
   font: {
     family: 'Source Sans Pro', 'KoPub Dotum', 'MalgeunGothic', 'AppleGothic', sans-serif;
@@ -123,7 +127,9 @@ nav {
     z-index: 1000000;
     transition: .5s all ease-out;
     &.active {
-      background: $logo;
+      > .fixed-nav {
+        background: $logo;
+      }
     }
     > .fixed-nav {
       position: relative;
@@ -191,7 +197,7 @@ nav {
           }
         }
       }
-      > .title {
+      > .header {
         margin-left: 8px;
         > h1 {
           display: inline-block;
@@ -254,6 +260,7 @@ nav {
 
 .container {
   position: relative;
+  max-width: unset;
   min-height: 70vh;
   z-index: 0;
 }
@@ -274,7 +281,7 @@ nav {
     background: rgba(0,0,0,.8);
     z-index: -1;
     + header {
-      > h2.title {
+      > h2.header {
         font-weight: bold;
         font-size: 4vw;
       }
@@ -329,7 +336,7 @@ footer {
   > .wrapper {
     width: 75%;
     margin: auto;
-    > .content {
+    > .footer-content {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -469,6 +476,7 @@ footer {
   border: 1px solid #eee;
   border-radius: 0.25rem;
   display: flex;
+  align-items: center;
   padding: 0.5rem 0.75rem;
   > .feather {
       margin-right: 0.5rem;
