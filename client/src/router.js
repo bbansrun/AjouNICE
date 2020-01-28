@@ -33,9 +33,22 @@ const requireAuth = (to, from, next) => {
     store.dispatch('checkTokenStatus').then(result => {
       return next()
     }).catch(error => {
-      return next('/')
+      if (error.name === 'TokenExpiredError') {
+        Vue.prototype.$flashStorage.flash('로그인 만료! 다시 로그인해주시기 바랍니다.', 'warning', {
+          timeout: 3000
+        })
+      }
+      return next({
+        path: '/',
+        query: {
+          redirect: to.fullPath
+        }
+      })
     })
   } else {
+    Vue.prototype.$flashStorage.flash('서비스 이용을 위해 로그인해주시기 바랍니다.', 'info', {
+      timeout: 3000
+    })
     return next({
       path: '/',
       query: {
@@ -73,7 +86,7 @@ export default new Router({
     },
     {
       path: '/invitation',
-      component: Invitation,
+      component: Invitation
     },
     {
       path: '/lectures',
@@ -87,7 +100,7 @@ export default new Router({
     },
     {
       path: '/sitemap',
-      component: Sitemap,
+      component: Sitemap
     },
     {
       path: '/board',
