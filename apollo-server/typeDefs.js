@@ -103,6 +103,7 @@ type Query {
 }
 
 type Mutation {
+    sendContactMail(name: String!, email: String!, content: String!): Boolean,
     sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean,
     lastLogin(userId: String!, ip: String!): Boolean,
     authorize(user_idx: Int!): Boolean,
