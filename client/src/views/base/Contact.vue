@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
