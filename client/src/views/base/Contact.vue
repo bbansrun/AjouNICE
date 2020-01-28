@@ -96,15 +96,20 @@ export default {
         contact () {
             if (this.name && (this.email && !this.emailError)) {
                 if (this.editorData) {
-                    // 이메일 발송
-                    this.$swal({
-                        title: '성공!',
-                        text: '이메일 발신에 성공하였습니다.',
-                        footer: '<p>빠른 시일 내에 입력해주신 이메일 주소로 답변을 보내드리겠습니다.</p>',
-                        type: 'success',
-                        width: '90vw'
-                    }).then(() => {
-                        window.location = '/contact'
+                    this.$apollo.mutate({
+                        mutation: gql`{ sendContactMail(name: "${this.name}", email: "${this.email}", content: "${this.editorData}") }`
+                    }).then(({ data }) => {
+                        if (data) {
+                            this.$swal({
+                                title: '성공!',
+                                text: '이메일 발신에 성공하였습니다.',
+                                footer: '<p>빠른 시일 내에 입력해주신 이메일 주소로 답변을 보내드리겠습니다.</p>',
+                                type: 'success',
+                                width: '90vw'
+                            }).then(() => {
+                                window.location = '/contact'
+                            })
+                        }
                     })
                 } else {
                     this.$swal({
