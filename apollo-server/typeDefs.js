@@ -1,4 +1,14 @@
-module.exports = `type User {
+module.exports = `
+scalar Date
+
+enum Role {
+    ADMIN
+    USER
+}
+
+directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
+
+type User {
     user_idx: ID!
     email: String
     user_id: String
@@ -51,6 +61,7 @@ type Board {
     board_idx: ID!
     category_idx: Int
     user_idx: Int
+    nick_nm: String
     title: String
     body: String
     view_cnt: Int
@@ -76,8 +87,6 @@ type BoardCategory {
     upt_dt: Date
 }
 
-scalar Date
-
 type Query {
     findDptByCollege(college_cd: String!): [Department],
     findColleges(exist_yn: String!): [College],
@@ -87,12 +96,17 @@ type Query {
     findUserByToken(token: String!): User,
     findUserByIdx(user_idx: ID!): User,
     findBoardCategories(depth: Int!, title: String, parent: Int): [BoardCategory],
+    findBoardsByBigCategory(category_idx: ID!): [Board],
+    findBoardsBySmallCategory(category_idx: ID!): [Board],
+    findBoardByBoardIdx(board_idx: ID!): Board,
+    boards(depth: Int!): [BoardCategory]
 }
 
 type Mutation {
-    register(email: String!, user_id: String!, password: String!, user_nm: String!, identity_num: Int, user_type: String!, sex_gb: String!, college_cd: String, dpt_cd: String, nick_nm: String!, reg_ip: String!): User!,
+    sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean,
     lastLogin(userId: String!, ip: String!): Boolean,
     authorize(user_idx: Int!): Boolean,
-    resetEmailToken(email: String!): Boolean
+    resetEmailToken(email: String!): Boolean,
+    writeBoard(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
 }
 `

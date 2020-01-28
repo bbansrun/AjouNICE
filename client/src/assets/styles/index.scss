@@ -372,6 +372,7 @@ footer {
           background-clip: text;
           font-size: 4rem;
           font-weight: bold;
+          background-image: -webkit-linear-gradient(to bottom, #a18cd1 0%, #fbc2eb 100%);
           background-image: linear-gradient(to bottom, #a18cd1 0%, #fbc2eb 100%);
           text-shadow: 0 2px 2px rgba(0,0,0,.1);
       }
@@ -411,10 +412,12 @@ footer {
     transition: .2s background-color ease;
     &:hover {
       color: #fff !important;
+      background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
   }
   >.vs__dropdown-toggle+[role="listbox"]>.vs__dropdown-option--highlight {
+      background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
   &.error {

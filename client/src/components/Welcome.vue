@@ -22,18 +22,18 @@
 
 <script>
 export default {
-    props: ['username', 'user_id'],
-    methods: {
-        logout () {
-            this.$store.dispatch('LOGOUT').then(() => {
-                document.body.classList.toggle('loading')
-                window.location = '/'
-            })
-            .catch(error => {
-                console.error(error)
-            })
-        }
+  props: ['username', 'user_id'],
+  methods: {
+    logout () {
+      this.$store.dispatch('LOGOUT').then(() => {
+        document.body.classList.toggle('loading')
+        window.location = '/'
+      })
+      .catch(error => {
+        console.error(error)
+      })
     }
+  }
 }
 </script>
 
@@ -42,6 +42,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background: -webkit-linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
     background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
     color: #fff;
     > header {

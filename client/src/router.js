@@ -22,37 +22,40 @@ import Gourmet from './views/place/gourmet/Home.vue'
 import GourmetList from './views/place/gourmet/List.vue'
 import LectureHome from './views/function/lecture/Home.vue'
 import ScheduleHome from './views/function/schedule/Home.vue'
+import Invitation from './views/base/Invitation.vue'
 
 import store from './store.js'
-import jwt from 'jsonwebtoken'
+
 Vue.use(Router)
 
 const requireAuth = (to, from, next) => {
   if (localStorage.accessToken) {
-    if (!store.state.user) {
-      Vue.prototype.$Axios({
-        method: 'GET',
-        url: '/api/protected'
-      }).then(result => {
-        store.state.user = result.data.user
-      })
-    } else {
-      // JWT Verify
-      jwt.verify(localStorage.accessToken, '4j0uN1ce1', (err, decoded) => {
-        if (err) {
-          store.dispatch('LOGOUT')
-          return next({ path: '/' })
+    store.dispatch('checkTokenStatus').then(result => {
+      return next()
+    }).catch(error => {
+      if (error.name === 'TokenExpiredError') {
+        Vue.prototype.$flashStorage.flash('로그인 만료! 다시 로그인해주시기 바랍니다.', 'warning', {
+          timeout: 3000
+        })
+      }
+      return next({
+        path: '/',
+        query: {
+          redirect: to.fullPath
         }
       })
-    }
-    return next()
+    })
+  } else {
+    Vue.prototype.$flashStorage.flash('서비스 이용을 위해 로그인해주시기 바랍니다.', 'info', {
+      timeout: 3000
+    })
+    return next({
+      path: '/',
+      query: {
+        redirect: to.fullPath
+      }
+    })
   }
-  next({
-    path: '/',
-    query: {
-      redirect: to.fullPath
-    }
-  })
 }
 
 const requireAdminAuth = (to, from, next) => {
@@ -82,6 +85,10 @@ export default new Router({
       beforeEnter: alreadySignedIn
     },
     {
+      path: '/invitation',
+      component: Invitation
+    },
+    {
       path: '/lectures',
       component: LectureHome,
       beforeEnter: requireAuth
@@ -93,7 +100,7 @@ export default new Router({
     },
     {
       path: '/sitemap',
-      component: Sitemap,
+      component: Sitemap
     },
     {
       path: '/board',

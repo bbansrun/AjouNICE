@@ -4,13 +4,13 @@
           <small>핫이슈</small>
           <h2>주목해야할 게시물</h2>
         </header>
-        <div class="posts" :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }">
-          <a href="/board/community/anonymous/1/view">
+        <div class="posts" :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }" v-for="post in items" :key="post.board_idx">
+          <a :href="`./${post.board_idx}/view`">
             <article class="post">
               <header>
-                <h3>카페에 자리가 없어서 어느날 빤스런한 김*영씨</h3>
+                <h3>{{ post.title }}</h3>
                 <p>
-                  <small><span>2019.10.11</span>&nbsp;<span>익명의 오리</span></small>
+                  <small><span>2019.10.11</span>&nbsp;<span>{{ post.nick_nm }}</span></small>
                 </p>
               </header>
               <div class="thumbnail" v-if="showThumbnail">
@@ -18,13 +18,14 @@
               </div>
               <div class="replies" v-else>
                   <span>{{ 0 }}</span>
+                  <h6>댓글</h6>
               </div>
             </article>
           </a>
         </div>
         <div class="view-more">
           <a href="#">
-            <small>게시물 더보기</small> 
+            <small>게시물 더보기</small>
           </a>
         </div>
     </section>
@@ -32,11 +33,16 @@
 
 <script>
 export default {
-    props: {
-        showHeader: Boolean,
-        showThumbnail: Boolean,
-        items: Array
+  props: {
+    showHeader: Boolean,
+    showThumbnail: Boolean,
+    items: Array
+  },
+  computed: {
+    retnPostLink (idx) {
+      return `/board/1/1/${idx}`
     }
+  }
 }
 </script>
 

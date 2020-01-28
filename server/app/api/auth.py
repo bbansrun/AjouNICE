@@ -1,6 +1,6 @@
 import jwt
 import json
-import base64
+import hashlib
 from datetime import datetime, timedelta, timezone
 
 from flask import Response, request
@@ -10,18 +10,23 @@ from flask_sqlalchemy import SQLAlchemy
 from server import db, bcrypt
 from server.app.api import api_rest
 
+SECRET_KEY = '4j0uN1ce1'
 
 class User(db.Model):
     __tablename__ = 'USER'
+    __table_args__ = { 'mysql_collate': 'utf8_general_ci' }
+
     user_idx = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(256), index=True, unique=True)
     user_id = db.Column(db.String(50), index=True, unique=True)
     password = db.Column(db.String(60))
     user_nm = db.Column(db.String(50))
     identity_num = db.Column(db.Integer, index=True, unique=True)
+    admin_type = db.Column(db.String(10))
     user_type = db.Column(db.String(1))
+    sex_gb = db.Column(db.String(1))
     user_status = db.Column(db.String(1))
-    policy_yn = db.Column(db.Boolean)
+    policy_yn = db.Column(db.String(1))
     college_cd = db.Column(db.String(10))
     dpt_cd = db.Column(db.String(10))
     auth_email_yn = db.Column(db.String(1))
@@ -37,9 +42,39 @@ class User(db.Model):
     log_ip = db.Column(db.String(40))
     log_dt = db.Column(db.DateTime)
 
+    def __init__(self, email, user_id, password, user_nm, identity_num, user_type, sex_gb, college_cd, dpt_cd, auth_token, nick_nm, reg_ip, reg_dt, upt_ip, upt_dt, log_ip, log_dt, admin_type='ORD', policy_yn='Y', user_status='Y', auth_email_yn='N', bamboo_stack=None, user_profile='', links=''):
+        self.email = email
+        self.user_id = user_id
+        self.password = password
+        self.user_nm = user_nm
+        self.identity_num = identity_num
+        self.user_type = user_type
+        self.sex_gb = sex_gb
+        self.user_status = user_status
+        self.college_cd = college_cd
+        self.dpt_cd = dpt_cd
+        self.auth_token = auth_token
+        self.nick_nm = nick_nm
+        self.reg_dt = reg_dt
+        self.reg_ip = reg_ip
+        self.upt_dt = upt_dt
+        self.upt_ip = upt_ip
+        self.log_dt = log_dt
+        self.log_ip = log_ip
+        self.admin_type = admin_type
+        self.policy_yn = policy_yn
+        self.auth_email_yn = auth_email_yn
+        self.bamboo_stack = bamboo_stack
+        self.user_profile = user_profile
+        self.links = links
+
     def __repr__(self):
         return '<User %r>' % self.user_nm
-
+    
+    def as_dict(self):
+        return {
+            x.name: getattr(self, x.name) for x in self.__table__.columns
+        }
 
 class Tokenizer():
     """
@@ -59,7 +94,7 @@ class Tokenizer():
         else:
             return int(datetime.timestamp(datetime.now(tz) + timedelta(seconds=3600)))
 
-    def create_payload(self, user):
+    def create_payload(self, user, remote_addr):
         self.payload = {
             'exp': self.req_timestamp(),
             'iss': 'AjouNICE!_APIserver',
@@ -68,7 +103,9 @@ class Tokenizer():
             'user': {
                 'email': user.email,
                 'name': user.user_nm,
-                'idx': user.user_idx
+                'idx': user.user_idx,
+                'nick_nm': user.user_nm,
+                'access_loc': remote_addr
             }
         }
 
@@ -103,13 +140,52 @@ class Tokenizer():
         else:
             return (True, '201', identity)
 
-
-SECRET_KEY = '4j0uN1ce1'
-
-
 def jsonResponse(payload, status_code):
     return Response(json.dumps(payload), status=status_code, mimetype='application/json')
 
+@api_rest.route("/auth/register")
+class RegisterAPI(Resource):
+    def post(self):
+        if not request.is_json:
+            return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
+        
+        rawPassword = request.json.get('password', None)
+        hashedPassword = bcrypt.generate_password_hash(rawPassword, 10)
+        authToken = hashlib.sha256(hashedPassword).hexdigest()
+        new_user_object = {
+            'email': request.json.get('email', None),
+            'user_id': request.json.get('userId', None),
+            'password': hashedPassword,
+            'user_nm': request.json.get('userNm', None),
+            'identity_num': request.json.get('identityNum', None),
+            'user_type': request.json.get('userType', None),
+            'sex_gb': request.json.get('sexGb', None),
+            'college_cd': request.json.get('collegeCd', None),
+            'dpt_cd': request.json.get('dptCd', None),
+            'nick_nm': request.json.get('nickNm', None),
+            'auth_token': authToken,
+            'reg_ip': request.remote_addr,
+            'reg_dt': datetime.now(tz=timezone(timedelta(hours=9))),
+            'upt_ip': request.remote_addr,
+            'upt_dt': datetime.now(tz=timezone(timedelta(hours=9))),
+            'log_ip': request.remote_addr,
+            'log_dt': datetime.now(tz=timezone(timedelta(hours=9)))
+        }
+        new_user = User(**new_user_object)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonResponse({
+            'title': 'AjouNICE!',
+            'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+            'APIName': '/auth/register',
+            'APIDescription': '회원가입 처리',
+            'result': {
+                'code': 201,
+                'auth_token': authToken
+            }
+        }, 201)
+        
 
 @api_rest.route("/auth/login")
 class LoginAPI(Resource):
@@ -117,39 +193,39 @@ class LoginAPI(Resource):
         if not request.is_json:
             return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
 
-        user_id = request.json.get('user_id', None)
+        user_id = request.json.get('userId', None)
         password = request.json.get('password', None)
 
         user = User.query.filter_by(user_id=user_id).first()
-        compare_pw = user.password
-        result = bcrypt.check_password_hash(compare_pw, password)
+        match = bcrypt.check_password_hash(user.password, password)
+        res = {
+            'title': 'AjouNICE!',
+            'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+            'APIName': '/auth/login',
+            'APIDescription': '로그인 토큰처리',
+        }
 
-        if result:
+        if match:
+            # 사용자 마지막 로그인 IP 및 일시 업데이트
+            user.log_ip = request.remote_addr
+            user.log_dt = datetime.now(tz=timezone(timedelta(hours=9)))
+            db.session.commit()
+
             tokenizer = Tokenizer(secret=SECRET_KEY)
-            tokenizer.create_payload(user)
+            tokenizer.create_payload(user, request.remote_addr)
             access_token = tokenizer.create_access_token()
-            return jsonResponse({
-                'title': 'AjouNICE!',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/auth/login',
-                'APIDescription': '로그인 토큰처리',
-                'result': {
-                    'code': '201',
-                    'access_token': access_token,
-                    'auth_email_yn': user.auth_email_yn
-                }
-            }, 201)
-        else:
-            return jsonResponse({
-                'title': 'AjouNICE!',
-                'message': '빤스런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
-                'APIName': '/auth/login',
-                'APIDescription': '로그인 토큰처리',
-                'result': {
-                    'code': '401',
-                    'message': '로그인 정보가 올바르지 않습니다.'
-                }
-            }, 401)
+            res['result'] = {
+                'code': '201',
+                'access_token': access_token,
+                'auth_email_yn': user.auth_email_yn
+            }
+            return jsonResponse(res, 201)
+
+        res['result'] = {
+            'code': '401',
+            'message': '로그인 정보가 올바르지 않습니다.'
+        }
+        return jsonResponse(res, 401)
 
 
 @api_rest.route("/auth/update")
@@ -157,7 +233,7 @@ class UpdateAPI(Resource):
     def post(self):
         if not request.is_json:
             return jsonResponse({"err": "TypeError: Not JSON Type Request."}, 400)
-        
+
         confirmed = False
 
         mode = request.json.get('mode', None)
@@ -200,7 +276,7 @@ class UpdateAPI(Resource):
                 identity = validate_result[2]
                 if not isValid:
                     return jsonResponse({'msg': identity[-1]}, int(identity[1]))
-                
+
                 # prePassword 일치 여부 확인
                 user_idx = identity['user']['idx']
                 user = User.query.filter_by(user_idx=user_idx).first()

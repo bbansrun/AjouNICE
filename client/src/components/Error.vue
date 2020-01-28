@@ -25,11 +25,7 @@
 
 export default {
   name: 'error',
-  props: {
-    description: String,
-    sub_description: String,
-    code: Number
-  }
+  props: ['description', 'sub_description', 'code']
 }
 </script>
 

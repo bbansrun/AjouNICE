@@ -662,22 +662,38 @@ export default {
                 })
             } else {
                 document.body.classList.toggle('loading')
-                this.$Axios.get('/api/reqClientIP').then(client => {
-                    let college
-                    let dpt
-                    if (this.hasSubMajor) {
-                        college = `${this.selectedCollege},${this.selectedSubCollege}`
-                        dpt = `${this.selectedDpt},${this.selectedSubDpt}`
-                    } else {
-                        college = this.selectedCollege
-                        dpt = this.selectedDpt
+                let college
+                let dpt
+                if (this.hasSubMajor) {
+                    college = `${this.selectedCollege},${this.selectedSubCollege}`
+                    dpt = `${this.selectedDpt},${this.selectedSubDpt}`
+                } else {
+                    college = this.selectedCollege
+                    dpt = this.selectedDpt
+                }
+                this.$Axios({
+                    method: 'POST',
+                    url: '/api/auth/register',
+                    data: {
+                        email: this.email,
+                        userId: this.userID,
+                        password: this.password,
+                        userNm: this.userName,
+                        identityNum: (this.userIDNum ? this.userIDNum : null),
+                        userType: this.selectedUserType,
+                        sexGb: this.gender,
+                        collegeCd: this.college,
+                        dptCd: this.dpt,
+                        nickNm: this.nick_nm
                     }
-                    this.$apollo.mutate({
-                        mutation: gql `mutation { register(email: "${this.email}", user_id: "${this.userID}", password: "${this.password}", user_nm: "${this.userName}", identity_num: ${this.userIDNum ? this.userIDNum : null}, user_type: "${this.selectedUserType}", sex_gb: "${this.gender}", college_cd: "${college}", dpt_cd: "${dpt}", nick_nm: "${this.nick_nm}", reg_ip: "${client.data.result.ip}") { user_idx } }`
-                    }).then(result => {
-                        if (typeof result === 'object') {
-                            if ('data' in result) {
-                                document.body.classList.toggle('loading')
+                }).then(({ data }) => {
+                    document.body.classList.toggle('loading')
+                    if (data.result.code === 201) {
+                        // 이메일 토큰 발송
+                        this.$apollo.mutate({
+                            mutation: gql `mutation { sendRegisterAuthEmail(user_nm: "${this.userName}", email: "${this.email}", auth_token: "${data.result.auth_token}") }`
+                        }).then(result => {
+                            if (result) {
                                 this.flash('회원가입 성공! 로그인 후 서비스 이용이 가능합니다.', 'success')
                                 this.$swal({
                                     title: '회원가입 완료!',
@@ -689,29 +705,25 @@ export default {
                                 }).then(result => {
                                     window.location = '/'
                                 })
+                            } else {
+                                // 인증메일 발송 중 에러
+                                throw Error('Unknown Error while sending auth email')
                             }
-                        }
-                    }).catch(error => {
-                        document.body.classList.toggle('loading')
-                        if (error.message === 'GraphQL error: Validation error') {
-                            this.$swal({
-                                title: '실패하였습니다!',
-                                text: '이미 입력하신 내용으로 가입된 계정이 존재합니다. 항목을 다시 확인하여주세요.',
-                                width: '90vw',
-                                type: 'error',
-                                animation: true,
-                                footer: '<a>가입에 문제가 있다면? 관리자에게 해당 내용을 문의하여주세요.</a>'
-                            })
-                        } else if (error.message.includes('Syntax')) {
-                            this.$swal({
-                                title: '실패하였습니다!',
-                                text: '회원가입에 필요한 데이터가 누락되었습니다. 항목을 다시 확인하여주세요.',
-                                width: '90vw',
-                                type: 'error',
-                                animation: true,
-                                footer: '<a>가입에 문제가 있다면? 관리자에게 해당 내용을 문의하여주세요.</a>'
-                            })
-                        }
+                        }).catch(error => {
+                            // 인증메일 발송 중 에러
+                            console.error(error)
+                        })
+                    }
+                }).catch(error => {
+                    console.error(error)
+                    document.body.classList.toggle('loading')
+                    this.$swal({
+                        title: '실패하였습니다!',
+                        text: '회원가입에 필요한 데이터가 누락되었습니다. 항목을 다시 확인하여주세요.',
+                        width: '90vw',
+                        type: 'error',
+                        animation: true,
+                        footer: '<a>가입에 문제가 있다면? 관리자에게 해당 내용을 문의하여주세요.</a>'
                     })
                 })
             }
