@@ -82,6 +82,9 @@ module.exports = {
     }
   },
   Mutation: {
+    sendContactMail: async (root, { name, email, content }) => {
+
+    }
     sendRegisterAuthEmail: async (root, { user_nm, email, auth_token }) => {
       sendConfirmMail(user_nm, email, auth_token, false)
       return true
