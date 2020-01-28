@@ -1,4 +1,4 @@
-const { sendConfirmMail } = require('./mailer/mailUtils')
+const { sendConfirmMail, sendContactMail } = require('./mailer/mailUtils')
 const { User, College, Department, Board, BoardCategory, sequelize } = require('./models')
 const { Op } = require('sequelize')
 const graphqlFields = require('graphql-fields')
@@ -83,8 +83,9 @@ module.exports = {
   },
   Mutation: {
     sendContactMail: async (root, { name, email, content }) => {
-
-    }
+      sendContactMail(name, email, content)
+      return true
+    },
     sendRegisterAuthEmail: async (root, { user_nm, email, auth_token }) => {
       sendConfirmMail(user_nm, email, auth_token, false)
       return true
