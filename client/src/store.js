@@ -13,7 +13,7 @@ export default new Vuex.Store({
     LOGIN (state, { result }) {
       state.accessToken = result.access_token
       localStorage.setItem('accessToken', result.access_token)
-      Vue.prototype.$Axios.defaults.headers.common['Authorization'] = `Bearer ${result.access_token}`
+      Vue.prototype.$Axios.defaults.headers.common.Authorization = `Bearer ${result.access_token}`
     },
     LOGOUT (state) {
       state.accessToken = null
@@ -30,8 +30,8 @@ export default new Vuex.Store({
           url: '/api/auth/login',
           method: 'POST',
           data: {
-            'userId': userId,
-            'password': password
+            userId: userId,
+            password: password
           }
         }).then(({ data }) => {
           commit('LOGIN', data)

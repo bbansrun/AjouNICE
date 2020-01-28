@@ -22,18 +22,18 @@
 
 <script>
 export default {
-    props: ['username', 'user_id'],
-    methods: {
-        logout () {
-            this.$store.dispatch('LOGOUT').then(() => {
-                document.body.classList.toggle('loading')
-                window.location = '/'
-            })
-            .catch(error => {
-                console.error(error)
-            })
-        }
+  props: ['username', 'user_id'],
+  methods: {
+    logout () {
+      this.$store.dispatch('LOGOUT').then(() => {
+        document.body.classList.toggle('loading')
+        window.location = '/'
+      })
+      .catch(error => {
+        console.error(error)
+      })
     }
+  }
 }
 </script>
 
