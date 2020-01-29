@@ -27,7 +27,7 @@ const server = new ApolloServer({
 server.applyMiddleware({ app, cors: false, });
 app.listen(455);
 
-//   (app) => {
-//     console.log('========================== AjouNICE! ==========================')
-//     console.log(`🚀  GraphQL Server ready at ${app.address()}`)
+// (app) => {
+//   console.log('========================== AjouNICE! ==========================')
+//   console.log(`🚀  GraphQL Server ready at ${app.address()}`)
 // });
