@@ -10,6 +10,10 @@ const server = new ApolloServer({
         host: require('./config/config.json')['development']['redis_host']
     })
   },
+  formatResponse: (res) => {
+    res.hithisisnailer = 'hihi';
+    return res;
+  },
 });
 server.applyMiddleware({ app, cors: false });
 app.listen(455);

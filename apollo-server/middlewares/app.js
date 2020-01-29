@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { graphqlDecode, cryptoModule } = require('./securityModule');
+const { graphqlDecode } = require('./securityModule');
 app.use(cors());
-app.all('*', graphqlDecode, cryptoModule);
+app.all('*', graphqlDecode);
 
 
 module.exports = app;
