@@ -1,20 +1,23 @@
 <template>
     <div id="app">
         <Loading />
+        <flash-message class="flash"></flash-message>
         <router-view />
     </div>
 </template>
 
 <script>
 import Loading from '@/components/Loading.vue'
+import 'vue-flash-message/dist/vue-flash-message.min.css'
 export default {
-    components: {
-        Loading
-    }
+  components: {
+    Loading
+  }
 }
 </script>
 
 <style lang="scss">
+@import "~buefy/dist/buefy.css";
 @import "~@/assets/styles/reset";
 @import "~@/assets/styles/fonts";
 @import "~@/assets/styles/index";
@@ -29,12 +32,21 @@ export default {
 @import '~vue-select/src/scss/vue-select';
 
 #app {
-    min-height: 100%;
-    margin: 0 auto;
+  min-height: 100%;
+  margin: 0 auto;
 }
 
 .swal2-container.swal2-center {
-    background: rgba(0, 0, 0, .65);
+  background: rgba(0, 0, 0, .65);
 }
 
+.flash {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  z-index: 10000;
+  > .flash__wrapper {
+    box-shadow: 0 0 5px rgba(0, 0, 0, .65);
+  }
+}
 </style>

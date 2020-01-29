@@ -1,7 +1,7 @@
 <template>
     <footer>
         <section class="wrapper">
-            <div class="content">
+            <div class="footer-content">
                 <header>
                     <h4 data-logo>AjouNICE!</h4>
                     <small>아주나이스는 아주대학교의 커뮤니티 서비스입니다.</small>

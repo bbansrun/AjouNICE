@@ -25,7 +25,7 @@
         </div>
         <div class="view-more">
           <a href="#">
-            <small>게시물 더보기</small> 
+            <small>게시물 더보기</small>
           </a>
         </div>
     </section>
@@ -33,16 +33,16 @@
 
 <script>
 export default {
-    props: {
-        showHeader: Boolean,
-        showThumbnail: Boolean,
-        items: Array
-    },
-    computed: {
-      retnPostLink (idx) {
-        return `/board/1/1/${idx}`
-      }
+  props: {
+    showHeader: Boolean,
+    showThumbnail: Boolean,
+    items: Array
+  },
+  computed: {
+    retnPostLink (idx) {
+      return `/board/1/1/${idx}`
     }
+  }
 }
 </script>
 

@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import VueCarousel from '@chenfengyuan/vue-carousel'
 import VueFeather from 'vue-feather'
+import VueFlashMessage from 'vue-flash-message'
 
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
@@ -22,13 +23,22 @@ import VueApollo from 'vue-apollo'
 Vue.use(VueApollo)
 Vue.use(VueCarousel)
 Vue.use(VueFeather)
+Vue.use(VueFlashMessage, {
+  createShortcuts: true,
+  messageOptions: {
+    timeout: 1000,
+    important: true,
+    autoEmit: true,
+    pauseOnInteract: true
+  }
+})
 
 Vue.prototype.$Axios = axios
 const token = localStorage.getItem('accessToken')
 if (token) {
-  Vue.prototype.$Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  Vue.prototype.$Axios.defaults.headers.common.Authorization = `Bearer ${token}`
 } else {
-  Vue.prototype.$Axios.defaults.headers.common['Authorization'] = undefined
+  Vue.prototype.$Axios.defaults.headers.common.Authorization = undefined
 }
 
 library.add(faSignOutAlt)
@@ -102,10 +112,10 @@ const encryptedFetchImplementation = async (url, options) => {
 
 const apolloClient = new ApolloClient({
   link: createPersistedQueryLink({ useGETForHashedQueries: true })
-    .concat(createHttpLink({
-      uri: `http://${require('ip').address()}:455/`,
-      fetch: encryptedFetchImplementation
-    })),
+          .concat(createHttpLink({
+            uri: `http://${require('ip').address()}:455/`,
+            fetch: encryptedFetchImplementation
+          })),
   cache: new InMemoryCache()
 })
 

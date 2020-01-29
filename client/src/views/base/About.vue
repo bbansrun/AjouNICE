@@ -11,37 +11,49 @@
           <hr />
           <article>
             <header class="underline underline-inline-block">서비스 공지사항</header>
-            <VueTable
-              :api-mode="false"
-              :fields="columns"
-              :data="tableData"
-              :css="tableStyles.table"
-            ></VueTable>
-            <table class="notice">
-              <thead>
-                <tr>
-                  <th>번호</th>
-                  <th>유형</th>
-                  <th>제목</th>
-                  <th>일시</th>
-                  <th>작성</th>
-                  <th>조회</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>공지</td>
-                  <td>서비스 소개</td>
-                  <td>2020. 1. 1.</td>
-                  <td>빤스런 팀</td>
-                  <td>100</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr></tr>
-              </tfoot>
-            </table>
+            <b-table
+              :data="data"
+              :loading="loading"
+
+              paginated
+              backend-pagination
+              :total="total"
+              :per-page="perPage"
+              @page-change="onPageChange"
+              aria-next-label="Next page"
+              aria-previous-label="Previous page"
+              aria-page-label="Page"
+              aria-current-label="Current page"
+
+              backend-sorting
+              :default-sort-direction="defaultSortOrder"
+              :default-sort="[sortField, sortOrder]"
+              @sort="onSort">
+
+              <template slot-scope="props">
+                  <b-table-column field="original_title" label="Title" sortable>
+                      {{ props.row.original_title }}
+                  </b-table-column>
+
+                  <b-table-column field="vote_average" label="Vote Average" numeric sortable>
+                      <span class="tag" :class="type(props.row.vote_average)">
+                          {{ props.row.vote_average }}
+                      </span>
+                  </b-table-column>
+
+                  <b-table-column field="vote_count" label="Vote Count" numeric sortable>
+                      {{ props.row.vote_count }}
+                  </b-table-column>
+
+                  <b-table-column field="release_date" label="Release Date" sortable centered>
+                      {{ props.row.release_date ? new Date(props.row.release_date).toLocaleDateString() : '' }}
+                  </b-table-column>
+
+                  <b-table-column label="Overview" width="500">
+                      {{ props.row.overview | truncate(80) }}
+                  </b-table-column>
+              </template>
+            </b-table>
           </article>
         </section>
       </div>
@@ -50,67 +62,96 @@
 </template>
 
 <script>
-import VueTable from 'vuetable-2'
+import Vue from 'vue'
+import { Table } from 'buefy'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
+
+Vue.use(Table)
+
 export default {
   name: 'about',
   components: {
-    Navigation, Landing, Footer, VueTable
+    Navigation, Landing, Footer
   },
   data () {
     return {
       scrollBase: null,
-      columns: ['id', 'name', 'age'],
-      tableData: [
-          { id: 1, name: "John", age: "20" },
-          { id: 2, name: "Jane", age: "24" },
-          { id: 3, name: "Susan", age: "16" },
-          { id: 4, name: "Chris", age: "55" },
-          { id: 5, name: "Dan", age: "40" }
-      ],
-      tableStyles: {
-        table: {
-          tableWrapper: '',
-          tableHeaderClass: 'fixed',
-          tableBodyClass: 'vuetable-semantic-no-top fixed',
-          tableClass: 'ui blue selectable unstackable celled table',
-          loadingClass: 'loading',
-          ascendingIcon: 'blue chevron up icon',
-          descendingIcon: 'blue chevron down icon',
-          ascendingClass: 'sorted-asc',
-          descendingClass: 'sorted-desc',
-          sortableIcon: 'grey sort icon',
-          handleIcon: 'grey sidebar icon',
-        },
+      data: [],
+      total: 0,
+      loading: false,
+      sortField: 'vote_count',
+      sortOrder: 'desc',
+      defaultSortOrder: 'desc',
+      page: 1,
+      perPage: 20
+    }
+  },
+  methods: {
+    loadAsyncData () {
+        const params = [
+            'api_key=bb6f51bef07465653c3e553d6ab161a8',
+            'language=en-US',
+            'include_adult=false',
+            'include_video=false',
+            `sort_by=${this.sortField}.${this.sortOrder}`,
+            `page=${this.page}`
+        ].join('&')
 
-        pagination: {
-          wrapperClass: 'ui right floated pagination menu',
-          activeClass: 'active large',
-          disabledClass: 'disabled',
-          pageClass: 'item',
-          linkClass: 'icon item',
-          paginationClass: 'ui bottom attached segment grid',
-          paginationInfoClass: 'left floated left aligned six wide column',
-          dropdownClass: 'ui search dropdown',
-          icons: {
-            first: 'angle double left icon',
-            prev: 'left chevron icon',
-            next: 'right chevron icon',
-            last: 'angle double right icon',
-          }
-        },
-
-        paginationInfo: {
-          infoClass: 'left floated left aligned six wide column',
+        this.loading = true
+        this.$Axios.get(`https://api.themoviedb.org/3/discover/movie?${params}`)
+            .then(({ data }) => {
+                // api.themoviedb.org manage max 1000 pages
+                this.data = []
+                let currentTotal = data.total_results
+                if (data.total_results / this.perPage > 1000) {
+                    currentTotal = this.perPage * 1000
+                }
+                this.total = currentTotal
+                data.results.forEach((item) => {
+                    item.release_date = item.release_date.replace(/-/g, '/')
+                    this.data.push(item)
+                })
+                this.loading = false
+            })
+            .catch((error) => {
+                this.data = []
+                this.total = 0
+                this.loading = false
+                throw error
+            })
+    },
+    onPageChange (page) {
+        this.page = page
+        this.loadAsyncData()
+    },
+    onSort (field, order) {
+        this.sortField = field
+        this.sortOrder = order
+        this.loadAsyncData()
+    },
+    type (value) {
+        const number = parseFloat(value)
+        if (number < 6) {
+            return 'is-danger'
+        } else if (number >= 6 && number < 8) {
+            return 'is-warning'
+        } else if (number >= 8) {
+            return 'is-success'
         }
-      },
-      options: {}
+    }
+  },
+  filters: {
+    truncate(value, length) {
+        return value.length > length
+            ? value.substr(0, length) + '...'
+            : value
     }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+    this.loadAsyncData()
   }
 }
 </script>

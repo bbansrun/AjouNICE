@@ -2,7 +2,7 @@
     <section class="landing" :style="{ 'background': `url(${background}) center/cover fixed` }">
         <div class="cover"></div>
         <header>
-            <h2 class="title" :data-logo="isLogo">
+            <h2 class="header" :data-logo="isLogo">
                 <span class="underline underline-animated underline-inline-block">{{ title }}</span>
             </h2>
             <small>{{ description }}</small>
