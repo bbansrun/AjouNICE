@@ -20,7 +20,7 @@
             <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.password && !this.password }" v-if="this.errorValidation.password && !this.password">칸이 비어있습니다.</p>
           </div>
           <div class="input-form">
-            <input type="button" @click="signin" @submit.prevent value="로그인" />
+            <b-button class="is-medium submit" @click="signin" type="is-primary">로그인</b-button>
           </div>
         </div>
         <div class="input-form-controls">

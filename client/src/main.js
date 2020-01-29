@@ -7,7 +7,7 @@ import store from './store'
 import './filters'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSignOutAlt, faUser, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faSignOutAlt, faUser, faPen, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import VueCarousel from '@chenfengyuan/vue-carousel'
@@ -45,6 +45,7 @@ library.add(faSignOutAlt)
 library.add(faUser)
 library.add(faPen)
 library.add(faPlus)
+library.add(faUpload)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const shouldEncode = (url, options) => {
