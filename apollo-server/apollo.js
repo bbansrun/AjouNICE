@@ -1,7 +1,9 @@
 
-const { ApolloServer, gql } = require('apollo-server')
-const { LoggerExtension } = require('apollo-server-logger')
+const { ApolloServer, gql } = require('apollo-server-express')
 const { RedisCache } = require('apollo-server-cache-redis')
+const { LoggerExtension } = require('apollo-server-logger')
+const app = require('./middlewares/app')
+
 const server = new ApolloServer({
   typeDefs: gql(require('./typeDefs')),
   resolvers: require('./resolvers'),
@@ -17,16 +19,15 @@ const server = new ApolloServer({
   extensions: [() => new LoggerExtension({
     tracing: true
   })],
-  context: ({ req, res }) => {
-    // const token = req.headers.authorization || ''
-    // Get User JWT Token
-    // const user = getUser(token)
-    // if (!user) throw new AuthenticationError('You must be signed in')
-    // return { user }
+  formatResponse: (res) => {
+    res.hithisisnailer = 'hihi'
+    return res
   }
 })
+server.applyMiddleware({ app, cors: false })
+app.listen(455)
 
-server.listen({ port: 455 }).then(({ url }) => {
-  console.log('========================== AjouNICE! ==========================')
-  console.log(`🚀  GraphQL Server ready at ${url}`)
-})
+//   (app) => {
+//     console.log('========================== AjouNICE! ==========================')
+//     console.log(`🚀  GraphQL Server ready at ${app.address()}`)
+// });
