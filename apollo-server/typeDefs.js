@@ -85,6 +85,7 @@ type BoardCategory {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
+    posts: [Board]
 }
 
 type Query {

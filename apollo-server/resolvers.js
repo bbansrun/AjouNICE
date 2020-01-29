@@ -79,6 +79,13 @@ module.exports = {
     async findBoardByBoardIdx (parent, args, context, info) {
       const conditions = { board_idx: args.board_idx }
       return await getOne(Board, conditions)(parent, args, context, info)
+    },
+    async boards (parent, args, context, info) {
+      const conditions = { depth: args.depth }
+      const include = [
+        { model: Board, as: 'posts' }
+      ]
+      return await getAll(BoardCategory, conditions, include)(parent, args, context, info)
     }
   },
   Mutation: {

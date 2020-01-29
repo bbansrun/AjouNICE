@@ -16,17 +16,17 @@ db.Department = require('./department')(sequelize, Sequelize)
 db.Board = require('./board')(sequelize, Sequelize)
 db.BoardCategory = require('./board_category')(sequelize, Sequelize)
 
-db.User.hasMany(db.Board, {
-  foreignKey: 'user_idx',
-  onDelete: 'cascade'
-})
+db.User.hasMany(db.Board)
 
 db.BoardCategory.hasMany(db.Board, {
-  foreignKey: 'category_idx',
-  onDelete: 'cascade'
+  as: 'posts',
+  foreignKey: 'category_idx'
 })
 
-db.Board.belongsTo(db.BoardCategory)
+db.Board.belongsTo(db.BoardCategory, {
+  as: 'posts',
+  foreignKey: 'category_idx'
+})
 db.Board.belongsTo(db.User)
 
 module.exports = db
