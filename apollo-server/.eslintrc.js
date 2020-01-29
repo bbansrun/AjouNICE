@@ -17,5 +17,11 @@ module.exports = {
   plugins: [
   ],
   rules: {
-  }
+    'comma-dangle': ['error', {
+      'objects': 'always',
+    }],
+    'semi': ['error', 'always'],
+    'no-return-await': 'off',
+    'camelcase': 'off',
+  },
 }
