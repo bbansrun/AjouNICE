@@ -195,3 +195,4 @@ module.exports = (confirmLink) => `
     </body>
 </html>
 `
+;

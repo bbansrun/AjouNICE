@@ -194,3 +194,4 @@ module.exports = (name, content) => `
     </body>
 </html>
 `
+;
