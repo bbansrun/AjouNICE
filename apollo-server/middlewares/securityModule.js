@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 
-const decodeTextBody = async (text) => {
-  let buffer = Buffer.from(text, 'base64');
+const setKeyAndIv = async () => {
   const iv = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   const key = await crypto.subtle.importKey(
     'jwk', {
@@ -14,6 +13,27 @@ const decodeTextBody = async (text) => {
     false,
     ['encrypt', 'decrypt']
   );
+  return { iv, key, };
+};
+
+const encodeTextBody = async text => {
+  const { iv, key, } = setKeyAndIv();
+  let buffer = Buffer.from(text, 'utf8');
+  buffer = await crypto.subtle.encrypt(
+    {
+      name: 'AES-GCM',
+      iv,
+      tagLength: 128,
+    },
+    key,
+    buffer
+  );
+  return Buffer.from(buffer).toString('base64');
+};
+
+const decodeTextBody = async (text) => {
+  const { iv, key, } = setKeyAndIv();
+  let buffer = Buffer.from(text, 'base64');
   buffer = await crypto.subtle.decrypt(
     { name: 'AES-GCM', iv, tagLength: 128, },
     key,
@@ -36,4 +56,4 @@ const graphqlDecode = async (req, res, next) => {
   }
 };
 
-module.exports = { graphqlDecode, };
+module.exports = { graphqlDecode, encodeTextBody, };

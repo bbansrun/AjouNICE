@@ -111,4 +111,4 @@ type Mutation {
     resetEmailToken(email: String!): Boolean,
     writeBoard(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
 }
-`
+`;
