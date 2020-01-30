@@ -54,6 +54,7 @@
     "vue-gallery-slideshow": "^1.5.0",
     "vue-loader": "^15.8.3",
     "vue-router": "^3.1.3",
+    "vue-search-select": "^2.9.3",
     "vue-select": "^3.4.0",
     "vue-sticky": "^3.3.4",
     "vue-sweetalert2": "^2.1.5",
