@@ -3,38 +3,38 @@ module.exports = (sequelize, DataTypes) => {
     college_cd: {
       type: DataTypes.STRING(4),
       allowNull: false,
-      unique: true
+      unique: true,
     },
     college_nm: {
       type: DataTypes.STRING(6),
       allowNull: false,
-      unique: true
+      unique: true,
     },
     exist_yn: {
       type: DataTypes.STRING(1),
-      allowNull: false
+      allowNull: false,
     },
     reg_ip: {
       type: DataTypes.STRING(40),
-      allowNull: false
+      allowNull: false,
     },
     reg_dt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     upt_ip: {
       type: DataTypes.STRING(40),
-      allowNull: false
+      allowNull: false,
     },
     upt_dt: {
       type: DataTypes.DATE,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   }, {
     timestamps: false,
     freezeTableName: true,
     charset: 'utf8',
-    collate: 'utf8_unicode_ci'
-  })
-}
+    collate: 'utf8_unicode_ci',
+  });
+};

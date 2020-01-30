@@ -3,70 +3,70 @@ module.exports = (sequelize, DataTypes) => {
     board_idx: {
       type: DataTypes.INTEGER(10).UNSIGNED,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     category_idx: {
       type: DataTypes.INTEGER(10).UNSIGNED,
-      allowNull: false
+      allowNull: false,
     },
     user_idx: {
       type: DataTypes.INTEGER(10).UNSIGNED,
-      allowNull: false
+      allowNull: false,
     },
     nick_nm: {
       type: DataTypes.STRING(50, true),
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     },
     title: {
       type: DataTypes.STRING(100, true),
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     },
     body: {
       type: DataTypes.STRING(20000, true),
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     },
     view_cnt: {
       type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     },
     cmt_cnt: {
       type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     },
     reg_ip: {
       type: DataTypes.STRING(40, true),
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     },
     reg_dt: {
       type: DataTypes.DATE,
       allowNull: true, // 왜 allowNull??
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     upt_ip: {
       type: DataTypes.STRING(40, true),
       allowNull: true,
-      defaultValue: null
+      defaultValue: null,
     },
     upt_dt: {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: DataTypes.NOW
-    }
+      defaultValue: DataTypes.NOW,
+    },
   }, {
     hooks: {
       afterUpdate: (board, options) => {
-        board.upt_dt = DataTypes.NOW
-      }
+        board.upt_dt = DataTypes.NOW;
+      },
     },
     timestamps: false,
     freezeTableName: true,
     charset: 'utf8',
-    collate: 'utf8_unicode_ci'
-  })
-}
+    collate: 'utf8_unicode_ci',
+  });
+};

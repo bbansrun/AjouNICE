@@ -32,6 +32,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-link-persisted-queries": "^0.2.2",
     "axios": "^0.19.0",
+    "buefy": "^0.8.10",
     "feather-icons": "^4.25.0",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
@@ -53,12 +54,12 @@
     "vue-gallery-slideshow": "^1.5.0",
     "vue-loader": "^15.8.3",
     "vue-router": "^3.1.3",
+    "vue-search-select": "^2.9.3",
     "vue-select": "^3.4.0",
     "vue-sticky": "^3.3.4",
     "vue-sweetalert2": "^2.1.5",
     "vue-template-compiler": "^2.6.11",
     "vue-upload-component": "^2.8.20",
-    "vuetable-2": "^2.0.0-beta.4",
     "vuex": "^3.1.2"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@
                     <span></span>
                 </span>
             </div>
-            <header class="title">
+            <header class="header">
                 <h1 data-logo>
                     <router-link to="/">AjouNICE!</router-link>
                 </h1>

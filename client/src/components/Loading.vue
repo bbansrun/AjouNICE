@@ -14,3 +14,10 @@ export default {
     name: 'loading'
 }
 </script>
+
+<style lang="scss">
+body.loading .loader {
+    animation: unset;
+    border-radius: unset;
+}
+</style>

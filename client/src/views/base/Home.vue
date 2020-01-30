@@ -45,13 +45,13 @@ export default {
                         <small>아주대학교의 대표 커뮤니티 서비스입니다.</small>
                     </div>
                 </a>`,
-                `<a data-slide-item href="/about">
-                    <div class="cover"></div>
-                    <div class="slide-content">
-                        <h2 data-logo>AjouNICE!</h2>
-                        <small>서비스 오픈 일정 안내</small>
-                    </div>
-                </a>`,
+                // `<a data-slide-item href="/about">
+                //     <div class="cover"></div>
+                //     <div class="slide-content">
+                //         <h2 data-logo>AjouNICE!</h2>
+                //         <small>서비스 오픈 일정 안내</small>
+                //     </div>
+                // </a>`,
             ],
             carouselRadio: [{
                     id: 1,
@@ -135,3 +135,9 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+.carousel {
+  min-height: unset;
+}
+</style>

@@ -17,6 +17,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~buefy/dist/buefy.css";
 @import "~@/assets/styles/reset";
 @import "~@/assets/styles/fonts";
 @import "~@/assets/styles/index";

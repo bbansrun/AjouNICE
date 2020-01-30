@@ -29,7 +29,7 @@
                             <div class="input-form input-form-horizontal" v-if="this.selectedCollege && this.selectedDpt">
                                 <label for="smajor" role="title" class="input-form-title flex-9">제2전공(복수전공/부전공)이 있습니다.</label>
                                 <div class="input-form radio-wrapper flex-1">
-                                    <input type="checkbox" name="smajor" id="smajor" v-model="hasSubMajor" />
+                                    <b-checkbox size="is-medium" v-model="hasSubMajor" name="smajor" id="smajor"></b-checkbox>
                                 </div>
                             </div>
                             <div class="input-group">
@@ -83,8 +83,8 @@
                         <div class="input-group input-form-horizontal">
                             <span role="title" class="input-form-title flex-6">성별 선택</span>
                             <div class="input-form button-wrapper flex-4">
-                                <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.M }" @click="selectedGender('M')" value="남성">
-                                <input type="button" class="mini-inline radio" :class="{ 'radio-selected': this.genderSelected.W }" @click="selectedGender('W')" value="여성">
+                                <b-button @click="selectedGender('M')" :type="{ 'is-primary': !this.gender, 'is-info': this.genderSelected.M }">남성</b-button>
+                                <b-button @click="selectedGender('W')" :type="{ 'is-primary': !this.gender, 'is-info': this.genderSelected.W }">여성</b-button>
                             </div>
                         </div>
                         <div class="notice">
@@ -93,15 +93,15 @@
                     </div>
                     <div class="input-form">
                         <div class="input-group input-form-horizontal">
-                            <label for="policy" class="input-form-title flex-6">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
-                            <input type="button" class="mini-inline flex-4" @click="showPolicy" :disabled="this.policy.agreed" :value="this.policy.msg" />
+                            <label for="policy" class="input-form-title flex-7">아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
+                            <b-button class="flex-3" @click="showPolicy" :disabled="policy.agreed" :type="{ 'is-primary': !policy.agreed, 'is-success': policy.agreed }" expanded>{{ policy.msg }}</b-button>
                         </div>
                         <div class="notice">
                             <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.policy }" v-if="this.errorValidation.policy">{{ this.errorMsg.policy }}</p>
                         </div>
                     </div>
                     <div class="input-form">
-                        <input type="button" @click="signup" value="회원가입">
+                        <b-button class="is-medium submit" @click="signup" type="is-primary">회원가입</b-button>
                     </div>
                 </div>
                 <div class="input-form-controls">
@@ -116,12 +116,15 @@
 
 <script>
 import Vue from 'vue'
+import { Button, Checkbox } from 'buefy'
 import vSelect from 'vue-select'
 import VueSweetalert2 from 'vue-sweetalert2'
 import VueFlashMessage from 'vue-flash-message'
 import gql from 'graphql-tag'
 
 Vue.component('v-select', vSelect)
+Vue.use(Button)
+Vue.use(Checkbox)
 Vue.use(VueSweetalert2)
 Vue.use(VueFlashMessage)
 

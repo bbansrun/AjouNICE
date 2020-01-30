@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div class="input-form">
-                        <input type="button" @click="resetAccount" value="계정 재설정">
+                        <b-button class="is-medium submit" @click="resetAccount" type="is-primary">계정 재설정</b-button>
                     </div>
                 </div>
                 <div class="input-form-controls">

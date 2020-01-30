@@ -85,6 +85,7 @@ type BoardCategory {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
+    posts: [Board]
 }
 
 type Query {
@@ -103,10 +104,11 @@ type Query {
 }
 
 type Mutation {
+    sendContactMail(name: String!, email: String!, content: String!): Boolean,
     sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean,
     lastLogin(userId: String!, ip: String!): Boolean,
     authorize(user_idx: Int!): Boolean,
     resetEmailToken(email: String!): Boolean,
     writeBoard(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
 }
-`
+`;

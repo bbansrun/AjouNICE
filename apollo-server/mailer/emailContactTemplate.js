@@ -1,4 +1,4 @@
-module.exports = (confirmLink) => `
+module.exports = (name, content) => `
 <!DOCTYPE html>
 <html lang="ko">
     <head>
@@ -184,9 +184,8 @@ module.exports = (confirmLink) => `
         </header>
         <div class="invoice">
             <article>
-                <h2>서비스 인증을 위한 이메일 발송</h2>
-                <p>아주나이스 서비스에 관심을 가져주셔서 대단히 감사합니다.<br />서비스 사용을 위해서 이메일 인증이 요구되오니, 잠깐의 시간을 내주시어 아래 이메일 인증을 진행해주시기 바랍니다.<br />본인이 해당 서비스 회원가입을 진행하신 이력이 없는 경우, <a href="mailto:jwurbane97@ajou.ac.kr">개발팀</a>으로 신고하여주시기 바랍니다.</p>
-                <a class="btn" href="${confirmLink}" target="_blank">인증하기 →</a>
+                <h2>${name}님께서 보내신 문의 이메일입니다.</h2>
+                ${content}
             </article>
         </div>
         <footer>
