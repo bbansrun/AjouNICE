@@ -29,6 +29,7 @@ import LectureReviews from './views/user/LectureReviews.vue'
 import BusStation from './views/place/BusStation.vue'
 import Gourmet from './views/place/gourmet/Home.vue'
 import GourmetList from './views/place/gourmet/List.vue'
+import GourmetView from './views/place/gourmet/View.vue'
 
 import LectureHome from './views/function/lecture/Home.vue'
 import LectureReview from './views/function/lecture/Review.vue'
@@ -220,6 +221,11 @@ export default new Router({
     {
       path: '/place/gourmet/:category',
       component: GourmetList,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/place/gourmet/:category/:id',
+      component: GourmetView,
       beforeEnter: requireAuth
     },
     {

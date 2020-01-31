@@ -7,7 +7,7 @@ import store from './store'
 import './filters'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSignOutAlt, faUser, faPen, faPlus, faUpload, faKey, faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons'
+import { faSignOutAlt, faUser, faPen, faPlus, faUpload, faKey, faArrowAltCircleRight, faCheckCircle, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import VueCarousel from '@chenfengyuan/vue-carousel'
@@ -47,6 +47,7 @@ library.add(faPen)
 library.add(faPlus)
 library.add(faKey)
 library.add(faArrowAltCircleRight)
+library.add(faCheckCircle)
 library.add(faUpload)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
