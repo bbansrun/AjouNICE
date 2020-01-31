@@ -1,18 +1,39 @@
 <template>
-    <div class="wrapper">
-        <Navigation :scrollBase="scrollBase" />
-        <Landing ref="scrollBase" :title="user_nm" background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg" />
-        <div class="container">
-          <section class="user">
-            <div class="notification is-primary">
-              <b-button type="is-info" tag="router-link" :to="myLectureReviewsLink">나의 강의평가</b-button>
-              <b-button type="is-warning" tag="router-link" :to="profileEditUrl">계정정보 수정</b-button>
-              <b-button type="is-danger" @click="secession">회원탈퇴</b-button>
-          </div>
-          </section>
+  <div class="wrapper">
+    <Navigation :scroll-base="scrollBase" />
+    <Landing
+      ref="scrollBase"
+      :title="user_nm"
+      background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
+    />
+    <div class="container">
+      <section class="user">
+        <div class="notification is-primary">
+          <b-button
+            type="is-info"
+            tag="router-link"
+            :to="myLectureReviewsLink"
+          >
+            나의 강의평가
+          </b-button>
+          <b-button
+            type="is-warning"
+            tag="router-link"
+            :to="profileEditUrl"
+          >
+            계정정보 수정
+          </b-button>
+          <b-button
+            type="is-danger"
+            @click="secession"
+          >
+            회원탈퇴
+          </b-button>
         </div>
-        <Footer />
+      </section>
     </div>
+    <Footer />
+  </div>
 </template>
 
 <script>
@@ -33,13 +54,24 @@ export default {
       user_nm: null
     }
   },
+  computed: {
+    profileEditUrl () {
+      return urljoin(this.$route.path, '/edit')
+    },
+    myLectureReviewsLink () {
+      return `/profile/${this.$store.state.user.idx}/lectures/reviews`
+    }
+  },
   beforeMount () {
-    let _this = this
+    const _this = this
     this.$apollo.query({
       query: gql`{ findUserByIdx(user_idx: ${_this.$route.params.user_id}) { user_nm } }`
     }).then(result => {
       _this.user_nm = result.data.findUserByIdx.user_nm
     })
+  },
+  mounted () {
+    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
   methods: {
     secession () {
@@ -65,17 +97,6 @@ export default {
           })
         }
       })
-    }
-  },
-  mounted () {
-    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
-  },
-  computed: {
-    profileEditUrl () {
-      return urljoin(this.$route.path, '/edit')
-    },
-    myLectureReviewsLink () {
-        return `/profile/${this.$store.state.user.idx}/lectures/reviews`
     }
   }
 }
