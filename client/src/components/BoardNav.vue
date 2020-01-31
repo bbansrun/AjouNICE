@@ -1,25 +1,25 @@
 <template>
-    <section class="board-menu">
-        <header>
-            <h4>옆의 아이콘을 클릭하여 게시물을 작성할 수 있습니다.</h4>
-        </header>
-        <nav class="board-nav">
-            <ul class="menu menu-horizontal">
-                <li>
-                    <router-link :to="writeUrl">
-                        <font-awesome-icon icon="pen" />
-                    </router-link>
-                </li>
-            </ul>
-        </nav>
-    </section>
+  <section class="board-menu">
+    <header>
+      <h4>옆의 아이콘을 클릭하여 게시물을 작성할 수 있습니다.</h4>
+    </header>
+    <nav class="board-nav">
+      <ul class="menu menu-horizontal">
+        <li>
+          <router-link :to="writeUrl">
+            <font-awesome-icon icon="pen" />
+          </router-link>
+        </li>
+      </ul>
+    </nav>
+  </section>
 </template>
 
 <script>
 export default {
-    props: ['writeUrl'],
-    methods: {
-    }
+  props: ['writeUrl'],
+  methods: {
+  }
 }
 </script>
 

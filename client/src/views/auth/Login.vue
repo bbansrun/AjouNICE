@@ -1,33 +1,83 @@
 <template>
-  <div class="wrapper" fix-page>
+  <div
+    class="wrapper"
+    fix-page
+  >
     <section data-form-center>
       <header>
-        <h1 data-logo>AjouNICE!</h1>
+        <h1 data-logo>
+          AjouNICE!
+        </h1>
         <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
       </header>
-      <form data-auth-form @submit.prevent autocomplete="off">
+      <form
+        data-auth-form
+        autocomplete="off"
+        @submit.prevent
+      >
         <header data-logo>
           <h2>LOGIN</h2>
           <small>로그인</small>
         </header>
         <div class="input-form-wrapper">
           <div class="input-form">
-            <input type="text" :class="{ 'error': this.errorValidation.userID && !this.userID }" placeholder="아이디" v-model="userID" pattern=".{6,}" required>
-            <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.userID && !this.userID }" v-if="this.errorValidation.userID && !this.userID">칸이 비어있습니다.</p>
+            <input
+              v-model="userID"
+              type="text"
+              :class="{ 'error': errorValidation.userID && !userID }"
+              placeholder="아이디"
+              pattern=".{6,}"
+              required
+            >
+            <p
+              v-if="errorValidation.userID && !userID"
+              class="auto-validate-noti"
+              :class="{ 'error': errorValidation.userID && !userID }"
+            >
+              칸이 비어있습니다.
+            </p>
           </div>
           <div class="input-form">
-            <input type="password" placeholder="패스워드" @keyup.enter="signin" v-model="password" pattern=".{8,}" :class="{ 'error': this.errorValidation.password && !this.password }" required>
-            <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.password && !this.password }" v-if="this.errorValidation.password && !this.password">칸이 비어있습니다.</p>
+            <input
+              v-model="password"
+              type="password"
+              placeholder="패스워드"
+              pattern=".{8,}"
+              :class="{ 'error': errorValidation.password && !password }"
+              required
+              @keyup.enter="signin"
+            >
+            <p
+              v-if="errorValidation.password && !password"
+              class="auto-validate-noti"
+              :class="{ 'error': errorValidation.password && !password }"
+            >
+              칸이 비어있습니다.
+            </p>
           </div>
           <div class="input-form">
-            <b-button class="is-medium submit" @click="signin" type="is-primary">로그인</b-button>
+            <b-button
+              class="is-medium submit"
+              type="is-primary"
+              @click="signin"
+            >
+              로그인
+            </b-button>
           </div>
         </div>
         <div class="input-form-controls">
-          <router-link to="/auth/reset" class="underline underline-inline-block">
+          <router-link
+            to="/auth/reset"
+            class="underline underline-inline-block"
+          >
             <small>계정 재설정</small>
           </router-link>
-          <router-link to="/auth/signup" class="btn rounded box-shadow text-inverse">회원가입 &rarr;</router-link>
+          <router-link
+            to="/auth/signup"
+            class="btn rounded box-shadow text-inverse"
+          >
+            회원가입 &rarr;
+          </router-link>
         </div>
       </form>
     </section>
@@ -35,11 +85,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import gql from 'graphql-tag'
 
 export default {
-  name: 'login',
+  name: 'Login',
   data () {
     return {
       userID: '',
@@ -49,6 +98,9 @@ export default {
         password: false
       }
     }
+  },
+  beforeCreate () {
+    document.body.classList.add('auth')
   },
   methods: {
     signin () {
@@ -61,7 +113,7 @@ export default {
           .then(({ result }) => {
             this.$Axios.get('https://api.ipify.org/?format=json').then(client => {
               this.$apollo.mutate({
-                mutation: gql `mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.ip}") }`
+                mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.ip}") }`
               })
             })
             if (result.auth_email_yn === 'N') {
@@ -76,14 +128,18 @@ export default {
               }
             }
           })
-          .catch(err => {
+          .catch(({ response }) => {
             document.body.classList.toggle('loading')
-            this.$swal({
-              title: '오류!',
-              text: '입력하신 정보가 올바르지 않습니다.',
-              type: 'error',
-              width: '90vw'
-            })
+            if (response.status === 500) {
+              window.location = '/error/500'
+            } else {
+              this.$swal({
+                title: '오류!',
+                text: '입력하신 정보가 올바르지 않습니다.',
+                type: 'error',
+                width: '90vw'
+              })
+            }
           })
       }
       if (!this.userID) {
@@ -93,9 +149,6 @@ export default {
         this.errorValidation.password = true
       }
     }
-  },
-  beforeCreate () {
-    document.body.classList.add('auth')
   }
 }
 </script>

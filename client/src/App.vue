@@ -1,9 +1,9 @@
 <template>
-    <div id="app">
-        <Loading />
-        <flash-message class="flash"></flash-message>
-        <router-view />
-    </div>
+  <div id="app">
+    <Loading />
+    <flash-message class="flash" />
+    <router-view />
+  </div>
 </template>
 
 <script>

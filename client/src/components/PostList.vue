@@ -1,34 +1,49 @@
 <template>
-    <section class="popular">
-        <header v-if="showHeader">
-          <small>핫이슈</small>
-          <h2>주목해야할 게시물</h2>
-        </header>
-        <div class="posts" :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }" v-for="post in items" :key="post.board_idx">
-          <a :href="`./${post.board_idx}/view`">
-            <article class="post">
-              <header>
-                <h3>{{ post.title }}</h3>
-                <p>
-                  <small><span>2019.10.11</span>&nbsp;<span>{{ post.nick_nm }}</span></small>
-                </p>
-              </header>
-              <div class="thumbnail" v-if="showThumbnail">
-                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
-              </div>
-              <div class="replies" v-else>
-                  <span>{{ 0 }}</span>
-                  <h6>댓글</h6>
-              </div>
-            </article>
-          </a>
-        </div>
-        <div class="view-more">
-          <a href="#">
-            <small>게시물 더보기</small>
-          </a>
-        </div>
-    </section>
+  <section class="popular">
+    <header v-if="showHeader">
+      <small>핫이슈</small>
+      <h2>주목해야할 게시물</h2>
+    </header>
+    <div
+      v-for="post in items"
+      :key="post.board_idx"
+      class="posts"
+      :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }"
+    >
+      <a :href="`./${post.board_idx}/view`">
+        <article class="post">
+          <header>
+            <h3>{{ post.title }}</h3>
+            <p>
+              <small><span>2019.10.11</span>&nbsp;<span>{{ post.nick_nm }}</span></small>
+            </p>
+          </header>
+          <div
+            v-if="showThumbnail"
+            class="thumbnail"
+          >
+            <img
+              src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4"
+              height="100"
+              alt="gravatar"
+            >
+          </div>
+          <div
+            v-else
+            class="replies"
+          >
+            <span>{{ 0 }}</span>
+            <h6>댓글</h6>
+          </div>
+        </article>
+      </a>
+    </div>
+    <div class="view-more">
+      <a href="#">
+        <small>게시물 더보기</small>
+      </a>
+    </div>
+  </section>
 </template>
 
 <script>

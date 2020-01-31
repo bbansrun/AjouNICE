@@ -1,33 +1,74 @@
 <template>
-    <div class="wrapper" fix-page>
-        <flash-message></flash-message>
-        <section data-form-center>
-            <header>
-                <h1 data-logo>AjouNICE!</h1>
-                <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
-            </header>
-            <form data-auth-form @submit.prevent autocomplete="off">
-                <header data-logo>
-                    <h2>ADMIN</h2>
-                    <small>관리자 로그인</small>
-                </header>
-                <div class="divider"></div>
-                <div class="input-form-wrapper">
-                    <div class="input-form">
-                        <input type="text"  :class="{ 'error': this.errorValidation.userID && !this.userID }" placeholder="아이디" v-model="userID" pattern=".{6,}" required>
-                        <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.userID && !this.userID }" v-if="this.errorValidation.userID && !this.userID">칸이 비어있습니다.</p>
-                    </div>
-                    <div class="input-form">
-                        <input type="password" placeholder="패스워드" @keyup.enter="signin" v-model="password" pattern=".{8,}" :class="{ 'error': this.errorValidation.password && !this.password }" required>
-                        <p class="auto-validate-noti" :class="{ 'error': this.errorValidation.password && !this.password }" v-if="this.errorValidation.password && !this.password">칸이 비어있습니다.</p>
-                    </div>
-                    <div class="input-form">
-                        <input type="button" @click="signin" @submit.prevent value="로그인">
-                    </div>
-                </div>
-            </form>
-        </section>
-    </div>
+  <div
+    class="wrapper"
+    fix-page
+  >
+    <flash-message />
+    <section data-form-center>
+      <header>
+        <h1 data-logo>
+          AjouNICE!
+        </h1>
+        <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
+      </header>
+      <form
+        data-auth-form
+        autocomplete="off"
+        @submit.prevent
+      >
+        <header data-logo>
+          <h2>ADMIN</h2>
+          <small>관리자 로그인</small>
+        </header>
+        <div class="divider" />
+        <div class="input-form-wrapper">
+          <div class="input-form">
+            <input
+              v-model="userID"
+              type="text"
+              :class="{ 'error': errorValidation.userID && !userID }"
+              placeholder="아이디"
+              pattern=".{6,}"
+              required
+            >
+            <p
+              v-if="errorValidation.userID && !userID"
+              class="auto-validate-noti"
+              :class="{ 'error': errorValidation.userID && !userID }"
+            >
+              칸이 비어있습니다.
+            </p>
+          </div>
+          <div class="input-form">
+            <input
+              v-model="password"
+              type="password"
+              placeholder="패스워드"
+              pattern=".{8,}"
+              :class="{ 'error': errorValidation.password && !password }"
+              required
+              @keyup.enter="signin"
+            >
+            <p
+              v-if="errorValidation.password && !password"
+              class="auto-validate-noti"
+              :class="{ 'error': errorValidation.password && !password }"
+            >
+              칸이 비어있습니다.
+            </p>
+          </div>
+          <div class="input-form">
+            <input
+              type="button"
+              value="로그인"
+              @click="signin"
+              @submit.prevent
+            >
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -38,7 +79,7 @@ import gql from 'graphql-tag'
 Vue.use(VueFlashMessage)
 
 export default {
-  name: 'login',
+  name: 'Login',
   data () {
     return {
       userID: '',
@@ -49,41 +90,44 @@ export default {
       }
     }
   },
+  beforeCreate () {
+    document.body.classList.add('auth')
+  },
   methods: {
     signin () {
-      let params = this.$route.params
+      const params = this.$route.params
       if (this.userID && this.password && this.password.length >= 8) {
         document.body.classList.toggle('loading')
-        let user_id = this.userID
-        let password = this.password
+        const user_id = this.userID
+        const password = this.password
         this.$store.dispatch('LOGIN', { user_id, password })
-        .then(({ result }) => {
+          .then(({ result }) => {
             this.$Axios.get('/api/reqClientIP').then(client => {
-                this.$apollo.mutate({
-                    mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
-                })
+              this.$apollo.mutate({
+                mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.result.ip}") }`
+              })
             })
             if (result.auth_email_yn === 'N') {
-                this.$store.dispatch('LOGOUT')
-                window.location = '/error/401'
+              this.$store.dispatch('LOGOUT')
+              window.location = '/error/401'
             } else {
-                if ('redirect' in params) {
-                  window.location = params['redirect']
-                } else {
-                  window.location = '/gate/manager'
-                }
+              if ('redirect' in params) {
+                window.location = params.redirect
+              } else {
+                window.location = '/gate/manager'
+              }
             }
-        })
-        .catch(err => {
+          })
+          .catch(err => {
             console.error(err)
             document.body.classList.toggle('loading')
             this.$swal({
-                title: '오류!',
-                text: '입력하신 정보가 올바르지 않습니다.',
-                type: 'error',
-                width: '90vw'
+              title: '오류!',
+              text: '입력하신 정보가 올바르지 않습니다.',
+              type: 'error',
+              width: '90vw'
             })
-        })
+          })
       }
       if (!this.userID) {
         this.errorValidation.userID = true
@@ -92,9 +136,6 @@ export default {
         this.errorValidation.password = true
       }
     }
-  },
-  beforeCreate () {
-    document.body.classList.add('auth')
   }
 }
 </script>

@@ -1,23 +1,34 @@
 <template>
-    <div class="wrapper">
-        <Navigation :scrollBase="scrollBase" />
-        <Landing ref="scrollBase" title="나의 강의평가" :description="`${$store.state.user.name}님께서 평가하신 강의평입니다.`" background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg" />
-        <div class="container">
-          <div class="control">
-            <b-button tag="router-link" :to="`/profile/${$store.state.user.idx}`">&larr; 돌아가기</b-button>
-          </div>
-          <section class="user">
-              <article>
-                  <header class="underline underline-inline-block">나의 강의평가</header>
-              </article>
-          </section>
-        </div>
-        <Footer />
+  <div class="wrapper">
+    <Navigation :scroll-base="scrollBase" />
+    <Landing
+      ref="scrollBase"
+      title="나의 강의평가"
+      :description="`${$store.state.user.name}님께서 평가하신 강의평입니다.`"
+      background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
+    />
+    <div class="container">
+      <div class="control">
+        <b-button
+          tag="router-link"
+          :to="`/profile/${$store.state.user.idx}`"
+        >
+          &larr; 돌아가기
+        </b-button>
+      </div>
+      <section class="user">
+        <article>
+          <header class="underline underline-inline-block">
+            나의 강의평가
+          </header>
+        </article>
+      </section>
     </div>
+    <Footer />
+  </div>
 </template>
 
 <script>
-import gql from 'graphql-tag'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
@@ -33,14 +44,14 @@ export default {
       user_nm: null
     }
   },
-  beforeMount () {
+  computed: {
   },
-  methods: {
+  beforeMount () {
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
-  computed: {
+  methods: {
   }
 }
 </script>
