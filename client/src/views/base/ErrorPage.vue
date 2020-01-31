@@ -45,9 +45,6 @@ export default {
     }
   },
   computed: {
-    code () {
-      return this.$route.params.code
-    },
     description () {
       return this.errData[this.$route.params.code].title
     },
@@ -60,6 +57,11 @@ export default {
       this.errCode = this.code()
     } else {
       window.location = '/error/404'
+    }
+  },
+  methods: {
+    code () {
+      return this.$route.params.code
     }
   }
 }

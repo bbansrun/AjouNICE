@@ -45,7 +45,7 @@
               pattern=".{8,}"
               :class="{ 'error': errorValidation.password && !password }"
               required
-@keyup.enter="signin"
+              @keyup.enter="signin"
             >
             <p
               v-if="errorValidation.password && !password"
@@ -128,14 +128,18 @@ export default {
               }
             }
           })
-          .catch(err => {
+          .catch(({ response }) => {
             document.body.classList.toggle('loading')
-            this.$swal({
-              title: '오류!',
-              text: '입력하신 정보가 올바르지 않습니다.',
-              type: 'error',
-              width: '90vw'
-            })
+            if (response.status === 500) {
+              window.location = '/error/500'
+            } else {
+              this.$swal({
+                title: '오류!',
+                text: '입력하신 정보가 올바르지 않습니다.',
+                type: 'error',
+                width: '90vw'
+              })
+            }
           })
       }
       if (!this.userID) {
