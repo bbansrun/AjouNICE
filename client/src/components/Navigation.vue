@@ -28,7 +28,8 @@
                 </li>
                 <hr />
                 <li>
-                    <a @click="logout" class="underline underline-inline-block">로그아웃</a>
+                    <a v-show="$store.state.user" @click="logout" class="underline underline-inline-block">로그아웃</a>
+                    <a v-show="!$store.state.user" href="/auth/login" class="underline underline-inline-block">로그인</a>
                 </li>
             </ul>
         </div>

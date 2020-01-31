@@ -3,7 +3,7 @@
         <Navigation :scrollBase="scrollBase" />
         <div class="container">
             <carousel ref="scrollBase" :data="carouselItems"></carousel>
-            <Welcome :username="$store.state.user.name" :user_id="$store.state.user.idx" />
+            <Welcome />
             <IconNav :data="iconNav" />
             <div class="broadcast">
                 <feather type="radio"></feather>

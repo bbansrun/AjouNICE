@@ -72,7 +72,7 @@ export default {
               if ('redirect' in params) {
                 window.location = params.redirect
               } else {
-                window.location = '/home'
+                window.location = '/'
               }
             }
           })

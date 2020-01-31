@@ -7,7 +7,7 @@ import store from './store'
 import './filters'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSignOutAlt, faUser, faPen, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faSignOutAlt, faUser, faPen, faPlus, faUpload, faKey } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import VueCarousel from '@chenfengyuan/vue-carousel'
@@ -45,6 +45,7 @@ library.add(faSignOutAlt)
 library.add(faUser)
 library.add(faPen)
 library.add(faPlus)
+library.add(faKey)
 library.add(faUpload)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -113,10 +114,10 @@ const encryptedFetchImplementation = async (url, options) => {
 
 const apolloClient = new ApolloClient({
   link: createPersistedQueryLink({ useGETForHashedQueries: true })
-          .concat(createHttpLink({
-            uri: `http://${require('ip').address()}:455/`,
-            fetch: encryptedFetchImplementation
-          })),
+    .concat(createHttpLink({
+      uri: `http://${require('ip').address()}:455/`,
+      fetch: encryptedFetchImplementation
+    })),
   cache: new InMemoryCache()
 })
 

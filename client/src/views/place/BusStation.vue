@@ -24,41 +24,7 @@
 			</section>
 			<section class="ord-bus">
 				<article>
-					<header class="underline underline-inline-block">일반 시내/광역/마을버스</header>
-					<div class="buses">
-						<h4>시내버스</h4>
-						<b-tag type="is-success">2-2</b-tag>
-						<b-tag type="is-success">7</b-tag>
-						<b-tag type="is-success">11-1</b-tag>
-						<b-tag type="is-success">13-4</b-tag>
-						<b-tag type="is-success">18</b-tag>
-						<b-tag type="is-success">20</b-tag>
-						<b-tag type="is-success">202</b-tag>
-						<b-tag type="is-success">32-3</b-tag>
-						<b-tag type="is-success">32-4</b-tag>
-						<b-tag type="is-success">80</b-tag>
-						<b-tag type="is-success">81</b-tag>
-						<b-tag type="is-success">85</b-tag>
-						<b-tag type="is-success">88-1</b-tag>
-						<b-tag type="is-success">99</b-tag>
-						<b-tag type="is-success">99-2</b-tag>
-						<b-tag type="is-success">720-1</b-tag>
-						<b-tag type="is-success">720-2</b-tag>
-						<h4>마을버스</h4>
-						<b-tag type="is-warning">7</b-tag>
-						<h4>수서.잠실역</h4>
-						<b-tag type="is-danger">1007-1</b-tag>
-						<h4>판교</h4>
-						<b-tag type="is-danger">4000</b-tag>
-						<h4>사당역</h4>
-						<b-tag type="is-danger">7000</b-tag>
-						<b-tag type="is-danger">7001</b-tag>
-						<h4>강남역</h4>
-						<b-tag type="is-danger">3007</b-tag>
-						<b-tag type="is-danger">3008(평일)</b-tag>
-						<h4>에버랜드/인천</h4>
-						<b-tag type="is-info">8862</b-tag>
-					</div>
+					<header class="underline underline-inline-block">마을버스</header>
 					<b-table :data="schoolBus.data.townShuttle" :columns="schoolBus.columns.townShuttle">
 						<template slot="footer">
 							<div class="has-text-right">
@@ -66,7 +32,35 @@
 							</div>
 						</template>
 					</b-table>
-					<div id="map"></div>
+				</article>
+				<article>
+					<header class="underline underline-inline-block">일반 시내/광역버스</header>
+					<div class="buses">
+						<model-select :options="options"
+							v-model="item"
+							placeholder="목적지를 선택하시면 해당 방향 버스노선이 정렬됩니다.">
+						</model-select>
+						<div class="routes" v-for="type in buses.types" :key="type.type">
+							<h4>{{ type.label }}</h4>
+							<span v-if="item.value && buses.routes.filter(elem => (elem.type === type.type && elem.bound.includes(item.value))).length === 0">없음</span>
+							<b-tag
+								v-for="route in buses.routes.filter(elem => elem.type === type.type)"
+								:key="route.num"
+								:type="{ 'is-success': route.type === 1, 'is-warning': route.type === 2, 'is-danger': route.type === 3, 'is-info': route.type === 4 }"
+								v-show="item.value === '' || (item.value && route.bound.includes(item.value))">
+								{{ route.num }}
+							</b-tag>
+						</div>
+					</div>
+					<vue-daum-map
+						:appKey="appKey"
+						:center.sync="center"
+						:level.sync="level"
+						:mapTypeId="mapTypeId"
+						:libraries="libraries"
+						@load="onLoad"
+						:style="mapStyle"
+					/>
 				</article>
 			</section>
 		</div>
@@ -77,21 +71,96 @@
 <script>
 import Vue from 'vue'
 import { Tag } from 'buefy'
+import { ModelSelect } from 'vue-search-select'
+import VueDaumMap from 'vue-daum-map'
 import axios from 'axios'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
+import 'vue-search-select/dist/VueSearchSelect.css'
 
 Vue.use(Tag)
+Vue.use(VueDaumMap)
+Vue.use(ModelSelect)
 export default {
 	components: {
 		Navigation,
 		Landing,
-		Footer
+		Footer,
+		VueDaumMap,
+		ModelSelect
 	},
 	data() {
 		return {
 			scrollBase: null,
+			buses: {
+				types: [
+					{ label: '시내버스', type: 1 },
+					{ label: '마을버스', type: 2 },
+					{ label: '광역버스', type: 3 },
+					{ label: '시외버스', type: 4 },
+				],
+				routes: [
+					{ type: 1, num: '2-2', bound: [4, 1, 8] },
+					{ type: 1, num: '7', bound: [10, 2, 1, 9] },
+					{ type: 1, num: '11-1', bound: [9, 1] },
+					{ type: 1, num: '13-4', bound: [9, 1, 2] },
+					{ type: 1, num: '18', bound: [2, 4, 5] },
+					{ type: 1, num: '20', bound: [2, 6] },
+					{ type: 1, num: '32-3', bound: [2, 1, 7] },
+					{ type: 1, num: '32-4', bound: [2, 1, 7] },
+					{ type: 1, num: '80', bound: [2, 3] },
+					{ type: 1, num: '81', bound: [2, 3, 6] },
+					{ type: 1, num: '88-1', bound: [9, 1, 2] },
+					{ type: 1, num: '99', bound: [8, 5] },
+					{ type: 1, num: '99-2', bound: [8, 5] },
+					{ type: 1, num: '202', bound: [3, 6] },
+					{ type: 1, num: '720-1', bound: [5, 4, 10] },
+					{ type: 1, num: '720-2', bound: [7, 9, 1, 10] },
+					{ type: 2, num: '7', bound: [2] },
+					{ type: 3, num: '1007-1', bound: [14] },
+					{ type: 3, num: '3007', bound: [13] },
+					{ type: 3, num: '3008', bound: [13] },
+					{ type: 3, num: '4000', bound: [10] },
+					{ type: 3, num: '7000', bound: [12] },
+					{ type: 3, num: '7001', bound: [12] },
+					{ type: 3, num: '8800', bound: [11] },
+					{ type: 4, num: '8862', bound: [15] },
+				]
+			},
+			options: [
+				{ value: 1, text: '수원역' },
+				{ value: 2, text: '광교.광교중앙.상현역' },
+				{ value: 3, text: '수원시청역(인계동)' },
+				{ value: 4, text: '영통.영통역' },
+				{ value: 5, text: '망포.동탄' },
+				{ value: 6, text: '병점.오산' },
+				{ value: 7, text: '봉담.향남' },
+				{ value: 8, text: '북수원' },
+				{ value: 9, text: '서수원' },
+				{ value: 10, text: '수지.죽전.판교.성남' },
+				{ value: 11, text: '서울(서울역)' },
+				{ value: 12, text: '서울(사당역)' },
+				{ value: 13, text: '서울(강남역)' },
+				{ value: 14, text: '서울(잠실역)' },
+				{ value: 15, text: '인천' },
+			],
+			item: {
+				value: '',
+				text: ''
+			},
+			mapStyle: {
+				width: '100%',
+				height: '500px',
+				margin: '1rem 0'
+			},
+			appKey: '57ca092a89b95b1726db4a29813a43c5',
+			center: { lat : 37.2791647, lng : 127.0431981 },
+			level: 3,
+			zoom: false,
+			mapTypeId: VueDaumMap.MapTypeId.NORMAL,
+			libraries: [],
+			map: null,
 			apiCallback: 'https://map.kakao.com/bus/stop.json?busstopid=',
 			stops: ['BS72693', 'BS72549', 'BS72694', 'BS72548', 'BS320880', 'BS320876', 'BS320881'],
 			stopsInfo: [],
@@ -254,9 +323,11 @@ export default {
 		}
 	},
 	methods: {
-
+		onLoad (map) {
+		  this.map = map
+        }
 	},
-	mounted() {
+	mounted () {
 		this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
 		let kakaoMap = document.createElement('script')
 		kakaoMap.setAttribute('src', '//dapi.kakao.com/v2/maps/sdk.js?appkey=57ca092a89b95b1726db4a29813a43c5&autoload=false')
