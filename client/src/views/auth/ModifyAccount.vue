@@ -129,8 +129,8 @@ export default {
                         console.error(error)
                         window.location = '/error/500'
                     })
-                } else if (modify) {
-
+                } else if (this.mode.modify) {
+                    this.email = this.$store.state.user.email
                 } else {
                     window.location = '/error/404'
                 }
