@@ -37,6 +37,28 @@ import ScheduleHome from './views/function/schedule/Home.vue'
 
 Vue.use(Router)
 
+const checkHomeSignedIn = (to, from, next) => {
+  if (localStorage.accessToken) {
+    store.dispatch('checkTokenStatus').then(result => {
+      return next()
+    }).catch(error => {
+      if (error.name === 'TokenExpiredError') {
+        Vue.prototype.$flashStorage.flash('로그인 만료! 다시 로그인해주시기 바랍니다.', 'warning', {
+          timeout: 3000
+        })
+      }
+      return next({
+        path: '/auth/login',
+        query: {
+          redirect: to.fullPath
+        }
+      })
+    })
+  } else {
+    next()
+  }
+}
+
 const requireAuth = (to, from, next) => {
   if (localStorage.accessToken) {
     store.dispatch('checkTokenStatus').then(result => {
@@ -48,7 +70,7 @@ const requireAuth = (to, from, next) => {
         })
       }
       return next({
-        path: '/',
+        path: '/auth/login',
         query: {
           redirect: to.fullPath
         }
@@ -59,7 +81,7 @@ const requireAuth = (to, from, next) => {
       timeout: 3000
     })
     return next({
-      path: '/',
+      path: '/auth/login',
       query: {
         redirect: to.fullPath
       }
@@ -80,7 +102,7 @@ const requireAdminAuth = (to, from, next) => {
 const alreadySignedIn = (to, from, next) => {
   if (!localStorage.accessToken) return next()
   next({
-    path: '/home'
+    path: '/'
   })
 }
 
@@ -89,6 +111,12 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'home',
+      component: Home,
+      beforeEnter: checkHomeSignedIn
+    },
+    {
+      path: '/auth/login',
       name: 'login',
       component: Login,
       beforeEnter: alreadySignedIn
@@ -114,8 +142,7 @@ export default new Router({
     },
     {
       path: '/schedule',
-      component: ScheduleHome,
-      beforeEnter: requireAuth
+      component: ScheduleHome
     },
     {
       path: '/sitemap',
@@ -183,8 +210,7 @@ export default new Router({
     },
     {
       path: '/place/bus',
-      component: BusStation,
-      beforeEnter: requireAuth
+      component: BusStation
     },
     {
       path: '/place/gourmet',
@@ -220,12 +246,6 @@ export default new Router({
       path: '/auth/signup',
       name: 'signup',
       component: Signup
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: Home,
-      beforeEnter: requireAuth
     },
     {
       path: '/about',
