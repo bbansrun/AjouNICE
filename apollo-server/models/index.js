@@ -16,17 +16,40 @@ db.Department = require('./department')(sequelize, Sequelize);
 db.Board = require('./board')(sequelize, Sequelize);
 db.BoardCategory = require('./board_category')(sequelize, Sequelize);
 
-db.User.hasMany(db.Board);
+db.User.hasMany(db.Board, {
+  as: 'articles',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.Board.belongsTo(db.User, {
+  as: 'articles',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
 
 db.BoardCategory.hasMany(db.Board, {
   as: 'posts',
   foreignKey: 'category_idx',
+  sourceKey: 'category_idx',
 });
 
 db.Board.belongsTo(db.BoardCategory, {
   as: 'posts',
   foreignKey: 'category_idx',
+  targetKey: 'category_idx',
 });
-db.Board.belongsTo(db.User);
+
+db.College.hasMany(db.Department, {
+  as: 'departments',
+  foreignKey: 'college_cd',
+  sourceKey: 'college_cd',
+});
+
+db.Department.belongsTo(db.College, {
+  as: 'departments',
+  foreignKey: 'college_cd',
+  targetKey: 'college_cd',
+});
 
 module.exports = db;

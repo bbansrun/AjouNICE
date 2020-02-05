@@ -21,6 +21,11 @@ const server = new ApolloServer({
   extensions: [() => new LoggerExtension({
     tracing: true,
   })],
+  context: ({ req, res, }) => {
+    return {
+      req, res,
+    };
+  },
   formatResponse: async res => {
     try {
       let type = 'application/json';
@@ -44,8 +49,3 @@ const server = new ApolloServer({
 });
 server.applyMiddleware({ app, cors: false, });
 app.listen(455);
-
-// (app) => {
-//   console.log('========================== AjouNICE! ==========================')
-//   console.log(`🚀  GraphQL Server ready at ${app.address()}`)
-// });

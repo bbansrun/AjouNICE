@@ -34,9 +34,13 @@ type User {
     upt_dt: Date
     log_ip: String
     log_dt: Date
+    articles: [Board!]!
+    comments: [BoardComment!]!
+    restaurants: [RestaurantBoard!]!
 }
 
 type College {
+    id: ID!
     college_cd: String
     college_nm: String
     exist_yn: String
@@ -44,12 +48,15 @@ type College {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
+    departments: [Department!]
 }
 
 type Department {
+    id: ID!
     dpt_cd: String
     dpt_nm: String
-    college_cd: String
+    college: College!
+    college_cd: String!
     exist_yn: String
     reg_ip: String
     reg_dt: Date
@@ -59,8 +66,10 @@ type Department {
 
 type Board {
     board_idx: ID!
-    category_idx: Int
-    user_idx: Int
+    category: BoardCategory!
+    category_idx: Int!
+    user: User!
+    user_idx: Int!
     nick_nm: String
     title: String
     body: String
@@ -85,22 +94,48 @@ type BoardCategory {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
-    posts: [Board]
+    posts: [Board!]!
+}
+
+type BoardComment {
+    cmt_idx: ID!
+    board_idx: Board!
+    user_idx: User!
+    nick_nm: String
+    text: String
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
+}
+
+type RestaurantBoard {
+    res_idx: ID!
+    user: User!
+    user_idx: Int!
+    res_nm: String
+    res_icon: String
+    res_category: String
+    star_avg: Int
+    res_menu: String
+    res_info: String
+    res_lat: Int
+    res_lon: Int
+    res_addr: String
+    res_phone: String
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
 }
 
 type Query {
-    findDptByCollege(college_cd: String!): [Department],
-    findColleges(exist_yn: String!): [College],
-    findNickName(nick_nm: String!): [User],
-    findEmail(email: String!): [User],
-    findUserID(userId: String!): [User],
-    findUserByToken(token: String!): User,
-    findUserByIdx(user_idx: ID!): User,
-    findBoardCategories(depth: Int!, title: String, parent: Int): [BoardCategory],
-    findBoardsByBigCategory(category_idx: ID!): [Board],
-    findBoardsBySmallCategory(category_idx: ID!): [Board],
-    findBoardByBoardIdx(board_idx: ID!): Board,
-    boards(depth: Int!): [BoardCategory]
+    user(user_idx: Int, nick_nm: String, email: String, token: String): User
+    colleges(exist_yn: String!): [College]
+    departments(college_cd: String): [Department]
+    boards(depth: Int, title: String, parent: Int): [BoardCategory]
+    post(board_idx: ID!): Board
+    posts(category_idx: ID): [Board] 
 }
 
 type Mutation {
