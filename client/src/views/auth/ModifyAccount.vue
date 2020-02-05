@@ -259,12 +259,9 @@ export default {
               text: '패스워드가 변경되었습니다.',
               type: 'success',
               width: '90vw',
-              footer: '<p>입력하신 새로운 비밀번호로 로그인하시면 서비스 이용이 가능합니다.</p>',
-              confirmButtonText: '확인'
+              footer: '<p>입력하신 새로운 비밀번호로 로그인하시면 서비스 이용이 가능합니다.</p>'
             }).then(() => {
-              this.$store.dispatch('LOGOUT').then(() => {
-                window.location = '/'
-              })
+              window.location = '/'
             })
           } else {
             throw Error(result)

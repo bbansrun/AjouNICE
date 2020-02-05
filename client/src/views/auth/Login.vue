@@ -137,8 +137,7 @@ export default {
                 title: '오류!',
                 text: '입력하신 정보가 올바르지 않습니다.',
                 type: 'error',
-                width: '90vw',
-                confirmButtonText: '확인'
+                width: '90vw'
               })
             }
           })
