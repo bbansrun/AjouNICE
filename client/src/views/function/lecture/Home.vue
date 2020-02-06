@@ -8,6 +8,63 @@
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
     />
     <div class="container">
+      <section class="search">
+        <article>
+          <header class="underline underline-inline-block">
+            강의평 검색
+          </header>
+          <model-select
+            v-model="item"
+            :options="options"
+            placeholder="학과/과목/교수명을 입력하거나 목록에서 선택해주세요."
+          />
+        </article>
+      </section>
+      <section class="recent-reviews">
+        <article>
+          <header class="underline underline-inline-block">
+            주목받는 강의평
+          </header>
+        </article>
+        <div class="reviews grid grid-auto">
+          <div class="card">
+            <div class="card-header">
+              <header>현대암호이론및응용(예홍진)</header>
+              <span>사이버보안학과 (전공필수)</span>
+            </div>
+            <div class="card-content">
+              <p>테스트 강의평</p>
+            </div>
+            <div class="card-footer">
+              <span>별이 5개</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <header>현대암호이론및응용(예홍진)</header>
+              <span>사이버보안학과 (전공필수)</span>
+            </div>
+            <div class="card-content">
+              <p>테스트 강의평</p>
+            </div>
+            <div class="card-footer">
+              <span>별이 5개</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <header>현대암호이론및응용(예홍진)</header>
+              <span>사이버보안학과 (전공필수)</span>
+            </div>
+            <div class="card-content">
+              <p>테스트 강의평</p>
+            </div>
+            <div class="card-footer">
+              <span>별이 5개</span>
+            </div>
+          </div>
+        </div>
+      </section>
       <div class="controls">
         <b-button
           tag="router-link"
@@ -22,61 +79,6 @@
           나의 강의평가
         </b-button>
       </div>
-      <section class="search">
-        <article>
-          <header class="underline underline-inline-block">
-            강의평 검색
-          </header>
-          <model-select
-            v-model="item"
-            :options="options"
-            placeholder="학과명, 과목명, 혹은 교수명을 입력하시거나 리스트에서 선택해주세요."
-          />
-        </article>
-      </section>
-      <section class="recent-reviews">
-        <article>
-          <header class="underline underline-inline-block">
-            주목받는 강의평
-          </header>
-        </article>
-        <div class="card">
-          <div class="card-header">
-            <header>현대암호이론및응용(예홍진)</header>
-            <span>사이버보안학과 (전공필수)</span>
-          </div>
-          <div class="card-content">
-            <p>테스트 강의평</p>
-          </div>
-          <div class="card-footer">
-            <span>별이 5개</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <header>현대암호이론및응용(예홍진)</header>
-            <span>사이버보안학과 (전공필수)</span>
-          </div>
-          <div class="card-content">
-            <p>테스트 강의평</p>
-          </div>
-          <div class="card-footer">
-            <span>별이 5개</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <header>현대암호이론및응용(예홍진)</header>
-            <span>사이버보안학과 (전공필수)</span>
-          </div>
-          <div class="card-content">
-            <p>테스트 강의평</p>
-          </div>
-          <div class="card-footer">
-            <span>별이 5개</span>
-          </div>
-        </div>
-      </section>
     </div>
     <Footer />
   </div>
@@ -133,3 +135,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: .5rem;
+  column-gap: .5rem;
+}
+</style>

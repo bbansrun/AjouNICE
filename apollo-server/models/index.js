@@ -15,6 +15,31 @@ db.College = require('./college')(sequelize, Sequelize);
 db.Department = require('./department')(sequelize, Sequelize);
 db.Board = require('./board')(sequelize, Sequelize);
 db.BoardCategory = require('./board_category')(sequelize, Sequelize);
+db.BoardComment = require('./board_comment.js')(sequelize, Sequelize);
+
+db.Board.hasMany(db.BoardComment, {
+  as: 'comments',
+  foreignKey: 'board_idx',
+  sourceKey: 'board_idx',
+});
+
+db.BoardComment.belongsTo(db.Board, {
+  as: 'comments',
+  foreignKey: 'board_idx',
+  targetKey: 'board_idx',
+});
+
+db.User.hasMany(db.BoardComment, {
+  as: 'commenter',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.BoardComment.belongsTo(db.User, {
+  as: 'commenter',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
 
 db.User.hasMany(db.Board, {
   as: 'articles',

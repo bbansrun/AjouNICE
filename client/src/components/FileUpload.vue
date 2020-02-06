@@ -37,8 +37,9 @@
 
 <script>
 import Vue from 'vue'
-import { Upload } from 'buefy'
+import { Field, Upload } from 'buefy'
 
+Vue.use(Field)
 Vue.use(Upload)
 export default {
   data () {

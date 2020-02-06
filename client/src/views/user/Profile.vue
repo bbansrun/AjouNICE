@@ -31,6 +31,8 @@
           </b-button>
         </div>
       </section>
+      <MyPosts :posts="articles" />
+      <MyReviews />
     </div>
     <Footer />
   </div>
@@ -41,17 +43,23 @@ import urljoin from 'url-join'
 import gql from 'graphql-tag'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
+import MyPosts from '@/components/user/MyPosts.vue'
+import MyReviews from '@/components/user/MyLectureReviews.vue'
 import Footer from '@/components/Footer.vue'
+import { User } from '@/assets/graphql/queries'
 export default {
   components: {
     Navigation,
     Landing,
+    MyPosts,
+    MyReviews,
     Footer
   },
   data () {
     return {
       scrollBase: null,
-      user_nm: null
+      user_nm: null,
+      articles: null
     }
   },
   computed: {
@@ -63,11 +71,13 @@ export default {
     }
   },
   beforeMount () {
-    const _this = this
     this.$apollo.query({
-      query: gql`{ findUserByIdx(user_idx: ${_this.$route.params.user_id}) { user_nm } }`
-    }).then(result => {
-      _this.user_nm = result.data.findUserByIdx.user_nm
+      query: gql`${User}`,
+      variables: {
+        id: this.$store.state.user.idx
+      }
+    }).then(({ data }) => {
+      this.articles = data.user.articles
     })
   },
   mounted () {

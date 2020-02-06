@@ -4,6 +4,7 @@ import SubCates from './SubCates.graphql'
 import Post from './PostDetail.graphql'
 import AllCates from './AllCates.graphql'
 import AllPosts from './AllPosts.graphql'
+import User from './UserProfile.graphql'
 import BoardsAndPosts from './BoardsAndPosts.graphql'
 
 export {
@@ -13,5 +14,6 @@ export {
   SubCates,
   AllCates,
   AllPosts,
-  BoardsAndPosts
+  BoardsAndPosts,
+  User
 }

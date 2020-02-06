@@ -11,14 +11,31 @@
       class="container"
       v-html="body"
     />
+    <div
+      v-show="articleWriter()"
+      class="controls"
+    >
+      <b-button
+        tag="router-link"
+        :to="editArticle"
+      >
+        수정
+      </b-button>
+      <button @click="removeArticle()">
+        삭제
+      </button>
+    </div>
+    <Replies />
     <Footer />
   </div>
 </template>
 
 <script>
 import gql from 'graphql-tag'
+import urljoin from 'url-join'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
+import Replies from '@/components/Replies.vue'
 import Footer from '@/components/Footer.vue'
 import { Post } from '@/assets/graphql/queries'
 export default {
@@ -26,6 +43,7 @@ export default {
   components: {
     Navigation,
     Landing,
+    Replies,
     Footer
   },
   data () {
@@ -33,7 +51,16 @@ export default {
       scrollBase: null,
       title: '',
       meta: {},
-      body: ''
+      body: '',
+      user_idx: null
+    }
+  },
+  computed: {
+    editArticle () {
+      let url = this.$route.path
+      url = url.split('/')
+      url.pop()
+      return urljoin(url.join('/'), 'edit')
     }
   },
   beforeCreate () {
@@ -43,6 +70,7 @@ export default {
         id: this.$route.params.post_id
       }
     }).then(({ data }) => {
+      this.user_idx = data.post.user_idx
       this.title = data.post.title
       this.body = data.post.body
     }).catch(error => {
@@ -52,6 +80,23 @@ export default {
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+  },
+  methods: {
+    articleWriter () {
+      console.log(this.$store.state.user.idx, this.user_idx)
+      return this.$store.state.user.idx === this.user_idx
+    },
+    removeArticle () {
+      console.log(this.$route.params.post_id)
+      this.$swal({
+        title: '삭제하시겠습니까?',
+        width: '90vw',
+        text: '삭제 후 복구가 불가능합니다.',
+        type: 'warning',
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소'
+      })
+    }
   }
 }
 </script>

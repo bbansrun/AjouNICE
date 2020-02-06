@@ -79,6 +79,7 @@ type Board {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
+    comments: [BoardComment!]!
 }
 
 type BoardCategory {
@@ -144,6 +145,7 @@ type Mutation {
     lastLogin(userId: String!, ip: String!): Boolean,
     authorize(user_idx: Int!): Boolean,
     resetEmailToken(email: String!): Boolean,
-    writeBoard(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
+    writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
+    editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
 }
 `;

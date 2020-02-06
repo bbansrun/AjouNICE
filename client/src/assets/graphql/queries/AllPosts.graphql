@@ -5,5 +5,9 @@
     title
     body
     nick_nm
+    comments {
+      text
+      nick_nm
+    }
   }
 }

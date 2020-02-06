@@ -14,9 +14,14 @@
         <article class="post">
           <header>
             <h3>{{ post.title }}</h3>
-            <p>
+            <div class="info">
               <small><span>2019.10.11</span>&nbsp;<span>{{ post.nick_nm }}</span></small>
-            </p>
+            </div>
+            <div class="info">
+              <span><small><font-awesome-icon icon="eye" /> {{ views() }}</small></span>&nbsp;
+              <span><small><font-awesome-icon icon="thumbs-up" /> {{ like() }}</small></span>&nbsp;
+              <span><small><font-awesome-icon icon="thumbs-down" /> {{ unlike() }}</small></span>&nbsp;
+            </div>
           </header>
           <div
             v-if="showThumbnail"
@@ -32,7 +37,7 @@
             v-else
             class="replies"
           >
-            <span>{{ 0 }}</span>
+            <span>{{ replyCnt() }}</span>
             <h6>댓글</h6>
           </div>
         </article>
@@ -47,6 +52,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
   props: {
     showHeader: Boolean,
@@ -57,6 +63,12 @@ export default {
     retnPostLink (idx) {
       return `/board/1/1/${idx}`
     }
+  },
+  methods: {
+    views: () => (_.random(31, 49)),
+    like: () => (_.random(31, 49)),
+    unlike: () => (_.random(31, 49)),
+    replyCnt: () => (_.random(31, 49))
   }
 }
 </script>
@@ -79,14 +91,22 @@ section.popular {
     }
     & article {
       width: 100vw;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 6fr 1fr;
       padding: 0 !important;
       margin: 0 !important;
       > header {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         width: 100%;
-        padding: 1rem;
+        padding: .6rem .8rem;
+        overflow: hidden;
+        > h3 {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
         > p {
           margin-top: auto;
         }
@@ -98,9 +118,13 @@ section.popular {
         background: #e2e2e2;
         font-size: 2rem;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         padding: 2rem;
+        > h6 {
+          line-height: 1;
+        }
       }
       > .thumbnail {
         max-width: 100px;
@@ -115,6 +139,9 @@ section.popular {
       color: #000;
       text-align: center;
       padding: .5rem 0;
+      &:hover {
+        background: #333;
+      }
     }
   }
 }

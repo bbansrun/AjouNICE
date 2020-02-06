@@ -33,42 +33,51 @@
       :class="{ 'active': isSlideNavActive }"
     >
       <section class="auth">
-          <div class="signed-in-user" v-if="userState">
-              <h3>{{ userState.name }}님, 환영합니다.</h3>
-              <div class="btn-wrapper">
-                <div class="btn btn-half-extended logout">
-                    <a @click="logout" data-logout>
-                        <font-awesome-icon icon="sign-out-alt" />
-                        <span>로그아웃</span>
-                    </a>
-                </div>
-                <div class="btn btn-half-extended profile">
-                    <router-link :to="userProfileLink">
-                      <font-awesome-icon icon="user" />
-                      <span>마이페이지</span>
-                    </router-link>
-                </div>
-              </div>
-          </div>
-          <div class="not-signed-in-user" v-else>
-            <h3>로그인이 필요합니다.</h3>
-            <div class="btn-wrapper">
-              <div class="btn btn-extended login">
-                <router-link to="/auth/login">
-                    <font-awesome-icon icon="key" />
-                    <span>로그인</span>
-                </router-link>
-              </div>
+        <div
+          v-if="userState"
+          class="signed-in-user"
+        >
+          <h3>{{ userState.name }}님, 환영합니다.</h3>
+          <div class="btn-wrapper">
+            <div class="btn btn-half-extended logout">
+              <a
+                data-logout
+                @click="logout"
+              >
+                <font-awesome-icon icon="sign-out-alt" />
+                <span>로그아웃</span>
+              </a>
+            </div>
+            <div class="btn btn-half-extended profile">
+              <router-link :to="userProfileLink">
+                <font-awesome-icon icon="user" />
+                <span>마이페이지</span>
+              </router-link>
             </div>
           </div>
+        </div>
+        <div
+          v-else
+          class="not-signed-in-user"
+        >
+          <h3>로그인이 필요합니다.</h3>
+          <div class="btn-wrapper">
+            <div class="btn btn-extended login">
+              <router-link to="/auth/login">
+                <font-awesome-icon icon="key" />
+                <span>로그인</span>
+              </router-link>
+            </div>
+          </div>
+        </div>
       </section>
       <section class="major-menus">
         <h3>주요 메뉴</h3>
         <ul class="slide-nav-menus">
           <li
-            class="btn btn-menu"
             v-for="service in services"
             :key="service.id"
+            class="btn btn-menu"
           >
             <router-link :to="service.link">
               <span>{{ service.label }}</span>
@@ -79,10 +88,18 @@
       </section>
       <footer class="footer footer-slide-nav">
         <p>아주나이스는 모바일 기기에 최적화되어 있습니다. (PC 버전 향후 제공예정)</p>
-        <router-link to="/about">서비스 소개</router-link>
-        <router-link to="/contact">광고/제휴/기타문의</router-link>
-        <router-link to="/policy">이용약관</router-link>
-        <router-link to="/sitemap">사이트맵</router-link>
+        <router-link to="/about">
+          서비스 소개
+        </router-link>
+        <router-link to="/contact">
+          광고/제휴/기타문의
+        </router-link>
+        <router-link to="/policy">
+          이용약관
+        </router-link>
+        <router-link to="/sitemap">
+          사이트맵
+        </router-link>
       </footer>
     </div>
   </nav>
@@ -91,26 +108,30 @@
 <script>
 export default {
   props: {
-    services: Array,
     scrollBase: Number
   },
   data () {
     return {
       isSlideNavActive: false,
-      isFixedNavActive: false
+      isFixedNavActive: false,
+      services: [
+        { id: 1, label: '강의평가', link: '/lectures' },
+        { id: 2, label: '아주맛집', link: '/place/gourmet' },
+        { id: 3, label: 'Ajou버스', link: '/place/bus' },
+        { id: 4, label: '학사일정', link: '/schedule' },
+        { id: 5, label: '커뮤니티', link: '/board' }
+      ]
     }
   },
   computed: {
-      userState () {
-        return this.$store.state.user
-      },
-      userProfileLink () {
-          if (this.$store.state.user) {
-              return `/profile/${this.$store.state.user.idx}`
-          } else {
-              return
-          }
+    userState () {
+      return this.$store.state.user
+    },
+    userProfileLink () {
+      if (this.$store.state.user) {
+        return `/profile/${this.$store.state.user.idx}`
       }
+    }
   },
   mounted () {
     window.addEventListener('scroll', (e) => {

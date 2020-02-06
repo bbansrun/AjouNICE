@@ -1,5 +1,5 @@
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
-const { User, College, Department, Board, BoardCategory, sequelize, } = require('./models');
+const { User, College, Department, Board, BoardCategory, BoardComment, sequelize, } = require('./models');
 const { Op, } = require('sequelize');
 const graphqlFields = require('graphql-fields');
 const bcrypt = require('bcrypt');
@@ -39,7 +39,8 @@ module.exports = {
     // User
     async user (parent, args, context, info) {
       const include = [
-        { model: Board, as: 'articles', }
+        { model: Board, as: 'articles', },
+        { model: BoardComment, as: 'commenter', }
       ];
       return await findOne(User, args, info, include);
     },
@@ -51,7 +52,10 @@ module.exports = {
       return await findAll(BoardCategory, args, info, include);
     },
     async posts (parent, args, context, info) {
-      return await findAll(Board, args, info);
+      const include = [
+        { model: BoardComment, as: 'comments', }
+      ];
+      return await findAll(Board, args, info, include);
     },
     async post (parent, args, context, info) {
       return await findOne(Board, args, info);
@@ -84,17 +88,28 @@ module.exports = {
       if (user) return true;
       else return false;
     },
-    // BOARD
-    writeBoard: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip, }) => {
-      const board = await Board.create({
+    // Board
+    writePost: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip, }) => {
+      return await Board.create({
         category_idx,
         user_idx,
-        nick_nm: nick_nm,
+        nick_nm,
         title,
         body,
         reg_ip,
       });
-      return board;
+    },
+    editPost: async (parent, args, context, info) => {
+      const updated = Board.update({
+        ...args,
+      },
+      { where: { board_idx: args.board_idx, }, }
+      );
+      if (updated) {
+        return await findOne(Board, args, info);
+      } else {
+        return {};
+      }
     },
   },
 };

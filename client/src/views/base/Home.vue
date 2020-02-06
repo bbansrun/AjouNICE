@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Navigation :scroll-base="scrollBase" :services="services" />
+    <Navigation :scroll-base="scrollBase" />
     <div class="container">
       <carousel
         ref="scrollBase"
@@ -50,13 +50,6 @@ export default {
   data () {
     return {
       scrollBase: null,
-      services: [
-        { id: 1, label: '강의평가', link: '/lectures' },
-        { id: 2, label: '아주맛집', link: '/place/gourmet' },
-        { id: 3, label: 'Ajou버스', link: '/place/bus' },
-        { id: 4, label: '학사일정', link: '/schedule' },
-        { id: 5, label: '커뮤니티', link: '/board' },
-      ],
       iconNav: [
         { id: 1, title: '커뮤니티', background: 'https://i.pinimg.com/originals/41/5d/0e/415d0e858d30604063794897fbffd048.png', link: '/board/' },
         { id: 2, title: '학사일정', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/schedule' },
