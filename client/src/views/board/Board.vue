@@ -139,9 +139,17 @@ export default {
           title: name
         }
       }).then(({ data }) => {
-        this.category = data.boards[0].category_nm
-        this.category_idx = data.boards[0].category_idx
-        this.getSubCateInfo(data.boards[0].depth + 1, data.boards[0].category_idx, name)
+        try {
+          const { categoryNm, categoryIdx } = data.boards[0]
+          this.category = categoryNm
+          this.category_idx = categoryIdx
+          this.getSubCateInfo(data.boards[0].depth + 1, data.boards[0].category_idx, name)
+        } catch (e) {
+          throw Error(e)
+        }
+      }).catch((error) => {
+        console.log(error)
+        window.location = '/error/404'
       })
     },
     getSubCateInfo (depth, parent, name) {

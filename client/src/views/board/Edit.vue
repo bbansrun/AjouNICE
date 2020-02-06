@@ -93,6 +93,7 @@ import FileUpload from '@/components/FileUpload.vue'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
+import { AllCates, CateInfo, SubCates } from '@/assets/graphql/queries'
 
 Vue.use(CKEditor)
 export default {
@@ -180,15 +181,21 @@ export default {
     const _this = this
     if (!this.$route.params.category) {
       this.$apollo.query({
-        query: gql`{ findBoardCategories(depth: 0) { category_idx category_nm title access_auth private_yn desc } }`
-      }).then(result => {
-        _this.categories = result.data.findBoardCategories.filter((elem) => (elem.access_auth === 'ALL' && elem.private_yn === 'N'))
+        query: gql`${AllCates}`,
+        variables: {
+          depth: 0
+        }
+      }).then(({ data }) => {
+        this.categories = data.boards
       }).catch(error => {
         console.error(error)
       })
     } else {
       this.$apollo.query({
-        query: gql`{ findBoardCategories(depth: 0, title: "${_this.$route.params.category}") { category_idx category_nm title access_auth private_yn desc } }`
+        query: gql`${CateInfo}`,
+        variables: {
+          title: this.$route.params.name
+        }
       }).then(result => {
         _this.category = result.data.findBoardCategories[0].category_nm
         _this.category_idx = result.data.findBoardCategories[0].category_idx
@@ -238,11 +245,14 @@ export default {
     getCateDepth1 () {
       this.sub_categories = []
       this.selectedSubCategory = ''
-      const _this = this
       this.$apollo.query({
-        query: gql`{ findBoardCategories(depth: 1, parent: ${_this.selectedCategory}) { category_idx category_nm title parent access_auth private_yn desc } }`
-      }).then(result => {
-        _this.sub_categories = result.data.findBoardCategories.filter((elem) => (elem.access_auth === 'ALL' && elem.private_yn === 'N'))
+        query: gql`${SubCates}`,
+        variables: {
+          depth: 1,
+          parent: parseInt(this.selectedCategory)
+        }
+      }).then(({ data }) => {
+        this.sub_categories = data.boards
       })
     }
   }
