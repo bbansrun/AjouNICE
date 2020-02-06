@@ -20,6 +20,7 @@ import gql from 'graphql-tag'
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
+import { Post } from '@/assets/graphql/queries'
 export default {
   name: 'App',
   components: {
@@ -36,18 +37,17 @@ export default {
     }
   },
   beforeCreate () {
-    const board_idx = this.$route.params.post_id
     this.$apollo.query({
-      query: gql`{ findBoardByBoardIdx(board_idx: ${board_idx}) { title body } }`
-    }).then(({ data }) => {
-      if (data.findBoardByBoardIdx === null) {
-        throw Error('존재하지 않는 게시물입니다.')
+      query: gql`${Post}`,
+      variables: {
+        id: this.$route.params.post_id
       }
-      this.title = data.findBoardByBoardIdx.title
-      this.body = data.findBoardByBoardIdx.body
+    }).then(({ data }) => {
+      this.title = data.post.title
+      this.body = data.post.body
     }).catch(error => {
       console.error(error)
-      window.location = '/error/404'
+      // window.location = '/error/404'
     })
   },
   mounted () {

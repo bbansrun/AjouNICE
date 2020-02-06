@@ -1,0 +1,7 @@
+query PostsByCate($category_idx: ID!) {
+    posts(category_idx: $category_idx) {
+        title
+        body
+        nick_nm
+    }
+}

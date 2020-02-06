@@ -1,0 +1,9 @@
+{
+  posts {
+    board_idx
+    category_idx
+    title
+    body
+    nick_nm
+  }
+}

@@ -55,6 +55,7 @@ module.exports = {
     },
     async post (parent, args, context, info) {
       return await findOne(Board, args, info);
+    },
   },
   Mutation: {
     sendContactMail: async (root, { name, email, content, }) => {

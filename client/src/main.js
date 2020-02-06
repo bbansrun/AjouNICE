@@ -116,7 +116,7 @@ const encryptedFetchImplementation = async (url, options) => {
 const apolloClient = new ApolloClient({
   link: createPersistedQueryLink({ useGETForHashedQueries: true })
     .concat(createHttpLink({
-      uri: `http://${require('ip').address()}:455/`,
+      uri: `http://${require('ip').address()}:455/graphql`,
       fetch: encryptedFetchImplementation
     })),
   cache: new InMemoryCache()
