@@ -188,6 +188,26 @@ export default {
           }
           transform: unset;
         }
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 0;
+          width: 1px;
+          height: 40px;
+          margin-top: -20px;
+          background: rgba(0,0,0,.5);
+        }
+        &:last-child::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          right: 0;
+          width: 1px;
+          height: 40px;
+          margin-top: -20px;
+          background: rgba(0,0,0,.5);
+        }
         > a {
           display: flex;
           flex-direction: column;
@@ -197,16 +217,6 @@ export default {
           height: 100%;
           font-size: 6vw;
           color: #333;
-          &::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 1px;
-            height: 40px;
-            margin-top: -20px;
-            background: rgba(225,166,67,.5);
-          }
           > span {
             font-size: 3vw;
           }
@@ -266,7 +276,17 @@ export default {
         &:hover {
             color: #333 !important;
         }
-        &::after {
+        &:last-child::after {
+            content: '';
+            position: absolute;
+            background: #aaa;
+            width: 1px;
+            height: 1rem;
+            right: 0;
+            top: 50%;
+            margin-top: -.5rem;
+        }
+        &::before {
             content: '';
             position: absolute;
             background: #aaa;

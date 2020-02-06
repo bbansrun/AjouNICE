@@ -25,23 +25,26 @@ export default {
 
 <style lang="scss" scoped>
 .board-menu {
-    display: flex;
-    flex-direction: row;
+    position: absolute;
+    width: 90vw;
     justify-content: space-between;
     background: -webkit-linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
     background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
     color: #fff;
+    left: 50%;
+    transform: translate(-50%, -2.7rem);
+    display: flex;
+    z-index: 1000;
+    box-shadow: 0px 7px 22px rgba(0,0,0,.25);
     > header {
-        padding: 1rem;
-        > h2 {
-
-        }
+        padding: .6rem;
+        font-weight: bold;
     }
     > nav.board-nav {
         > ul.menu-horizontal {
             > li {
                 display: inline-block;
-                padding: 1rem;
+                padding: .6rem 1rem;
                 > a {
                     display: inherit;
                     color: #fff;

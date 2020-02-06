@@ -4,6 +4,7 @@ const { Op, } = require('sequelize');
 const graphqlFields = require('graphql-fields');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const fetch = require('node-fetch');
 
 sequelize.sync({});
 
@@ -62,6 +63,11 @@ module.exports = {
     },
   },
   Mutation: {
+    notice: async (root, args, context, info) => {
+      const response = await fetch(`http://localhost:5000/api/notice/${args.code}`);
+      const result = await response.json();
+      return result.result;
+    },
     sendContactMail: async (root, { name, email, content, }) => {
       sendContactMail(name, email, content);
       return true;

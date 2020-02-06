@@ -15,12 +15,9 @@
           <header>
             <h3>{{ post.title }}</h3>
             <div class="info">
-              <small><span>2019.10.11</span>&nbsp;<span>{{ post.nick_nm }}</span></small>
-            </div>
-            <div class="info">
-              <span><small><font-awesome-icon icon="eye" /> {{ views() }}</small></span>&nbsp;
-              <span><small><font-awesome-icon icon="thumbs-up" /> {{ like() }}</small></span>&nbsp;
-              <span><small><font-awesome-icon icon="thumbs-down" /> {{ unlike() }}</small></span>&nbsp;
+              <span><small>{{ new Date(post.reg_dt).toLocaleDateString() }}</small></span>&nbsp;
+              <span><small>{{ post.nick_nm }}</small></span>&nbsp;
+              <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt }}</small></span>&nbsp;
             </div>
           </header>
           <div
@@ -37,7 +34,7 @@
             v-else
             class="replies"
           >
-            <span>{{ replyCnt() }}</span>
+            <span>{{ post.cmt_cnt }}</span>
             <h6>댓글</h6>
           </div>
         </article>
@@ -52,7 +49,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 export default {
   props: {
     showHeader: Boolean,
@@ -63,12 +59,6 @@ export default {
     retnPostLink (idx) {
       return `/board/1/1/${idx}`
     }
-  },
-  methods: {
-    views: () => (_.random(31, 49)),
-    like: () => (_.random(31, 49)),
-    unlike: () => (_.random(31, 49)),
-    replyCnt: () => (_.random(31, 49))
   }
 }
 </script>

@@ -130,6 +130,14 @@ type RestaurantBoard {
     upt_dt: Date
 }
 
+type Notice {
+    unit: String!
+    code: String!
+    boardName: String!
+    title: String!
+    link: String!
+}
+
 type Query {
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
     colleges(exist_yn: String!): [College]
@@ -140,12 +148,13 @@ type Query {
 }
 
 type Mutation {
-    sendContactMail(name: String!, email: String!, content: String!): Boolean,
-    sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean,
-    lastLogin(userId: String!, ip: String!): Boolean,
-    authorize(user_idx: Int!): Boolean,
-    resetEmailToken(email: String!): Boolean,
-    writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
-    editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board,
+    notice(code: String!): [Notice]
+    sendContactMail(name: String!, email: String!, content: String!): Boolean
+    sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean
+    lastLogin(userId: String!, ip: String!): Boolean
+    authorize(user_idx: Int!): Boolean
+    resetEmailToken(email: String!): Boolean
+    writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
+    editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
 }
 `;

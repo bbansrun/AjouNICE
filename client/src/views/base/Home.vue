@@ -21,10 +21,12 @@
       <PostList
         show-header
         show-thumbnail
+        :items="posts"
       />
       <PostList
         show-header
         show-thumbnail
+        :items="posts"
       />
     </div>
     <Footer />
@@ -32,12 +34,13 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import Navigation from '@/components/Navigation.vue'
 import Welcome from '@/components/Welcome.vue'
 import IconNav from '@/components/IconNav.vue'
 import PostList from '@/components/PostList.vue'
 import Footer from '@/components/Footer.vue'
-
+import { AllPosts } from '@/assets/graphql/queries'
 export default {
   name: 'Home',
   components: {
@@ -75,16 +78,22 @@ export default {
       ],
       carouselRadio: [{
         id: 1,
-        message: '[빤스런] 김호영',
+        message: '[공지사항] 신종 코로나바이러스로 인한 입학식, 졸업식 등 2월 주요 행사 취소 안내',
         content (createElement, content) {
           return createElement('a', {
             attrs: {
               href: '#'
             },
-
             class: 'broadcast-content'
           }, [
-            createElement('span', [`${content.message} ${content.id}`]),
+            createElement('span', {
+              style: {
+                width: '80vw',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
+              }
+            }, [`${content.message}`]),
             createElement('feather', {
               props: {
                 size: 16,
@@ -93,57 +102,22 @@ export default {
             })
           ])
         }
-      },
-      {
-        id: 2,
-        message: '[빤스런] 최성흠',
-        content (createElement, content) {
-          return createElement('a', {
-            attrs: {
-              href: '#'
-            },
-
-            class: 'broadcast-content'
-          }, [
-            createElement('span', [`${content.message} ${content.id}`]),
-            createElement('feather', {
-              props: {
-                size: 16,
-                type: 'chevron-right'
-              }
-            })
-          ])
-        }
-      },
-      {
-        id: 3,
-        message: '[빤스런] 전지원',
-        content (createElement, content) {
-          return createElement('a', {
-            attrs: {
-              href: '#'
-            },
-
-            class: 'broadcast-content'
-          }, [
-            createElement('span', [`${content.message} ${content.id}`]),
-            createElement('feather', {
-              props: {
-                size: 16,
-                type: 'chevron-right'
-              }
-            })
-          ])
-        }
-      }
-      ]
+      }],
+      posts: []
     }
   },
   beforeCreate () {
     document.body.classList.remove('auth')
   },
+  beforeMount () {
+    this.$apollo.query({
+      query: gql`${AllPosts}`
+    }).then(({ data }) => {
+      this.posts = data.posts
+    })
+  },
   mounted () {
-    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom
+    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   }
 }
 </script>
@@ -151,5 +125,9 @@ export default {
 <style lang="scss" scoped>
 .carousel {
   min-height: unset;
+}
+
+.icon-nav {
+  padding-top: 3rem;
 }
 </style>

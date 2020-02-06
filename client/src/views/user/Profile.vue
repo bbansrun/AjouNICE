@@ -10,13 +10,6 @@
       <section class="user">
         <div class="notification is-primary">
           <b-button
-            type="is-info"
-            tag="router-link"
-            :to="myLectureReviewsLink"
-          >
-            나의 강의평가
-          </b-button>
-          <b-button
             type="is-warning"
             tag="router-link"
             :to="profileEditUrl"
@@ -33,6 +26,29 @@
       </section>
       <MyPosts :posts="articles" />
       <MyReviews />
+      <!-- 소속 학과 공지사항 -->
+      <section class="notice">
+        <article>
+          <header class="underline underline-inline-block">
+            소속학과 공지사항
+          </header>
+          <div
+            v-for="notice in notices"
+            :key="notice.link"
+            class="notice"
+          >
+            <div class="card">
+              <a
+                :href="notice.link"
+                target="_blank"
+              >
+                <header>{{ notice.title }}</header>
+                <p>{{ notice.unit }}</p>
+              </a>
+            </div>
+          </div>
+        </article>
+      </section>
     </div>
     <Footer />
   </div>
@@ -47,6 +63,7 @@ import MyPosts from '@/components/user/MyPosts.vue'
 import MyReviews from '@/components/user/MyLectureReviews.vue'
 import Footer from '@/components/Footer.vue'
 import { User } from '@/assets/graphql/queries'
+import { Notice } from '@/assets/graphql/mutations'
 export default {
   components: {
     Navigation,
@@ -59,7 +76,8 @@ export default {
     return {
       scrollBase: null,
       user_nm: null,
-      articles: null
+      articles: null,
+      notices: []
     }
   },
   computed: {
@@ -78,6 +96,15 @@ export default {
       }
     }).then(({ data }) => {
       this.articles = data.user.articles
+      this.user_nm = data.user.user_nm
+    })
+    this.$apollo.mutate({
+      mutation: gql`${Notice}`,
+      variables: {
+        code: 'IT0003' // TEST Case
+      }
+    }).then(({ data }) => {
+      this.notices = data.notice
     })
   },
   mounted () {

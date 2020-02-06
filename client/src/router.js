@@ -159,6 +159,11 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
+      path: '/board/:post_id/view',
+      component: PostView,
+      beforeEnter: requireAuth
+    },
+    {
       path: '/board/:category',
       component: Board,
       beforeEnter: requireAuth
@@ -176,11 +181,6 @@ export default new Router({
     {
       path: '/board/:category/:name/new',
       component: Edit,
-      beforeEnter: requireAuth
-    },
-    {
-      path: '/board/:category/:name/:post_id/view',
-      component: PostView,
       beforeEnter: requireAuth
     },
     {
