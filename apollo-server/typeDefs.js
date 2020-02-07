@@ -1,6 +1,12 @@
 module.exports = `
 scalar Date
 
+input ImageInput {
+    name: String!
+    description: String
+    file: Upload!
+}
+
 enum Role {
     ADMIN
     USER
