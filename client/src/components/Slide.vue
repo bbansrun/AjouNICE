@@ -9,12 +9,12 @@
 
 <script>
 export default {
-    name: 'slide',
-    props: {
-        largeTitle: String,
-        smallTitle: String,
-        isLargeTitleLogo: Boolean,
-        link: String
-    }
+  name: 'slide',
+  props: {
+    largeTitle: String,
+    smallTitle: String,
+    isLargeTitleLogo: Boolean,
+    link: String
+  }
 }
 </script>

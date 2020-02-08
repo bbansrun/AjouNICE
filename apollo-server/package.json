@@ -5,7 +5,8 @@
   "main": "apollo.js",
   "scripts": {
     "start": "node apollo.js",
-    "dev": "NODE_ENV=development node apollo.js"
+    "dev": "NODE_ENV=development node apollo.js",
+    "prod": "NODE_ENV=production node apollo.js"
   },
   "keywords": [],
   "author": "Bbansrun",
