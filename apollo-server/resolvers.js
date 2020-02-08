@@ -1,87 +1,73 @@
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
-const { User, College, Department, Board, BoardCategory, sequelize, } = require('./models');
+const { User, College, Department, Board, BoardCategory, BoardComment, sequelize, } = require('./models');
 const { Op, } = require('sequelize');
 const graphqlFields = require('graphql-fields');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const fetch = require('node-fetch');
 
-sequelize.sync();
+sequelize.sync({});
 
-// Query Trigger 압축
-const selectAttributes = (info) => {
-  return Object.keys(graphqlFields(info)).filter((elem) => elem !== '__typename');
+const findOne = async (model, args, info, include = []) => {
+  return await model.findOne({
+    attributes: graphqlFields(info),
+    where: { ...args, },
+    include: include,
+  });
 };
 
-const getOne = (model, conditions) => async (parent, args, context, info) => {
-  const attributes = selectAttributes(info);
-  return await model.findOne({ attributes: attributes, where: conditions, });
-};
-
-const getAll = (model, conditions, include = []) => async (parent, args, context, info) => {
-  const attributes = selectAttributes(info);
-  return await model.findAll({ attributes: attributes, where: conditions, include: include, });
+const findAll = async (model, args, info, include = []) => {
+  return await model.findAll({
+    attributes: graphqlFields(info),
+    where: { ...args, },
+    include: include,
+  });
 };
 
 module.exports = {
   Query: {
-    // Department
-    async findDptByCollege (parent, args, context, info) {
-      const conditions = { college_cd: args.college_cd, };
-      return await getAll(Department, conditions)(parent, args, context, info);
-    },
     // College
-    async findColleges (parent, args, context, info) {
-      const conditions = { exist_yn: args.exist_yn, };
-      return await getAll(College, conditions)(parent, args, context, info);
+    async colleges (parent, args, context, info) {
+      const include = [
+        { model: Department, as: 'departments', }
+      ];
+      return await findAll(College, args, info, include);
+    },
+    // Department
+    async departments (parent, args, context, info) {
+      return await findAll(Department, args, info);
     },
     // User
-    async findNickName (parent, args, context, info) {
-      const conditions = { nick_nm: args.nick_nm, };
-      return await getAll(User, conditions)(parent, args, context, info);
-    },
-    async findEmail (parent, args, context, info) {
-      const conditions = { email: args.email, };
-      return await getAll(User, conditions)(parent, args, context, info);
-    },
-    async findUserID (parent, args, context, info) {
-      const conditions = { user_id: args.userId, };
-      return await getAll(User, conditions)(parent, args, context, info);
-    },
-    async findUserByToken (parent, args, context, info) {
-      const conditions = { auth_token: args.token, };
-      return await getOne(User, conditions)(parent, args, context, info);
-    },
-    async findUserByIdx (parent, args, context, info) {
-      const conditions = { user_idx: args.user_idx, };
-      return await getOne(User, conditions)(parent, args, context, info);
-    },
-    // BoardCategory
-    async findBoardCategories (parent, args, context, info) {
-      const conditions = { depth: args.depth, };
-      if (args.title) conditions.title = args.title;
-      if (args.parent) conditions.parent = args.parent;
-      return await getAll(BoardCategory, conditions)(parent, args, context, info);
+    async user (parent, args, context, info) {
+      const include = [
+        { model: Board, as: 'articles', },
+        { model: BoardComment, as: 'commenter', }
+      ];
+      return await findOne(User, args, info, include);
     },
     // Board
-    async findBoardsByBigCategory (parent, args, context, info) {
-      const targetCategories = await BoardCategory.findAll({
-        attributes: ['category_idx'],
-        where: { parent: args.category_idx, },
-      });
-      const categoryIndice = targetCategories.map((model) => model.category_idx);
-      const conditions = { category_idx: { [Op.in]: categoryIndice, }, };
-      return await getAll(Board, conditions)(parent, args, context, info);
+    async boards (parent, args, context, info) {
+      const include = [
+        { model: Board, as: 'posts', }
+      ];
+      return await findAll(BoardCategory, args, info, include);
     },
-    async findBoardsBySmallCategory (parent, args, context, info) {
-      const conditions = { category_idx: args.category_idx, };
-      return await getAll(Board, conditions)(parent, args, context, info);
+    async posts (parent, args, context, info) {
+      const include = [
+        { model: BoardComment, as: 'comments', }
+      ];
+      return await findAll(Board, args, info, include);
     },
-    async findBoardByBoardIdx (parent, args, context, info) {
-      const conditions = { board_idx: args.board_idx, };
-      return await getOne(Board, conditions)(parent, args, context, info);
+    async post (parent, args, context, info) {
+      return await findOne(Board, args, info);
     },
   },
   Mutation: {
+    notice: async (root, args, context, info) => {
+      const response = await fetch(`http://localhost:5000/api/notice/${args.code}`);
+      const result = await response.json();
+      return result.result;
+    },
     sendContactMail: async (root, { name, email, content, }) => {
       sendContactMail(name, email, content);
       return true;
@@ -108,17 +94,28 @@ module.exports = {
       if (user) return true;
       else return false;
     },
-    // BOARD
-    writeBoard: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip, }) => {
-      const board = await Board.create({
+    // Board
+    writePost: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip, }) => {
+      return await Board.create({
         category_idx,
         user_idx,
-        nick_nm: nick_nm,
+        nick_nm,
         title,
         body,
         reg_ip,
       });
-      return board;
+    },
+    editPost: async (parent, args, context, info) => {
+      const updated = Board.update({
+        ...args,
+      },
+      { where: { board_idx: args.board_idx, }, }
+      );
+      if (updated) {
+        return await findOne(Board, args, info);
+      } else {
+        return {};
+      }
     },
   },
 };

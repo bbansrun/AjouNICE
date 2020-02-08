@@ -3,10 +3,10 @@
 
 import Vue from 'vue'
 
-let filters = {
+const filters = {
 
   formatTimestamp (timestamp) {
-    let datetime = new Date(timestamp)
+    const datetime = new Date(timestamp)
     return datetime.toLocaleTimeString('ko-KR')
   }
 }

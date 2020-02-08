@@ -1,0 +1,7 @@
+query CateInfo($title: String!) {
+  boards(title: $title) {
+    category_nm
+    category_idx
+    depth
+  }
+}

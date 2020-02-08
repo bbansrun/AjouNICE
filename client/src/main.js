@@ -7,7 +7,16 @@ import store from './store'
 import './filters'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSignOutAlt, faUser, faPen, faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+  faSignOutAlt,
+  faUser,
+  faPen,
+  faPlus,
+  faUpload,
+  faKey,
+  faArrowAltCircleRight,
+  faEye
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import VueCarousel from '@chenfengyuan/vue-carousel'
@@ -45,6 +54,10 @@ library.add(faSignOutAlt)
 library.add(faUser)
 library.add(faPen)
 library.add(faPlus)
+library.add(faKey)
+library.add(faArrowAltCircleRight)
+library.add(faUpload)
+library.add(faEye)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const shouldEncode = (url, options) => {
@@ -113,7 +126,7 @@ const encryptedFetchImplementation = async (url, options) => {
 const apolloClient = new ApolloClient({
   link: createPersistedQueryLink({ useGETForHashedQueries: true })
     .concat(createHttpLink({
-      uri: `http://${require('ip').address()}:455/`,
+      uri: `http://${require('ip').address()}:455/graphql`,
       fetch: encryptedFetchImplementation
     })),
   cache: new InMemoryCache()

@@ -1,27 +1,146 @@
 <template>
-    <div class="wrapper">
-        <Navigation :scrollBase="scrollBase" />
-        <Landing ref="scrollBase" title="강의평가" description="여러분의 수강후기를 공유해주세요." background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg" />
-        <div class="container"></div>
-        <Footer />
+  <div class="wrapper">
+    <Navigation :scroll-base="scrollBase" />
+    <Landing
+      ref="scrollBase"
+      title="강의평가"
+      description="여러분의 수강후기를 공유해주세요."
+      background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
+    />
+    <div class="container">
+      <section class="search">
+        <article>
+          <header class="underline underline-inline-block">
+            강의평 검색
+          </header>
+          <model-select
+            v-model="item"
+            :options="options"
+            placeholder="학과/과목/교수명을 입력하거나 목록에서 선택해주세요."
+          />
+        </article>
+      </section>
+      <section class="recent-reviews">
+        <article>
+          <header class="underline underline-inline-block">
+            주목받는 강의평
+          </header>
+        </article>
+        <div class="reviews grid grid-auto">
+          <div class="card">
+            <div class="card-header">
+              <header>현대암호이론및응용(예홍진)</header>
+              <span>사이버보안학과 (전공필수)</span>
+            </div>
+            <div class="card-content">
+              <p>테스트 강의평</p>
+            </div>
+            <div class="card-footer">
+              <span>별이 5개</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <header>현대암호이론및응용(예홍진)</header>
+              <span>사이버보안학과 (전공필수)</span>
+            </div>
+            <div class="card-content">
+              <p>테스트 강의평</p>
+            </div>
+            <div class="card-footer">
+              <span>별이 5개</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <header>현대암호이론및응용(예홍진)</header>
+              <span>사이버보안학과 (전공필수)</span>
+            </div>
+            <div class="card-content">
+              <p>테스트 강의평</p>
+            </div>
+            <div class="card-footer">
+              <span>별이 5개</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="controls">
+        <b-button
+          tag="router-link"
+          :to="evaluateLink"
+        >
+          강의평가 작성
+        </b-button>
+        <b-button
+          tag="router-link"
+          :to="myLectureReviewsLink"
+        >
+          나의 강의평가
+        </b-button>
+      </div>
     </div>
+    <Footer />
+  </div>
 </template>
 
 <script>
+import urljoin from 'url-join'
+import { ModelSelect } from 'vue-search-select'
+import 'vue-search-select/dist/VueSearchSelect.css'
+
 import Navigation from '@/components/Navigation.vue'
 import Landing from '@/components/Landing.vue'
 import Footer from '@/components/Footer.vue'
+
 export default {
- components: {
-     Navigation, Landing, Footer
- },
- data () {
-     return {
-         scrollBase: null
-     }
- },
- mounted () {
+  components: {
+    Navigation, Landing, Footer, ModelSelect
+  },
+  data () {
+    return {
+      scrollBase: null,
+      options: [
+        { value: '1', text: '사이버보안학과 | 현대암호이론및응용(예홍진)' },
+        { value: '2', text: '소프트웨어학과 | 컴퓨터네트워크 (강경란)' },
+        { value: '3', text: '소프트웨어학과 | 객체지향프로그래밍 (떼무)' },
+        { value: '4', text: '소프트웨어학과 | 운영체제(고정길)' },
+        { value: '5', text: '사이버보안학과 | 사이버보안사례특강(곽진)' }
+      ],
+      item: {
+        value: '',
+        text: ''
+      }
+    }
+  },
+  computed: {
+    evaluateLink () {
+      return urljoin(this.$route.path, '/evaluate')
+    },
+    myLectureReviewsLink () {
+      return `/profile/${this.$store.state.user.idx}/lectures/reviews`
+    }
+  },
+  mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom
- }
+  },
+  methods: {
+    reset () {
+      this.item = {}
+    },
+    selectFromParentComponent1 () {
+      // select option from parent component
+      this.item = this.options[0]
+    }
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: .5rem;
+  column-gap: .5rem;
+}
+</style>

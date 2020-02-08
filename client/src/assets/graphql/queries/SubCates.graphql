@@ -1,0 +1,7 @@
+query SubCates($depth: Int, $parent: Int) {
+    boards(depth: $depth, parent: $parent) {
+        category_nm
+        category_idx
+        title
+    }
+}

@@ -1,34 +1,51 @@
 <template>
-    <section class="popular">
-        <header v-if="showHeader">
-          <small>핫이슈</small>
-          <h2>주목해야할 게시물</h2>
-        </header>
-        <div class="posts" :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }" v-for="post in items" :key="post.board_idx">
-          <a :href="`./${post.board_idx}/view`">
-            <article class="post">
-              <header>
-                <h3>{{ post.title }}</h3>
-                <p>
-                  <small><span>2019.10.11</span>&nbsp;<span>{{ post.nick_nm }}</span></small>
-                </p>
-              </header>
-              <div class="thumbnail" v-if="showThumbnail">
-                <img src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4" height="100" alt="gravatar">
-              </div>
-              <div class="replies" v-else>
-                  <span>{{ 0 }}</span>
-                  <h6>댓글</h6>
-              </div>
-            </article>
-          </a>
-        </div>
-        <div class="view-more">
-          <a href="#">
-            <small>게시물 더보기</small>
-          </a>
-        </div>
-    </section>
+  <section class="popular">
+    <header v-if="showHeader">
+      <small>핫이슈</small>
+      <h2>주목해야할 게시물</h2>
+    </header>
+    <div
+      v-for="post in items"
+      :key="post.board_idx"
+      class="posts"
+      :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }"
+    >
+      <a :href="`./${post.board_idx}/view`">
+        <article class="post">
+          <header>
+            <h3>{{ post.title }}</h3>
+            <div class="info">
+              <span><small>{{ new Date(post.reg_dt).toLocaleDateString() }}</small></span>&nbsp;
+              <span><small>{{ post.nick_nm }}</small></span>&nbsp;
+              <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt }}</small></span>&nbsp;
+            </div>
+          </header>
+          <div
+            v-if="showThumbnail"
+            class="thumbnail"
+          >
+            <img
+              src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4"
+              height="100"
+              alt="gravatar"
+            >
+          </div>
+          <div
+            v-else
+            class="replies"
+          >
+            <span>{{ post.cmt_cnt }}</span>
+            <h6>댓글</h6>
+          </div>
+        </article>
+      </a>
+    </div>
+    <div class="view-more">
+      <a href="#">
+        <small>게시물 더보기</small>
+      </a>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -64,14 +81,22 @@ section.popular {
     }
     & article {
       width: 100vw;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 6fr 1fr;
       padding: 0 !important;
       margin: 0 !important;
       > header {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         width: 100%;
-        padding: 1rem;
+        padding: .6rem .8rem;
+        overflow: hidden;
+        > h3 {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
         > p {
           margin-top: auto;
         }
@@ -83,9 +108,13 @@ section.popular {
         background: #e2e2e2;
         font-size: 2rem;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         padding: 2rem;
+        > h6 {
+          line-height: 1;
+        }
       }
       > .thumbnail {
         max-width: 100px;
@@ -100,6 +129,9 @@ section.popular {
       color: #000;
       text-align: center;
       padding: .5rem 0;
+      &:hover {
+        background: #333;
+      }
     }
   }
 }

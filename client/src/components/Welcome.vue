@@ -1,37 +1,56 @@
 <template>
-    <section class="welcome">
-        <header>
-            <h4>{{ username }}님, 환영합니다.</h4>
-        </header>
-        <nav class="welcome-nav">
-            <ul class="menu menu-horizontal">
-                <li>
-                    <router-link :to="`/profile/${user_id}`">
-                        <font-awesome-icon icon="user" />
-                    </router-link>
-                </li>
-                <li>
-                    <a @click="logout">
-                        <font-awesome-icon icon="sign-out-alt" />
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </section>
+  <section
+    v-if="$store.state.user"
+    class="welcome signed-in-user"
+  >
+    <header>
+      <h4>{{ $store.state.user.name }}님, 환영합니다.</h4>
+    </header>
+    <nav class="welcome-nav">
+      <ul class="menu menu-horizontal">
+        <li>
+          <router-link :to="`/profile/${$store.state.user.idx}`">
+            <font-awesome-icon icon="user" />
+          </router-link>
+        </li>
+        <li>
+          <a @click="logout">
+            <font-awesome-icon icon="sign-out-alt" />
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </section>
+  <section
+    v-else
+    class="welcome not-signed-in-user"
+  >
+    <header>
+      <h4>서비스 이용을 위해 로그인하시기 바랍니다.</h4>
+    </header>
+    <nav class="welcome-nav">
+      <ul class="menu menu-horizontal">
+        <li>
+          <router-link to="/auth/login">
+            <font-awesome-icon icon="key" />
+          </router-link>
+        </li>
+      </ul>
+    </nav>
+  </section>
 </template>
 
 <script>
 export default {
-  props: ['username', 'user_id'],
   methods: {
     logout () {
       this.$store.dispatch('LOGOUT').then(() => {
         document.body.classList.toggle('loading')
         window.location = '/'
       })
-      .catch(error => {
-        console.error(error)
-      })
+        .catch(error => {
+          console.error(error)
+        })
     }
   }
 }
@@ -39,23 +58,26 @@ export default {
 
 <style lang="scss" scoped>
 .welcome {
-    display: flex;
-    flex-direction: row;
+    position: absolute;
+    width: 90vw;
     justify-content: space-between;
     background: -webkit-linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
     background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
     color: #fff;
+    left: 50%;
+    transform: translate(-50%, -1.5rem);
+    display: flex;
+    z-index: 1000;
+    box-shadow: 0px 7px 22px rgba(0,0,0,.25);
     > header {
-        padding: 1rem;
-        > h2 {
-
-        }
+      font-weight: bold;
+      padding: .6rem;
     }
     > nav.welcome-nav {
         > ul.menu-horizontal {
             > li {
                 display: inline-block;
-                padding: 1rem;
+                padding: .6rem 1rem;
                 > a {
                     display: inherit;
                     color: #fff;

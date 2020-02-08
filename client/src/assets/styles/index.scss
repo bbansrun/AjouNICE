@@ -1,5 +1,5 @@
-$logo: #062A5F;
-$logo_aux: #17553E;
+$logo: #0D4AB3;
+$logo_aux: #1F5ECC;
 $auth: auth;
 
 ::-webkit-scrollbar {
@@ -11,13 +11,13 @@ $auth: auth;
   color: #fff;
 }
 
-a:hover {
-  color: #fff !important;
-}
+// a:hover {
+//   color: #fff !important;
+// }
 
 body {
   font: {
-    family: 'Source Sans Pro', 'KoPub Dotum', 'MalgeunGothic', 'AppleGothic', sans-serif;
+    family: 'Montserrat', 'NanumSquare', 'Source Sans Pro', 'KoPub Dotum', 'MalgeunGothic', 'AppleGothic', sans-serif;
     weight: 300;
     size: 18px;
   }
@@ -129,6 +129,7 @@ nav {
     &.active {
       > .fixed-nav {
         background: $logo;
+        transition: .5s all ease-in-out;
       }
     }
     > .fixed-nav {
@@ -214,8 +215,7 @@ nav {
       left: -100vw;
       width: 100%;
       height: calc(100vh - 45px);
-      padding: .5rem 1rem;
-      background: #e3e3e3;
+      background: #eee;
       transition: .4s all ease;
       box-sizing: border-box;
       &.active {
@@ -451,13 +451,13 @@ footer {
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,.4);
+      background: rgba(0,0,0,.75);
       z-index: -1;
   }
   > .slide-content {
       position: absolute;
       line-height: 1;
-      bottom: 1rem;
+      bottom: 2.4rem;
       left: 1rem;
       z-index: 1;
       > h2 {
@@ -468,7 +468,7 @@ footer {
   background: url('http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual03.jpg') no-repeat center center/cover;
   color: #fff;
   font-size: 1.5rem;
-  min-height: 10rem;
+  min-height: 12rem;
 }
 
 // Broadcast

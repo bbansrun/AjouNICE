@@ -158,7 +158,11 @@ form {
             position: relative;
             width: 100%;
             > .input-form {
-                input {
+                > button {
+                    width: calc(100% - 4rem);
+                    margin: 1rem 0 0 0;
+                }
+                & input {
                     &[type="button"] {
                         cursor: pointer;
                         color: #fff;
@@ -222,7 +226,7 @@ form {
                     color: #333;
                     text-align: left;
                 }
-                & div[class$="-wrapper"] {
+                & .button-wrapper, .radio-wrapper {
                     text-align: right;
                 }
                 + .input-form > input {

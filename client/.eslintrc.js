@@ -4,8 +4,8 @@ module.exports = {
     es6: true
   },
   extends: [
-    'plugin:vue/essential',
-    'standard'
+    'standard',
+    'plugin:vue/recommended'
   ],
   globals: {
     Atomics: 'readonly',
@@ -16,8 +16,14 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: [
+    'html',
+    'standard',
     'vue'
   ],
   rules: {
+    // allow async-await
+    'generator-star-spacing': 'off',
+    // allow debugger during development
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

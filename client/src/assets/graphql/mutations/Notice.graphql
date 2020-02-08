@@ -1,0 +1,8 @@
+mutation getNotice($code: String!) {
+    notice(code: $code) {
+        unit
+        boardName
+        title
+        link
+    }
+}

@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/bbansrun/AjouNICE/issues"
   },
-  "homepage": "https://github.com/bbansrun/AjouNICE#readme"
+  "homepage": "https://github.com/bbansrun/AjouNICE#readme",
+  "dependencies": {
+    "core-js": "^2.6.11"
+  }
 }

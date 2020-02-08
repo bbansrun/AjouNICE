@@ -5,3 +5,8 @@ __pycache__/
 
 yarn-error.log
 yarn.lock
+
+docker-compose.yml
+res-server/
+
+.env
