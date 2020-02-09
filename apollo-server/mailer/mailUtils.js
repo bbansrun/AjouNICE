@@ -46,5 +46,4 @@ const sendContactMail = async (name, email, content) => {
 module.exports = {
   sendConfirmMail,
   sendContactMail,
-}
-;
+};

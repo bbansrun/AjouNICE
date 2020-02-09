@@ -193,5 +193,4 @@ module.exports = (name, content) => `
         </footer>
     </body>
 </html>
-`
-;
+`;

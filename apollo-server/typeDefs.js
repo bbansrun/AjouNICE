@@ -114,6 +114,7 @@ type BoardComment {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
+    commenter: User!
 }
 
 type RestaurantBoard {
@@ -151,6 +152,7 @@ type Query {
     boards(depth: Int, title: String, parent: Int): [BoardCategory]
     post(board_idx: ID!): Board
     posts(category_idx: ID): [Board] 
+    comment(cmt_idx: ID!): BoardComment
 }
 
 type Mutation {

@@ -194,5 +194,4 @@ module.exports = (confirmLink) => `
         </footer>
     </body>
 </html>
-`
-;
+`;
