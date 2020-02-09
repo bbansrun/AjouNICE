@@ -107,7 +107,8 @@ type BoardCategory {
 type BoardComment {
     cmt_idx: ID!
     board_idx: Board!
-    user_idx: User!
+    user: User!
+    user_idx: Int!
     nick_nm: String
     text: String
     reg_ip: String
@@ -163,6 +164,8 @@ type Mutation {
     authorize(user_idx: Int!): Boolean
     resetEmailToken(email: String!): Boolean
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
+    writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String): Boolean
+    removeReply(cmt_idx: Int!): Boolean
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
 }
 `;

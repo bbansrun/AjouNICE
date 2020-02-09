@@ -114,12 +114,24 @@ module.exports = {
         reg_ip,
       });
     },
+    writeReply: async (parent, args, context, info) => {
+      const created = await BoardComment.create({ ...args, });
+      if (created) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    removeReply: async (parent, args, context, info) => {
+      const removed = await BoardComment.destroy({ where: { ...args, }, });
+      if (removed) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     editPost: async (parent, args, context, info) => {
-      const updated = Board.update({
-        ...args,
-      },
-      { where: { board_idx: args.board_idx, }, }
-      );
+      const updated = await Board.update({ ...args, }, { where: { board_idx: args.board_idx, }, });
       if (updated) {
         return await findOne(Board, args, info);
       } else {

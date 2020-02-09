@@ -31,7 +31,7 @@ input {
         border-image-source: -webkit-linear-gradient(135deg, transparent 0%, transparent 100%);
         border-image-source: linear-gradient(135deg, transparent 0%, transparent 100%);
         border-image-slice: 1;
-        &:not(.error) {
+        &:not(.error):not([no-validate]) {
             &:valid {
                 color: #fff;
                 &::placeholder{

@@ -4,5 +4,13 @@ query Post($id: ID!) {
         title
         body
         nick_nm
+        comments {
+            cmt_idx
+            user_idx
+            text
+            nick_nm
+            reg_dt
+            upt_dt
+        }
     }
 }

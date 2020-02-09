@@ -25,7 +25,10 @@
         삭제
       </button>
     </div>
-    <Replies />
+    <Replies
+      :post="$route.params.post_id"
+      :content="replies"
+    />
     <Footer />
   </div>
 </template>
@@ -52,7 +55,8 @@ export default {
       title: '',
       meta: {},
       body: '',
-      user_idx: null
+      user_idx: null,
+      replies: []
     }
   },
   computed: {
@@ -73,6 +77,7 @@ export default {
       this.user_idx = data.post.user_idx
       this.title = data.post.title
       this.body = data.post.body
+      this.replies = data.post.comments
     }).catch(error => {
       console.error(error)
       // window.location = '/error/404'

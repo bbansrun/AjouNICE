@@ -10,7 +10,7 @@
       class="posts"
       :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }"
     >
-      <a :href="`./${post.board_idx}/view`">
+      <a :href="`/board/${post.board_idx}/view`">
         <article class="post">
           <header>
             <h3>{{ post.title }}</h3>
