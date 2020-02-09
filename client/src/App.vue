@@ -46,7 +46,18 @@ export default {
   top: 1rem;
   z-index: 10000;
   > .flash__wrapper {
-    box-shadow: 0 0 5px rgba(0, 0, 0, .65);
+    > .flash__message {
+      -webkit-animation: fadeOut 1s;
+      animation: fadeOut 1s;
+      animation-fill-mode: forwards;
+      animation-delay: 2s;
+      transition: .2s all cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      > .flash__message-content {
+        font: {
+          weight: bold;
+        }
+      }
+    }
   }
 }
 </style>

@@ -8,7 +8,7 @@
     />
     <div class="container">
       <section class="user">
-        <div class="notification is-primary">
+        <div class="controls">
           <b-button
             type="is-warning"
             tag="router-link"
@@ -38,13 +38,17 @@
             class="notice"
           >
             <div class="card">
-              <a
-                :href="notice.link"
-                target="_blank"
-              >
-                <header>{{ notice.title }}</header>
-                <p>{{ notice.unit }}</p>
-              </a>
+              <div class="card-content">
+                <p class="title">
+                  <a
+                    :href="notice.link"
+                    target="_blank"
+                  >{{ notice.title }}</a>
+                </p>
+                <p class="subtitle">
+                  {{ notice.unit }}
+                </p>
+              </div>
             </div>
           </div>
         </article>
@@ -97,14 +101,16 @@ export default {
     }).then(({ data }) => {
       this.articles = data.user.articles
       this.user_nm = data.user.user_nm
-    })
-    this.$apollo.mutate({
-      mutation: gql`${Notice}`,
-      variables: {
-        code: 'IT0003' // TEST Case
+      for (const dpt of data.user.dpt_cd.split(',')) {
+        this.$apollo.mutate({
+          mutation: gql`${Notice}`,
+          variables: {
+            code: dpt
+          }
+        }).then(({ data }) => {
+          this.notices.concat(data.notice)
+        })
       }
-    }).then(({ data }) => {
-      this.notices = data.notice
     })
   },
   mounted () {
@@ -138,3 +144,17 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.notice {
+  > .card {
+    margin-bottom: .8rem;
+    & .title {
+      font-size: 1.2rem;
+    }
+    & .subtitle {
+      font-size: .8rem;
+    }
+  }
+}
+</style>
