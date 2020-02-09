@@ -71,7 +71,6 @@ def parse_content_type3(soup, urlInfo):
     lists = soup.select('tr[height]:not([bgcolor])')
     for post in lists:
         try:
-            print(post)
             title = post.find('td', attrs={"align": "left"}).a.text.strip()
             link = 'http://software.ajou.ac.kr' + \
                 post.find('td', attrs={"align": "left"}).a['href']
@@ -85,3 +84,22 @@ def parse_content_type3(soup, urlInfo):
         except:
             pass
     return posts
+
+def get_schedule():
+    target_url = url_list['schedule']['link']
+    soup = BeautifulSoup(requests.get(target_url).text, 'html.parser')
+    rows = soup.select('#jwxe_main_content > div > div.jwxe_html.jw-relative > table > tbody > tr')
+    results = []
+    for row in rows:
+        try:
+            tds = row.find_all('td')
+            date, event, etc = map(lambda x: x.text.strip(), tds)
+            results.append({
+                'date': date,
+                'event': event,
+                'etc': etc,
+            })
+        except:
+            print(row, 'EXCEPTION@@@@@@@@@@@@@@@@@')
+    return results
+            

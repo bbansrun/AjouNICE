@@ -280,5 +280,11 @@
       "boardName": "공지사항",
       "link": "http://software.ajou.ac.kr/bbs/board.php?tbl=notice"
     }
-  ]
+  ],
+  "schedule": {
+    "name": "학사일정",
+    "code": "SCH",
+    "boardName": "전체일정",
+    "link": "http://www.ajou.ac.kr/main/life/schedule_haksa.jsp"
+  }
 }

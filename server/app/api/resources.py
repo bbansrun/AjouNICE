@@ -6,7 +6,7 @@ import json
 
 from server.app.api import api_rest
 from server.app.api.security import require_auth
-from .customutils.crawl_utils import parse_content_type1, parse_content_type2, parse_content_type3, parse_content
+from .customutils.crawl_utils import parse_content, get_schedule
 
 
 class SecureResource(Resource):
@@ -45,6 +45,22 @@ class Bbansrun(Resource):
         api_response['error'] = {'message': 'Code not exists'}
         return api_response
 
+@api_rest.route('/schedule')
+class Schedule(Resource):
+    def get(self):
+        api_response = {
+            'title': 'schedule',
+            'message': '빤쓰런 프로젝트 아주나이스 - 아주대 차세대 학부 커뮤니티 서비스',
+            'APIName': '/schedule',
+            'APIDesription': '학사일정 크롤러',
+        }
+        schedule_result = get_schedule()
+        if schedule_result:
+            api_response['result'] = schedule_result
+            return api_response
+        api_response['error'] = {'message': 'get_schedule failed.'}
+        return api_response
+
 
 @api_rest.route('/resource/<string:resource_id>')
 class ResourceOne(Resource):
@@ -66,3 +82,4 @@ class SecureResourceOne(SecureResource):
     def get(self, resource_id):
         timestamp = datetime.utcnow().isoformat()
         return {'timestamp': timestamp}
+
