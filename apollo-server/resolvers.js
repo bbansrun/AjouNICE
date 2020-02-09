@@ -59,7 +59,16 @@ module.exports = {
       return await findAll(Board, args, info, include);
     },
     async post (parent, args, context, info) {
-      return await findOne(Board, args, info);
+      const include = [
+        { model: BoardComment, as: 'comments', include: [{ model: User, as: 'commenter', }], }
+      ];
+      return await findOne(Board, args, info, include);
+    },
+    async comment (parent, args, context, info) {
+      const include = [
+        { model: User, as: 'commenter', }
+      ];
+      return await findOne(BoardComment, args, info, include);
     },
   },
   Mutation: {
