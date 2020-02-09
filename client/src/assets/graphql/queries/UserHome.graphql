@@ -1,0 +1,20 @@
+query UserHome($id: Int!) {
+    posts {
+        board_idx
+        category_idx
+        title
+        body
+        nick_nm
+        view_cnt
+        cmt_cnt
+        reg_dt
+        comments {
+            text
+            nick_nm
+        }
+    }
+
+    user(user_idx: $id) {
+        dpt_cd
+    }
+}

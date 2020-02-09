@@ -55,11 +55,11 @@
 <script>
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
-import Landing from '@/components/Landing.vue'
-import Navigation from '@/components/Navigation.vue'
-import PostList from '@/components/PostList.vue'
-import BoardNav from '@/components/BoardNav.vue'
-import Footer from '@/components/Footer.vue'
+import Landing from '@/components/base/Landing.vue'
+import Navigation from '@/components/base/Navigation.vue'
+import PostList from '@/components/board/PostList.vue'
+import BoardNav from '@/components/board/BoardNav.vue'
+import Footer from '@/components/base/Footer.vue'
 import { CateInfo, PostsByCate, SubCates, BoardsAndPosts } from '@/assets/graphql/queries'
 export default {
   name: 'Board',

@@ -115,11 +115,11 @@ export default {
       isSlideNavActive: false,
       isFixedNavActive: false,
       services: [
-        { id: 1, label: '강의평가', link: '/lectures' },
+        { id: 1, label: '커뮤니티', link: '/board' },
         { id: 2, label: '아주맛집', link: '/place/gourmet' },
-        { id: 3, label: 'Ajou버스', link: '/place/bus' },
+        { id: 3, label: '강의평가', link: '/lectures' },
         { id: 4, label: '학사일정', link: '/schedule' },
-        { id: 5, label: '커뮤니티', link: '/board' }
+        { id: 5, label: 'Ajou버스', link: '/place/bus' }
       ]
     }
   },

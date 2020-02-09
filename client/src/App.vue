@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Loading from '@/components/Loading.vue'
+import Loading from '@/components/base/Loading.vue'
 import 'vue-flash-message/dist/vue-flash-message.min.css'
 export default {
   components: {

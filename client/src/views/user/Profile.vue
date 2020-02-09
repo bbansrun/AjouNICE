@@ -61,11 +61,11 @@
 <script>
 import urljoin from 'url-join'
 import gql from 'graphql-tag'
-import Navigation from '@/components/Navigation.vue'
-import Landing from '@/components/Landing.vue'
+import Navigation from '@/components/base/Navigation.vue'
+import Landing from '@/components/base/Landing.vue'
 import MyPosts from '@/components/user/MyPosts.vue'
 import MyReviews from '@/components/user/MyLectureReviews.vue'
-import Footer from '@/components/Footer.vue'
+import Footer from '@/components/base/Footer.vue'
 import { User } from '@/assets/graphql/queries'
 import { Notice } from '@/assets/graphql/mutations'
 export default {
@@ -108,7 +108,7 @@ export default {
             code: dpt
           }
         }).then(({ data }) => {
-          this.notices.concat(data.notice)
+          this.notices = this.notices.concat(data.notice)
         })
       }
     })

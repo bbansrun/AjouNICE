@@ -90,10 +90,10 @@ import urljoin from 'url-join'
 import pathParser from 'path-parse'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import FileUpload from '@/components/FileUpload.vue'
-import Navigation from '@/components/Navigation.vue'
-import Landing from '@/components/Landing.vue'
-import Footer from '@/components/Footer.vue'
+import FileUpload from '@/components/board/FileUpload.vue'
+import Navigation from '@/components/base/Navigation.vue'
+import Landing from '@/components/base/Landing.vue'
+import Footer from '@/components/base/Footer.vue'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
 import { writePost, editPost } from '@/assets/graphql/mutations'
 
@@ -229,6 +229,7 @@ export default {
     writePost () {
       const user = this.$store.state.user
       if (this.selectedCategory && this.selectedSubCategory && this.form.title && this.form.editorData) {
+        document.body.classList.toggle('loading')
         this.$apollo.mutate({
           mutation: gql`${writePost}`,
           variables: {
@@ -240,7 +241,7 @@ export default {
             reg_ip: user.access_loc
           }
         }).then(({ data }) => {
-          // Flash
+          document.body.classList.toggle('loading')
           this.$swal({
             type: 'success',
             title: '게시!',
@@ -273,6 +274,7 @@ export default {
         }
       }).then(({ data }) => {
         const cateId = data.boards[0].category_idx
+        document.body.classList.toggle('loading')
         this.$apollo.mutate({
           mutation: gql`${editPost}`,
           variables: {
@@ -285,7 +287,7 @@ export default {
             reg_ip: user.access_loc
           }
         }).then(({ data }) => {
-        // Flash
+          document.body.classList.toggle('loading')
           this.$swal({
             type: 'success',
             title: '게시!',

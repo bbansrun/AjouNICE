@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Error from '@/components/Error.vue'
+import Error from '@/components/base/Error.vue'
 export default {
   name: 'ErrorByCode',
   components: {

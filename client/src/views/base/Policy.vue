@@ -168,9 +168,9 @@
 </template>
 
 <script>
-import Navigation from '@/components/Navigation.vue'
-import Landing from '@/components/Landing.vue'
-import Footer from '@/components/Footer.vue'
+import Navigation from '@/components/base/Navigation.vue'
+import Landing from '@/components/base/Landing.vue'
+import Footer from '@/components/base/Footer.vue'
 export default {
   name: 'Policy',
   components: {

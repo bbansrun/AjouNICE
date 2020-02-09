@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Landing from '@/components/Landing.vue'
-import Footer from '@/components/Footer.vue'
+import Landing from '@/components/base/Landing.vue'
+import Footer from '@/components/base/Footer.vue'
 export default {
   components: {
     Landing, Footer

@@ -99,9 +99,9 @@ import Vue from 'vue'
 import { Tag } from 'buefy'
 import { ModelSelect } from 'vue-search-select'
 import VueDaumMap from 'vue-daum-map'
-import Navigation from '@/components/Navigation.vue'
-import Landing from '@/components/Landing.vue'
-import Footer from '@/components/Footer.vue'
+import Navigation from '@/components/base/Navigation.vue'
+import Landing from '@/components/base/Landing.vue'
+import Footer from '@/components/base/Footer.vue'
 import 'vue-search-select/dist/VueSearchSelect.css'
 
 Vue.use(Tag)

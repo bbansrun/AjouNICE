@@ -1,4 +1,4 @@
-{
+query Posts {
   posts {
     board_idx
     category_idx

@@ -33,10 +33,10 @@
 <script>
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
-import Navigation from '@/components/Navigation.vue'
-import Landing from '@/components/Landing.vue'
-import Replies from '@/components/Replies.vue'
-import Footer from '@/components/Footer.vue'
+import Navigation from '@/components/base/Navigation.vue'
+import Landing from '@/components/base/Landing.vue'
+import Replies from '@/components/board/Replies.vue'
+import Footer from '@/components/base/Footer.vue'
 import { Post } from '@/assets/graphql/queries'
 export default {
   name: 'App',

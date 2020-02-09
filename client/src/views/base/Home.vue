@@ -8,7 +8,10 @@
       />
       <Welcome />
       <IconNav :data="iconNav" />
-      <div class="broadcast">
+      <div
+        v-show="$store.state.user"
+        class="broadcast"
+      >
         <feather type="radio" />
         <carousel
           :data="carouselRadio"
@@ -35,12 +38,14 @@
 
 <script>
 import gql from 'graphql-tag'
-import Navigation from '@/components/Navigation.vue'
-import Welcome from '@/components/Welcome.vue'
-import IconNav from '@/components/IconNav.vue'
-import PostList from '@/components/PostList.vue'
-import Footer from '@/components/Footer.vue'
-import { AllPosts } from '@/assets/graphql/queries'
+import Navigation from '@/components/base/Navigation.vue'
+import Welcome from '@/components/base/Welcome.vue'
+import IconNav from '@/components/base/IconNav.vue'
+import PostList from '@/components/board/PostList.vue'
+import Footer from '@/components/base/Footer.vue'
+import { UserHome } from '@/assets/graphql/queries'
+import { Notice } from '@/assets/graphql/mutations'
+
 export default {
   name: 'Home',
   components: {
@@ -68,41 +73,8 @@ export default {
                         <small>아주대학교의 대표 커뮤니티 서비스입니다.</small>
                     </div>
                 </a>`
-        // `<a data-slide-item href="/about">
-        //     <div class="cover"></div>
-        //     <div class="slide-content">
-        //         <h2 data-logo>AjouNICE!</h2>
-        //         <small>서비스 오픈 일정 안내</small>
-        //     </div>
-        // </a>`,
       ],
-      carouselRadio: [{
-        id: 1,
-        message: '[공지사항] 신종 코로나바이러스로 인한 입학식, 졸업식 등 2월 주요 행사 취소 안내',
-        content (createElement, content) {
-          return createElement('a', {
-            attrs: {
-              href: '#'
-            },
-            class: 'broadcast-content'
-          }, [
-            createElement('span', {
-              style: {
-                width: '80vw',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis'
-              }
-            }, [`${content.message}`]),
-            createElement('feather', {
-              props: {
-                size: 16,
-                type: 'chevron-right'
-              }
-            })
-          ])
-        }
-      }],
+      carouselRadio: [],
       posts: []
     }
   },
@@ -111,9 +83,52 @@ export default {
   },
   beforeMount () {
     this.$apollo.query({
-      query: gql`${AllPosts}`
+      query: gql`${UserHome}`,
+      variables: {
+        id: this.$store.state.user.idx
+      }
     }).then(({ data }) => {
       this.posts = data.posts
+      for (const dpt of data.user.dpt_cd.split(',')) {
+        this.$apollo.mutate({
+          mutation: gql`${Notice}`,
+          variables: {
+            code: dpt
+          }
+        }).then(({ data }) => {
+          const template = (id, message, link) => ({
+            id: id,
+            message: message,
+            content (createElement, content) {
+              return createElement('a', {
+                attrs: {
+                  href: link,
+                  target: '_blank'
+                },
+                class: 'broadcast-content'
+              }, [
+                createElement('span', {
+                  style: {
+                    width: '80vw',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }
+                }, [`${content.message}`]),
+                createElement('feather', {
+                  props: {
+                    size: 16,
+                    type: 'chevron-right'
+                  }
+                })
+              ])
+            }
+          })
+          data.notice.forEach((value, i) => {
+            this.carouselRadio.push(template(i, value.title, value.link))
+          })
+        })
+      }
     })
   },
   mounted () {

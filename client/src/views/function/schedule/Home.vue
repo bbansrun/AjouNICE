@@ -27,9 +27,9 @@
 <script>
 import Vue from 'vue'
 import { Table } from 'buefy'
-import Navigation from '@/components/Navigation.vue'
-import Landing from '@/components/Landing.vue'
-import Footer from '@/components/Footer.vue'
+import Navigation from '@/components/base/Navigation.vue'
+import Landing from '@/components/base/Landing.vue'
+import Footer from '@/components/base/Footer.vue'
 
 Vue.use(Table)
 export default {
