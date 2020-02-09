@@ -34,7 +34,7 @@
             v-else
             class="replies"
           >
-            <span>{{ post.cmt_cnt }}</span>
+            <span>{{ post.comments.length }}</span>
             <h6>댓글</h6>
           </div>
         </article>

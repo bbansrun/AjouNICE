@@ -10,7 +10,7 @@
       autocomplete="off"
       @submit.prevent
     >
-      <div class="input-form">
+      <div class="input-form input-form-reply">
         <input
           id="reply"
           v-model="reply"
@@ -23,28 +23,28 @@
           작성
         </button>
       </div>
-    </form>
-    <div class="replies-view">
-      <div
-        v-for="reply in content"
-        :key="reply.cmt_idx"
-        class="card reply"
-      >
-        <div class="content">
-          <header>{{ reply.nick_nm }}</header>
-          <p>{{ reply.text }}</p>
-          <small>{{ new Date(reply.upt_dt).toLocaleDateString() }}</small>
-        </div>
-        <div class="controls">
-          <button
-            v-show="reply.user_idx === $store.state.user.idx"
-            @click="removeReply(reply.cmt_idx)"
-          >
-            삭제
-          </button>
+      <div class="replies-view">
+        <div
+          v-for="reply in content"
+          :key="reply.cmt_idx"
+          class="card reply"
+        >
+          <div class="content">
+            <header>{{ reply.nick_nm }}</header>
+            <p>{{ reply.text }}</p>
+            <small>{{ new Date(reply.upt_dt).toLocaleDateString() }}</small>
+          </div>
+          <div class="controls">
+            <button
+              v-show="reply.user_idx === $store.state.user.idx"
+              @click="removeReply(reply.cmt_idx)"
+            >
+              삭제
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   </section>
 </template>
 
@@ -100,8 +100,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.reply {
+form.reply {
+  padding: 0 2rem;
+}
+
+div.reply {
   display: grid;
-  grid-template-columns: 6fr 1fr;
+  grid-template-columns: 9fr 1fr;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-form-reply {
+  display: grid;
+  grid-template-columns: 9fr 1fr;
+  margin-bottom: 1rem;
 }
 </style>

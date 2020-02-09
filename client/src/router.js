@@ -1,39 +1,42 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store.js'
+import store from '@/store.js'
 
-import Home from './views/base/Home.vue'
-import Sitemap from './views/base/Sitemap.vue'
-import About from './views/base/About.vue'
-import ErrorPage from './views/base/ErrorPage.vue'
-import Policy from './views/base/Policy.vue'
-import Contact from './views/base/Contact.vue'
-import Invitation from './views/base/Invitation.vue'
+import Home from '@/views/base/Home.vue'
+import Sitemap from '@/views/base/Sitemap.vue'
+import About from '@/views/base/About.vue'
+import ErrorPage from '@/views/base/ErrorPage.vue'
+import Policy from '@/views/base/Policy.vue'
+import Contact from '@/views/base/Contact.vue'
+import Invitation from '@/views/base/Invitation.vue'
 
-import AdminLogin from './views/auth/AdminLogin.vue'
-import Login from './views/auth/Login.vue'
-import RenewAccount from './views/auth/RenewAccount.vue'
-import Modifier from './views/auth/ModifyAccount.vue'
-import Signup from './views/auth/SignUp.vue'
-import Authorize from './views/auth/Authorize.vue'
+import AdminLogin from '@/views/auth/AdminLogin.vue'
+import Login from '@/views/auth/Login.vue'
+import RenewAccount from '@/views/auth/RenewAccount.vue'
+import Modifier from '@/views/auth/ModifyAccount.vue'
+import Signup from '@/views/auth/SignUp.vue'
+import Authorize from '@/views/auth/Authorize.vue'
 
-import Board from './views/board/Board.vue'
-import PostView from './views/board/View.vue'
-import Edit from './views/board/Edit.vue'
+import Board from '@/views/board/Board.vue'
+import PostView from '@/views/board/View.vue'
+import Edit from '@/views/board/Edit.vue'
 
-import Dashboard from './views/admin/Dashboard.vue'
+import Dashboard from '@/views/admin/Dashboard.vue'
 
-import Profile from './views/user/Profile.vue'
-import LectureReviews from './views/user/LectureReviews.vue'
+import Profile from '@/views/user/Profile.vue'
+import LectureReviews from '@/views/user/LectureReviews.vue'
 
-import BusStation from './views/place/BusStation.vue'
-import Gourmet from './views/place/gourmet/Home.vue'
-import GourmetList from './views/place/gourmet/List.vue'
+import BusStation from '@/views/place/BusStation.vue'
+import Gourmet from '@/views/place/gourmet/Home.vue'
+import GourmetList from '@/views/place/gourmet/List.vue'
 
-import LectureHome from './views/function/lecture/Home.vue'
-import LectureReview from './views/function/lecture/Review.vue'
-import LectureEvaluation from './views/function/lecture/Evaluation.vue'
-import ScheduleHome from './views/function/schedule/Home.vue'
+import LectureHome from '@/views/function/lecture/Home.vue'
+import LectureReview from '@/views/function/lecture/Review.vue'
+import LectureEvaluation from '@/views/function/lecture/Evaluation.vue'
+
+import ScheduleHome from '@/views/function/schedule/Home.vue'
+
+import TimetableHome from '@/views/function/timetable/Home.vue'
 
 Vue.use(Router)
 
@@ -143,6 +146,10 @@ export default new Router({
     {
       path: '/schedule',
       component: ScheduleHome
+    },
+    {
+      path: '/timetable',
+      component: TimetableHome
     },
     {
       path: '/sitemap',

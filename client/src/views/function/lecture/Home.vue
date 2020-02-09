@@ -27,40 +27,30 @@
           </header>
         </article>
         <div class="reviews grid grid-auto">
-          <div class="card">
-            <div class="card-header">
-              <header>현대암호이론및응용(예홍진)</header>
-              <span>사이버보안학과 (전공필수)</span>
+          <div
+            v-for="review in reviews"
+            :key="review.id"
+            class="card"
+          >
+            <div class="card-content">
+              <p class="title">
+                {{ review.subject }}
+              </p>
+              <p class="subtitle">
+                {{ review.dpt }} ({{ review.subType }})
+              </p>
             </div>
             <div class="card-content">
-              <p>테스트 강의평</p>
+              <p>{{ review.content }}</p>
             </div>
             <div class="card-footer">
-              <span>별이 5개</span>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header">
-              <header>현대암호이론및응용(예홍진)</header>
-              <span>사이버보안학과 (전공필수)</span>
-            </div>
-            <div class="card-content">
-              <p>테스트 강의평</p>
-            </div>
-            <div class="card-footer">
-              <span>별이 5개</span>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header">
-              <header>현대암호이론및응용(예홍진)</header>
-              <span>사이버보안학과 (전공필수)</span>
-            </div>
-            <div class="card-content">
-              <p>테스트 강의평</p>
-            </div>
-            <div class="card-footer">
-              <span>별이 5개</span>
+              <span>
+                <font-awesome-icon
+                  v-for="n in review.rate"
+                  :key="n"
+                  icon="star"
+                />
+              </span>
             </div>
           </div>
         </div>
@@ -99,6 +89,13 @@ export default {
   },
   data () {
     return {
+      reviews: [
+        { id: 1, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
+        { id: 2, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
+        { id: 3, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
+        { id: 4, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
+        { id: 5, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' }
+      ],
       scrollBase: null,
       options: [
         { value: '1', text: '사이버보안학과 | 현대암호이론및응용(예홍진)' },
@@ -139,8 +136,24 @@ export default {
 <style lang="scss" scoped>
 .grid-auto {
   display: grid;
+  row-gap: .8rem;
+  column-gap: .8rem;
+}
+
+.grid {
+  padding: 0 2rem;
   grid-template-columns: repeat(2, 1fr);
-  row-gap: .5rem;
-  column-gap: .5rem;
+  margin-bottom: 1rem;
+}
+
+.controls {
+  padding: 0 2rem;
+  margin-bottom: 1rem;
+}
+
+svg {
+  & path {
+    fill: #ffd83d;
+  }
 }
 </style>

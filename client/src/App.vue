@@ -12,6 +12,9 @@ import 'vue-flash-message/dist/vue-flash-message.min.css'
 export default {
   components: {
     Loading
+  },
+  mounted () {
+    document.body.classList.remove('loading')
   }
 }
 </script>

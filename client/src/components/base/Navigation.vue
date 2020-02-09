@@ -72,7 +72,9 @@
         </div>
       </section>
       <section class="major-menus">
-        <h3>주요 메뉴</h3>
+        <h3 class="underline">
+          주요 메뉴
+        </h3>
         <ul class="slide-nav-menus">
           <li
             v-for="service in services"
@@ -87,18 +89,15 @@
         </ul>
       </section>
       <footer class="footer footer-slide-nav">
-        <p>아주나이스는 모바일 기기에 최적화되어 있습니다. (PC 버전 향후 제공예정)</p>
-        <router-link to="/about">
-          서비스 소개
-        </router-link>
-        <router-link to="/contact">
-          광고/제휴/기타문의
-        </router-link>
-        <router-link to="/policy">
-          이용약관
-        </router-link>
-        <router-link to="/sitemap">
-          사이트맵
+        <p>
+          <strong>아주나이스는 모바일 기기에 최적화되어 있습니다. (PC 버전 향후 제공예정)</strong>
+        </p>
+        <router-link
+          v-for="item in footerLinks"
+          :key="item.id"
+          :to="item.link"
+        >
+          <strong>{{ item.label }}</strong>
         </router-link>
       </footer>
     </div>
@@ -120,6 +119,12 @@ export default {
         { id: 3, label: '강의평가', link: '/lectures' },
         { id: 4, label: '학사일정', link: '/schedule' },
         { id: 5, label: 'Ajou버스', link: '/place/bus' }
+      ],
+      footerLinks: [
+        { id: 1, label: '서비스 소개', link: '/about' },
+        { id: 2, label: '광고.제휴/기타문의', link: '/contact' },
+        { id: 3, label: '이용약관', link: '/policy' },
+        { id: 4, label: '사이트맵', link: '/sitemap' }
       ]
     }
   },

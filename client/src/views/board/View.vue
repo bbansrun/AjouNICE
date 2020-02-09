@@ -7,23 +7,25 @@
       description=""
       background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
     />
-    <div
-      class="container"
-      v-html="body"
-    />
-    <div
-      v-show="articleWriter()"
-      class="controls"
-    >
-      <b-button
-        tag="router-link"
-        :to="editArticle"
+    <div class="container">
+      <div
+        class="content"
+        v-html="body"
+      />
+      <div
+        v-show="articleWriter()"
+        class="controls"
       >
-        수정
-      </b-button>
-      <button @click="removeArticle()">
-        삭제
-      </button>
+        <b-button
+          tag="router-link"
+          :to="editArticle"
+        >
+          수정
+        </b-button>
+        <button @click="removeArticle()">
+          삭제
+        </button>
+      </div>
     </div>
     <Replies
       :post="$route.params.post_id"
@@ -105,3 +107,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.container {
+  padding: 1rem;
+}
+</style>
