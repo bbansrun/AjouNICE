@@ -4,7 +4,9 @@
       <div class="logo">
         <LoadingSVG ref="logo" />
       </div>
-      <p>필요한 데이터를 준비하고 있습니다...</p>
+      <p>
+        <strong>필요한 데이터를 준비하고 있습니다...</strong>
+      </p>
     </div>
   </div>
 </template>
@@ -35,7 +37,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 body.loading .loader {
     animation: unset;
     border-radius: unset;
@@ -47,5 +49,6 @@ svg {
 
 path {
   stroke: #fff;
+  stroke-width: .2rem;
 }
 </style>

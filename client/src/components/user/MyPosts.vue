@@ -9,7 +9,13 @@
           v-for="post in posts"
           :key="post.board_idx"
         >
-          <header>{{ post.title }}</header>
+          <div class="card">
+            <div class="card-content">
+              <p class="title">
+                <a :href="`/board/${post.board_idx}/view`">{{ post.title }}</a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </article>
@@ -24,6 +30,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.card {
+  margin-bottom: .8rem;
+  & .title {
+    font-size: 1.2rem;
+  }
+}
 </style>

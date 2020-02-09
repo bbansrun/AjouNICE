@@ -30,6 +30,14 @@ body {
   &.loading {
     > #app > .loader {
         display: block;
+        animation: fadeIn .5s;
+        > .wrapper {
+          > p {
+            > strong {
+              color: #fff;
+            }
+          }
+        }
     }
   }
 }
@@ -88,6 +96,7 @@ small {
 // Default
 .underline {
   position: relative;
+  margin-bottom: .8rem;
   &-inline-block {
     display: inline-block;
   }

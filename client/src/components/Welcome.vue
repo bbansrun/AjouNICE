@@ -10,12 +10,14 @@
       <ul class="menu menu-horizontal">
         <li>
           <router-link :to="`/profile/${$store.state.user.idx}`">
-            <font-awesome-icon icon="user" />
+            <font-awesome-icon icon="user" />&nbsp;
+            <span>마이페이지</span>
           </router-link>
         </li>
         <li>
           <a @click="logout">
-            <font-awesome-icon icon="sign-out-alt" />
+            <font-awesome-icon icon="sign-out-alt" />&nbsp;
+            <span>로그아웃</span>
           </a>
         </li>
       </ul>
@@ -32,7 +34,8 @@
       <ul class="menu menu-horizontal">
         <li>
           <router-link to="/auth/login">
-            <font-awesome-icon icon="key" />
+            <font-awesome-icon icon="key" />&nbsp;
+            <span>로그인</span>
           </router-link>
         </li>
       </ul>
@@ -81,8 +84,10 @@ export default {
                 > a {
                     display: inherit;
                     color: #fff;
+                    transition: .2s all ease;
                     &:hover {
                         cursor: pointer;
+                        text-shadow: 0 2px 2px rgba(0,0,0,.8),
                     }
                 }
             }
