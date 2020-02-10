@@ -80,9 +80,7 @@ export default {
   data () {
     return {
       scrollBase: null,
-      title: '',
       meta: {},
-      body: '',
       user_idx: null,
       replies: [],
       post: null,
@@ -118,8 +116,6 @@ export default {
     }).then(({ data }) => {
       this.post = data.post
       this.user_idx = data.post.user_idx
-      this.title = data.post.title
-      this.body = data.post.body
       this.replies = data.post.comments
     }).catch(error => {
       console.error(error)

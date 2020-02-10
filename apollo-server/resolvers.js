@@ -1,10 +1,24 @@
-const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
-const { User, College, Department, Board, BoardCategory, BoardComment, sequelize, } = require('./models');
 const { Op, } = require('sequelize');
-const graphqlFields = require('graphql-fields');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
+const jwt = require('jsonwebtoken');
+const graphqlFields = require('graphql-fields');
+const { PubSub, } = require('apollo-server-express');
+const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
+const { User, College, Department, Board, BoardCategory, BoardComment, sequelize, } = require('./models');
+
+const pubsub = new PubSub();
+// JWT Token Verify
+const tokenVerify = (token) => (new Promise((resolve, reject) => {
+  jwt.verify(token, '4j0uN1ce1', (err, decoded) => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve(decoded);
+    }
+  });
+}));
 
 sequelize.sync({});
 
@@ -24,7 +38,14 @@ const findAll = async (model, args, info, include = []) => {
   });
 };
 
+const REPLY_WRITTEN = 'REPLY_WRITTEN';
+
 module.exports = {
+  Subscription: {
+    replyWritten: {
+      subscribe: (parent, args, context, info) => pubsub.asyncIterator([REPLY_WRITTEN]),
+    },
+  },
   Query: {
     // College
     async colleges (parent, args, context, info) {
@@ -121,11 +142,8 @@ module.exports = {
     },
     writeReply: async (parent, args, context, info) => {
       const created = await BoardComment.create({ ...args, });
-      if (created) {
-        return true;
-      } else {
-        return false;
-      }
+      pubsub.publish(REPLY_WRITTEN, { replyWritten: created.dataValues, });
+      return created.dataValues;
     },
     removeReply: async (parent, args, context, info) => {
       const removed = await BoardComment.destroy({ where: { ...args, }, });

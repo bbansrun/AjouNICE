@@ -152,6 +152,10 @@ type Schedule {
     etc: String!
 }
 
+type Subscription {
+    replyWritten: BoardComment
+}
+
 type Query {
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
     colleges(exist_yn: String!): [College]
@@ -171,7 +175,7 @@ type Mutation {
     authorize(user_idx: Int!): Boolean
     resetEmailToken(email: String!): Boolean
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
-    writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String): Boolean
+    writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String): BoardComment
     removeReply(cmt_idx: Int!): Boolean
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
     removePost(board_idx: Int!): Boolean

@@ -26,7 +26,10 @@ import VueFlashMessage from 'vue-flash-message'
 
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
+import { ApolloLink, split } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
 
@@ -125,17 +128,46 @@ const encryptedFetchImplementation = async (url, options) => {
   return res
 }
 
-const apolloClient = new ApolloClient({
-  link: createPersistedQueryLink({ useGETForHashedQueries: true })
-    .concat(createHttpLink({
-      uri: `http://${require('ip').address()}:455/graphql`,
-      fetch: encryptedFetchImplementation
-    })),
-  cache: new InMemoryCache()
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:455/graphql',
+  options: {
+    reconnect: true
+  }
 })
 
+const authLink = new ApolloLink((operation, forward) => {
+  operation.setContext(context => ({
+    headers: {
+      ...context.headers,
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+    }
+  }))
+  return forward(operation)
+})
+
+const httpLink = authLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
+  .concat(createHttpLink({
+    uri: `http://${require('ip').address()}:455/graphql`,
+    fetch: encryptedFetchImplementation
+  })))
+
+const link = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink, // Websocket Link
+  httpLink // Http Link
+)
+
 const apolloProvider = new VueApollo({
-  defaultClient: apolloClient
+  defaultClient: new ApolloClient({
+    link,
+    cache: new InMemoryCache()
+  })
 })
 
 Vue.config.productionTip = false
