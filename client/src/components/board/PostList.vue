@@ -5,45 +5,56 @@
       <h2>주목해야할 게시물</h2>
     </header>
     <div
-      v-for="post in items"
-      :key="post.board_idx"
+      v-if="items.length > 0"
       class="posts"
-      :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }"
     >
-      <a :href="`/board/${post.board_idx}/view`">
-        <article class="post">
-          <header>
-            <h3>{{ post.title }}</h3>
-            <div class="info">
-              <span><small>{{ new Date(post.reg_dt).toLocaleDateString() }}</small></span>&nbsp;
-              <span><small>{{ post.nick_nm }}</small></span>&nbsp;
-              <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt }}</small></span>&nbsp;
-            </div>
-          </header>
-          <div
-            v-if="showThumbnail"
-            class="thumbnail"
-          >
-            <img
-              src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4"
-              height="100"
-              alt="gravatar"
+      <div
+        v-for="post in items"
+        :key="post.board_idx"
+        class="posts"
+        :class="{ 'thumbnail': showThumbnail, 'replies': !showThumbnail }"
+      >
+        <router-link :to="`/board/${post.board_idx}/view`">
+          <article class="post">
+            <header>
+              <h3>{{ post.title }}</h3>
+              <div class="info">
+                <span><small>{{ new Date(post.reg_dt).toLocaleDateString() }}</small></span>&nbsp;
+                <span><small>{{ post.nick_nm }}</small></span>&nbsp;
+                <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt }}</small></span>&nbsp;
+              </div>
+            </header>
+            <div
+              v-if="showThumbnail"
+              class="thumbnail"
             >
-          </div>
-          <div
-            v-else
-            class="replies"
-          >
-            <span>{{ post.comments.length }}</span>
-            <h6>댓글</h6>
-          </div>
-        </article>
-      </a>
+              <img
+                src="https://avatars3.githubusercontent.com/u/51874554?s=200&v=4"
+                height="100"
+                alt="gravatar"
+              >
+            </div>
+            <div
+              v-else
+              class="replies"
+            >
+              <span>{{ post.comments.length }}</span>
+              <h6>댓글</h6>
+            </div>
+          </article>
+        </router-link>
+      </div>
+      <div class="view-more">
+        <a href="#">
+          <small>게시물 더보기</small>
+        </a>
+      </div>
     </div>
-    <div class="view-more">
-      <a href="#">
-        <small>게시물 더보기</small>
-      </a>
+    <div
+      v-else
+      class="no-posts"
+    >
+      <span>아직 게시물이 없어요.</span>
     </div>
   </section>
 </template>
@@ -72,7 +83,7 @@ section.popular {
     padding: 1rem 0;
     border-top: 1px solid rgba(0,0,0,.2);
   }
-  > .posts {
+  > .posts > .posts {
     border-top: 1px solid rgba(0,0,0,.2);
     border-bottom: 1px solid rgba(0,0,0,.2);
     & a {
@@ -134,5 +145,12 @@ section.popular {
       }
     }
   }
+}
+
+.no-posts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
 }
 </style>

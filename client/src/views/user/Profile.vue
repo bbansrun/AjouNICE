@@ -10,6 +10,14 @@
       <section class="user">
         <div class="controls">
           <b-button
+            v-show="$store.state.user.type === 'A'"
+            type="is-danger"
+            tag="router-link"
+            to="/#/gate/manager"
+          >
+            관리자
+          </b-button>
+          <b-button
             type="is-warning"
             tag="router-link"
             :to="profileEditUrl"
@@ -135,7 +143,7 @@ export default {
           // 탈퇴 진행
           this.$store.dispatch('LOGOUT').then(() => {
             this.flash('탈퇴되었습니다.', 'success')
-            window.location = '/'
+            this.$router.push('/')
           })
         }
       })

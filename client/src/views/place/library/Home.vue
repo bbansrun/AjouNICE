@@ -3,8 +3,8 @@
     <Navigation :scroll-base="scrollBase" />
     <Landing
       ref="scrollBase"
-      title="오늘의 학식"
-      description="오늘의 학교 식단을 소개합니다."
+      title="도서관"
+      description="학교 도서관 정보를 알려드립니다."
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
     />
     <div class="container">

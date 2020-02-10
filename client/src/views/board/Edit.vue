@@ -252,7 +252,7 @@ export default {
             let url = this.$route.path
             url = url.split('/')
             url.pop()
-            window.location = urljoin(url.join('/'), 'view')
+            this.$router.push(urljoin(url.join('/'), 'view'))
           })
         })
       } else {
@@ -298,7 +298,7 @@ export default {
             let url = this.$route.path
             url = url.split('/')
             url.pop()
-            window.location = urljoin(url.join('/'), 'view')
+            this.$router.push(urljoin(url.join('/'), 'view'))
           })
         })
       })

@@ -21,7 +21,7 @@
     </div>
     <nav id="error_nav">
       <router-link
-        to="/"
+        to="/#/"
         class="btn rounded-on-hover box-shadow-on-hover text-inverse"
       >
         → 처음으로

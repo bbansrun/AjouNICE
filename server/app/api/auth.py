@@ -104,7 +104,8 @@ class Tokenizer():
                 'email': user.email,
                 'name': user.user_nm,
                 'idx': user.user_idx,
-                'nick_nm': user.user_nm,
+                'nick_nm': user.nick_nm,
+                'type': user.admin_type,
                 'access_loc': remote_addr
             }
         }

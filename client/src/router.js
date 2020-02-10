@@ -26,7 +26,7 @@ import Dashboard from '@/views/admin/Dashboard.vue'
 import Profile from '@/views/user/Profile.vue'
 import LectureReviews from '@/views/user/LectureReviews.vue'
 
-import BusStation from '@/views/place/BusStation.vue'
+import BusStation from '@/views/place/bus/BusStation.vue'
 import Gourmet from '@/views/place/gourmet/Home.vue'
 import GourmetList from '@/views/place/gourmet/List.vue'
 
@@ -37,6 +37,12 @@ import LectureEvaluation from '@/views/function/lecture/Evaluation.vue'
 import ScheduleHome from '@/views/function/schedule/Home.vue'
 
 import TimetableHome from '@/views/function/timetable/Home.vue'
+
+import RealtyHome from '@/views/place/realty/Home.vue'
+
+import LibraryHome from '@/views/place/library/Home.vue'
+
+import RestaurantHome from '@/views/place/restaurant/Home.vue'
 
 Vue.use(Router)
 
@@ -93,13 +99,31 @@ const requireAuth = (to, from, next) => {
 }
 
 const requireAdminAuth = (to, from, next) => {
-  if (localStorage.accessToken) return next()
-  next({
-    path: '/gate/manager/auth/login',
-    query: {
-      redirect: to.fullPath
-    }
-  })
+  if (localStorage.accessToken) {
+    store.dispatch('checkTokenStatus').then(({ user }) => {
+      if (user.type === 'A') {
+        return next()
+      } else {
+        return next({
+          path: '/error/404'
+        })
+      }
+    }).catch(error => {
+      if (error.name === 'TokenExpiredError') {
+        Vue.prototype.$flashStorage.flash('로그인 만료! 다시 로그인해주시기 바랍니다.', 'warning', {
+          timeout: 3000
+        })
+      }
+      return next({
+        path: '/gate/manager/auth/login',
+        query: {
+          redirect: to.fullPath
+        }
+      })
+    })
+  } else {
+    next()
+  }
 }
 
 const alreadySignedIn = (to, from, next) => {
@@ -110,7 +134,6 @@ const alreadySignedIn = (to, from, next) => {
 }
 
 export default new Router({
-  mode: 'history',
   routes: [
     {
       path: '/',
@@ -150,6 +173,10 @@ export default new Router({
     {
       path: '/timetable',
       component: TimetableHome
+    },
+    {
+      path: '/restaurant',
+      component: RestaurantHome
     },
     {
       path: '/sitemap',
@@ -218,6 +245,14 @@ export default new Router({
     {
       path: '/place/bus',
       component: BusStation
+    },
+    {
+      path: '/place/realty',
+      component: RealtyHome
+    },
+    {
+      path: '/place/library',
+      component: LibraryHome
     },
     {
       path: '/place/gourmet',

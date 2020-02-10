@@ -10,7 +10,7 @@
     <BoardNav :write-url="write_url" />
     <section v-if="$route.params.category">
       <ul
-        v-if="sub_categories"
+        v-show="sub_categories"
         class="board-nav"
       >
         <li class="active">
@@ -20,7 +20,9 @@
           v-for="category in sub_categories"
           :key="category.category_idx"
         >
-          <a :href="'/board/' + $route.params.category + '/' + category.title">{{ category.category_nm }}</a>
+          <router-link :to="`/board/${$route.params.category}/${category.title}`">
+            {{ category.category_nm }}
+          </router-link>
         </li>
       </ul>
       <table class="list">
@@ -31,7 +33,7 @@
     </section>
     <section v-else>
       <ul
-        v-if="categories"
+        v-show="categories"
         class="board-nav"
       >
         <li class="active">
@@ -41,7 +43,9 @@
           v-for="category in categories"
           :key="category.category_idx"
         >
-          <a :href="'/board/' + category.title">{{ category.category_nm }}</a>
+          <router-link :to="`/board/${category.title}`">
+            {{ category.category_nm }}
+          </router-link>
         </li>
       </ul>
     </section>
@@ -69,8 +73,8 @@ export default {
   data () {
     return {
       scrollBase: null,
-      categories: null,
-      sub_categories: null,
+      categories: [],
+      sub_categories: [],
       category: '',
       category_desc: '',
       category_idx: null,
@@ -149,7 +153,7 @@ export default {
         }
       }).catch((error) => {
         console.log(error)
-        window.location = '/error/404'
+        this.$router.push('/error/404')
       })
     },
     getSubCateInfo (depth, parent, name) {

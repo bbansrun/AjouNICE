@@ -67,13 +67,13 @@
         </div>
         <div class="input-form-controls">
           <router-link
-            to="/auth/reset"
+            to="/#/auth/reset"
             class="underline underline-inline-block"
           >
             <small>계정 재설정</small>
           </router-link>
           <router-link
-            to="/auth/signup"
+            to="/#/auth/signup"
             class="btn rounded box-shadow text-inverse"
           >
             회원가입 &rarr;
@@ -118,20 +118,20 @@ export default {
             })
             if (result.auth_email_yn === 'N') {
               this.$store.dispatch('LOGOUT').then(() => {
-                window.location = '/error/401'
+                this.$router.push('/error/401')
               })
             } else {
               if ('redirect' in params) {
-                window.location = params.redirect
+                this.$router.push(params.redirect)
               } else {
-                window.location = '/'
+                this.$router.push('/')
               }
             }
           })
           .catch(({ response }) => {
             document.body.classList.toggle('loading')
             if (response.status === 500) {
-              window.location = '/error/500'
+              this.$router.push('/error/500')
             } else {
               this.$swal({
                 title: '오류!',

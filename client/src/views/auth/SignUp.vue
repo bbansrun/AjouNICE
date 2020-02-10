@@ -364,7 +364,7 @@
         </div>
         <div class="input-form-controls">
           <router-link
-            to="/"
+            to="/#/"
             class="underline underline-inline-block"
           >
             <small>로그인 화면으로</small>
@@ -970,7 +970,7 @@ export default {
                   footer: '<p>기입하신 이메일 수신함을 확인하여 주시기 바랍니다.</p>',
                   animation: true
                 }).then(result => {
-                  window.location = '/'
+                  this.$router.push('/')
                 })
               } else {
                 // 인증메일 발송 중 에러

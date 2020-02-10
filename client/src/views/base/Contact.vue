@@ -155,7 +155,7 @@ export default {
                 type: 'success',
                 width: '90vw'
               }).then(() => {
-                window.location = '/contact'
+                this.$router.push('/contact')
               })
             }
           })

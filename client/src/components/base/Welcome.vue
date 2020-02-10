@@ -49,7 +49,7 @@ export default {
     logout () {
       this.$store.dispatch('LOGOUT').then(() => {
         document.body.classList.toggle('loading')
-        window.location = '/'
+        this.$router.go(0)
       })
         .catch(error => {
           console.error(error)

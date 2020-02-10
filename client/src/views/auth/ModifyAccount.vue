@@ -110,7 +110,7 @@
         </div>
         <div class="input-form-controls">
           <router-link
-            to="/"
+            to="/#/"
             class="underline underline-inline-block"
           >
             <small>처음으로</small>
@@ -211,12 +211,12 @@ export default {
             this.email = result.data.findUserByToken.email
           }).catch(error => {
             console.error(error)
-            window.location = '/error/500'
+            this.$router.push('/error/500')
           })
         } else if (this.mode.modify) {
           this.email = this.$store.state.user.email
         } else {
-          window.location = '/error/404'
+          this.$router.push('/error/404')
         }
       }
     },
@@ -261,7 +261,7 @@ export default {
               width: '90vw',
               footer: '<p>입력하신 새로운 비밀번호로 로그인하시면 서비스 이용이 가능합니다.</p>'
             }).then(() => {
-              window.location = '/'
+              this.$router.push('/')
             })
           } else {
             throw Error(result)

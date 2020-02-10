@@ -56,7 +56,7 @@ export default {
     if (this.code() in this.errData) {
       this.errCode = this.code()
     } else {
-      window.location = '/error/404'
+      this.$router.push('/error/404')
     }
   },
   methods: {

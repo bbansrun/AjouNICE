@@ -1,51 +1,59 @@
 <template>
   <div class="wrapper">
-    <Navigation :scroll-base="scrollBase" />
-    <Landing
-      ref="scrollBase"
-      :title="title"
-      description=""
-      background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
-    />
-    <div class="container">
-      <div
-        class="content"
-        v-html="body"
-      />
-      <header>첨부 이미지</header>
-      <div class="image-wrapper">
-        <img
-          v-for="(image, i) in images"
-          :key="i"
-          class="image"
-          :src="image"
-          @click="index = i"
-        >
-        <vue-gallery-slideshow
-          :images="images"
-          :index="index"
-          @close="index = null"
+    <Navigation is-static />
+    <article class="post">
+      <header>
+        {{ post.title }}
+      </header>
+      <div class="content">
+        <div
+          class="container"
+          v-html="post.body"
+        />
+        <div class="files">
+          <header>첨부 이미지</header>
+          <div class="image-wrapper">
+            <img
+              v-for="(image, i) in images"
+              :key="i"
+              class="image"
+              :src="image"
+              @click="index = i"
+            >
+            <vue-gallery-slideshow
+              :images="images"
+              :index="index"
+              @close="index = null"
+            />
+          </div>
+        </div>
+        <div class="controls">
+          <b-button
+            tag="router-link"
+            to="/board"
+          >
+            목록으로
+          </b-button>
+          <b-button
+            v-show="articleWriter()"
+            tag="router-link"
+            :to="editArticle"
+          >
+            수정
+          </b-button>
+          <b-button
+            v-show="articleWriter()"
+            @click="removeArticle()"
+          >
+            삭제
+          </b-button>
+        </div>
+        <Replies
+          :post="parseInt($route.params.post_id)"
+          :content="replies"
         />
       </div>
-      <div
-        v-show="articleWriter()"
-        class="controls"
-      >
-        <b-button
-          tag="router-link"
-          :to="editArticle"
-        >
-          수정
-        </b-button>
-        <button @click="removeArticle()">
-          삭제
-        </button>
-      </div>
-    </div>
-    <Replies
-      :post="parseInt($route.params.post_id)"
-      :content="replies"
-    />
+    </article>
     <Footer />
   </div>
 </template>
@@ -77,6 +85,7 @@ export default {
       body: '',
       user_idx: null,
       replies: [],
+      post: null,
       images: [
         'https://placekitten.com/801/800',
         'https://placekitten.com/802/800',
@@ -107,17 +116,18 @@ export default {
         id: this.$route.params.post_id
       }
     }).then(({ data }) => {
+      this.post = data.post
       this.user_idx = data.post.user_idx
       this.title = data.post.title
       this.body = data.post.body
       this.replies = data.post.comments
     }).catch(error => {
       console.error(error)
-      // window.location = '/error/404'
+      // this.$router.push('/error/404')
     })
   },
   mounted () {
-    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+    this.scrollBase = 0
   },
   methods: {
     articleWriter () {
@@ -131,8 +141,10 @@ export default {
         text: '삭제 후 복구가 불가능합니다.',
         type: 'warning',
         showCancelButton: true,
+        showLoaderOnConfirm: true,
         confirmButtonText: '삭제',
         cancelButtonText: '취소',
+        cancelButtonColor: 'red',
         preConfirm () {
           that.$apollo.mutate({
             mutation: gql`${removePost}`,
@@ -145,7 +157,7 @@ export default {
         }
       }).then((result) => {
         this.flash('삭제되었습니다.', 'success')
-        // window.location = '/board/'
+        this.$router.push('/board')
       })
     }
   }
@@ -153,6 +165,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+nav.gnb.static + .post {
+  margin-top: 60px !important;
+}
+
 .container {
   padding: 1rem;
 }

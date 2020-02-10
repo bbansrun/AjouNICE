@@ -109,12 +109,12 @@ export default {
             })
             if (result.auth_email_yn === 'N') {
               this.$store.dispatch('LOGOUT')
-              window.location = '/error/401'
+              this.$router.push('/error/401')
             } else {
               if ('redirect' in params) {
-                window.location = params.redirect
+                this.$router.push(params.redirect)
               } else {
-                window.location = '/gate/manager'
+                this.$router.push('/gate/manager')
               }
             }
           })

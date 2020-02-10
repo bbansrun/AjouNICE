@@ -100,10 +100,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-form.reply {
-  padding: 0 2rem;
-}
-
 div.reply {
   display: grid;
   grid-template-columns: 9fr 1fr;

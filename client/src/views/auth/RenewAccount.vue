@@ -49,7 +49,7 @@
         </div>
         <div class="input-form-controls">
           <router-link
-            to="/"
+            to="/#/"
             class="underline underline-inline-block"
           >
             <small>처음으로</small>
@@ -113,7 +113,7 @@ export default {
                     text: '패스워드 재설정 이메일을 입력하신 주소로 발송하였습니다. 수신함을 확인해주세요.',
                     footer: '<p>스팸으로 분류되는 경우도 발생할 수 있으니 수신되지 않은 경우 해당 문서함을 확인해주세요.</p>'
                   }).then(result => {
-                    window.location = '/'
+                    this.$router.push('/')
                   })
                 }
               })

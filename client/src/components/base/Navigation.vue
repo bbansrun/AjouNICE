@@ -1,7 +1,7 @@
 <template>
   <nav
     class="gnb"
-    :class="{ 'active': (isFixedNavActive || isSlideNavActive) }"
+    :class="{ 'active': (isFixedNavActive || isSlideNavActive || isStatic), 'static': isStatic }"
   >
     <div class="fixed-nav">
       <div
@@ -63,7 +63,7 @@
           <h3>로그인이 필요합니다.</h3>
           <div class="btn-wrapper">
             <div class="btn btn-extended login">
-              <router-link to="/auth/login">
+              <router-link to="/#/auth/login">
                 <font-awesome-icon icon="key" />
                 <span>로그인</span>
               </router-link>
@@ -107,7 +107,11 @@
 <script>
 export default {
   props: {
-    scrollBase: Number
+    isStatic: Boolean,
+    scrollBase: {
+      type: Number,
+      default: 0
+    }
   },
   data () {
     return {
@@ -133,9 +137,7 @@ export default {
       return this.$store.state.user
     },
     userProfileLink () {
-      if (this.$store.state.user) {
-        return `/profile/${this.$store.state.user.idx}`
-      }
+      return `/profile/${this.$store.state.user.idx}`
     }
   },
   mounted () {
@@ -158,7 +160,7 @@ export default {
     logout () {
       this.$store.dispatch('LOGOUT').then(() => {
         document.body.classList.toggle('loading')
-        window.location = '/'
+        this.$router.go(0)
       })
         .catch(error => {
           console.error(error)
