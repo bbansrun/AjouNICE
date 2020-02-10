@@ -43,8 +43,7 @@ import Welcome from '@/components/base/Welcome.vue'
 import IconNav from '@/components/base/IconNav.vue'
 import PostList from '@/components/board/PostList.vue'
 import Footer from '@/components/base/Footer.vue'
-import { UserHome } from '@/assets/graphql/queries'
-import { Notice } from '@/assets/graphql/mutations'
+import { UserHome, Notice } from '@/assets/graphql/queries'
 
 export default {
   name: 'Home',
@@ -94,8 +93,8 @@ export default {
     }).then(({ data }) => {
       this.posts = data.posts
       for (const dpt of data.user.dpt_cd.split(',')) {
-        this.$apollo.mutate({
-          mutation: gql`${Notice}`,
+        this.$apollo.query({
+          query: gql`${Notice}`,
           variables: {
             code: dpt
           }

@@ -21,6 +21,8 @@ db.Board.hasMany(db.BoardComment, {
   as: 'comments',
   foreignKey: 'board_idx',
   sourceKey: 'board_idx',
+  onDelete: 'cascade',
+  foreignKeyConstraint: false,
 });
 
 db.BoardComment.belongsTo(db.Board, {

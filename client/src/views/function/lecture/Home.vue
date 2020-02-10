@@ -37,7 +37,7 @@
                 {{ review.subject }}
               </p>
               <p class="subtitle">
-                {{ review.dpt }} ({{ review.subType }})
+                {{ review.professor }} | {{ review.dpt }} ({{ review.subType }})
               </p>
             </div>
             <div class="card-content">
@@ -91,10 +91,9 @@ export default {
     return {
       reviews: [
         { id: 1, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
-        { id: 2, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
-        { id: 3, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
-        { id: 4, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' },
-        { id: 5, subject: '현대암호이론및응용', dpt: '사이버보안학과', subType: '전공필수', professor: '예홍진', rate: 5, content: '호호' }
+        { id: 2, subject: '정보보호법정책과제도', dpt: '사이버보안학과', subType: '전공선택', professor: '박춘식', rate: 5, content: '호호' },
+        { id: 3, subject: '컴퓨터네트워크', dpt: '소프트웨어학과', subType: '전공필수', professor: '강경란', rate: 5, content: '호호' },
+        { id: 4, subject: '미디어통계', dpt: '미디어학과', subType: '전공필수', professor: '김효동', rate: 5, content: '호호' }
       ],
       scrollBase: null,
       options: [

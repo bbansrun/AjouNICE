@@ -80,7 +80,7 @@ export default {
       }).then(({ data }) => {
         document.body.classList.toggle('loading')
         this.flash('댓글을 달았습니다.', 'success')
-        location.reload()
+        this.$router.go(0)
       })
     },
     removeReply (id) {

@@ -70,13 +70,18 @@ module.exports = {
       ];
       return await findOne(BoardComment, args, info, include);
     },
-  },
-  Mutation: {
-    notice: async (root, args, context, info) => {
+    async schedule (parent, args, context, info) {
+      const response = await fetch('http://localhost:5000/api/schedule');
+      const result = await response.json();
+      return result.result;
+    },
+    async notice (parent, args, context, info) {
       const response = await fetch(`http://localhost:5000/api/notice/${args.code}`);
       const result = await response.json();
       return result.result;
     },
+  },
+  Mutation: {
     sendContactMail: async (root, { name, email, content, }) => {
       sendContactMail(name, email, content);
       return true;
@@ -136,6 +141,14 @@ module.exports = {
         return await findOne(Board, args, info);
       } else {
         return {};
+      }
+    },
+    removePost: async (parent, args, context, info) => {
+      const removed = await Board.destroy({ where: { ...args, }, });
+      if (removed) {
+        return true;
+      } else {
+        return false;
       }
     },
   },

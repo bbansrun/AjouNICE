@@ -1,0 +1,7 @@
+{
+  schedule {
+    date
+    event
+    etc
+  }
+}

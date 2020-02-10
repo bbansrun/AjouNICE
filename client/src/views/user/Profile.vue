@@ -66,8 +66,7 @@ import Landing from '@/components/base/Landing.vue'
 import MyPosts from '@/components/user/MyPosts.vue'
 import MyReviews from '@/components/user/MyLectureReviews.vue'
 import Footer from '@/components/base/Footer.vue'
-import { User } from '@/assets/graphql/queries'
-import { Notice } from '@/assets/graphql/mutations'
+import { User, Notice } from '@/assets/graphql/queries'
 export default {
   components: {
     Navigation,
@@ -102,8 +101,8 @@ export default {
       this.articles = data.user.articles
       this.user_nm = data.user.user_nm
       for (const dpt of data.user.dpt_cd.split(',')) {
-        this.$apollo.mutate({
-          mutation: gql`${Notice}`,
+        this.$apollo.query({
+          query: gql`${Notice}`,
           variables: {
             code: dpt
           }

@@ -1,4 +1,4 @@
-mutation getNotice($code: String!) {
+query getNotice($code: String!) {
     notice(code: $code) {
         unit
         boardName

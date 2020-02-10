@@ -196,7 +196,7 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/board/:category/:name/:post_id/edit',
+      path: '/board/:post_id/edit',
       component: Edit,
       beforeEnter: requireAuth
     },

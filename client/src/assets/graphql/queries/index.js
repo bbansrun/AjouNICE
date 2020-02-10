@@ -7,6 +7,8 @@ import AllPosts from './AllPosts.graphql'
 import User from './UserProfile.graphql'
 import UserHome from './UserHome.graphql'
 import BoardsAndPosts from './BoardsAndPosts.graphql'
+import Schedule from './Schedule.graphql'
+import Notice from './Notice.graphql'
 
 export {
   Post,
@@ -17,5 +19,7 @@ export {
   AllPosts,
   BoardsAndPosts,
   User,
-  UserHome
+  UserHome,
+  Schedule,
+  Notice
 }

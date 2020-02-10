@@ -146,6 +146,12 @@ type Notice {
     link: String!
 }
 
+type Schedule {
+    date: String!
+    event: String!
+    etc: String!
+}
+
 type Query {
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
     colleges(exist_yn: String!): [College]
@@ -154,10 +160,11 @@ type Query {
     post(board_idx: ID!): Board
     posts(category_idx: ID): [Board] 
     comment(cmt_idx: ID!): BoardComment
+    schedule: [Schedule]
+    notice(code: String!): [Notice]
 }
 
 type Mutation {
-    notice(code: String!): [Notice]
     sendContactMail(name: String!, email: String!, content: String!): Boolean
     sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean
     lastLogin(userId: String!, ip: String!): Boolean
@@ -167,5 +174,6 @@ type Mutation {
     writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String): Boolean
     removeReply(cmt_idx: Int!): Boolean
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
+    removePost(board_idx: Int!): Boolean
 }
 `;
