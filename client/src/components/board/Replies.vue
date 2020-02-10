@@ -51,7 +51,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { replyWritten } from '@/assets/graphql/subscriptions'
+import { replyWritten, replyRemoved } from '@/assets/graphql/subscriptions'
 import { writeReply, removeReply } from '@/assets/graphql/mutations'
 export default {
   props: {
@@ -71,15 +71,29 @@ export default {
   },
   mounted () {
     const that = this
-    const observer = this.$apollo.subscribe({
+    const writtenObserver = this.$apollo.subscribe({
       query: gql`${replyWritten}`
     })
+    const removedObserver = this.$apollo.subscribe({
+      query: gql`${replyRemoved}`
+    })
 
-    observer.subscribe({
+    writtenObserver.subscribe({
       next ({ data }) {
         that.flash('댓글을 달았습니다.', 'success')
-        that.content.push(data.replyWritten)
+        that.content.unshift(data.replyWritten)
         that.reply = ''
+        document.body.classList.toggle('loading')
+      },
+      error (error) {
+        console.error(error)
+      }
+    })
+
+    removedObserver.subscribe({
+      next ({ data }) {
+        that.flash('댓글을 삭제하였습니다.', 'success')
+        that.content.shift()
         document.body.classList.toggle('loading')
       },
       error (error) {
@@ -111,8 +125,6 @@ export default {
         }
       }).then(({ data }) => {
         document.body.classList.toggle('loading')
-        this.flash('댓글을 삭제하였습니다.', 'success')
-        // this.$router.go(0)
       })
     }
   }

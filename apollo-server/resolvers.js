@@ -39,11 +39,15 @@ const findAll = async (model, args, info, include = []) => {
 };
 
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
+const REPLY_REMOVED = 'REPLY_REMOVED';
 
 module.exports = {
   Subscription: {
     replyWritten: {
       subscribe: (parent, args, context, info) => pubsub.asyncIterator([REPLY_WRITTEN]),
+    },
+    replyRemoved: {
+      subscribe: (parent, args, context, info) => pubsub.asyncIterator([REPLY_REMOVED]),
     },
   },
   Query: {
@@ -147,6 +151,7 @@ module.exports = {
     },
     removeReply: async (parent, args, context, info) => {
       const removed = await BoardComment.destroy({ where: { ...args, }, });
+      pubsub.publish(REPLY_REMOVED, { replyRemoved: removed, });
       if (removed) {
         return true;
       } else {

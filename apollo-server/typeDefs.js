@@ -154,6 +154,7 @@ type Schedule {
 
 type Subscription {
     replyWritten: BoardComment
+    replyRemoved: Boolean
 }
 
 type Query {
