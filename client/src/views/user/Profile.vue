@@ -13,7 +13,7 @@
             v-show="$store.state.user.type === 'A'"
             type="is-danger"
             tag="router-link"
-            to="/#/gate/manager"
+            to="/gate/manager"
           >
             관리자
           </b-button>
