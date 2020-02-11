@@ -8,23 +8,9 @@ const { PubSub, } = require('apollo-server-express');
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
 const { sequelize, } = require('./models');
 
-const path = require('path');
-const multer = require('multer');
-const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 AWS.config.loadFromPath(`${__dirname}/config/aws.json`);
 const s3 = new AWS.S3();
-const uploadS3 = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: 'ajounice',
-    key (req, file, cb) {
-      const extension = path.extname(file.originalname);
-      cb(null, `${Date.now().toString()}${extension}`);
-    },
-    acl: 'public-read-write',
-  }),
-});
 
 sequelize.sync({});
 
@@ -222,11 +208,25 @@ module.exports = {
         return false;
       }
     },
-    uploadImage: async (root, args, { db, }, info) => {
+    singleUpload: async (root, { file, }, { db, }, info) => {
       // Upload Image to S3
-      uploadS3.single(args.input.file);
-      pubsub.publish(IMAGE_UPLOADED, { imageUploaded: {}, });
-      return {};
+      const { filename, mimetype, encoding, createReadStream, } = await file;
+      const returnFile = { filename, mimetype, encoding, };
+      const param = {
+        Bucket: 'ajounice',
+        Key: `board/images/${filename}`,
+        ACL: 'public-read',
+        Body: createReadStream(),
+        ContentType: mimetype,
+      };
+      s3.upload(param, (err, data) => {
+        if (err) {
+          console.error(`[AWS] S3 업로드 중 에러 발생: ${err}`);
+        }
+        console.log(data);
+      });
+      pubsub.publish(IMAGE_UPLOADED, { imageUploaded: returnFile, });
+      return returnFile;
     },
   },
 };

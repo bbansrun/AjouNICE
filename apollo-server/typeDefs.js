@@ -1,26 +1,18 @@
 module.exports = `
 scalar Date
 
-input ImageS3 {
-    name: String!
-    description: String
-    file: Upload!
-}
-
-type Image {
-    id: ID!
-    url: String!
-    name: String!
-    description: String
-    postedBy: User!
-}
-
 enum Role {
     ADMIN
     USER
 }
 
 directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
+
+type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+}
 
 type User {
     user_idx: ID!
@@ -163,7 +155,7 @@ type Schedule {
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: Boolean
-    imageUploaded: Image
+    imageUploaded: File
 }
 
 type Query {
@@ -177,6 +169,7 @@ type Query {
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]
+    uploads: [File]
 }
 
 type Mutation {
@@ -190,6 +183,6 @@ type Mutation {
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
     writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String, reg_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): Boolean
-    uploadImage(image: ImageS3!): Image
+    singleUpload(file: Upload!): File
 }
 `;

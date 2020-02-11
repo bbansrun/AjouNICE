@@ -29,6 +29,7 @@
     "graphql-disable-introspection": "^1.1.0",
     "graphql-fields": "^2.0.3",
     "graphql-playground-middleware-express": "^1.7.12",
+    "graphql-upload": "^10.0.0",
     "graphql-validation-complexity": "^0.2.5",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",

@@ -5,14 +5,14 @@
         v-model="dropFiles"
         multiple
         drag-drop
-        accept="jpg,png"
+        accept="image/*"
       >
         <section class="section">
           <div class="content has-text-centered">
             <p>
               <font-awesome-icon icon="upload" />
             </p>
-            <p>파일을 이곳에 드래그하거나 클릭하여 업로드하세요</p>
+            <p>파일을 이곳에 드래그하거나 클릭하여 업로드하세요.<br><small>이미지만 허용됩니다.</small></p>
           </div>
         </section>
       </b-upload>
@@ -37,7 +37,9 @@
 
 <script>
 import Vue from 'vue'
+import gql from 'graphql-tag'
 import { Field, Upload } from 'buefy'
+import { UploadFiles } from '@/assets/graphql/mutations'
 
 Vue.use(Field)
 Vue.use(Upload)
@@ -47,9 +49,27 @@ export default {
       dropFiles: []
     }
   },
+  watch: {
+    dropFiles (value) {
+      // TEST Push
+      this.uploadFiles(value)
+    }
+  },
   methods: {
     deleteDropFile (index) {
       this.dropFiles.splice(index, 1)
+    },
+    uploadFiles (file) {
+      console.log(file)
+      console.log('Will upload ', file[0])
+      this.$apollo.mutate({
+        mutation: gql`${UploadFiles}`,
+        variables: {
+          file: file[0]
+        }
+      }).then(({ data }) => {
+        console.log(data)
+      })
     }
   }
 }

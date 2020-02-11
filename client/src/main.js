@@ -33,6 +33,7 @@ import { createHttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { createUploadLink } from 'apollo-upload-client'
 import VueApollo from 'vue-apollo'
 
 Vue.use(VueApollo)
@@ -168,7 +169,11 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-const httpLink = authLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
+const uploadLink = authLink.concat(createUploadLink({
+  uri: 'http://localhost:455/graphql'
+}))
+
+const httpLink = uploadLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
   .concat(createHttpLink({
     uri: `http://${require('ip').address()}:455/graphql`
     // fetch
