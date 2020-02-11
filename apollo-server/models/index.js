@@ -50,7 +50,7 @@ db.User.hasMany(db.Board, {
 });
 
 db.Board.belongsTo(db.User, {
-  as: 'articles',
+  as: 'user',
   foreignKey: 'user_idx',
   targetKey: 'user_idx',
 });

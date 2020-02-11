@@ -65,6 +65,9 @@ export default {
       }).then(({ data }) => {
         this.loading = false
         this.schedule.data = data.schedule
+      }).catch(error => {
+        console.error(error)
+        this.$router.push('/error/500')
       })
     }
   }

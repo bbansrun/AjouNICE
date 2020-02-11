@@ -1,11 +1,14 @@
 query Post($id: ID!) {
     post(board_idx: $id) {
-        user_idx
         title
         body
         nick_nm
         reg_dt
         upt_dt
+        user {
+            user_idx
+            nick_nm
+        }
         comments {
             cmt_idx
             user_idx

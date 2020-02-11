@@ -81,16 +81,24 @@ module.exports = {
       return await findAll(BoardCategory, args, info, include);
     },
     async posts (parent, args, context, info) {
+      const order = [
+        ['reg_dt', 'DESC']
+      ];
       const include = [
         { model: BoardComment, as: 'comments', }
       ];
-      return await findAll(Board, args, info, include);
+      return await findAll(Board, args, info, include, order);
     },
     async post (parent, args, context, info) {
+      const order = [
+        [{ model: BoardComment, as: 'comments', }, 'reg_dt', 'DESC'],
+        [{ model: BoardComment, as: 'comments', }, 'cmt_idx', 'DESC']
+      ];
       const include = [
+        { model: User, as: 'user', },
         { model: BoardComment, as: 'comments', include: [{ model: User, as: 'commenter', }], }
       ];
-      return await findOne(Board, args, info, include);
+      return await findOne(Board, args, info, include, order);
     },
     async postsByKeyword (parent, args, context, info) {
       const parsedArgs = {

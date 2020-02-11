@@ -2,7 +2,7 @@
   <section class="replies">
     <article>
       <header class="underline underline-inline-block">
-        <h3>{{ content.length }}개의 댓글이 달렸습니다.</h3>
+        {{ content.length }}개의 댓글이 달렸습니다.
       </header>
     </article>
     <form
@@ -19,10 +19,13 @@
           required
           placeholder="댓글을 작성하세요."
           no-validate
+          @keyup.enter="makeReply"
         >
-        <button @click="makeReply">
+        <b-button
+          @click="makeReply"
+        >
           작성
-        </button>
+        </b-button>
       </div>
     </form>
     <div class="replies-view">
@@ -31,17 +34,21 @@
         :key="reply.cmt_idx"
         class="card reply"
       >
-        <div class="content">
+        <div class="meta">
           <header>{{ reply.nick_nm }}</header>
-          <p>{{ reply.text }}</p>
           <small>{{ new Date(reply.upt_dt).toLocaleDateString() }}</small>
         </div>
-        <div class="controls">
+        <p class="content">
+          {{ reply.text }}
+        </p>
+        <div
+          v-show="$store.state.user.idx === reply.user_idx"
+          class="controls"
+        >
           <button
-            v-show="reply.user_idx === $store.state.user.idx"
             @click="removeReply(reply.cmt_idx)"
           >
-            삭제
+            <font-awesome-icon icon="trash" />
           </button>
         </div>
       </div>
@@ -80,6 +87,7 @@ export default {
 
     writtenObserver.subscribe({
       next ({ data }) {
+        console.log(data.replyWritten)
         that.flash('댓글을 달았습니다.', 'success')
         that.content.unshift(data.replyWritten)
         that.reply = ''
@@ -93,7 +101,7 @@ export default {
     removedObserver.subscribe({
       next ({ data }) {
         that.flash('댓글을 삭제하였습니다.', 'success')
-        that.content.shift()
+        that.content.pop()
         // document.body.classList.toggle('loading')
       },
       error (error) {
@@ -133,11 +141,52 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+article {
+  padding: unset !important;
+  > header {
+    font: {
+      size: 1rem;
+    }
+  }
+}
+
 div.reply {
   display: grid;
-  grid-template-columns: 9fr 1fr;
-  padding: 1rem;
+  grid-template-columns: 1fr 8fr 1fr;
   margin-bottom: 1rem;
+  > .meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: .4rem;
+    > header {
+      font: {
+        size: .8rem;
+      }
+    }
+  }
+  > .content {
+    display: flex;
+    align-items: center;
+    margin-bottom: unset;
+    padding: .4rem;
+    font: {
+      size: .8rem;
+    }
+  }
+  > .controls {
+    & button {
+      font: {
+        size: .8rem;
+      }
+      border: none;
+      outline: none;
+      width: 100%;
+      height: 100%;
+      background: red;
+      color: #fff;
+    }
+  }
 }
 
 .input-form-reply {

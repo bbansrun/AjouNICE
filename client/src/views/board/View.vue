@@ -5,7 +5,11 @@
       <header>
         {{ post.title }}
       </header>
-      <small>{{ new Date(post.reg_dt).toLocaleDateString() }}</small>
+      <small>
+        <span class="writer">{{ post.user.nick_nm }}</span>&nbsp;
+        <span class="date">{{ new Date(post.reg_dt).toLocaleDateString() }}</span>
+      </small>
+      <hr>
       <div class="content">
         <div
           class="container"
@@ -49,9 +53,10 @@
             삭제
           </b-button>
         </div>
+        <hr>
         <Replies
           :post="parseInt($route.params.post_id)"
-          :content="replies"
+          :content="post.comments"
         />
       </div>
     </article>
@@ -81,7 +86,6 @@ export default {
       scrollBase: null,
       meta: {},
       user_idx: null,
-      replies: [],
       post: null,
       images: [
         'https://placekitten.com/801/800',
@@ -114,8 +118,6 @@ export default {
       }
     }).then(({ data }) => {
       this.post = data.post
-      this.user_idx = data.post.user_idx
-      this.replies = data.post.comments
     }).catch(error => {
       console.error(error)
       // this.$router.push('/error/404')

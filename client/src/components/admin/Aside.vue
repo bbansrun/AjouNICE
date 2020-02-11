@@ -9,6 +9,7 @@
           <strong>관리자</strong>
         </small>
       </header>
+      <hr>
       사이드 영역
       <hr>
       <div class="controls">

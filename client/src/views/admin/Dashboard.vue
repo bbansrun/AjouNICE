@@ -24,7 +24,7 @@ export default {
 .admin {
   display: grid;
   grid-template-columns: 1fr 9fr;
-  min-height: 70vh;
+  min-height: calc(100vh - 32px);
   > aside {
     background: #e3e3e3;
   }

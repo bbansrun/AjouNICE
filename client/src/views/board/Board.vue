@@ -109,17 +109,7 @@ export default {
     document.body.classList.toggle('loading')
   },
   beforeMount () {
-    if (this.$route.params.category) {
-      // 특정 Depth 카테고리 내 전체 게시물 조회
-      this.getCateInfo(this.$route.params.category)
-      if (this.$route.params.name) {
-        // 특정 Depth 하위 카테고리 내 전체 게시물 조회
-        this.getSubCateInfo(this.category_idx, this.$route.params.name)
-      }
-    } else {
-      // 전체 게시판, 게시물 조회
-      this.getAll()
-    }
+    this.init()
   },
   created () {
     document.body.classList.toggle('loading')
@@ -127,7 +117,23 @@ export default {
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
+  updated () {
+    this.init()
+  },
   methods: {
+    init () {
+      if (this.$route.params.category) {
+      // 특정 Depth 카테고리 내 전체 게시물 조회
+        this.getCateInfo(this.$route.params.category)
+        if (this.$route.params.name) {
+        // 특정 Depth 하위 카테고리 내 전체 게시물 조회
+          this.getSubCateInfo(this.category_idx, this.$route.params.name)
+        }
+      } else {
+      // 전체 게시판, 게시물 조회
+        this.getAll()
+      }
+    },
     getAll () {
       this.$apollo.query({
         query: gql`${BoardsAndPosts}`
@@ -153,7 +159,7 @@ export default {
         }
       }).catch((error) => {
         console.log(error)
-        this.$router.push('/error/404')
+        this.$router.push('/error/500')
       })
     },
     getSubCateInfo (depth, parent, name) {
