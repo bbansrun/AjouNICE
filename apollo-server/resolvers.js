@@ -6,7 +6,25 @@ const jwt = require('jsonwebtoken');
 const graphqlFields = require('graphql-fields');
 const { PubSub, } = require('apollo-server-express');
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
-const { User, College, Department, Board, BoardCategory, BoardComment, sequelize, } = require('./models');
+const { sequelize, } = require('./models');
+
+const path = require('path');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
+AWS.config.loadFromPath(`${__dirname}/config/aws.json`);
+const s3 = new AWS.S3();
+const uploadS3 = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'ajounice',
+    key (req, file, cb) {
+      const extension = path.extname(file.originalname);
+      cb(null, `${Date.now().toString()}${extension}`);
+    },
+    acl: 'public-read-write',
+  }),
+});
 
 sequelize.sync({});
 
@@ -14,6 +32,7 @@ sequelize.sync({});
 const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
+const IMAGE_UPLOADED = 'IMAGE_UPLOADED';
 
 // JWT Token Verify
 const tokenVerify = (token) => (new Promise((resolve, reject) => {
@@ -44,83 +63,98 @@ const findAll = async (model, args, info, include = [], order = []) => {
   });
 };
 
+const createOne = async (model, args) => {
+  return await model.create({ ...args, });
+};
+
+const destroyOne = async (model, args) => {
+  return await model.destroy({ where: { ...args, }, });
+};
+
+const updateOne = async (model, value, condArgs) => {
+  return await model.update(value, { where: { ...condArgs, }, });
+};
+
 module.exports = {
   Subscription: {
     replyWritten: {
-      subscribe: (parent, args, context, info) => pubsub.asyncIterator([REPLY_WRITTEN]),
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([REPLY_WRITTEN]),
     },
     replyRemoved: {
-      subscribe: (parent, args, context, info) => pubsub.asyncIterator([REPLY_REMOVED]),
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([REPLY_REMOVED]),
+    },
+    imageUploaded: {
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([IMAGE_UPLOADED]),
     },
   },
   Query: {
     // College
-    async colleges (parent, args, context, info) {
+    async colleges (root, args, { db, }, info) {
       const include = [
-        { model: Department, as: 'departments', }
+        { model: db.Department, as: 'departments', }
       ];
-      return await findAll(College, args, info, include);
+      return await findAll(db.College, args, info, include);
     },
     // Department
-    async departments (parent, args, context, info) {
-      return await findAll(Department, args, info);
+    async departments (root, args, { db, }, info) {
+      return await findAll(db.Department, args, info);
     },
     // User
-    async user (parent, args, context, info) {
+    async user (root, args, { db, }, info) {
       const include = [
-        { model: Board, as: 'articles', },
-        { model: BoardComment, as: 'commenter', }
+        { model: db.Board, as: 'articles', },
+        { model: db.BoardComment, as: 'commenter', }
       ];
-      return await findOne(User, args, info, include);
+      return await findOne(db.User, args, info, include);
     },
     // Board
-    async boards (parent, args, context, info) {
+    async boards (root, args, { db, }, info) {
       const include = [
-        { model: Board, as: 'posts', }
+        { model: db.Board, as: 'posts', }
       ];
-      return await findAll(BoardCategory, args, info, include);
+      return await findAll(db.BoardCategory, args, info, include);
     },
-    async posts (parent, args, context, info) {
+    async posts (root, args, { db, }, info) {
       const order = [
         ['reg_dt', 'DESC']
       ];
       const include = [
-        { model: BoardComment, as: 'comments', }
+        { model: db.BoardComment, as: 'comments', }
       ];
-      return await findAll(Board, args, info, include, order);
+      return await findAll(db.Board, args, info, include, order);
     },
-    async post (parent, args, context, info) {
+    async post (root, args, { db, }, info) {
       const order = [
-        [{ model: BoardComment, as: 'comments', }, 'reg_dt', 'DESC'],
-        [{ model: BoardComment, as: 'comments', }, 'cmt_idx', 'DESC']
+        [{ model: db.BoardComment, as: 'comments', }, 'reg_dt', 'DESC'],
+        [{ model: db.BoardComment, as: 'comments', }, 'cmt_idx', 'DESC']
       ];
       const include = [
-        { model: User, as: 'user', },
-        { model: BoardComment, as: 'comments', include: [{ model: User, as: 'commenter', }], }
+        { model: db.User, as: 'user', },
+        { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
       ];
-      return await findOne(Board, args, info, include, order);
+      return await findOne(db.Board, args, info, include, order);
     },
-    async postsByKeyword (parent, args, context, info) {
+    async postsByKeyword (root, args, { db, }, info) {
       const parsedArgs = {
         [Op.or]: [
           { title: { [Op.like]: `%${args.keyword}%`, }, },
           { body: { [Op.like]: `%${args.keyword}%`, }, }
         ],
       };
-      return await findAll(Board, parsedArgs, info);
+      return await findAll(db.Board, parsedArgs, info);
     },
-    async comment (parent, args, context, info) {
+    async comment (root, args, { db, }, info) {
       const include = [
-        { model: User, as: 'commenter', }
+        { model: db.User, as: 'commenter', }
       ];
-      return await findOne(BoardComment, args, info, include);
+      return await findOne(db.BoardComment, args, info, include);
     },
-    async schedule (parent, args, context, info) {
+    async schedule (root, args, { db, }, info) {
       const response = await fetch('http://localhost:5000/api/schedule');
       const result = await response.json();
       return result.result;
     },
-    async notice (parent, args, context, info) {
+    async notice (root, args, { db, }, info) {
       const response = await fetch(`http://localhost:5000/api/notice/${args.code}`);
       const result = await response.json();
       return result.result;
@@ -135,42 +169,36 @@ module.exports = {
       sendConfirmMail(user_nm, email, auth_token, false);
       return true;
     },
-    lastLogin: async (root, { userId, ip, }) => {
-      const updateLastLogin = await User.update({ log_ip: ip, log_dt: Date.now(), }, { where: { user_id: userId, }, });
+    lastLogin: async (root, { userId, ip, }, { db, }, info) => {
+      const updateLastLogin = await db.User.update({ log_ip: ip, log_dt: Date.now(), }, { where: { user_id: userId, }, });
       if (updateLastLogin) return true;
       else return false;
     },
-    authorize: async (root, { user_idx, }) => {
-      const updateAuthorized = await User.update({ auth_email_yn: 'Y', }, { where: { user_idx: user_idx, }, });
+    authorize: async (root, { user_idx, }, { db, }, info) => {
+      const updateAuthorized = await db.User.update({ auth_email_yn: 'Y', }, { where: { user_idx: user_idx, }, });
       if (updateAuthorized) return true;
       else return false;
     },
-    resetEmailToken: async (root, { email, }) => {
-      const salt = bcrypt.genSaltSync(10);
-      const newToken = crypto.createHash('sha256').update(bcrypt.hashSync(email + Date.now(), salt)).digest('hex');
-      const user = await User.update({ auth_token: newToken, auth_email_yn: 'N', }, { where: { email: email, }, });
+    resetEmailToken: async (root, { email, }, { db, }, info) => {
+      const salt = await bcrypt.genSalt(10);
+      const rawToken = await bcrypt.hash(`AjouNICE!|authToken|${email}|${Date.now()}`, salt);
+      const newToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+      const user = await db.User.update({ auth_token: newToken, auth_email_yn: 'N', }, { where: { email: email, }, });
       sendConfirmMail(undefined, email, newToken, true);
       if (user) return true;
       else return false;
     },
     // Board
-    writePost: async (root, { category_idx, user_idx, nick_nm, title, body, reg_ip, }) => {
-      return await Board.create({
-        category_idx,
-        user_idx,
-        nick_nm,
-        title,
-        body,
-        reg_ip,
-      });
+    writePost: async (root, args, { db, }, info) => {
+      return await createOne(db.Board, args);
     },
-    writeReply: async (parent, args, context, info) => {
-      const created = await BoardComment.create({ ...args, });
+    writeReply: async (root, args, { db, }, info) => {
+      const created = await createOne(db.BoardComment, args);
       pubsub.publish(REPLY_WRITTEN, { replyWritten: created.dataValues, });
       return created.dataValues;
     },
-    removeReply: async (parent, args, context, info) => {
-      const removed = await BoardComment.destroy({ where: { ...args, }, });
+    removeReply: async (root, args, { db, }, info) => {
+      const removed = await destroyOne(db.BoardComment, args);
       pubsub.publish(REPLY_REMOVED, { replyRemoved: removed, });
       if (removed) {
         return true;
@@ -178,21 +206,27 @@ module.exports = {
         return false;
       }
     },
-    editPost: async (parent, args, context, info) => {
-      const updated = await Board.update({ ...args, }, { where: { board_idx: args.board_idx, }, });
+    editPost: async (root, args, { db, }, info) => {
+      const updated = await db.Board.update({ ...args, }, { where: { board_idx: args.board_idx, }, });
       if (updated) {
-        return await findOne(Board, args, info);
+        return await findOne(db.Board, args, info);
       } else {
         return {};
       }
     },
-    removePost: async (parent, args, context, info) => {
-      const removed = await Board.destroy({ where: { ...args, }, });
+    removePost: async (root, args, { db, }, info) => {
+      const removed = await destroyOne(db.Board, args);
       if (removed) {
         return true;
       } else {
         return false;
       }
+    },
+    uploadImage: async (root, args, { db, }, info) => {
+      // Upload Image to S3
+      uploadS3.single(args.input.file);
+      pubsub.publish(IMAGE_UPLOADED, { imageUploaded: {}, });
+      return {};
     },
   },
 };

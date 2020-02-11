@@ -170,8 +170,8 @@ const authLink = new ApolloLink((operation, forward) => {
 
 const httpLink = authLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
   .concat(createHttpLink({
-    uri: `http://${require('ip').address()}:455/graphql`,
-    fetch
+    uri: `http://${require('ip').address()}:455/graphql`
+    // fetch
   })))
 
 const link = split(

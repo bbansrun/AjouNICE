@@ -7,6 +7,14 @@ input ImageS3 {
     file: Upload!
 }
 
+type Image {
+    id: ID!
+    url: String!
+    name: String!
+    description: String
+    postedBy: User!
+}
+
 enum Role {
     ADMIN
     USER
@@ -155,6 +163,7 @@ type Schedule {
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: Boolean
+    imageUploaded: Image
 }
 
 type Query {
@@ -177,9 +186,10 @@ type Mutation {
     authorize(user_idx: Int!): Boolean
     resetEmailToken(email: String!): Boolean
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
+    removePost(board_idx: Int!): Boolean
+    editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
     writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String, reg_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): Boolean
-    editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
-    removePost(board_idx: Int!): Boolean
+    uploadImage(image: ImageS3!): Image
 }
 `;
