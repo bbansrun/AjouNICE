@@ -63,7 +63,7 @@
           <h3>로그인이 필요합니다.</h3>
           <div class="btn-wrapper">
             <div class="btn btn-extended login">
-              <router-link to="/#/auth/login">
+              <router-link to="/auth/login">
                 <font-awesome-icon icon="key" />
                 <span>로그인</span>
               </router-link>

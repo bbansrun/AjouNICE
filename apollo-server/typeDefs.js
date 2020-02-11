@@ -1,7 +1,7 @@
 module.exports = `
 scalar Date
 
-input ImageInput {
+input ImageS3 {
     name: String!
     description: String
     file: Upload!
@@ -163,7 +163,8 @@ type Query {
     departments(college_cd: String): [Department]
     boards(depth: Int, title: String, parent: Int): [BoardCategory]
     post(board_idx: ID!): Board
-    posts(category_idx: ID): [Board] 
+    postsByKeyword(keyword: String!): [Board]
+    posts(category_idx: ID): [Board]
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]
@@ -176,7 +177,7 @@ type Mutation {
     authorize(user_idx: Int!): Boolean
     resetEmailToken(email: String!): Boolean
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
-    writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String): BoardComment
+    writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String, reg_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): Boolean
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
     removePost(board_idx: Int!): Boolean

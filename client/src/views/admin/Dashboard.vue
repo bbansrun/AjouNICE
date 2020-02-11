@@ -16,17 +16,6 @@ import Footer from '@/components/admin/Footer.vue'
 export default {
   components: {
     Aside, Footer
-  },
-  methods: {
-    logout () {
-      this.$store.dispatch('LOGOUT').then(() => {
-        document.body.classList.toggle('loading')
-        this.$router.push('/')
-      })
-        .catch(error => {
-          console.error(error)
-        })
-    }
   }
 }
 </script>

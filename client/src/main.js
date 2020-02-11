@@ -16,7 +16,8 @@ import {
   faKey,
   faArrowAltCircleRight,
   faEye,
-  faStar
+  faStar,
+  faSearchPlus
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -63,6 +64,7 @@ library.add(faArrowAltCircleRight)
 library.add(faUpload)
 library.add(faEye)
 library.add(faStar)
+library.add(faSearchPlus)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const shouldEncode = (url, options) => {

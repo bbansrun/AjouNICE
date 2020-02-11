@@ -67,13 +67,13 @@
         </div>
         <div class="input-form-controls">
           <router-link
-            to="/#/auth/reset"
+            to="/auth/reset"
             class="underline underline-inline-block"
           >
             <small>계정 재설정</small>
           </router-link>
           <router-link
-            to="/#/auth/signup"
+            to="/auth/signup"
             class="btn rounded box-shadow text-inverse"
           >
             회원가입 &rarr;
@@ -86,6 +86,7 @@
 
 <script>
 import gql from 'graphql-tag'
+import jwt from 'jsonwebtoken'
 
 export default {
   name: 'Login',
@@ -111,22 +112,24 @@ export default {
         const password = this.password
         this.$store.dispatch('LOGIN', { userId, password })
           .then(({ result }) => {
-            this.$Axios.get('https://api.ipify.org/?format=json').then(client => {
-              this.$apollo.mutate({
-                mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${client.data.ip}") }`
-              })
-            })
-            if (result.auth_email_yn === 'N') {
-              this.$store.dispatch('LOGOUT').then(() => {
+            jwt.verify(result.access_token, '4j0uN1ce1', (err, { user: { access_loc } }) => {
+              if (err) {
                 this.$router.push('/error/401')
-              })
-            } else {
-              if ('redirect' in params) {
-                this.$router.push(params.redirect)
               } else {
-                this.$router.push('/')
+                this.$apollo.mutate({
+                  mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${access_loc}") }`
+                }).then((result) => {
+                  document.body.classList.toggle('loading')
+                  if (result.auth_email_yn === 'N') {
+                    this.$store.dispatch('LOGOUT').then(() => {
+                      this.$router.push('/error/401')
+                    })
+                  } else {
+                    this.$router.push('redirect' in params ? params.redirect : '/')
+                  }
+                })
               }
-            }
+            })
           })
           .catch(({ response }) => {
             document.body.classList.toggle('loading')

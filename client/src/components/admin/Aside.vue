@@ -12,8 +12,13 @@
       사이드 영역
       <hr>
       <div class="controls">
-        <a href="/#/">메인으로</a><br>
-        <a @click="logout">로그아웃</a>
+        <router-link to="/">
+          메인으로
+        </router-link><br>
+        <a @click="logout">
+          <font-awesome-icon icon="sign-out-alt" />&nbsp;
+          <span>로그아웃</span>
+        </a>
       </div>
     </div>
   </aside>
@@ -21,7 +26,17 @@
 
 <script>
 export default {
-
+  methods: {
+    logout () {
+      this.$store.dispatch('LOGOUT').then(() => {
+        document.body.classList.toggle('loading')
+        this.$router.push('/')
+      })
+        .catch(error => {
+          console.error(error)
+        })
+    }
+  }
 }
 </script>
 

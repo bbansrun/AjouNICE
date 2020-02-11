@@ -110,7 +110,7 @@
         </div>
         <div class="input-form-controls">
           <router-link
-            to="/#/"
+            to="/"
             class="underline underline-inline-block"
           >
             <small>처음으로</small>

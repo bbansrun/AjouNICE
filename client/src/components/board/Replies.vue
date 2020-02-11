@@ -83,7 +83,7 @@ export default {
         that.flash('댓글을 달았습니다.', 'success')
         that.content.unshift(data.replyWritten)
         that.reply = ''
-        document.body.classList.toggle('loading')
+        // document.body.classList.toggle('loading')
       },
       error (error) {
         console.error(error)
@@ -94,7 +94,7 @@ export default {
       next ({ data }) {
         that.flash('댓글을 삭제하였습니다.', 'success')
         that.content.shift()
-        document.body.classList.toggle('loading')
+        // document.body.classList.toggle('loading')
       },
       error (error) {
         console.error(error)
@@ -110,10 +110,11 @@ export default {
             board: parseInt(this.post),
             user: this.$store.state.user.idx,
             nick: this.$store.state.user.nick_nm,
-            text: this.reply
+            text: this.reply,
+            ip: this.$store.state.user.access_loc
           }
         }).then(({ data }) => {
-          document.body.classList.toggle('loading')
+          // document.body.classList.toggle('loading')
         })
       }
     },
@@ -124,7 +125,7 @@ export default {
           id: parseInt(id)
         }
       }).then(({ data }) => {
-        document.body.classList.toggle('loading')
+        // document.body.classList.toggle('loading')
       })
     }
   }

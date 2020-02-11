@@ -364,7 +364,7 @@
         </div>
         <div class="input-form-controls">
           <router-link
-            to="/#/"
+            to="/"
             class="underline underline-inline-block"
           >
             <small>로그인 화면으로</small>

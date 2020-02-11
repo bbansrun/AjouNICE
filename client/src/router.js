@@ -18,6 +18,7 @@ import Signup from '@/views/auth/SignUp.vue'
 import Authorize from '@/views/auth/Authorize.vue'
 
 import Board from '@/views/board/Board.vue'
+import BoardSearch from '@/views/board/Search.vue'
 import PostView from '@/views/board/View.vue'
 import Edit from '@/views/board/Edit.vue'
 
@@ -86,7 +87,7 @@ const requireAuth = (to, from, next) => {
       })
     })
   } else {
-    Vue.prototype.$flashStorage.flash('서비스 이용을 위해 로그인해주시기 바랍니다.', 'info', {
+    Vue.prototype.$flashStorage.flash('서비스 이용을 위해 로그인해주시기 바랍니다.', 'warning', {
       timeout: 3000
     })
     return next({
@@ -188,6 +189,11 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
+      path: '/board/search',
+      component: BoardSearch,
+      beforeEnter: requireAuth
+    },
+    {
       path: '/board/new',
       component: Edit,
       beforeEnter: requireAuth
@@ -195,6 +201,11 @@ export default new Router({
     {
       path: '/board/:post_id/view',
       component: PostView,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/board/:post_id/edit',
+      component: Edit,
       beforeEnter: requireAuth
     },
     {
@@ -223,8 +234,8 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/board/:post_id/edit',
-      component: Edit,
+      path: '/my',
+      component: Profile,
       beforeEnter: requireAuth
     },
     {

@@ -1,5 +1,6 @@
 import CateInfo from './CateInfo.graphql'
 import PostsByCate from './PostsByCate.graphql'
+import PostsByKeyword from './PostsSearch.graphql'
 import SubCates from './SubCates.graphql'
 import Post from './PostDetail.graphql'
 import AllCates from './AllCates.graphql'
@@ -9,9 +10,9 @@ import UserHome from './UserHome.graphql'
 import BoardsAndPosts from './BoardsAndPosts.graphql'
 import Schedule from './Schedule.graphql'
 import Notice from './Notice.graphql'
-
 export {
   Post,
+  PostsByKeyword,
   CateInfo,
   PostsByCate,
   SubCates,

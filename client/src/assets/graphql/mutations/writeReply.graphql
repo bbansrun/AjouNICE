@@ -1,5 +1,5 @@
-mutation writeReply($board: Int!, $user: Int!, $nick: String!, $text: String) {
-    writeReply(board_idx: $board, user_idx: $user, nick_nm: $nick, text: $text) {
+mutation writeReply($board: Int!, $user: Int!, $nick: String!, $text: String, $ip: String!) {
+    writeReply(board_idx: $board, user_idx: $user, nick_nm: $nick, text: $text, reg_ip: $ip) {
         cmt_idx
         user_idx
         text

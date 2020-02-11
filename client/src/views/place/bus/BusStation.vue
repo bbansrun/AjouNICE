@@ -61,21 +61,26 @@
               :options="options"
               placeholder="목적지를 선택하시면 해당 방향 버스노선이 정렬됩니다."
             />
-            <div
-              v-for="type in buses.types"
-              :key="type.type"
-              class="routes"
-            >
-              <h4>{{ type.label }}</h4>
-              <span v-if="item.value && buses.routes.filter(elem => (elem.type === type.type && elem.bound.includes(item.value))).length === 0">없음</span>
-              <b-tag
-                v-for="route in buses.routes.filter(elem => elem.type === type.type)"
-                v-show="item.value === '' || (item.value && route.bound.includes(item.value))"
-                :key="route.num"
-                :type="{ 'is-success': route.type === 1, 'is-warning': route.type === 2, 'is-danger': route.type === 3, 'is-info': route.type === 4 }"
+            <div class="grid">
+              <div
+                v-for="type in buses.types"
+                :key="type.type"
+                class="routes"
               >
-                {{ route.num }}
-              </b-tag>
+                <h3>{{ type.label }}</h3>
+                <span v-if="item.value && buses.routes.filter(elem => (elem.type === type.type && elem.bound.includes(item.value))).length === 0">
+                  <small>없음</small>
+                </span>
+                <b-tag
+                  v-for="route in buses.routes.filter(elem => elem.type === type.type)"
+                  v-show="item.value === '' || (item.value && route.bound.includes(item.value))"
+                  :key="route.num"
+                  :type="{ 'is-success': route.type === 1, 'is-warning': route.type === 2, 'is-danger': route.type === 3, 'is-info': route.type === 4 }"
+                >
+                  <span>{{ route.num }}</span>
+                  <span v-show="route.etc">({{ route.etc }})</span>
+                </b-tag>
+              </div>
             </div>
           </div>
           <vue-daum-map
@@ -126,31 +131,31 @@ export default {
           { label: '시외버스', type: 4 }
         ],
         routes: [
-          { type: 1, num: '2-2', bound: [4, 1, 8] },
-          { type: 1, num: '7', bound: [10, 2, 1, 9] },
-          { type: 1, num: '11-1', bound: [9, 1] },
-          { type: 1, num: '13-4', bound: [9, 1, 2] },
-          { type: 1, num: '18', bound: [2, 4, 5] },
-          { type: 1, num: '20', bound: [2, 6] },
-          { type: 1, num: '32-3', bound: [2, 1, 7] },
-          { type: 1, num: '32-4', bound: [2, 1, 7] },
-          { type: 1, num: '80', bound: [2, 3] },
-          { type: 1, num: '81', bound: [2, 3, 6] },
-          { type: 1, num: '88-1', bound: [9, 1, 2] },
-          { type: 1, num: '99', bound: [8, 5] },
-          { type: 1, num: '99-2', bound: [8, 5] },
-          { type: 1, num: '202', bound: [3, 6] },
-          { type: 1, num: '720-1', bound: [5, 4, 10] },
-          { type: 1, num: '720-2', bound: [7, 9, 1, 10] },
-          { type: 2, num: '7', bound: [2] },
-          { type: 3, num: '1007-1', bound: [14] },
-          { type: 3, num: '3007', bound: [13] },
-          { type: 3, num: '3008', bound: [13] },
-          { type: 3, num: '4000', bound: [10] },
-          { type: 3, num: '7000', bound: [12] },
-          { type: 3, num: '7001', bound: [12] },
-          { type: 3, num: '8800', bound: [11] },
-          { type: 4, num: '8862', bound: [15] }
+          { etc: '', type: 1, num: '2-2', bound: [4, 1, 8] },
+          { etc: '', type: 1, num: '7', bound: [10, 2, 1, 9] },
+          { etc: '', type: 1, num: '11-1', bound: [9, 1] },
+          { etc: '', type: 1, num: '13-4', bound: [9, 1, 2] },
+          { etc: '', type: 1, num: '18', bound: [2, 4, 5] },
+          { etc: '', type: 1, num: '20', bound: [2, 6] },
+          { etc: '', type: 1, num: '32-3', bound: [2, 1, 7] },
+          { etc: '', type: 1, num: '32-4', bound: [2, 1, 7] },
+          { etc: '', type: 1, num: '80', bound: [2, 3] },
+          { etc: '', type: 1, num: '81', bound: [2, 3, 6] },
+          { etc: '', type: 1, num: '88-1', bound: [9, 1, 2] },
+          { etc: '', type: 1, num: '99', bound: [8, 5] },
+          { etc: '', type: 1, num: '99-2', bound: [8, 5] },
+          { etc: '', type: 1, num: '202', bound: [3, 6] },
+          { etc: '', type: 1, num: '720-1', bound: [5, 4, 10] },
+          { etc: '', type: 1, num: '720-2', bound: [7, 9, 1, 10] },
+          { etc: '', type: 2, num: '7', bound: [2] },
+          { etc: '', type: 3, num: '1007-1', bound: [14] },
+          { etc: '', type: 3, num: '3007', bound: [13] },
+          { etc: '평일', type: 3, num: '3008', bound: [13] },
+          { etc: '', type: 3, num: '4000', bound: [10] },
+          { etc: '', type: 3, num: '7000', bound: [12] },
+          { etc: '', type: 3, num: '7001', bound: [12] },
+          { etc: '', type: 3, num: '8800', bound: [11] },
+          { etc: '', type: 4, num: '8862', bound: [15] }
         ]
       },
       options: [
@@ -361,9 +366,19 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #map {
   width: 100vw;
   height: 400px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: .5rem;
+}
+
+span.tag {
+  margin: 0 .2rem;
 }
 </style>

@@ -5,7 +5,7 @@
       <h2>주목해야할 게시물</h2>
     </header>
     <div
-      v-if="items.length > 0"
+      v-if="items"
       class="posts"
     >
       <div
@@ -66,9 +66,9 @@ export default {
     showThumbnail: Boolean,
     items: Array
   },
-  computed: {
-    retnPostLink (idx) {
-      return `/board/1/1/${idx}`
+  watch: {
+    items (newVal, oldVal) {
+      console.log(newVal, oldVal)
     }
   }
 }

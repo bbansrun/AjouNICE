@@ -40,25 +40,31 @@
           <header class="underline underline-inline-block">
             소속학과 공지사항
           </header>
-          <div
-            v-for="notice in notices"
-            :key="notice.link"
-            class="notice"
+          <b-table
+            :data="dpt.data"
+            :loading="loading"
           >
-            <div class="card">
-              <div class="card-content">
-                <p class="title">
-                  <a
-                    :href="notice.link"
-                    target="_blank"
-                  >{{ notice.title }}</a>
-                </p>
-                <p class="subtitle">
-                  {{ notice.unit }}
-                </p>
-              </div>
-            </div>
-          </div>
+            <template slot-scope="props">
+              <b-table-column
+                field="title"
+                label="제목"
+              >
+                <a
+                  :href="props.row.link"
+                  target="_blank"
+                >
+                  {{ props.row.title }}
+                </a>
+              </b-table-column>
+              <b-table-column
+                field="unit"
+                label="부서"
+                sortable
+              >
+                {{ props.row.unit }}
+              </b-table-column>
+            </template>
+          </b-table>
         </article>
       </section>
     </div>
@@ -88,7 +94,11 @@ export default {
       scrollBase: null,
       user_nm: null,
       articles: null,
-      notices: []
+      loading: true,
+      dpt_cds: [],
+      dpt: {
+        data: []
+      }
     }
   },
   computed: {
@@ -108,22 +118,27 @@ export default {
     }).then(({ data }) => {
       this.articles = data.user.articles
       this.user_nm = data.user.user_nm
-      for (const dpt of data.user.dpt_cd.split(',')) {
-        this.$apollo.query({
-          query: gql`${Notice}`,
-          variables: {
-            code: dpt
-          }
-        }).then(({ data }) => {
-          this.notices = this.notices.concat(data.notice)
-        })
-      }
+      this.dpt_cds = data.user.dpt_cd.split(',')
+      this.loadNotice()
     })
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
   methods: {
+    loadNotice () {
+      for (const dpt of this.dpt_cds) {
+        this.$apollo.query({
+          query: gql`${Notice}`,
+          variables: {
+            code: dpt
+          }
+        }).then(({ data }) => {
+          this.dpt.data = this.dpt.data.concat(data.notice)
+        })
+      }
+      this.loading = false
+    },
     secession () {
       this.$swal({
         title: '정말 탈퇴하시겠습니까?',

@@ -8,7 +8,13 @@ const { PubSub, } = require('apollo-server-express');
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
 const { User, College, Department, Board, BoardCategory, BoardComment, sequelize, } = require('./models');
 
+sequelize.sync({});
+
+// Subscription Websocket
 const pubsub = new PubSub();
+const REPLY_WRITTEN = 'REPLY_WRITTEN';
+const REPLY_REMOVED = 'REPLY_REMOVED';
+
 // JWT Token Verify
 const tokenVerify = (token) => (new Promise((resolve, reject) => {
   jwt.verify(token, '4j0uN1ce1', (err, decoded) => {
@@ -20,26 +26,23 @@ const tokenVerify = (token) => (new Promise((resolve, reject) => {
   });
 }));
 
-sequelize.sync({});
-
-const findOne = async (model, args, info, include = []) => {
+const findOne = async (model, args, info, include = [], order = []) => {
   return await model.findOne({
     attributes: graphqlFields(info),
     where: { ...args, },
-    include: include,
+    include,
+    order,
   });
 };
 
-const findAll = async (model, args, info, include = []) => {
+const findAll = async (model, args, info, include = [], order = []) => {
   return await model.findAll({
     attributes: graphqlFields(info),
     where: { ...args, },
-    include: include,
+    include,
+    order,
   });
 };
-
-const REPLY_WRITTEN = 'REPLY_WRITTEN';
-const REPLY_REMOVED = 'REPLY_REMOVED';
 
 module.exports = {
   Subscription: {
@@ -88,6 +91,15 @@ module.exports = {
         { model: BoardComment, as: 'comments', include: [{ model: User, as: 'commenter', }], }
       ];
       return await findOne(Board, args, info, include);
+    },
+    async postsByKeyword (parent, args, context, info) {
+      const parsedArgs = {
+        [Op.or]: [
+          { title: { [Op.like]: `%${args.keyword}%`, }, },
+          { body: { [Op.like]: `%${args.keyword}%`, }, }
+        ],
+      };
+      return await findAll(Board, parsedArgs, info);
     },
     async comment (parent, args, context, info) {
       const include = [

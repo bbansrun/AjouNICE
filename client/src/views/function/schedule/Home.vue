@@ -16,7 +16,6 @@
           <b-table
             :data="schedule.data"
             :loading="loading"
-
             :columns="schedule.columns"
           />
         </article>

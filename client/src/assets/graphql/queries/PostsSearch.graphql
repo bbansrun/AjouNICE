@@ -1,0 +1,12 @@
+query PostsSearch($keyword: String!) {
+    postsByKeyword(keyword: $keyword) {
+        board_idx
+        category_idx
+        title
+        body
+        nick_nm
+        view_cnt
+        cmt_cnt
+        reg_dt
+    }
+}

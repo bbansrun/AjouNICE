@@ -5,6 +5,7 @@
       <header>
         {{ post.title }}
       </header>
+      <small>{{ new Date(post.reg_dt).toLocaleDateString() }}</small>
       <div class="content">
         <div
           class="container"
@@ -63,7 +64,6 @@ import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import VueGallerySlideshow from 'vue-gallery-slideshow'
 import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
 import Replies from '@/components/board/Replies.vue'
 import Footer from '@/components/base/Footer.vue'
 import { Post } from '@/assets/graphql/queries'
@@ -72,7 +72,6 @@ export default {
   name: 'App',
   components: {
     Navigation,
-    Landing,
     Replies,
     Footer,
     VueGallerySlideshow

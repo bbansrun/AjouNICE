@@ -85,54 +85,56 @@ export default {
     document.body.classList.remove('auth')
   },
   beforeMount () {
-    this.$apollo.query({
-      query: gql`${UserHome}`,
-      variables: {
-        id: this.$store.state.user.idx
-      }
-    }).then(({ data }) => {
-      this.posts = data.posts
-      for (const dpt of data.user.dpt_cd.split(',')) {
-        this.$apollo.query({
-          query: gql`${Notice}`,
-          variables: {
-            code: dpt
-          }
-        }).then(({ data }) => {
-          const template = (id, message, link) => ({
-            id: id,
-            message: message,
-            content (createElement, content) {
-              return createElement('a', {
-                attrs: {
-                  href: link,
-                  target: '_blank'
-                },
-                class: 'broadcast-content'
-              }, [
-                createElement('span', {
-                  style: {
-                    width: '80vw',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis'
-                  }
-                }, [`${content.message}`]),
-                createElement('feather', {
-                  props: {
-                    size: 16,
-                    type: 'chevron-right'
-                  }
-                })
-              ])
+    if (this.$store.state.user) {
+      this.$apollo.query({
+        query: gql`${UserHome}`,
+        variables: {
+          id: this.$store.state.user.idx
+        }
+      }).then(({ data }) => {
+        this.posts = data.posts
+        for (const dpt of data.user.dpt_cd.split(',')) {
+          this.$apollo.query({
+            query: gql`${Notice}`,
+            variables: {
+              code: dpt
             }
+          }).then(({ data }) => {
+            const template = (id, message, link) => ({
+              id: id,
+              message: message,
+              content (createElement, content) {
+                return createElement('a', {
+                  attrs: {
+                    href: link,
+                    target: '_blank'
+                  },
+                  class: 'broadcast-content'
+                }, [
+                  createElement('span', {
+                    style: {
+                      width: '80vw',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis'
+                    }
+                  }, [`${content.message}`]),
+                  createElement('feather', {
+                    props: {
+                      size: 16,
+                      type: 'chevron-right'
+                    }
+                  })
+                ])
+              }
+            })
+            data.notice.forEach((value, i) => {
+              this.carouselRadio.push(template(i, value.title, value.link))
+            })
           })
-          data.notice.forEach((value, i) => {
-            this.carouselRadio.push(template(i, value.title, value.link))
-          })
-        })
-      }
-    })
+        }
+      })
+    }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3

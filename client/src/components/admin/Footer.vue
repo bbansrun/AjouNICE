@@ -3,7 +3,7 @@
     <section class="wrapper">
       <div class="footer-content">
         <header>
-          <small>관리자 페이지는 PC에 최적화되어있습니다.</small>
+          <span data-logo><small>AjouNICE!</small></span>&nbsp;<small>관리자 페이지는 PC에 최적화되어있습니다.</small>
         </header>
       </div>
     </section>

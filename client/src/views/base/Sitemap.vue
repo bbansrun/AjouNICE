@@ -13,7 +13,7 @@
           사이트맵
         </header>
         <div class="sitemap">
-          <router-link to="/#/">
+          <router-link to="/">
             홈
           </router-link>
         </div>
