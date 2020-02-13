@@ -1,12 +1,14 @@
-const { Op, } = require('sequelize');
+const uuid = require('uuid/v4');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
+const { Op, } = require('sequelize');
+const { sequelize, } = require('./models');
+const fileExtension = require('file-extension');
 const graphqlFields = require('graphql-fields');
 const { PubSub, } = require('apollo-server-express');
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
-const { sequelize, } = require('./models');
 
 const AWS = require('aws-sdk');
 AWS.config.loadFromPath(`${__dirname}/config/aws.json`);
@@ -19,6 +21,39 @@ const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
 const IMAGE_UPLOADED = 'IMAGE_UPLOADED';
+
+// AWS File Upload Handler
+const s3DefaultParams = {
+  ACL: 'public-read',
+  Bucket: 'ajounice',
+  Conditions: [
+    ['content-length-range', 0, 1024 ** 2 * 20], // Max: 20MB per each
+    { acl: 'public-read', }
+  ],
+};
+
+const handleS3Upload = async (file) => {
+  const { createReadStream, filename, mimetype, } = await file;
+  const key = uuid();
+  return new Promise((resolve, reject) => {
+    s3.upload({
+      ...s3DefaultParams,
+      Body: createReadStream(),
+      Key: `board/name/${key}.${fileExtension(filename)}`,
+      ContentType: mimetype,
+    }, (err, data) => {
+      if (err) {
+        console.error(`[AWS] ${err}`);
+        console.log(err);
+        reject(err);
+      } else {
+        console.log('[AWS] 성공적으로 데이터 업로드 완료');
+        console.log(data);
+        resolve(data);
+      }
+    });
+  });
+};
 
 // JWT Token Verify
 const tokenVerify = (token) => (new Promise((resolve, reject) => {
@@ -145,6 +180,20 @@ module.exports = {
       const result = await response.json();
       return result.result;
     },
+    // 게시물 업로드 이미지의 성인 유해성 검토
+    async checkImageHarmfulness (root, { file, }, _, info) {
+      const apiEndpoint = 'https://kapi.kakao.com/v1/vision/adult/detect';
+      const authKey = 'KakaoAK cf416bd14737f5c1949d34696ffe16f6';
+      const fetchResult = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: authKey,
+        },
+        body: JSON.stringify({ image_url: 'https://t1.daumcdn.net/alvolo/_vision/openapi/r2/images/09.jpg', }),
+      });
+      console.log(fetchResult);
+      return fetchResult.json();
+    },
   },
   Mutation: {
     sendContactMail: async (root, { name, email, content, }) => {
@@ -210,23 +259,8 @@ module.exports = {
     },
     singleUpload: async (root, { file, }, { db, }, info) => {
       // Upload Image to S3
-      const { filename, mimetype, encoding, createReadStream, } = await file;
-      const returnFile = { filename, mimetype, encoding, };
-      const param = {
-        Bucket: 'ajounice',
-        Key: `board/images/${filename}`,
-        ACL: 'public-read',
-        Body: createReadStream(),
-        ContentType: mimetype,
-      };
-      s3.upload(param, (err, data) => {
-        if (err) {
-          console.error(`[AWS] S3 업로드 중 에러 발생: ${err}`);
-        }
-        console.log(data);
-      });
-      pubsub.publish(IMAGE_UPLOADED, { imageUploaded: returnFile, });
-      return returnFile;
+      const { Location, } = await handleS3Upload(file);
+      return Location;
     },
   },
 };

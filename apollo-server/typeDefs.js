@@ -1,4 +1,5 @@
 module.exports = `
+scalar Email
 scalar Date
 
 enum Role {
@@ -16,7 +17,7 @@ type File {
 
 type User {
     user_idx: ID!
-    email: String
+    email: Email!
     user_id: String
     password: String
     user_nm: String
@@ -152,6 +153,12 @@ type Schedule {
     etc: String!
 }
 
+type Harmfulness {
+    normal: Float!
+    soft: Float!
+    adult: Float!
+}
+
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: Boolean
@@ -170,6 +177,7 @@ type Query {
     schedule: [Schedule]
     notice(code: String!): [Notice]
     uploads: [File]
+    checkImageHarmfulness: Harmfulness
 }
 
 type Mutation {

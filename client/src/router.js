@@ -23,6 +23,9 @@ import PostView from '@/views/board/View.vue'
 import Edit from '@/views/board/Edit.vue'
 
 import Dashboard from '@/views/admin/Dashboard.vue'
+import AdminStatus from '@/views/admin/Status.vue'
+import AdminUsers from '@/views/admin/Users.vue'
+import AdminBoards from '@/views/admin/Boards.vue'
 
 import Profile from '@/views/user/Profile.vue'
 import LectureReviews from '@/views/user/LectureReviews.vue'
@@ -286,43 +289,49 @@ export default new Router({
     },
     {
       path: '/gate/manager/auth/login',
-      name: 'admin_login',
       component: AdminLogin
     },
     {
       path: '/gate/manager',
-      name: 'admin',
       component: Dashboard,
-      beforeEnter: requireAdminAuth
+      beforeEnter: requireAdminAuth,
+      children: [
+        {
+          path: '',
+          component: AdminStatus
+        },
+        {
+          path: 'users',
+          component: AdminUsers
+        },
+        {
+          path: 'boards',
+          component: AdminBoards
+        }
+      ]
     },
     {
       path: '/auth/signup',
-      name: 'signup',
       component: Signup
     },
     {
       path: '/about',
-      name: 'about',
       component: About
     },
     {
       path: '/contact',
-      name: 'contact',
       component: Contact
     },
     {
       path: '/policy',
-      name: 'policy',
       component: Policy
     },
     {
       path: '/auth/reset',
-      name: 'reset',
       component: RenewAccount
     },
     {
       path: '/error/:code',
-      name: 'error_by_code',
       component: ErrorPage
     },
     {

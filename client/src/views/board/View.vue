@@ -117,7 +117,11 @@ export default {
         id: this.$route.params.post_id
       }
     }).then(({ data }) => {
-      this.post = data.post
+      if (data.post === null) {
+        this.$router.push('/error/404')
+      } else {
+        this.post = data.post
+      }
     }).catch(error => {
       console.error(error)
       // this.$router.push('/error/404')

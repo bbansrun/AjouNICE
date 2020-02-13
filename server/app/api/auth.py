@@ -287,6 +287,8 @@ class UpdateAPI(Resource):
                 confirmed = True
 
         if confirmed:
+            user.upt_dt = datetime.now(tz=timezone(timedelta(hours=9)))
+            user.upt_ip = request.remote_addr
             user.auth_email_yn = 'Y'
             user.password = bcrypt.generate_password_hash(password, 10)
             db.session.commit()

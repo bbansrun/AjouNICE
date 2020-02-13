@@ -52,7 +52,7 @@ export default {
   watch: {
     dropFiles (value) {
       // TEST Push
-      this.uploadFiles(value)
+      // this.uploadFiles(value)
     }
   },
   methods: {
@@ -60,8 +60,6 @@ export default {
       this.dropFiles.splice(index, 1)
     },
     uploadFiles (file) {
-      console.log(file)
-      console.log('Will upload ', file[0])
       this.$apollo.mutate({
         mutation: gql`${UploadFiles}`,
         variables: {

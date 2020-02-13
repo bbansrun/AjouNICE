@@ -261,7 +261,7 @@ export default {
               width: '90vw',
               footer: '<p>입력하신 새로운 비밀번호로 로그인하시면 서비스 이용이 가능합니다.</p>'
             }).then(() => {
-              this.$store.dispath('LOGOUT').then(() => {
+              this.$store.dispatch('LOGOUT').then(() => {
                 this.$router.push('/')
               })
             })
