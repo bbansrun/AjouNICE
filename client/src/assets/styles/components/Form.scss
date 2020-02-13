@@ -243,12 +243,9 @@ form {
         }
     }
     &[data-post-form] {
-        margin: 1rem;
-        padding: 1rem;
         color: #666;
-        background: #eaeaea;
         box-shadow: 0 5px 5px rgba(0,0,0,.12);
-        > .input-form {
+        & .input-form {
             padding: .5rem 0;
             &:not(.editor):not(.uploads):not(.controls) {
                 display: grid;
@@ -261,7 +258,7 @@ form {
         & .ck-content {
             min-height: 50vh;
         }
-        > .input-form-controls {
+        & .input-form-controls {
             text-align: right;
             > .btn {
                 display: inline-block;

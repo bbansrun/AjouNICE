@@ -11,6 +11,8 @@ import {
   faSignOutAlt,
   faUser,
   faUsers,
+  faUsersCog,
+  faUserLock,
   faPen,
   faPlus,
   faUpload,
@@ -21,7 +23,9 @@ import {
   faSearchPlus,
   faTrash,
   faStickyNote,
-  faHome
+  faHome,
+  faReply,
+  faThList
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -63,6 +67,8 @@ if (token) {
 library.add(faSignOutAlt)
 library.add(faUser)
 library.add(faUsers)
+library.add(faUsersCog)
+library.add(faUserLock)
 library.add(faPen)
 library.add(faPlus)
 library.add(faKey)
@@ -74,6 +80,8 @@ library.add(faSearchPlus)
 library.add(faTrash)
 library.add(faStickyNote)
 library.add(faHome)
+library.add(faReply)
+library.add(faThList)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const shouldEncode = (url, options) => {

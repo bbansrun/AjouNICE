@@ -9,26 +9,30 @@
     <div class="container">
       <section class="user">
         <div class="controls">
+          <header>계정관리</header>
           <b-button
             v-show="$store.state.user.type === 'A'"
             type="is-danger"
             tag="router-link"
             to="/gate/manager"
           >
-            관리자
+            <font-awesome-icon icon="users-cog" />
+            <span>관리자</span>
           </b-button>
           <b-button
             type="is-warning"
             tag="router-link"
             :to="profileEditUrl"
           >
-            계정정보 수정
+            <font-awesome-icon icon="user-lock" />
+            <span>계정정보 수정</span>
           </b-button>
           <b-button
             type="is-danger"
             @click="secession"
           >
-            회원탈퇴
+            <font-awesome-icon icon="sign-out-alt" />
+            <span>회원탈퇴</span>
           </b-button>
         </div>
       </section>

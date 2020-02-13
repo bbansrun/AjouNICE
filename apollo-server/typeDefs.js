@@ -153,12 +153,6 @@ type Schedule {
     etc: String!
 }
 
-type Harmfulness {
-    normal: Float!
-    soft: Float!
-    adult: Float!
-}
-
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: Boolean
@@ -177,7 +171,6 @@ type Query {
     schedule: [Schedule]
     notice(code: String!): [Notice]
     uploads: [File]
-    checkImageHarmfulness: Harmfulness
 }
 
 type Mutation {

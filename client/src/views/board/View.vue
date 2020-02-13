@@ -1,70 +1,111 @@
 <template>
   <div class="wrapper">
     <Navigation is-static />
-    <article class="post">
-      <header>
-        {{ post.title }}
-      </header>
-      <small>
-        <span class="writer">{{ post.user.nick_nm }}</span>&nbsp;
-        <span class="date">{{ new Date(post.reg_dt).toLocaleDateString() }}</span>
-      </small>
-      <hr>
-      <div class="content">
-        <div
-          class="container"
-          v-html="post.body"
-        />
-        <div class="files">
-          <header>첨부 이미지</header>
-          <div class="image-wrapper">
-            <img
-              v-for="(image, i) in images"
-              :key="i"
-              class="image"
-              :src="image"
-              @click="index = i"
-            >
-            <vue-gallery-slideshow
-              :images="images"
-              :index="index"
-              @close="index = null"
+    <main>
+      <article class="post">
+        <div class="content-wrapper">
+          <header>
+            <div class="header grid">
+              <h3>{{ post.title }}</h3>
+              <small class="category">{{ post.category.category_nm }} 게시판</small>
+            </div>
+            <div class="meta has-text-right">
+              <small>
+                <span class="writer">{{ post.user.nick_nm }}</span>&nbsp;
+                <span class="date">{{ new Date(post.reg_dt).toLocaleDateString() }}</span>&nbsp;
+              </small>
+            </div>
+          </header>
+          <hr>
+          <div class="content">
+            <div
+              class="container"
+              v-html="post.body"
+            />
+            <div class="files">
+              <header>첨부 이미지</header>
+              <div class="image-wrapper">
+                <img
+                  v-for="(image, i) in images"
+                  :key="i"
+                  class="image"
+                  :src="image"
+                  @click="index = i"
+                >
+                <vue-gallery-slideshow
+                  :images="images"
+                  :index="index"
+                  @close="index = null"
+                />
+              </div>
+            </div>
+            <div class="controls has-text-right">
+              <div class="meta-bottom">
+                <small>
+                  <span class="permalink">
+                    <a :href="permalink">{{ permalink }}</a>&nbsp;
+                    <b-tooltip
+                      label="클릭하시면 주소가 복사됩니다."
+                      always
+                    >
+                      <b-button
+                        v-clipboard:copy="permalink"
+                        v-clipboard:success="onCopy"
+                        v-clipboard:error="onError"
+                        type="is-small"
+                      >
+                        <span>복사</span>
+                      </b-button>
+                    </b-tooltip>
+                  </span>
+                </small>
+              </div>
+              <b-button
+                tag="router-link"
+                size="is-small"
+                type="is-primary"
+                to="/board"
+              >
+                <font-awesome-icon icon="th-list" />&nbsp;
+                <span>목록으로</span>
+              </b-button>
+              <b-button
+                v-show="articleWriter()"
+                tag="router-link"
+                size="is-small"
+                type="is-warning"
+                :to="editArticle"
+              >
+                <font-awesome-icon icon="pen" />&nbsp;
+                <span>수정</span>
+              </b-button>
+              <b-button
+                v-show="articleWriter()"
+                size="is-small"
+                type="is-danger"
+                @click="removeArticle()"
+              >
+                <font-awesome-icon icon="trash" />&nbsp;
+                <span>삭제</span>
+              </b-button>
+            </div>
+            <hr>
+            <Replies
+              :post="parseInt($route.params.post_id)"
+              :content="post.comments"
             />
           </div>
         </div>
-        <div class="controls">
-          <b-button
-            tag="router-link"
-            to="/board"
-          >
-            목록으로
-          </b-button>
-          <b-button
-            v-show="articleWriter()"
-            tag="router-link"
-            :to="editArticle"
-          >
-            수정
-          </b-button>
-          <b-button
-            v-show="articleWriter()"
-            @click="removeArticle()"
-          >
-            삭제
-          </b-button>
-        </div>
-        <hr>
-        <Replies
-          :post="parseInt($route.params.post_id)"
-          :content="post.comments"
-        />
-      </div>
-    </article>
-    <Footer />
+      </article>
+      <Footer />
+    </main>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import VueClipBoard from 'vue-clipboard2'
+import { Tooltip } from 'buefy'
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import VueGallerySlideshow from 'vue-gallery-slideshow'
@@ -73,6 +114,10 @@ import Replies from '@/components/board/Replies.vue'
 import Footer from '@/components/base/Footer.vue'
 import { Post } from '@/assets/graphql/queries'
 import { removePost } from '@/assets/graphql/mutations'
+
+VueClipBoard.config.autoSetContainer = true
+Vue.use(VueClipBoard)
+Vue.use(Tooltip)
 export default {
   name: 'App',
   components: {
@@ -108,6 +153,9 @@ export default {
       url = url.split('/')
       url.pop()
       return urljoin(url.join('/'), 'edit')
+    },
+    permalink () {
+      return window.location.href
     }
   },
   beforeCreate () {
@@ -131,8 +179,14 @@ export default {
     this.scrollBase = 0
   },
   methods: {
+    onCopy (e) {
+      this.$swal('복사!', '복사되었습니다.', 'success')
+    },
+    onError (e) {
+      this.$swal('에러!', '복사 중 에러가 발생하였습니다.', 'error')
+    },
     articleWriter () {
-      return this.$store.state.user.idx === this.user_idx
+      return parseInt(this.$store.state.user.idx) === parseInt(this.post.user.user_idx)
     },
     removeArticle () {
       const that = this
@@ -166,8 +220,53 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-nav.gnb.static + .post {
-  margin-top: 60px !important;
+body.isMobile {
+  & .b-tooltip {
+    display: none;
+  }
+}
+
+hr {
+  margin: .5rem 0;
+}
+
+nav.gnb.static {
+  + main {
+    & .post {
+      margin-top: 60px !important;
+      padding: 0 !important;
+      & header {
+        > .header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+        > .meta {
+          line-height: 1;
+        }
+      }
+      & .content {
+        > .container {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.switch .control-label {
+  white-space: nowrap !important;
+}
+
+.content-wrapper {
+  padding: 0 .8rem;
+}
+
+article header span::before {
+  display: unset;
+  background: unset;
+  height: unset;
 }
 
 .container {
@@ -191,5 +290,18 @@ nav.gnb.static + .post {
 
 .vgs__container {
   top: 5rem;
+}
+
+.files {
+  margin-bottom: 1rem;
+}
+
+.controls {
+  > a, button {
+    margin-right: 5px;
+    &:last-child {
+      margin-right: 0 !important;
+    }
+  }
 }
 </style>

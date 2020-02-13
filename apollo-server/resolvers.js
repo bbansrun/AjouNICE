@@ -10,6 +10,9 @@ const graphqlFields = require('graphql-fields');
 const { PubSub, } = require('apollo-server-express');
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
 
+const FormData = require('form-data');
+const { kakao: { api: { key: { rest, }, }, }, } = require('./config/kakao.json');
+
 const AWS = require('aws-sdk');
 AWS.config.loadFromPath(`${__dirname}/config/aws.json`);
 const s3 = new AWS.S3();
@@ -150,6 +153,7 @@ module.exports = {
         [{ model: db.BoardComment, as: 'comments', }, 'cmt_idx', 'DESC']
       ];
       const include = [
+        { model: db.BoardCategory, as: 'category', },
         { model: db.User, as: 'user', },
         { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
       ];
@@ -162,7 +166,11 @@ module.exports = {
           { body: { [Op.like]: `%${args.keyword}%`, }, }
         ],
       };
-      return await findAll(db.Board, parsedArgs, info);
+      const include = [
+        { model: db.User, as: 'user', },
+        { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
+      ];
+      return await findAll(db.Board, parsedArgs, info, include);
     },
     async comment (root, args, { db, }, info) {
       const include = [
@@ -179,20 +187,6 @@ module.exports = {
       const response = await fetch(`http://localhost:5000/api/notice/${args.code}`);
       const result = await response.json();
       return result.result;
-    },
-    // 게시물 업로드 이미지의 성인 유해성 검토
-    async checkImageHarmfulness (root, { file, }, _, info) {
-      const apiEndpoint = 'https://kapi.kakao.com/v1/vision/adult/detect';
-      const authKey = 'KakaoAK cf416bd14737f5c1949d34696ffe16f6';
-      const fetchResult = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          Authorization: authKey,
-        },
-        body: JSON.stringify({ image_url: 'https://t1.daumcdn.net/alvolo/_vision/openapi/r2/images/09.jpg', }),
-      });
-      console.log(fetchResult);
-      return fetchResult.json();
     },
   },
   Mutation: {
@@ -259,8 +253,8 @@ module.exports = {
     },
     singleUpload: async (root, { file, }, { db, }, info) => {
       // Upload Image to S3
-      const { Location, } = await handleS3Upload(file);
-      return Location;
+      // const { Location, } = await handleS3Upload(file);
+      // return Location;
     },
   },
 };

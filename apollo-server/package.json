@@ -26,6 +26,7 @@
     "dataloader": "^2.0.0",
     "express": "^4.17.1",
     "file-extension": "^4.0.5",
+    "form-data": "^3.0.0",
     "fs-capacitor": "^6.1.0",
     "graphql": "^14.5.8",
     "graphql-depth-limit": "^1.1.0",

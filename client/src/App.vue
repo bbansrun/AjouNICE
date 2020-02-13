@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { isMobile } from 'mobile-device-detect'
 import Loading from '@/components/base/Loading.vue'
 import 'vue-flash-message/dist/vue-flash-message.min.css'
 export default {
@@ -14,6 +15,9 @@ export default {
     Loading
   },
   mounted () {
+    if (isMobile) {
+      document.body.classList.add('isMobile')
+    }
     document.body.classList.remove('loading')
   }
 }
@@ -47,7 +51,7 @@ export default {
   position: fixed;
   right: 1rem;
   top: 1rem;
-  z-index: 10000;
+  z-index: 10000000000;
   > .flash__wrapper {
     > .flash__message {
       -webkit-animation: fadeOut 1s;

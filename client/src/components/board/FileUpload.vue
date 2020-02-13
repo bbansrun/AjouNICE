@@ -52,7 +52,7 @@ export default {
   watch: {
     dropFiles (value) {
       // TEST Push
-      // this.uploadFiles(value)
+      this.uploadFiles(value)
     }
   },
   methods: {
@@ -60,14 +60,14 @@ export default {
       this.dropFiles.splice(index, 1)
     },
     uploadFiles (file) {
-      this.$apollo.mutate({
-        mutation: gql`${UploadFiles}`,
-        variables: {
-          file: file[0]
-        }
-      }).then(({ data }) => {
-        console.log(data)
-      })
+      // this.$apollo.mutate({
+      //   mutation: gql`${UploadFiles}`,
+      //   variables: {
+      //     file: file[0]
+      //   }
+      // }).then(({ data }) => {
+      //   console.log(data)
+      // })
     }
   }
 }

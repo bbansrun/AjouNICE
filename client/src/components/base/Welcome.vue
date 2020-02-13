@@ -60,6 +60,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+body.isMobile {
+  & ul.menu {
+    > li {
+      > a {
+        > span {
+          display: none;
+        }
+      }
+    }
+  }
+}
 .welcome {
     position: absolute;
     width: 90vw;

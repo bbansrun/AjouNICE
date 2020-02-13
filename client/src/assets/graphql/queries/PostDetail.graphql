@@ -5,6 +5,11 @@ query Post($id: ID!) {
         nick_nm
         reg_dt
         upt_dt
+        category {
+            title
+            category_nm
+            category_idx
+        }
         user {
             user_idx
             nick_nm

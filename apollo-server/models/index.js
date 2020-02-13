@@ -62,7 +62,7 @@ db.BoardCategory.hasMany(db.Board, {
 });
 
 db.Board.belongsTo(db.BoardCategory, {
-  as: 'posts',
+  as: 'category',
   foreignKey: 'category_idx',
   targetKey: 'category_idx',
 });

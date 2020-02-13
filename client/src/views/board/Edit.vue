@@ -13,69 +13,72 @@
         autocomplete="off"
         @submit.prevent
       >
-        <div
-          v-show="mode.new"
-          class="input-form"
-        >
-          <label for="category">게시판명</label>
-          <div class="input-form-group">
-            <v-select
-              v-model="selectedCategory"
-              placeholder="게시판 분류 선택"
-              :value="selectedCategory"
-              :options="categories"
-              :reduce="options => options.category_idx"
-              label="category_nm"
-              @input="getCateDepth1()"
-            />
-            <v-select
-              v-if="sub_categories"
-              v-model="selectedSubCategory"
-              placeholder="게시판 하위 분류 선택"
-              :value="selectedSubCategory"
-              :options="sub_categories"
-              :reduce="options => options.category_idx"
-              label="category_nm"
+        <div class="content-wrapper">
+          <div
+            v-show="mode.new"
+            class="input-form"
+          >
+            <label for="category">게시판명</label>
+            <div class="input-form-group">
+              <v-select
+                v-model="selectedCategory"
+                placeholder="게시판 분류 선택"
+                :value="selectedCategory"
+                :options="categories"
+                :reduce="options => options.category_idx"
+                label="category_nm"
+                @input="getCateDepth1()"
+              />
+              <v-select
+                v-if="sub_categories"
+                v-model="selectedSubCategory"
+                placeholder="게시판 하위 분류 선택"
+                :value="selectedSubCategory"
+                :options="sub_categories"
+                :reduce="options => options.category_idx"
+                label="category_nm"
+                :disabled="depth1Deactivated"
+              />
+            </div>
+          </div>
+          <div class="input-form">
+            <label for="title">제목</label>
+            <input
+              id="title"
+              v-model="form.title"
+              type="text"
+              name="title"
+              placeholder="제목을 입력하세요"
+              required
+            >
+          </div>
+          <div class="input-form editor">
+            <label for="textarea">내용</label>
+            <ckeditor
+              v-model="form.editorData"
+              name="textarea"
+              :editor="editor"
+              :config="editorConfig"
             />
           </div>
-        </div>
-        <div class="input-form">
-          <label for="title">제목</label>
-          <input
-            id="title"
-            v-model="form.title"
-            type="text"
-            name="title"
-            placeholder="제목을 입력하세요"
-            required
-          >
-        </div>
-        <div class="input-form editor">
-          <label for="textarea">내용</label>
-          <ckeditor
-            v-model="form.editorData"
-            name="textarea"
-            :editor="editor"
-            :config="editorConfig"
-          />
-        </div>
-        <div class="input-form uploads">
-          <label for="images">이미지 삽입</label>
-          <FileUpload />
-        </div>
-        <div class="input-form-controls">
-          <input
-            type="button"
-            class="btn box-shadow text-inverse btn-submit"
-            :value="form.submitButton"
-            @click="mode.new ? writePost() : editPost()"
-          >
-          <input
-            type="button"
-            class="btn box-shadow text-inverse btn-cancel"
-            value="취소"
-            @click="goBack()"
-          >
+          <div class="input-form uploads">
+            <label for="images">이미지 삽입</label>
+            <FileUpload />
+          </div>
+          <div class="input-form-controls">
+            <input
+              type="button"
+              class="btn box-shadow text-inverse btn-submit"
+              :value="form.submitButton"
+              @click="mode.new ? writePost() : editPost()"
+            >
+            <input
+              type="button"
+              class="btn box-shadow text-inverse btn-cancel"
+              value="취소"
+              @click="goBack()"
+            >
+          </div>
         </div>
       </form>
     </div>
@@ -104,6 +107,7 @@ export default {
   },
   data () {
     return {
+      depth1Deactivated: true,
       scrollBase: null,
       selectedCategory: '',
       selectedSubCategory: '',
@@ -240,28 +244,19 @@ export default {
             body: this.form.editorData,
             reg_ip: user.access_loc
           }
-        }).then(({ data }) => {
+        }).then(({ data: { writePost: { board_idx } } }) => {
           document.body.classList.toggle('loading')
-          this.$swal({
-            type: 'success',
-            title: '게시!',
-            text: '게시되었습니다.',
-            width: '90vw',
-            allowOutsideClick: false
-          }).then(() => {
-            let url = this.$route.path
-            url = url.split('/')
-            url.pop()
-            this.$router.push(urljoin(url.join('/'), 'view'))
-          })
+          this.flash('게시되었습니다.', 'success')
+          this.$router.push(`/board/${board_idx}/view`)
         })
       } else {
         this.$swal({
           title: '잠깐!',
           text: '작성하지 않은 항목이 있습니다.',
           type: 'error',
-          footer: '<p>누락된 항목을 확인하신 후 다시 시도하여주시기 바랍니다.</p>',
-          width: '90vw'
+          footer: '<p class=\'has-text-centered\'>누락된 항목을 확인하신 후 다시 시도하여주시기 바랍니다.</p>',
+          width: '90vw',
+          confirmButtonText: '확인'
         })
       }
     },
@@ -317,6 +312,7 @@ export default {
         }
       }).then(({ data }) => {
         this.sub_categories = data.boards
+        this.depth1Deactivated = false
       })
     }
   }
