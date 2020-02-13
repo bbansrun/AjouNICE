@@ -10,9 +10,6 @@ const graphqlFields = require('graphql-fields');
 const { PubSub, } = require('apollo-server-express');
 const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
 
-const FormData = require('form-data');
-const { kakao: { api: { key: { rest, }, }, }, } = require('./config/kakao.json');
-
 const AWS = require('aws-sdk');
 AWS.config.loadFromPath(`${__dirname}/config/aws.json`);
 const s3 = new AWS.S3();
