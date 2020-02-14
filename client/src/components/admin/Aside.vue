@@ -21,6 +21,14 @@
               <font-awesome-icon :icon="item.icon" />
               <span>{{ item.label }}</span>
             </router-link>
+            <ul v-show="item.hasOwnProperty('children')">
+              <li
+                v-for="child in item.children"
+                :key="child.id"
+              >
+                <small>{{ child.label }}</small>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>

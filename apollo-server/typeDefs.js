@@ -160,6 +160,7 @@ type Subscription {
 }
 
 type Query {
+    users: [User]
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
     colleges(exist_yn: String!): [College]
     departments(college_cd: String): [Department]

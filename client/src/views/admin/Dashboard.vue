@@ -1,11 +1,13 @@
 <template>
   <div class="wrapper">
-    <section class="admin admin-dashboard">
+    <div class="admin admin-dashboard">
       <Aside :modules="modules" />
       <main>
-        <router-view />
+        <div class="wrapper content">
+          <router-view />
+        </div>
       </main>
-    </section>
+    </div>
     <Footer />
   </div>
 </template>
@@ -14,6 +16,7 @@
 import uuid from 'uuid/v4'
 import Aside from '@/components/admin/Aside.vue'
 import Footer from '@/components/admin/Footer.vue'
+
 export default {
   components: {
     Aside, Footer
@@ -23,7 +26,20 @@ export default {
       modules: [
         { id: uuid(), label: '홈', link: '/gate/manager', icon: 'home' },
         { id: uuid(), label: '사용자 관리', link: '/gate/manager/users', icon: 'users' },
-        { id: uuid(), label: '게시판 관리', link: '/gate/manager/boards', icon: 'sticky-note' }
+        {
+          id: uuid(),
+          label: '게시판 관리',
+          link: '/gate/manager/boards',
+          icon: 'sticky-note',
+          children: [
+            { id: uuid(), label: '일반 게시판', link: '#', icon: 'sticky-note' },
+            { id: uuid(), label: '맛집 게시판', link: '#', icon: 'sticky-note' },
+            { id: uuid(), label: '강의평가', link: '#', icon: 'sticky-note' }
+          ]
+        },
+        { id: uuid(), label: '권한 관리', link: '#', icon: 'sticky-note' },
+        { id: uuid(), label: '차단 관리', link: '#', icon: 'sticky-note' },
+        { id: uuid(), label: '팝업 관리', link: '#', icon: 'sticky-note' }
       ]
     }
   }

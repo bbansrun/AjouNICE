@@ -131,6 +131,14 @@ module.exports = {
       ];
       return await findOne(db.User, args, info, include);
     },
+    // 관리자 단독!! 향후 권한 처리
+    async users (root, args, { db, }, info) {
+      const include = [
+        { model: db.Board, as: 'articles', },
+        { model: db.BoardComment, as: 'commenter', }
+      ];
+      return await findAll(db.User, args, info, include);
+    },
     // Board
     async boards (root, args, { db, }, info) {
       const include = [

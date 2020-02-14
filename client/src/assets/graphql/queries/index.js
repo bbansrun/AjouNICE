@@ -5,12 +5,15 @@ import SubCates from './SubCates.graphql'
 import Post from './PostDetail.graphql'
 import AllCates from './AllCates.graphql'
 import AllPosts from './AllPosts.graphql'
+import AllUsers from './AllUsers.graphql'
 import User from './UserProfile.graphql'
 import UserHome from './UserHome.graphql'
 import UserModify from './UserModify.graphql'
 import BoardsAndPosts from './BoardsAndPosts.graphql'
 import Schedule from './Schedule.graphql'
 import Notice from './Notice.graphql'
+import AdminStatus from './AdminStatus.graphql'
+
 export {
   Post,
   PostsByKeyword,
@@ -19,10 +22,12 @@ export {
   SubCates,
   AllCates,
   AllPosts,
+  AllUsers,
   BoardsAndPosts,
   User,
   UserHome,
   UserModify,
   Schedule,
-  Notice
+  Notice,
+  AdminStatus
 }
