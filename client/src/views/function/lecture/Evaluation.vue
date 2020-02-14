@@ -7,51 +7,51 @@
       description="여러분의 수강후기를 공유해주세요."
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
     />
-    <div class="container">
-      <section class="evaluate">
-        <article>
+    <main>
+      <div class="wrapper">
+        <section class="evaluate">
           <header class="underline underline-inline-block">
-            강의평 작성
+            <strong>강의평 작성</strong>
           </header>
-        </article>
-        <form
-          data-post-form
-          autocomplete="off"
-          @submit.prevent
-        >
-          <div class="input-form editor">
-            <model-select
-              v-model="item"
-              :options="options"
-              placeholder="학과명, 과목명, 혹은 교수명을 입력하시거나 리스트에서 선택해주세요."
-            />
-          </div>
-          <div class="input-form editor">
-            <label for="textarea">강의평 내용</label>
-            <ckeditor
-              v-model="form.editorData"
-              name="textarea"
-              :editor="editor"
-              :config="editorConfig"
-            />
-          </div>
-          <div class="input-form-controls">
-            <input
-              type="button"
-              class="btn box-shadow text-inverse btn-submit"
-              :value="form.submitButton"
-              @click="evaluate"
-            >
-            <input
-              type="button"
-              class="btn box-shadow text-inverse btn-cancel"
-              value="취소"
-              @click="goBack()"
-            >
-          </div>
-        </form>
-      </section>
-    </div>
+          <form
+            data-post-form
+            autocomplete="off"
+            @submit.prevent
+          >
+            <div class="input-form editor">
+              <model-select
+                v-model="item"
+                :options="options"
+                placeholder="학과명, 과목명, 혹은 교수명을 입력하시거나 리스트에서 선택해주세요."
+              />
+            </div>
+            <div class="input-form editor">
+              <label for="textarea">강의평 내용</label>
+              <ckeditor
+                v-model="form.editorData"
+                name="textarea"
+                :editor="editor"
+                :config="editorConfig"
+              />
+            </div>
+            <div class="input-form-controls">
+              <input
+                type="button"
+                class="btn box-shadow text-inverse btn-submit"
+                :value="form.submitButton"
+                @click="evaluate"
+              >
+              <input
+                type="button"
+                class="btn box-shadow text-inverse btn-cancel"
+                value="취소"
+                @click="goBack()"
+              >
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>

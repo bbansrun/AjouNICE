@@ -1,43 +1,38 @@
 <template>
   <div class="wrapper">
-    <Navigation :scroll-base="scrollBase" />
-    <Landing
-      ref="scrollBase"
-      title="학사일정"
-      description="금년 학사일정입니다."
-      background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
-    />
-    <div class="container">
-      <section class="schedule">
-        <article>
-          <header class="underline underline-inline-block">
-            2020년도 학사일정
+    <Navigation is-static />
+    <main>
+      <div class="wrapper">
+        <section class="schedule container">
+          <header class="underline underline-inline-block underline-animated">
+            <strong>2020년도 학사일정</strong>
           </header>
           <b-table
             :data="schedule.data"
             :loading="loading"
             :columns="schedule.columns"
           />
-        </article>
-      </section>
-    </div>
+        </section>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import gql from 'graphql-tag'
 import { Table } from 'buefy'
 import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
 import Footer from '@/components/base/Footer.vue'
+
+import gql from 'graphql-tag'
 import { Schedule } from '@/assets/graphql/queries'
 
 Vue.use(Table)
 export default {
   components: {
-    Navigation, Landing, Footer
+    Navigation,
+    Footer
   },
   data () {
     return {
@@ -53,9 +48,18 @@ export default {
       }
     }
   },
+  beforeMount () {
+    document.body.classList.add('loading')
+  },
   mounted () {
-    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+    document.body.classList.remove('loading')
     this.loadSchedule()
+  },
+  beforeUpdate () {
+    document.body.classList.add('loading')
+  },
+  updated () {
+    document.body.classList.remove('loading')
   },
   methods: {
     loadSchedule () {
@@ -73,3 +77,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+tr {
+  & td::before {
+    white-space: nowrap;
+  }
+}
+</style>

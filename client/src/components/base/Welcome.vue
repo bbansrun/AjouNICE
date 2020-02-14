@@ -4,12 +4,12 @@
     class="welcome signed-in-user"
   >
     <header>
-      <h4>{{ $store.state.user.name }}님, 환영합니다.</h4>
+      <h4>{{ name }}님, 환영합니다.</h4>
     </header>
     <nav class="welcome-nav">
       <ul class="menu menu-horizontal">
         <li>
-          <router-link :to="`/profile/${$store.state.user.idx}`">
+          <router-link :to="`/profile/${idx}`">
             <font-awesome-icon icon="user" />&nbsp;
             <span>마이페이지</span>
           </router-link>
@@ -45,6 +45,10 @@
 
 <script>
 export default {
+  props: {
+    name: { type: String, required: true },
+    idx: { type: Number, required: true }
+  },
   methods: {
     logout () {
       this.$store.dispatch('LOGOUT').then(() => {

@@ -7,6 +7,7 @@ import AllCates from './AllCates.graphql'
 import AllPosts from './AllPosts.graphql'
 import User from './UserProfile.graphql'
 import UserHome from './UserHome.graphql'
+import UserModify from './UserModify.graphql'
 import BoardsAndPosts from './BoardsAndPosts.graphql'
 import Schedule from './Schedule.graphql'
 import Notice from './Notice.graphql'
@@ -21,6 +22,7 @@ export {
   BoardsAndPosts,
   User,
   UserHome,
+  UserModify,
   Schedule,
   Notice
 }

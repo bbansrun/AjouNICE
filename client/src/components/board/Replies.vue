@@ -1,8 +1,8 @@
 <template>
   <section class="replies">
     <article>
-      <header class="underline underline-inline-block">
-        {{ content.length }}개의 댓글이 달렸습니다.
+      <header class="underline underline-inline-block underline-animated">
+        <strong>{{ content.length }}개의 댓글이 달렸습니다.</strong>
       </header>
     </article>
     <form

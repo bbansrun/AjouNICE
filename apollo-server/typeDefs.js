@@ -163,6 +163,7 @@ type Query {
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
     colleges(exist_yn: String!): [College]
     departments(college_cd: String): [Department]
+    department(dpt_cd: String!): Department
     boards(depth: Int, title: String, parent: Int): [BoardCategory]
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]

@@ -2,10 +2,13 @@
   <section id="error">
     <header id="error_code">
       <h1 data-logo>
-        <span>X_X</span> | <span
+        <span>X_X</span><br>
+        <span
           v-if="code"
           class="code"
-        >{{ code }}</span>
+        >
+          {{ code }}
+        </span>
       </h1>
     </header>
     <div
@@ -16,6 +19,7 @@
       <p>{{ sub_description }}</p>
       <a
         v-if="code == 500"
+        class="underline"
         href="mailto:team.ajounice@gmail.com"
       >오류 리포트</a>
     </div>

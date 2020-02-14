@@ -6,7 +6,10 @@
         ref="scrollBase"
         :data="carouselItems"
       />
-      <Welcome />
+      <Welcome
+        :name="user.user_nm"
+        :idx="parseInt(user.user_idx)"
+      />
       <IconNav :data="iconNav" />
       <div
         v-show="$store.state.user"
@@ -57,6 +60,10 @@ export default {
   data () {
     return {
       scrollBase: null,
+      user: {
+        user_nm: '',
+        idx: null
+      },
       iconNav: [
         { id: 1, title: '커뮤니티', background: 'https://i.pinimg.com/originals/41/5d/0e/415d0e858d30604063794897fbffd048.png', link: '/board/' },
         { id: 2, title: '학사일정', background: 'https://i.pinimg.com/originals/d3/e4/1f/d3e41fcda53faa7b6da198ad21dedc9d.jpg', link: '/schedule' },
@@ -91,9 +98,10 @@ export default {
         variables: {
           id: this.$store.state.user.idx
         }
-      }).then(({ data }) => {
-        this.posts = data.posts
-        for (const dpt of data.user.dpt_cd.split(',')) {
+      }).then(({ data: { user, posts } }) => {
+        this.posts = posts
+        this.user = user
+        for (const dpt of user.dpt_cd.split(',')) {
           this.$apollo.query({
             query: gql`${Notice}`,
             variables: {

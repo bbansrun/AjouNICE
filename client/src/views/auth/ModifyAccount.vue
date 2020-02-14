@@ -124,6 +124,7 @@
 <script>
 import pathParser from 'path-parse'
 import gql from 'graphql-tag'
+import { UserModify } from '@/assets/graphql/queries'
 export default {
   data () {
     return {
@@ -214,7 +215,14 @@ export default {
             this.$router.push('/error/500')
           })
         } else if (this.mode.modify) {
-          this.email = this.$store.state.user.email
+          this.$apollo.query({
+            query: gql`${UserModify}`,
+            variables: {
+              id: parseInt(this.$store.state.user.idx)
+            }
+          }).then(({ data: { user } }) => {
+            this.email = user.email
+          })
         } else {
           this.$router.push('/error/404')
         }

@@ -3,6 +3,8 @@ query UserProfile($id: Int!) {
         user_nm
         nick_nm
         dpt_cd
+        admin_type
+        user_type
         articles {
             title
             body

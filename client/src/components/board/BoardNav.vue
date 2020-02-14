@@ -1,7 +1,7 @@
 <template>
   <section class="board-menu">
     <header v-show="!searchActive">
-      <h4>옆의 아이콘을 클릭하여 게시물을 작성할 수 있습니다.</h4>
+      <h5>옆의 아이콘을 클릭하여 게시물을 작성할 수 있습니다.</h5>
     </header>
     <form
       v-show="searchActive"
@@ -68,7 +68,7 @@ export default {
   position: absolute;
   width: 90vw;
   display: grid;
-  grid-template-columns: 4fr 1fr;
+  grid-template-columns: 3fr 1fr;
   background: -webkit-linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
   background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
   color: #fff;

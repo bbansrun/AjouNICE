@@ -98,14 +98,12 @@ class Tokenizer():
         self.payload = {
             'exp': self.req_timestamp(),
             'iss': 'AjouNICE!_APIserver',
-            'sub': 'AjouNICE!_SSO',
+            'sub': 'AjouNICE!_Sreq_timestampSO',
             'iat': self.req_timestamp(now=True),
             'user': {
-                'email': user.email,
-                'name': user.user_nm,
                 'idx': user.user_idx,
-                'nick_nm': user.nick_nm,
-                'type': user.admin_type,
+                'name': user.user_nm,
+                'managable': (user.admin_type == 'A'),
                 'access_loc': remote_addr
             }
         }

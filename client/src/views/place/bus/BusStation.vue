@@ -7,11 +7,11 @@
       description="학교 주변에서 이용할 수 있는 교통수단을 알려드립니다."
       background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
     />
-    <div class="container">
-      <section class="shuttle">
-        <article>
+    <main>
+      <div class="wrapper content">
+        <section class="shuttle">
           <header class="underline underline-inline-block">
-            학교 셔틀버스
+            <strong>학교 셔틀버스</strong>
           </header>
           <b-table
             :data="schoolBus.data.gwanggyo"
@@ -33,12 +33,11 @@
               </div>
             </template>
           </b-table>
-        </article>
-      </section>
-      <section class="ord-bus">
-        <article>
+        </section>
+        <hr>
+        <section class="ord-bus">
           <header class="underline underline-inline-block">
-            마을버스
+            <strong>마을버스</strong>
           </header>
           <b-table
             :data="schoolBus.data.townShuttle"
@@ -50,10 +49,8 @@
               </div>
             </template>
           </b-table>
-        </article>
-        <article>
           <header class="underline underline-inline-block">
-            일반 시내/광역버스
+            <strong>일반 시내/광역버스</strong>
           </header>
           <div class="buses">
             <model-select
@@ -67,7 +64,7 @@
                 :key="type.type"
                 class="routes"
               >
-                <h3>{{ type.label }}</h3>
+                <h6>{{ type.label }}</h6>
                 <span v-if="item.value && buses.routes.filter(elem => (elem.type === type.type && elem.bound.includes(item.value))).length === 0">
                   <small>없음</small>
                 </span>
@@ -92,9 +89,9 @@
             :style="mapStyle"
             @load="onLoad"
           />
-        </article>
-      </section>
-    </div>
+        </section>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>

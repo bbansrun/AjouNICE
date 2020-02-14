@@ -181,30 +181,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-article {
-    margin-top: 2rem !important;
-    padding: 0 2rem !important;
-    & header {
-        font-weight: bold;
-        font-size: 1.5rem;
-        & span {
-            position: relative;
-            &::before {
-                content: "";
-                display: block;
-                position: absolute;
-                left: 0;
-                z-index: -1;
-                bottom: 1px;
-                height: 10px;
-                background-color: #667eea;
-                transition: all .4s cubic-bezier(0.57, 0.02, 0.06, 1);
-                width: 100%;
-            }
-        }
-    }
-}
-</style>

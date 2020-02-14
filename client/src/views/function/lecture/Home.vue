@@ -7,69 +7,77 @@
       description="여러분의 수강후기를 공유해주세요."
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
     />
-    <div class="container">
-      <section class="search">
-        <article>
+    <main>
+      <div class="wrapper">
+        <div class="controls">
+          <div class="buttons">
+            <b-button
+              tag="router-link"
+              type="is-primary"
+              size="is-small"
+              :to="evaluateLink"
+            >
+              <font-awesome-icon icon="pen" />&nbsp;
+              <span>강의평가 작성</span>
+            </b-button>
+            <b-button
+              tag="router-link"
+              type="is-info"
+              size="is-small"
+              :to="myLectureReviewsLink"
+            >
+              <font-awesome-icon icon="sticky-note" />&nbsp;
+              <span>나의 강의평가</span>
+            </b-button>
+          </div>
+        </div>
+        <hr>
+        <section class="review review-search">
           <header class="underline underline-inline-block">
-            강의평 검색
+            <strong>강의평 검색</strong>
           </header>
           <model-select
             v-model="item"
             :options="options"
             placeholder="학과/과목/교수명을 입력하거나 목록에서 선택해주세요."
           />
-        </article>
-      </section>
-      <section class="recent-reviews">
-        <article>
+        </section>
+        <hr>
+        <section class="review recent-reviews">
           <header class="underline underline-inline-block">
-            주목받는 강의평
+            <strong>주목받는 강의평</strong>
           </header>
-        </article>
-        <div class="reviews grid grid-auto">
-          <div
-            v-for="review in reviews"
-            :key="review.id"
-            class="card"
-          >
-            <div class="card-content">
-              <p class="title">
-                {{ review.subject }}
-              </p>
-              <p class="subtitle">
-                {{ review.professor }} | {{ review.dpt }} ({{ review.subType }})
-              </p>
-            </div>
-            <div class="card-content">
-              <p>{{ review.content }}</p>
-            </div>
-            <div class="card-footer">
-              <span>
-                <font-awesome-icon
-                  v-for="n in review.rate"
-                  :key="n"
-                  icon="star"
-                />
-              </span>
+          <div class="review-list grid grid-auto">
+            <div
+              v-for="review in reviews"
+              :key="review.id"
+              class="card"
+            >
+              <div class="card-content">
+                <p class="title">
+                  {{ review.subject }}
+                </p>
+                <p class="subtitle">
+                  {{ review.professor }} | {{ review.dpt }} ({{ review.subType }})
+                </p>
+              </div>
+              <div class="card-content">
+                <p>{{ review.content }}</p>
+              </div>
+              <div class="card-footer">
+                <span>
+                  <font-awesome-icon
+                    v-for="n in review.rate"
+                    :key="n"
+                    icon="star"
+                  />
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <div class="controls">
-        <b-button
-          tag="router-link"
-          :to="evaluateLink"
-        >
-          강의평가 작성
-        </b-button>
-        <b-button
-          tag="router-link"
-          :to="myLectureReviewsLink"
-        >
-          나의 강의평가
-        </b-button>
+        </section>
       </div>
-    </div>
+    </main>
     <Footer />
   </div>
 </template>
@@ -140,19 +148,21 @@ export default {
 }
 
 .grid {
-  padding: 0 2rem;
   grid-template-columns: repeat(2, 1fr);
   margin-bottom: 1rem;
 }
 
-.controls {
-  padding: 0 2rem;
-  margin-bottom: 1rem;
+.card {
+  & svg {
+    & path {
+      fill: #ffd83d;
+    }
+  }
 }
 
-svg {
-  & path {
-    fill: #ffd83d;
+.controls {
+  > .buttons {
+    justify-content: flex-end;
   }
 }
 </style>

@@ -7,23 +7,24 @@
       :description="`${$store.state.user.name}님께서 평가하신 강의평입니다.`"
       background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
     />
-    <div class="container">
-      <div class="control">
-        <b-button
-          tag="router-link"
-          :to="`/profile/${$store.state.user.idx}`"
-        >
-          &larr; 돌아가기
-        </b-button>
+    <main>
+      <div class="wrapper container">
+        <div class="controls">
+          <div class="buttons">
+            <b-button
+              tag="router-link"
+              size="is-small"
+              type="is-primary"
+              :to="`/profile/${$store.state.user.idx}`"
+            >
+              <span>&larr; 돌아가기</span>
+            </b-button>
+          </div>
+        </div>
+        <hr>
+        <MyReviews />
       </div>
-      <section class="user">
-        <article>
-          <header class="underline underline-inline-block">
-            나의 강의평가
-          </header>
-        </article>
-      </section>
-    </div>
+    </main>
     <Footer />
   </div>
 </template>
@@ -32,11 +33,13 @@
 import Navigation from '@/components/base/Navigation.vue'
 import Landing from '@/components/base/Landing.vue'
 import Footer from '@/components/base/Footer.vue'
+import MyReviews from '@/components/function/reviews/MyReviews.vue'
 export default {
   components: {
     Navigation,
     Landing,
-    Footer
+    Footer,
+    MyReviews
   },
   data () {
     return {
@@ -44,14 +47,16 @@ export default {
       user_nm: null
     }
   },
-  computed: {
-  },
-  beforeMount () {
-  },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
-  },
-  methods: {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.controls {
+  > .buttons {
+    justify-content: flex-end;
+  }
+}
+</style>

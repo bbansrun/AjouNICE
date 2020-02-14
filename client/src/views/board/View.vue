@@ -7,12 +7,17 @@
           <header>
             <div class="header grid">
               <h3>{{ post.title }}</h3>
-              <small class="category">{{ post.category.category_nm }} 게시판</small>
+              <small class="category">
+                <router-link
+                  class="underline underline-animated"
+                  :to="`/board/${post.category.title}`"
+                >{{ post.category.category_nm }} 게시판</router-link>
+              </small>
             </div>
             <div class="meta has-text-right">
               <small>
                 <span class="writer">{{ post.user.nick_nm }}</span>&nbsp;
-                <span class="date">{{ new Date(post.reg_dt).toLocaleDateString() }}</span>&nbsp;
+                <span class="date">{{ new Date(post.reg_dt) | moment("YYYY-MM-DD HH:MM") }}</span>&nbsp;
               </small>
             </div>
           </header>
@@ -104,20 +109,25 @@
 
 <script>
 import Vue from 'vue'
-import VueClipBoard from 'vue-clipboard2'
-import { Tooltip } from 'buefy'
-import gql from 'graphql-tag'
 import urljoin from 'url-join'
+import moment from 'vue-moment'
+
+import { Tooltip } from 'buefy'
+import VueClipBoard from 'vue-clipboard2'
 import VueGallerySlideshow from 'vue-gallery-slideshow'
-import Navigation from '@/components/base/Navigation.vue'
-import Replies from '@/components/board/Replies.vue'
-import Footer from '@/components/base/Footer.vue'
+
+import gql from 'graphql-tag'
 import { Post } from '@/assets/graphql/queries'
 import { removePost } from '@/assets/graphql/mutations'
 
+import Navigation from '@/components/base/Navigation.vue'
+import Replies from '@/components/board/Replies.vue'
+import Footer from '@/components/base/Footer.vue'
+
 VueClipBoard.config.autoSetContainer = true
-Vue.use(VueClipBoard)
+Vue.use(moment)
 Vue.use(Tooltip)
+Vue.use(VueClipBoard)
 export default {
   name: 'App',
   components: {
@@ -128,7 +138,6 @@ export default {
   },
   data () {
     return {
-      scrollBase: null,
       meta: {},
       user_idx: null,
       post: null,
@@ -158,7 +167,8 @@ export default {
       return window.location.href
     }
   },
-  beforeCreate () {
+  beforeMount () {
+    document.body.classList.add('loading')
     this.$apollo.query({
       query: gql`${Post}`,
       variables: {
@@ -176,7 +186,13 @@ export default {
     })
   },
   mounted () {
-    this.scrollBase = 0
+    document.body.classList.remove('loading')
+  },
+  beforeUpdate () {
+    document.body.classList.add('loading')
+  },
+  updated () {
+    document.body.classList.remove('loading')
   },
   methods: {
     onCopy (e) {
@@ -255,7 +271,7 @@ nav.gnb.static {
   }
 }
 
-.switch .control-label {
+.control-label {
   white-space: nowrap !important;
 }
 

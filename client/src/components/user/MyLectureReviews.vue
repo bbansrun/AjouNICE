@@ -1,19 +1,12 @@
 <template>
-  <section class="reviews">
-    <article>
-      <header class="underline underline-inline-block">
-        나의 강의평
-      </header>
-    </article>
-  </section>
+  <MyReviews />
 </template>
 
 <script>
+import MyReviews from '@/components/function/reviews/MyReviews.vue'
 export default {
-
+  components: {
+    MyReviews
+  }
 }
 </script>
-
-<style>
-
-</style>

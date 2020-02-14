@@ -117,6 +117,9 @@ module.exports = {
       return await findAll(db.College, args, info, include);
     },
     // Department
+    async department (root, args, { db, }, info) {
+      return await findOne(db.Department, args, info);
+    },
     async departments (root, args, { db, }, info) {
       return await findAll(db.Department, args, info);
     },

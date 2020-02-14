@@ -1,48 +1,95 @@
 <template>
   <div class="wrapper">
-    <Navigation :scroll-base="scrollBase" />
-    <Landing
-      ref="scrollBase"
-      :title="user_nm"
-      background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
-    />
-    <div class="container">
-      <section class="user">
-        <div class="controls">
-          <header>계정관리</header>
-          <b-button
-            v-show="$store.state.user.type === 'A'"
-            type="is-danger"
-            tag="router-link"
-            to="/gate/manager"
-          >
-            <font-awesome-icon icon="users-cog" />
-            <span>관리자</span>
-          </b-button>
-          <b-button
-            type="is-warning"
-            tag="router-link"
-            :to="profileEditUrl"
-          >
-            <font-awesome-icon icon="user-lock" />
-            <span>계정정보 수정</span>
-          </b-button>
-          <b-button
-            type="is-danger"
-            @click="secession"
-          >
-            <font-awesome-icon icon="sign-out-alt" />
-            <span>회원탈퇴</span>
-          </b-button>
-        </div>
-      </section>
-      <MyPosts :posts="articles" />
-      <MyReviews />
-      <!-- 소속 학과 공지사항 -->
-      <section class="notice">
-        <article>
+    <Navigation is-static />
+    <main>
+      <div class="wrapper">
+        <section class="my my-profile">
+          <header>
+            <h2>
+              <span
+                id="username"
+                class="underline underline-animated"
+              >
+                <strong>{{ user.user_nm }}</strong>
+              </span>
+              <span>님, 환영합니다.</span>
+            </h2>
+          </header>
+          <div class="content">
+            <div class="card">
+              <div class="card-content">
+                <div class="columns">
+                  <div class="column is-3">
+                    <figure>
+                      <img
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000"
+                        alt="gravatar"
+                        class="thumbnail"
+                      >
+                    </figure>
+                  </div>
+                  <div class="column is-9">
+                    <p class="nickname">
+                      <span class="header">
+                        <strong>닉네임</strong>
+                      </span>&nbsp;
+                      <span class="content">{{ user.nick_nm }}</span>
+                    </p>
+                    <p class="dpts">
+                      <span class="header">
+                        <strong>소속학과</strong>
+                      </span>&nbsp;
+                      <span class="content">{{ dpt_cd_labels.join(' | ') }}</span>
+                    </p>
+                  </div>
+                </div>
+                <hr>
+                <div class="controls has-text-centered">
+                  <header>
+                    <strong>계정관리</strong>
+                  </header>
+                  <div class="buttons">
+                    <b-button
+                      v-show="user.admin_type === 'A'"
+                      type="is-primary"
+                      size="is-small"
+                      tag="router-link"
+                      to="/gate/manager"
+                    >
+                      <font-awesome-icon icon="users-cog" />&nbsp;
+                      <span>관리자</span>
+                    </b-button>
+                    <b-button
+                      type="is-warning"
+                      size="is-small"
+                      tag="router-link"
+                      :to="profileEditUrl"
+                    >
+                      <font-awesome-icon icon="user-lock" />&nbsp;
+                      <span>계정정보 수정</span>
+                    </b-button>
+                    <b-button
+                      type="is-danger"
+                      size="is-small"
+                      @click="secession"
+                    >
+                      <font-awesome-icon icon="sign-out-alt" />&nbsp;
+                      <span>회원탈퇴</span>
+                    </b-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <hr>
+        <MyPosts :posts="user.articles" />
+        <hr>
+        <MyReviews />
+        <hr>
+        <section class="my my-notice">
           <header class="underline underline-inline-block">
-            소속학과 공지사항
+            <strong>소속학과 공지사항</strong>
           </header>
           <b-table
             :data="dpt.data"
@@ -57,7 +104,7 @@
                   :href="props.row.link"
                   target="_blank"
                 >
-                  {{ props.row.title }}
+                  <h5>{{ props.row.title }}</h5>
                 </a>
               </b-table-column>
               <b-table-column
@@ -69,9 +116,9 @@
               </b-table-column>
             </template>
           </b-table>
-        </article>
-      </section>
-    </div>
+        </section>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>
@@ -80,7 +127,6 @@
 import urljoin from 'url-join'
 import gql from 'graphql-tag'
 import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
 import MyPosts from '@/components/user/MyPosts.vue'
 import MyReviews from '@/components/user/MyLectureReviews.vue'
 import Footer from '@/components/base/Footer.vue'
@@ -88,7 +134,6 @@ import { User, Notice } from '@/assets/graphql/queries'
 export default {
   components: {
     Navigation,
-    Landing,
     MyPosts,
     MyReviews,
     Footer
@@ -96,10 +141,17 @@ export default {
   data () {
     return {
       scrollBase: null,
-      user_nm: null,
-      articles: null,
+      user: {
+        user_nm: '',
+        nick_nm: '',
+        dpt_cd: '',
+        admin_type: '',
+        user_type: '',
+        articles: []
+      },
       loading: true,
       dpt_cds: [],
+      dpt_cd_labels: [],
       dpt: {
         data: []
       }
@@ -114,20 +166,37 @@ export default {
     }
   },
   beforeMount () {
+    document.body.classList.add('loading')
     this.$apollo.query({
       query: gql`${User}`,
       variables: {
         id: this.$store.state.user.idx
       }
-    }).then(({ data }) => {
-      this.articles = data.user.articles
-      this.user_nm = data.user.user_nm
-      this.dpt_cds = data.user.dpt_cd.split(',')
+    }).then(({ data: { user } }) => {
+      this.user = user
+      this.dpt_cds = user.dpt_cd.split(',')
+      this.dpt_cds.forEach(dpt => {
+        this.$apollo.query({
+          query: gql`{
+            department(dpt_cd: "${dpt}") {
+              dpt_nm
+            }
+          }`
+        }).then(({ data: { department } }) => {
+          this.dpt_cd_labels.push(department.dpt_nm)
+        })
+      })
       this.loadNotice()
     })
   },
   mounted () {
-    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+    document.body.classList.remove('loading')
+  },
+  beforeUpdate () {
+    document.body.classList.add('loading')
+  },
+  updated () {
+    document.body.classList.remove('loading')
   },
   methods: {
     loadNotice () {
@@ -172,6 +241,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+section.my {
+  margin-bottom: 1rem;
+}
+
+tr {
+  & td::before {
+    white-space: nowrap;
+  }
+}
+
+.card-content {
+  padding: 1.5rem 1rem;
+}
+
+.buttons {
+  justify-content: center;
+}
+
+select {
+  margin: 0;
+}
+
 .notice {
   > .card {
     margin-bottom: .8rem;

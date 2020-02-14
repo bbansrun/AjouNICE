@@ -105,7 +105,7 @@ const requireAuth = (to, from, next) => {
 const requireAdminAuth = (to, from, next) => {
   if (localStorage.accessToken) {
     store.dispatch('checkTokenStatus').then(({ user }) => {
-      if (user.type === 'A') {
+      if (user.managable) {
         return next()
       } else {
         return next({
