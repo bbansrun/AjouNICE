@@ -103,6 +103,7 @@ class Tokenizer():
             'user': {
                 'idx': user.user_idx,
                 'name': user.user_nm,
+                'nick_nm': user.nick_nm,
                 'managable': (user.admin_type == 'A'),
                 'access_loc': remote_addr
             }

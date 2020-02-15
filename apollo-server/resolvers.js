@@ -187,12 +187,12 @@ module.exports = {
       return await findOne(db.BoardComment, args, info, include);
     },
     async schedule (root, args, { db, }, info) {
-      const response = await fetch('http://localhost:5000/api/schedule');
+      const response = await fetch(`http://${require('ip').address()}:5000/api/schedule`);
       const result = await response.json();
       return result.result;
     },
     async notice (root, args, { db, }, info) {
-      const response = await fetch(`http://localhost:5000/api/notice/${args.code}`);
+      const response = await fetch(`http://${require('ip').address()}:5000/api/notice/${args.code}`);
       const result = await response.json();
       return result.result;
     },

@@ -140,7 +140,18 @@ export default {
     return {
       meta: {},
       user_idx: null,
-      post: null,
+      post: {
+        title: '',
+        body: '',
+        user: {
+          user_idx: null,
+          nick_nm: ''
+        },
+        category: {
+          title: ''
+        },
+        comments: []
+      },
       images: [
         'https://placekitten.com/801/800',
         'https://placekitten.com/802/800',

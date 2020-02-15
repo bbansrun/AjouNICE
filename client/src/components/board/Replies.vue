@@ -120,7 +120,7 @@ export default {
         console.log(data.replyWritten)
         that.flash('댓글을 달았습니다.', 'success')
         that.content.unshift(data.replyWritten)
-        that.reply = ''
+        that.content = ''
         // document.body.classList.toggle('loading')
       },
       error (error) {

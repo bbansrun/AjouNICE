@@ -167,7 +167,7 @@ const fetch = (url, options) => {
 }
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:455/graphql',
+  uri: `ws://${require('ip').address()}:455/graphql`,
   options: {
     reconnect: true
   }
@@ -184,7 +184,7 @@ const authLink = new ApolloLink((operation, forward) => {
 })
 
 const uploadLink = authLink.concat(createUploadLink({
-  uri: 'http://localhost:455/graphql'
+  uri: `http://${require('ip').address()}:455/graphql`
 }))
 
 const httpLink = uploadLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
