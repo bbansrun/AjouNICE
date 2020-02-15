@@ -77,7 +77,6 @@ type Board {
     category_idx: Int!
     user: User!
     user_idx: Int!
-    nick_nm: String
     title: String
     body: String
     view_cnt: Int
@@ -110,7 +109,6 @@ type BoardComment {
     board_idx: Board!
     user: User!
     user_idx: Int!
-    nick_nm: String
     text: String
     reg_ip: String
     reg_dt: Date

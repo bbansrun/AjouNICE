@@ -13,11 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
     },
-    nick_nm: {
-      type: DataTypes.STRING(50, true),
-      allowNull: true,
-      defaultValue: null,
-    },
     title: {
       type: DataTypes.STRING(100, true),
       allowNull: true,
