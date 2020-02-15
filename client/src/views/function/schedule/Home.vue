@@ -79,9 +79,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 tr {
   & td::before {
     white-space: nowrap;
   }
+}
+</style>
+
+<style>
+.table {
+  font-family: 'KoPub Dotum';
 }
 </style>

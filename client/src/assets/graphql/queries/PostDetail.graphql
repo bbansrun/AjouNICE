@@ -2,7 +2,6 @@ query Post($id: ID!) {
     post(board_idx: $id) {
         title
         body
-        nick_nm
         reg_dt
         upt_dt
         category {
@@ -18,7 +17,6 @@ query Post($id: ID!) {
             cmt_idx
             user_idx
             text
-            nick_nm
             reg_dt
             upt_dt
         }

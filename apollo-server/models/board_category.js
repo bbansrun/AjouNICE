@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: null,
     },
+    category_type: {
+      type: DataTypes.STRING(10, true),
+      allowNull: false,
+      defaultValue: 'NORMAL',
+    },
     title: {
       type: DataTypes.STRING(50, true),
       allowNull: true,

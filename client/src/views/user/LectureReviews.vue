@@ -12,10 +12,9 @@
         <div class="controls">
           <div class="buttons">
             <b-button
-              tag="router-link"
               size="is-small"
               type="is-primary"
-              :to="`/profile/${$store.state.user.idx}`"
+              @click="goBack"
             >
               <span>&larr; 돌아가기</span>
             </b-button>
@@ -49,6 +48,11 @@ export default {
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+  },
+  methods: {
+    goBack () {
+      this.$router.go(-1)
+    }
   }
 }
 </script>

@@ -7,12 +7,12 @@
       description=""
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg"
     />
-    <div class="container">
-      <article class="policy-wrapper">
+    <main>
+      <div class="wrapper">
         <header class="underline underline-inline-block">
-          서비스 이용약관
+          <strong>서비스 이용약관</strong>
         </header>
-        <div class="policy policy-content">
+        <section class="policy policy-content has-text-centered">
           <h3>제 1 장 환영합니다!</h3>
           <br>
           <h4>제 1 조 (목적 및 정의)</h4>
@@ -160,9 +160,9 @@
           공고일자 : 2020년 1월 1일<br>
           시행일자 : 2020년 1월 1일<br>
           <br>
-        </div>
-      </article>
-    </div>
+        </section>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>
@@ -172,7 +172,6 @@ import Navigation from '@/components/base/Navigation.vue'
 import Landing from '@/components/base/Landing.vue'
 import Footer from '@/components/base/Footer.vue'
 export default {
-  name: 'Policy',
   components: {
     Navigation, Landing, Footer
   },
@@ -188,41 +187,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-article.policy-wrapper {
-    margin-top: 2rem;
-    padding: 0 2rem;
-    & header {
+  .policy-content {
+    margin-top: 1rem;
+    font-size: .8rem;
+    & h3, h4 {
         font-weight: bold;
-        font-size: 1.5rem;
-        & span {
-            position: relative;
-            &::before {
-                content: "";
-                display: block;
-                position: absolute;
-                left: 0;
-                z-index: -1;
-                bottom: 1px;
-                height: 10px;
-                background-color: #667eea;
-                transition: all .4s cubic-bezier(0.57, 0.02, 0.06, 1);
-                width: 100%;
-            }
-        }
+        text-align: center;
     }
-    & div.policy-content {
-        margin-top: 1rem;
-        font-size: .8rem;
-        & h3, h4 {
-            font-weight: bold;
-            text-align: center;
-        }
-        & h3 {
-            font-size: 1.2rem;
-        }
-        & h4 {
-            font-size: 1rem;
-        }
+    & h3 {
+        font-size: 1.2rem;
     }
-}
+    & h4 {
+        font-size: 1rem;
+    }
+  }
 </style>

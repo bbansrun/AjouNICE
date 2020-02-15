@@ -165,8 +165,7 @@ export default {
       return `/profile/${this.$store.state.user.idx}/lectures/reviews`
     }
   },
-  beforeMount () {
-    document.body.classList.add('loading')
+  beforeCreate () {
     this.$apollo.query({
       query: gql`${User}`,
       variables: {
@@ -188,6 +187,9 @@ export default {
       })
       this.loadNotice()
     })
+  },
+  beforeMount () {
+    document.body.classList.add('loading')
   },
   mounted () {
     document.body.classList.remove('loading')

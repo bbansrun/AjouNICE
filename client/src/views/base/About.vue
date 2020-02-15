@@ -8,16 +8,16 @@
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif"
       is-logo
     />
-    <div class="container">
-      <section class="about">
-        <article>
-          <header>차세대 학부 커뮤니티 서비스를 지향합니다.</header>
+    <main>
+      <div class="wrapper">
+        <section class="about">
+          <header>
+            <strong>차세대 학부 커뮤니티 서비스를 지향합니다.</strong>
+          </header>
           <p>Mobile First와 정보공유에 초점을 두고 개발된 프로젝트입니다.</p>
-        </article>
-        <hr>
-        <article>
+          <hr>
           <header class="underline underline-inline-block">
-            서비스 공지사항
+            <strong>서비스 공지사항</strong>
           </header>
           <b-table
             :data="data"
@@ -87,9 +87,11 @@
               </b-table-column>
             </template>
           </b-table>
-        </article>
-      </section>
-    </div>
+          </strong>
+          </header></strong>
+        </section>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>

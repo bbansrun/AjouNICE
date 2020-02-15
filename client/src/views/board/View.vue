@@ -2,8 +2,8 @@
   <div class="wrapper">
     <Navigation is-static />
     <main>
-      <article class="post">
-        <div class="content-wrapper">
+      <div class="wrapper">
+        <section class="post">
           <header>
             <div class="header grid">
               <h3>{{ post.title }}</h3>
@@ -17,7 +17,7 @@
             <div class="meta has-text-right">
               <small>
                 <span class="writer">{{ post.user.nick_nm }}</span>&nbsp;
-                <span class="date">{{ new Date(post.reg_dt) | moment("YYYY-MM-DD HH:MM") }}</span>&nbsp;
+                <span class="date">{{ post.reg_dt | formatDateTime }}</span>&nbsp;
               </small>
             </div>
           </header>
@@ -44,14 +44,15 @@
                 />
               </div>
             </div>
-            <div class="controls has-text-right">
-              <div class="meta-bottom">
+            <div class="controls">
+              <div class="meta-bottom has-text-right">
                 <small>
                   <span class="permalink">
                     <a :href="permalink">{{ permalink }}</a>&nbsp;
                     <b-tooltip
                       label="클릭하시면 주소가 복사됩니다."
-                      always
+                      position="is-left"
+                      animated
                     >
                       <b-button
                         v-clipboard:copy="permalink"
@@ -59,40 +60,50 @@
                         v-clipboard:error="onError"
                         type="is-small"
                       >
+                        <font-awesome-icon icon="copy" />&nbsp;
                         <span>복사</span>
                       </b-button>
                     </b-tooltip>
                   </span>
                 </small>
               </div>
-              <b-button
-                tag="router-link"
-                size="is-small"
-                type="is-primary"
-                to="/board"
-              >
-                <font-awesome-icon icon="th-list" />&nbsp;
-                <span>목록으로</span>
-              </b-button>
-              <b-button
-                v-show="articleWriter()"
-                tag="router-link"
-                size="is-small"
-                type="is-warning"
-                :to="editArticle"
-              >
-                <font-awesome-icon icon="pen" />&nbsp;
-                <span>수정</span>
-              </b-button>
-              <b-button
-                v-show="articleWriter()"
-                size="is-small"
-                type="is-danger"
-                @click="removeArticle()"
-              >
-                <font-awesome-icon icon="trash" />&nbsp;
-                <span>삭제</span>
-              </b-button>
+              <div class="meta-bottom buttons">
+                <b-button
+                  tag="router-link"
+                  size="is-small"
+                  type="is-primary"
+                  to="/board"
+                >
+                  <font-awesome-icon icon="th-list" />&nbsp;
+                  <span>목록으로</span>
+                </b-button>
+                <b-button
+                  v-show="articleWriter()"
+                  tag="router-link"
+                  size="is-small"
+                  type="is-warning"
+                  :to="editArticle"
+                >
+                  <font-awesome-icon icon="pen" />&nbsp;
+                  <span>수정</span>
+                </b-button>
+                <b-button
+                  v-show="articleWriter()"
+                  size="is-small"
+                  type="is-danger"
+                  @click="removeArticle()"
+                >
+                  <font-awesome-icon icon="trash" />&nbsp;
+                  <span>삭제</span>
+                </b-button>
+                <b-button
+                  size="is-small"
+                  type="is-danger"
+                >
+                  <font-awesome-icon icon="exclamation-triangle" />&nbsp;
+                  <span>신고</span>
+                </b-button>
+              </div>
             </div>
             <hr>
             <Replies
@@ -100,17 +111,16 @@
               :content="post.comments"
             />
           </div>
-        </div>
-      </article>
-      <Footer />
+        </section>
+      </div>
     </main>
+    <Footer />
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import urljoin from 'url-join'
-import moment from 'vue-moment'
 
 import { Tooltip } from 'buefy'
 import VueClipBoard from 'vue-clipboard2'
@@ -125,7 +135,6 @@ import Replies from '@/components/board/Replies.vue'
 import Footer from '@/components/base/Footer.vue'
 
 VueClipBoard.config.autoSetContainer = true
-Vue.use(moment)
 Vue.use(Tooltip)
 Vue.use(VueClipBoard)
 export default {
@@ -226,7 +235,6 @@ export default {
         showLoaderOnConfirm: true,
         confirmButtonText: '삭제',
         cancelButtonText: '취소',
-        cancelButtonColor: 'red',
         preConfirm () {
           that.$apollo.mutate({
             mutation: gql`${removePost}`,
@@ -260,10 +268,9 @@ hr {
 nav.gnb.static {
   + main {
     & .post {
-      margin-top: 60px !important;
-      padding: 0 !important;
       & header {
         > .header {
+          font-family: 'KoPub Dotum';
           display: flex;
           flex-direction: row;
           justify-content: space-between;
@@ -275,15 +282,12 @@ nav.gnb.static {
       }
       & .content {
         > .container {
+          font-family: 'KoPub Dotum';
           padding: 0;
         }
       }
     }
   }
-}
-
-.control-label {
-  white-space: nowrap !important;
 }
 
 .content-wrapper {
@@ -324,11 +328,23 @@ article header span::before {
 }
 
 .controls {
+  .meta-bottom {
+    justify-content: flex-end;
+    &:first-of-type {
+      margin-bottom: .5rem;
+    }
+  }
   > a, button {
     margin-right: 5px;
     &:last-child {
       margin-right: 0 !important;
     }
   }
+}
+</style>
+
+<style>
+.control-label {
+  white-space: nowrap !important;
 }
 </style>

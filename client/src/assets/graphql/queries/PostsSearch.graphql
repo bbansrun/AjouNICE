@@ -4,15 +4,12 @@ query PostsSearch($keyword: String!) {
         category_idx
         title
         body
-        nick_nm
         view_cnt
-        cmt_cnt
         reg_dt
         comments {
             cmt_idx
             user_idx
             text
-            nick_nm
             reg_dt
             upt_dt
         }

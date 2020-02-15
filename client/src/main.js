@@ -25,13 +25,17 @@ import {
   faStickyNote,
   faHome,
   faReply,
-  faThList
+  faThList,
+  faCopy,
+  faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import VueCarousel from '@chenfengyuan/vue-carousel'
 import VueFeather from 'vue-feather'
 import VueFlashMessage from 'vue-flash-message'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
@@ -46,6 +50,10 @@ import VueApollo from 'vue-apollo'
 Vue.use(VueApollo)
 Vue.use(VueCarousel)
 Vue.use(VueFeather)
+Vue.use(VueSweetalert2, {
+  confirmButtonColor: '#00A8CC',
+  cancelButtonColor: '#FF2E63'
+})
 Vue.use(VueFlashMessage, {
   createShortcuts: true,
   messageOptions: {
@@ -82,6 +90,8 @@ library.add(faStickyNote)
 library.add(faHome)
 library.add(faReply)
 library.add(faThList)
+library.add(faExclamationTriangle)
+library.add(faCopy)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const shouldEncode = (url, options) => {
@@ -98,7 +108,6 @@ const encodeTextBody = (text) => {
 }
 
 const decodeTextBody = (text) => {
-  console.log(text)
   const buffer = new Uint8Array(
     [...atob(text)].map(char => char.charCodeAt(0))
   )

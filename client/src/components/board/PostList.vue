@@ -11,17 +11,17 @@
       <div
         v-for="post in items"
         :key="post.board_idx"
-        class="posts"
+        class="post"
       >
         <router-link :to="`/board/${post.board_idx}/view`">
           <article class="post">
             <header>
-              <div class="content-wrapper">
+              <div class="wrapper">
                 <h3>{{ post.title }}</h3>
                 <div class="info">
-                  <span><small>{{ new Date(post.reg_dt).toLocaleDateString() }}</small></span>&nbsp;
+                  <span><small>{{ post.reg_dt | formatDateTime }}</small></span>&nbsp;
                   <span><small>{{ post.nick_nm }}</small></span>&nbsp;
-                  <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt }}</small></span>&nbsp;
+                  <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt | numberWithCommas }}</small></span>&nbsp;
                 </div>
               </div>
               <div
@@ -35,7 +35,7 @@
               </div>
             </header>
             <div class="replies">
-              <span>{{ post.comments.length }}</span>
+              <span>{{ post.comments.length > 99 ? '100+' : (post.comments.length | numberWithCommas) }}</span>
               <h6>댓글</h6>
             </div>
           </article>
@@ -76,65 +76,74 @@ section.popular {
     padding: 1rem 0;
     border-top: 1px solid rgba(0,0,0,.2);
   }
-  > .posts > .posts {
-    border-top: 1px solid rgba(0,0,0,.2);
-    border-bottom: 1px solid rgba(0,0,0,.2);
-    & a {
-      display: inline-block;
-      color: #000;
-    }
-    & article {
-      width: 100vw;
-      display: grid;
-      grid-template-columns: 6fr 1fr;
-      padding: 0 !important;
-      margin: 0 !important;
-      > header {
+  > .posts {
+    > .post {
+      border-top: 1px solid rgba(0,0,0,.2);
+      border-bottom: 1px solid rgba(0,0,0,.2);
+      & a {
+        display: inline-block;
+        color: #000;
+      }
+      & article {
+        width: 100vw;
         display: grid;
-        grid-template-columns: 4fr 1fr;
-        width: 100%;
-        padding: .6rem .8rem;
-        overflow: hidden;
-        > .content-wrapper {
-          > h3 {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        grid-template-columns: 6fr 1fr;
+        padding: 0 !important;
+        margin: 0 !important;
+        > header {
+          display: grid;
+          grid-template-columns: 4fr 1fr;
+          width: 100%;
+          padding: .6rem .8rem;
+          overflow: hidden;
+          > .wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            > h3 {
+              font: {
+                family: 'KoPub Dotum';
+              }
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            > p {
+              margin-top: auto;
+            }
           }
-          > p {
-            margin-top: auto;
+          > .thumbnail {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #eee;
+            border-radius: 1rem;
+            > img {
+              width: auto;
+              max-height: 80%;
+            }
+          }
+        }
+        > .replies {
+          height: inherit;
+          width: auto;
+          position: relative;
+          background: #e2e2e2;
+          font-size: 2rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 2rem;
+          > h6 {
+            line-height: 1;
           }
         }
         > .thumbnail {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: #eee;
-          border-radius: 1rem;
-          > img {
-            width: auto;
-            max-height: 80%;
-          }
+          max-width: 100px;
+          max-height: 100px;
         }
-      }
-      > .replies {
-        height: inherit;
-        width: auto;
-        position: relative;
-        background: #e2e2e2;
-        font-size: 2rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 2rem;
-        > h6 {
-          line-height: 1;
-        }
-      }
-      > .thumbnail {
-        max-width: 100px;
-        max-height: 100px;
       }
     }
   }

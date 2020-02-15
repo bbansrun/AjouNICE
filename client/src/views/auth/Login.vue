@@ -126,6 +126,7 @@ export default {
                       this.$router.push('/error/401')
                     })
                   } else {
+                    document.body.classList.remove('auth')
                     this.$router.push('redirect' in params ? params.redirect : '/')
                   }
                 })

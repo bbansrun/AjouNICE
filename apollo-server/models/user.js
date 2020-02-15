@@ -35,15 +35,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       unique: true,
     },
-    user_type: {
-      type: DataTypes.STRING(1),
-      allowNull: false,
-      defaultValue: 'U',
-    },
     admin_type: {
       type: DataTypes.STRING(10),
       allowNull: false,
       defalutValue: 'ORD',
+    },
+    user_type: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
+      defaultValue: 'U',
     },
     sex_gb: {
       type: DataTypes.STRING(1),

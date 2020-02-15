@@ -34,8 +34,6 @@ export default {
 @import "~@/assets/styles/components/Link";
 @import "~@/assets/styles/components/Form";
 
-@import '~sweetalert2/src/variables';
-@import '~sweetalert2/src/sweetalert2';
 @import '~vue-select/src/scss/vue-select';
 
 #app {

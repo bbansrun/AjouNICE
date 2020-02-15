@@ -141,7 +141,7 @@ nav {
     transition: .5s all ease-out;
     &.active {
       > .fixed-nav {
-        background: $logo;
+        background: linear-gradient(to right, #4481eb 0%, #04befe 100%);
         transition: .5s all ease-in-out;
       }
     }

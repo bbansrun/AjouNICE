@@ -24,7 +24,7 @@
           </router-link>
         </h1>
         <span>
-          <small>&nbsp;&nbsp;|&nbsp;&nbsp;아주대학교 대표 커뮤니티 서비스</small>
+          <small>&nbsp;&nbsp;|&nbsp;&nbsp;<strong>아주대학교 대표 커뮤니티 서비스</strong></small>
         </span>
       </header>
     </div>
@@ -171,6 +171,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.gnb .header span small strong {
+  color: #fff;
+}
 .slide-nav {
   > .auth {
     padding: 2rem 1rem;
@@ -276,9 +279,10 @@ export default {
     color: #333;
     text-align: center;
     & p {
-      font-size: .8rem;
+      font-size: .75rem;
     }
     & a {
+        font-size: .6rem;
         padding: 0 1rem;
         &:hover {
             color: #333 !important;

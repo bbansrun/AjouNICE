@@ -4,10 +4,12 @@
 import Vue from 'vue'
 
 const filters = {
-
-  formatTimestamp (timestamp) {
+  formatDateTime (timestamp) {
     const datetime = new Date(timestamp)
-    return datetime.toLocaleTimeString('ko-KR')
+    return `${datetime.toLocaleDateString('ko-KR')} ${datetime.toLocaleTimeString('ko-KR')}`
+  },
+  numberWithCommas (x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 }
 

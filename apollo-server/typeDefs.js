@@ -80,7 +80,6 @@ type Board {
     title: String
     body: String
     view_cnt: Int
-    cmt_cnt: Int
     reg_ip: String
     reg_dt: Date
     upt_ip: String
@@ -91,6 +90,7 @@ type Board {
 type BoardCategory {
     category_idx: ID!
     category_nm: String
+    category_type: String
     title: String
     parent: Int
     depth: Int
@@ -106,8 +106,9 @@ type BoardCategory {
 
 type BoardComment {
     cmt_idx: ID!
-    board_idx: Board!
-    user: User!
+    board_idx: Int!
+    to: Board!
+    by: User!
     user_idx: Int!
     text: String
     reg_ip: String
@@ -115,6 +116,14 @@ type BoardComment {
     upt_ip: String
     upt_dt: Date
     commenter: User!
+}
+
+type BoardVote {
+    vote_idx: ID!
+    board_idx: Int!
+    to: Board!
+    by: User!
+    user_idx: Int!
 }
 
 type RestaurantBoard {

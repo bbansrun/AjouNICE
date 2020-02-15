@@ -76,22 +76,19 @@ export default {
         { id: 9, title: '오늘의학식', background: 'https://pngimage.net/wp-content/uploads/2018/06/foods-icon-png-5.png', link: '/restaurant' }
       ],
       carouselItems: [
-                `<a data-slide-item href="/#/">
-                    <div class="cover"></div>
-                    <div class="slide-content">
-                        <h2 data-logo>AjouNICE!</h2>
-                        <small>아주대학교의 대표 커뮤니티 서비스입니다.</small>
-                    </div>
-                </a>`
+        `<a data-slide-item href="/#/">
+            <div class="cover"></div>
+            <div class="slide-content">
+                <h2 data-logo>AjouNICE!</h2>
+                <small>아주대학교의 대표 커뮤니티 서비스입니다.</small>
+            </div>
+        </a>`
       ],
       carouselRadio: [],
       posts: []
     }
   },
   beforeCreate () {
-    document.body.classList.remove('auth')
-  },
-  beforeMount () {
     if (this.$store.state.user) {
       this.$apollo.query({
         query: gql`${UserHome}`,
@@ -157,5 +154,12 @@ export default {
 
 .icon-nav {
   padding-top: 3rem;
+}
+
+</style>
+
+<style>
+.broadcast-content {
+  font-family: 'KoPub Dotum';
 }
 </style>

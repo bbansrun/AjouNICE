@@ -7,12 +7,12 @@
       description="개발팀에 궁금한 것이 있으시면 연락주시기 바랍니다."
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual01.jpg"
     />
-    <div class="container">
-      <article>
+    <main>
+      <div class="wrapper">
         <header class="underline underline-inline-block">
-          문의폼 작성
+          <strong>문의폼 작성</strong>
         </header>
-        <section>
+        <section class="contact">
           <form
             data-post-form
             @submit.prevent
@@ -78,8 +78,8 @@
             </div>
           </form>
         </section>
-      </article>
-    </div>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>

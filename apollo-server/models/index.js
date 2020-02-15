@@ -16,6 +16,8 @@ db.Department = require('./department')(sequelize, Sequelize);
 db.Board = require('./board')(sequelize, Sequelize);
 db.BoardCategory = require('./board_category')(sequelize, Sequelize);
 db.BoardComment = require('./board_comment.js')(sequelize, Sequelize);
+db.BoardVote = require('./board_vote')(sequelize, Sequelize);
+db.RestaurantBoard = require('./restaurant_board')(sequelize, Sequelize);
 
 db.Board.hasMany(db.BoardComment, {
   as: 'comments',
@@ -47,6 +49,30 @@ db.User.hasMany(db.Board, {
   as: 'articles',
   foreignKey: 'user_idx',
   sourceKey: 'user_idx',
+});
+
+db.User.hasMany(db.BoardVote, {
+  as: 'voteTo',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.BoardVote.belongsTo(db.User, {
+  as: 'voter',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
+
+db.Board.hasMany(db.BoardVote, {
+  as: 'votes',
+  foreignKey: 'board_idx',
+  sourceKey: 'board_idx',
+});
+
+db.BoardVote.belongsTo(db.Board, {
+  as: 'voted',
+  foreignKey: 'board_idx',
+  targetKey: 'board_idx',
 });
 
 db.Board.belongsTo(db.User, {

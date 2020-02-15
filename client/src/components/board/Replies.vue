@@ -2,7 +2,7 @@
   <section class="replies">
     <article>
       <header class="underline underline-inline-block underline-animated">
-        <strong>{{ content.length }}개의 댓글이 달렸습니다.</strong>
+        <strong>{{ content.length | numberWithCommas }}개의 댓글이 달렸습니다.</strong>
       </header>
     </article>
     <form
@@ -32,13 +32,23 @@
           익명
         </b-switch>
         <b-button
+          size="is-small"
+          type="is-primary"
           @click="makeReply"
         >
-          작성
+          <font-awesome-icon icon="pen" />&nbsp;
+          <span>작성</span>
         </b-button>
       </div>
     </form>
     <div class="replies-view">
+      <div
+        v-show="content.length === 0"
+        class="no-replies has-text-centered"
+      >
+        <h3>아직 댓글이 없어요.</h3>
+        <span>이 게시물의 첫번째 댓글 주인공이 되어주시겠어요?</span>
+      </div>
       <div
         v-for="reply in content"
         :key="reply.cmt_idx"
@@ -46,7 +56,7 @@
       >
         <div class="meta">
           <header>{{ reply.nick_nm }}</header>
-          <small>{{ new Date(reply.upt_dt).toLocaleDateString() }}</small>
+          <small class="timestamp">{{ reply.upt_dt | formatDateTime }}</small>
         </div>
         <p class="content">
           {{ reply.text }}
@@ -153,7 +163,12 @@ export default {
           }
         }).then(({ data }) => {
           // document.body.classList.toggle('loading')
+          this.reply.content = ''
+        }).catch(error => {
+          console.error(error)
         })
+      } else {
+        this.flash('댓글을 입력해주세요.', 'error')
       }
     },
     removeReply (id) {
@@ -195,6 +210,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+label.switch {
+  padding: 0 .5rem;
+}
+
 article {
   padding: unset !important;
   > header {
@@ -217,6 +237,9 @@ div.reply {
       font: {
         size: .8rem;
       }
+    }
+    > .timestamp {
+      white-space: nowrap;
     }
   }
   > .content {
@@ -260,10 +283,14 @@ div.reply {
   align-items: center;
   margin-bottom: 1rem;
 }
+</style>
 
-.switch {
-  > .control-label {
-    white-space: nowrap !important;
-  }
+<style>
+.no-replies {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 30vh;
 }
 </style>
