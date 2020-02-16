@@ -1,0 +1,3 @@
+query DupNickCheck($nick: String!) {
+    doesNickExists(nick_nm: $nick)
+}

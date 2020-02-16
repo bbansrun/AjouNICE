@@ -1,0 +1,3 @@
+mutation LoggedInLogger($id: String!, $ip: String!) {
+    lastLogin(userId: $id, ip: $ip)
+}

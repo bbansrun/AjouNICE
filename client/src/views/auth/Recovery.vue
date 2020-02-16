@@ -45,6 +45,8 @@
 
 <script>
 import gql from 'graphql-tag'
+import { DupEmailCheck } from '@/assets/graphql/queries'
+
 export default {
   name: 'Reset',
   data () {
@@ -82,9 +84,12 @@ export default {
       if (this.email) {
         if (re.test(this.email)) {
           this.$apollo.query({
-            query: gql`{ findEmail(email: "${this.email}") { email } }`
-          }).then(result => {
-            if (result.data.findEmail.length > 0) {
+            query: gql`${DupEmailCheck}`,
+            variables: {
+              email: this.email
+            }
+          }).then(({ data: { doesEmailExists } }) => {
+            if (doesEmailExists) {
               this.$apollo.mutate({
                 mutation: gql`mutation { resetEmailToken(email: "${this.email}") }`
               }).then(result => {
@@ -114,11 +119,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-@import "~@/assets/styles/reset";
-@import "~@/assets/styles/media";
-@import "~@/assets/styles/index";
-@import "~@/assets/styles/fonts";
-
-</style>

@@ -14,6 +14,11 @@ import Schedule from './Schedule.graphql'
 import Notice from './Notice.graphql'
 import AdminStatus from './AdminStatus.graphql'
 import GourmetCategories from './gourmet/AllCategories.graphql'
+import DupIDCheck from './auth/DupIDCheck.graphql'
+import DupEmailCheck from './auth/DupEmailCheck.graphql'
+import DupNickCheck from './auth/DupNickCheck.graphql'
+import Colleges from './auth/Colleges.graphql'
+import Departments from './auth/DptByCollege.graphql'
 
 export {
   Post,
@@ -31,5 +36,10 @@ export {
   Schedule,
   Notice,
   AdminStatus,
-  GourmetCategories
+  GourmetCategories,
+  DupIDCheck,
+  DupEmailCheck,
+  DupNickCheck,
+  Colleges,
+  Departments
 }

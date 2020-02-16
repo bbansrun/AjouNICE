@@ -365,13 +365,13 @@
 import Vue from 'vue'
 import { Button, Checkbox } from 'buefy'
 import vSelect from 'vue-select'
-import VueFlashMessage from 'vue-flash-message'
+
 import gql from 'graphql-tag'
+import { DupIDCheck, DupEmailCheck, DupNickCheck, Colleges, Departments } from '@/assets/graphql/queries'
 
 Vue.component('v-select', vSelect)
 Vue.use(Button)
 Vue.use(Checkbox)
-Vue.use(VueFlashMessage)
 
 export default {
   name: 'Signup',
@@ -562,9 +562,9 @@ export default {
       }
       if (value === 'R' || value === 'G') {
         this.$apollo.query({
-          query: gql`{ findColleges(exist_yn: "Y") { college_cd college_nm } }`
-        }).then(result => {
-          this.collegeList = result.data.findColleges
+          query: gql`${Colleges}`
+        }).then(({ data: { colleges } }) => {
+          this.collegeList = colleges
         })
       }
     },
@@ -573,9 +573,12 @@ export default {
         this.initError('college')
       }
       this.$apollo.query({
-        query: gql`{ findDptByCollege(college_cd: "${value}") { dpt_nm dpt_cd college_cd } }`
-      }).then(result => {
-        this.dptList = result.data.findDptByCollege
+        query: gql`${Departments}`,
+        variables: {
+          college: value
+        }
+      }).then(({ data: { departments } }) => {
+        this.dptList = departments
       })
     },
     selectedSubCollege (value) {
@@ -583,9 +586,12 @@ export default {
         this.initError('subCollege')
       }
       this.$apollo.query({
-        query: gql`{ findDptByCollege(college_cd: "${value}") { dpt_nm dpt_cd college_cd } }`
-      }).then(result => {
-        this.dptSubList = result.data.findDptByCollege.filter(item => (item.dpt_cd !== this.selectedDpt))
+        query: gql`${Departments}`,
+        variables: {
+          college: value
+        }
+      }).then(({ data: { departments } }) => {
+        this.dptSubList = departments.filter(item => (item.dpt_cd !== this.selectedDpt))
       })
     },
     selectedDpt (value) {
@@ -613,9 +619,12 @@ export default {
     },
     queryEmailValid (email) {
       this.$apollo.query({
-        query: gql`{ findEmail(email: "${email}") { email } }`
-      }).then(result => {
-        if (result.data.findEmail.length > 0) {
+        query: gql`${DupEmailCheck}`,
+        variables: {
+          email: email
+        }
+      }).then(({ data: { doesEmailExists } }) => {
+        if (doesEmailExists) {
           this.occurError('email', '이미 가입된 계정입니다.')
         } else {
           this.validatedEmail = true
@@ -658,9 +667,12 @@ export default {
       if (this.nick_nm && !this.errorValidation.nick_nm) {
         if (!/[^(0-9A-Za-z_ㄱ-ㅎ가-힇)]/.test(this.nick_nm)) {
           this.$apollo.query({
-            query: gql`{ findNickName(nick_nm: "${this.nick_nm}") { nick_nm } }`
-          }).then(result => {
-            if (result.data.findNickName.length > 0) {
+            query: gql`${DupNickCheck}`,
+            variables: {
+              nick: this.nick_nm
+            }
+          }).then(({ data: { doesNickExists } }) => {
+            if (doesNickExists) {
               this.occurError('nick_nm', '중복된 별명입니다. 다른 별명을 사용해주세요.')
             } else {
               this.validatedNickname = true
@@ -675,9 +687,12 @@ export default {
     checkDupID () {
       if (this.userID && this.userID.length >= 6) {
         this.$apollo.query({
-          query: gql`{ findUserID(userId: "${this.userID}") { user_id } }`
-        }).then(result => {
-          if (result.data.findUserID.length > 0) {
+          query: gql`${DupIDCheck}`,
+          variables: {
+            id: this.userID
+          }
+        }).then(({ data: { doesIDExists } }) => {
+          if (doesIDExists) {
             this.occurError('user_id', '이미 가입된 계정입니다.')
           } else {
             this.validatedUserID = true

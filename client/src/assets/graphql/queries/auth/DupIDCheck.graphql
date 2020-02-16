@@ -1,0 +1,3 @@
+query DupIDCheck($id: String!) {
+    doesIDExists(user_id: $id)
+}

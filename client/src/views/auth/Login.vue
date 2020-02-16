@@ -69,6 +69,7 @@
 
 <script>
 import gql from 'graphql-tag'
+import { LoggedInLogger } from '@/assets/graphql/mutations'
 import jwt from 'jsonwebtoken'
 
 export default {
@@ -99,10 +100,14 @@ export default {
                 this.$router.push('/error/401')
               } else {
                 this.$apollo.mutate({
-                  mutation: gql`mutation { lastLogin(userId: "${this.userID}", ip: "${access_loc}") }`
-                }).then((result) => {
+                  mutation: gql`${LoggedInLogger}`,
+                  variables: {
+                    id: this.userID,
+                    ip: access_loc
+                  }
+                }).then(({ data: { auth_email_yn } }) => {
                   document.body.classList.toggle('loading')
-                  if (result.auth_email_yn === 'N') {
+                  if (auth_email_yn === 'N') {
                     this.$store.dispatch('LOGOUT').then(() => {
                       this.$router.push('/error/401')
                     })

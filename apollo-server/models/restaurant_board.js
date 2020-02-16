@@ -24,11 +24,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     res_menu: {
-      type: DataTypes.STRING(21845),
+      type: DataTypes.STRING(10000),
       allowNull: true,
     },
     res_info: {
-      type: DataTypes.STRING(21845),
+      type: DataTypes.STRING(10000),
       allowNull: true,
     },
     res_lat: {

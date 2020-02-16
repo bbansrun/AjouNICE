@@ -197,6 +197,22 @@ module.exports = {
       const result = await response.json();
       return result.result;
     },
+    // Auth
+    async doesIDExists (root, args, { db, }, info) {
+      const response = await findOne(db.User, args, info);
+      if (response) return true;
+      else return false;
+    },
+    async doesEmailExists (root, args, { db, }, info) {
+      const response = await findOne(db.User, args, info);
+      if (response) return true;
+      else return false;
+    },
+    async doesNickExists (root, args, { db, }, info) {
+      const response = await findOne(db.User, args, info);
+      if (response) return true;
+      else return false;
+    },
   },
   Mutation: {
     sendContactMail: async (root, { name, email, content, }) => {

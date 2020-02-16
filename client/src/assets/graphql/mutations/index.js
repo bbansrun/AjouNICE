@@ -5,11 +5,14 @@ import editPost from './editPost.graphql'
 import removePost from './removePost.graphql'
 import UploadFiles from './UploadFiles.graphql'
 
+import LoggedInLogger from './auth/LoggedInLogger.graphql'
+
 export {
   writePost,
   writeReply,
   removeReply,
   editPost,
   removePost,
-  UploadFiles
+  UploadFiles,
+  LoggedInLogger
 }

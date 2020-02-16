@@ -180,6 +180,9 @@ type Query {
     schedule: [Schedule]
     notice(code: String!): [Notice]
     uploads: [File]
+    doesIDExists(user_id: String!): Boolean
+    doesEmailExists(email: String!): Boolean
+    doesNickExists(nick_nm: String!): Boolean
 }
 
 type Mutation {

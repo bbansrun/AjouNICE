@@ -1,0 +1,3 @@
+query DupEmailCheck($email: String!) {
+    doesEmailExists(email: $email)
+}

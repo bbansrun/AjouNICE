@@ -1,0 +1,7 @@
+query DptByCollege($college: String!) {
+    departments(college_cd: $college) {
+        dpt_nm
+        dpt_cd
+        college_cd
+    }
+}
