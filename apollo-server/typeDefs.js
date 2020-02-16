@@ -197,5 +197,6 @@ type Mutation {
     writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String, reg_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): Boolean
     singleUpload(file: Upload!): File
+    postViewed(board_idx: Int!): Board
 }
 `;

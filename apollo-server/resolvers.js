@@ -281,5 +281,13 @@ module.exports = {
       // const { Location, } = await handleS3Upload(file);
       // return Location;
     },
+    postViewed: async (root, args, { db, }, info) => {
+      const updated = await db.Board.increment('view_cnt', { by: 1, where: { board_idx: args.board_idx, }, });
+      if (updated) {
+        return await findOne(db.Board, args, info);
+      } else {
+        return {};
+      }
+    },
   },
 };

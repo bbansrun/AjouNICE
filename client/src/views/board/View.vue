@@ -128,7 +128,7 @@ import VueGallerySlideshow from 'vue-gallery-slideshow'
 
 import gql from 'graphql-tag'
 import { Post } from '@/assets/graphql/queries'
-import { removePost } from '@/assets/graphql/mutations'
+import { removePost, IncrementViewCount } from '@/assets/graphql/mutations'
 
 import Navigation from '@/components/base/Navigation.vue'
 import Replies from '@/components/board/Replies.vue'
@@ -202,6 +202,14 @@ export default {
     }).catch(error => {
       console.error(error)
       // this.$router.push('/error/404')
+    })
+    this.$apollo.mutate({
+      mutation: gql`${IncrementViewCount}`,
+      variables: {
+        id: parseInt(this.$route.params.post_id)
+      }
+    }).then(({ data: { postViewed } }) => {
+
     })
   },
   mounted () {
