@@ -6,6 +6,9 @@ query UserHome($id: Int!) {
         body
         view_cnt
         reg_dt
+        user {
+            nick_nm
+        }
         comments {
             text
         }

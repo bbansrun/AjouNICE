@@ -96,7 +96,7 @@ section.popular {
         margin: 0 !important;
         > header {
           display: grid;
-          grid-template-columns: 4fr 1fr;
+          grid-template-columns: auto 80px;
           width: 100%;
           padding: .6rem .8rem;
           overflow: hidden;
@@ -105,7 +105,9 @@ section.popular {
             flex-direction: column;
             justify-content: space-between;
             align-items: flex-start;
+            overflow: hidden;
             > h3 {
+              width: 100%;
               font: {
                 family: 'KoPub Dotum';
               }
@@ -152,9 +154,11 @@ section.popular {
   }
 }
 
-a.view-more {
+.view-more {
   display: block;
   width: 100%;
+  font-size: .6rem;
+  padding: .5rem;
   color: #000;
   text-align: center;
   &:hover {

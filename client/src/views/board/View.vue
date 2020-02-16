@@ -7,7 +7,7 @@
           <header>
             <div class="header grid">
               <h3>{{ post.title }}</h3>
-              <small class="category">
+              <small class="category has-text-right">
                 <router-link
                   class="underline underline-animated"
                   :to="`/board/${post.category.title}`"
@@ -44,6 +44,7 @@
                 />
               </div>
             </div>
+            <hr>
             <div class="controls">
               <div class="meta-bottom has-text-right">
                 <small>
@@ -271,10 +272,18 @@ nav.gnb.static {
       & header {
         > .header {
           font-family: 'KoPub Dotum';
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
+          display: grid;
+          grid-template-columns: auto 80px;
           align-items: center;
+          > h3 {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          > .category {
+            justify-content: flex-end;
+          }
         }
         > .meta {
           line-height: 1;
