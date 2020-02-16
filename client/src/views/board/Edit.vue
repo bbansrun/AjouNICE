@@ -1,87 +1,86 @@
 <template>
   <div class="wrapper">
-    <Navigation :scroll-base="scrollBase" />
-    <Landing
-      ref="scrollBase"
-      :title="title"
-      :description="landingDescription"
-      background="https://faculty.ajou.ac.kr/_resources/faculty/img/main_visual02.jpg"
-    />
-    <div class="container">
-      <form
-        data-post-form
-        autocomplete="off"
-        @submit.prevent
-      >
-        <div class="content-wrapper">
-          <div
-            v-show="mode.new"
-            class="input-form"
-          >
-            <label for="category">게시판명</label>
-            <div class="input-form-group">
-              <v-select
-                v-model="selectedCategory"
-                placeholder="게시판 분류 선택"
-                :value="selectedCategory"
-                :options="categories"
-                :reduce="options => options.category_idx"
-                label="category_nm"
-                @input="getCateDepth1()"
-              />
-              <v-select
-                v-if="sub_categories"
-                v-model="selectedSubCategory"
-                placeholder="게시판 하위 분류 선택"
-                :value="selectedSubCategory"
-                :options="sub_categories"
-                :reduce="options => options.category_idx"
-                label="category_nm"
-                :disabled="depth1Deactivated"
+    <Navigation is-static />
+    <main>
+      <div class="wrapper container">
+        <header class="underline underline-inline-block underline-animated">
+          <strong>게시물 작성</strong>
+        </header>
+        <form
+          data-post-form
+          autocomplete="off"
+          @submit.prevent
+        >
+          <div class="content-wrapper">
+            <div
+              v-show="mode.new"
+              class="input-form"
+            >
+              <label for="category">게시판명</label>
+              <div class="input-form-group">
+                <v-select
+                  v-model="selectedCategory"
+                  placeholder="게시판 분류 선택"
+                  :value="selectedCategory"
+                  :options="categories"
+                  :reduce="options => options.category_idx"
+                  label="category_nm"
+                  @input="getCateDepth1()"
+                />
+                <v-select
+                  v-if="sub_categories"
+                  v-model="selectedSubCategory"
+                  placeholder="게시판 하위 분류 선택"
+                  :value="selectedSubCategory"
+                  :options="sub_categories"
+                  :reduce="options => options.category_idx"
+                  label="category_nm"
+                  :disabled="depth1Deactivated"
+                />
+              </div>
+            </div>
+            <div class="input-form">
+              <label for="title">제목</label>
+              <input
+                id="title"
+                v-model="form.title"
+                type="text"
+                name="title"
+                placeholder="제목을 입력하세요"
+                required
+              >
+            </div>
+            <div class="input-form editor">
+              <label for="textarea">내용</label>
+              <ckeditor
+                v-model="form.editorData"
+                name="textarea"
+                :editor="editor"
+                :config="editorConfig"
               />
             </div>
+            <div class="input-form uploads">
+              <label for="images">이미지 삽입</label>
+              <FileUpload />
+            </div>
+            <div class="input-form-controls">
+              <input
+                type="button"
+                class="btn box-shadow text-inverse btn-submit"
+                :value="form.submitButton"
+                @click="mode.new ? writePost() : editPost()"
+              >
+              <input
+                type="button"
+                class="btn box-shadow text-inverse btn-cancel"
+                value="취소"
+                @click="goBack()"
+              >
+            </div>
           </div>
-          <div class="input-form">
-            <label for="title">제목</label>
-            <input
-              id="title"
-              v-model="form.title"
-              type="text"
-              name="title"
-              placeholder="제목을 입력하세요"
-              required
-            >
-          </div>
-          <div class="input-form editor">
-            <label for="textarea">내용</label>
-            <ckeditor
-              v-model="form.editorData"
-              name="textarea"
-              :editor="editor"
-              :config="editorConfig"
-            />
-          </div>
-          <div class="input-form uploads">
-            <label for="images">이미지 삽입</label>
-            <FileUpload />
-          </div>
-          <div class="input-form-controls">
-            <input
-              type="button"
-              class="btn box-shadow text-inverse btn-submit"
-              :value="form.submitButton"
-              @click="mode.new ? writePost() : editPost()"
-            >
-            <input
-              type="button"
-              class="btn box-shadow text-inverse btn-cancel"
-              value="취소"
-              @click="goBack()"
-            >
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>
@@ -95,7 +94,6 @@ import CKEditor from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import FileUpload from '@/components/board/FileUpload.vue'
 import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
 import Footer from '@/components/base/Footer.vue'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
 import { writePost, editPost } from '@/assets/graphql/mutations'
@@ -103,7 +101,7 @@ import { writePost, editPost } from '@/assets/graphql/mutations'
 Vue.use(CKEditor)
 export default {
   components: {
-    Navigation, Landing, Footer, FileUpload
+    Navigation, Footer, FileUpload
   },
   data () {
     return {
@@ -225,9 +223,6 @@ export default {
         document.body.classList.toggle('loading')
       })
     }
-  },
-  mounted () {
-    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
   methods: {
     writePost () {

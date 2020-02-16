@@ -18,10 +18,14 @@
             <header>
               <div class="wrapper">
                 <h3>{{ post.title }}</h3>
-                <div class="info">
-                  <span><small>{{ post.reg_dt | formatDateTime }}</small></span>&nbsp;
-                  <span><small>{{ post.nick_nm }}</small></span>&nbsp;
-                  <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt | numberWithCommas }}</small></span>&nbsp;
+                <div class="meta">
+                  <div class="info">
+                    <span><small>{{ post.user.nick_nm }}</small></span>&nbsp;
+                  </div>
+                  <div class="info">
+                    <span><small>{{ post.reg_dt | formatDateTime }}</small></span>&nbsp;
+                    <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt | numberWithCommas }}</small></span>&nbsp;
+                  </div>
                 </div>
               </div>
               <div
@@ -41,9 +45,9 @@
           </article>
         </router-link>
       </div>
-      <a class="view-more">
-        <small>게시물 더보기</small>
-      </a>
+      <div class="view-more has-text-centered">
+        <a>게시물 더보기</a>
+      </div>
     </div>
     <div
       v-else
@@ -135,7 +139,6 @@ section.popular {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          padding: 2rem;
           > h6 {
             line-height: 1;
           }

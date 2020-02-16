@@ -9,7 +9,7 @@
       is-logo
     />
     <main>
-      <div class="wrapper">
+      <div class="wrapper container">
         <section class="about">
           <header>
             <strong>차세대 학부 커뮤니티 서비스를 지향합니다.</strong>

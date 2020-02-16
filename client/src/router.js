@@ -10,9 +10,10 @@ import Policy from '@/views/base/Policy.vue'
 import Contact from '@/views/base/Contact.vue'
 import Invitation from '@/views/base/Invitation.vue'
 
+import AuthTemplate from '@/views/auth/Template.vue'
 import AdminLogin from '@/views/auth/AdminLogin.vue'
 import Login from '@/views/auth/Login.vue'
-import RenewAccount from '@/views/auth/RenewAccount.vue'
+import Recovery from '@/views/auth/Recovery.vue'
 import Modifier from '@/views/auth/ModifyAccount.vue'
 import Signup from '@/views/auth/SignUp.vue'
 import Authorize from '@/views/auth/Authorize.vue'
@@ -146,10 +147,37 @@ export default new Router({
       beforeEnter: checkHomeSignedIn
     },
     {
-      path: '/auth/login',
-      name: 'login',
-      component: Login,
-      beforeEnter: alreadySignedIn
+      path: '/auth',
+      component: AuthTemplate,
+      children: [
+        {
+          path: 'login',
+          component: Login,
+          beforeEnter: alreadySignedIn
+        },
+        {
+          path: 'signup',
+          component: Signup
+        },
+        {
+          path: 'recovery',
+          component: Recovery
+        }
+      ]
+    },
+    {
+      path: '/auth/authorize',
+      name: 'authorize',
+      component: Authorize
+    },
+    {
+      path: '/auth/reset/authorize',
+      component: Modifier
+    },
+    {
+      path: '/my/edit',
+      component: Modifier,
+      beforeEnter: requireAuth
     },
     {
       path: '/invitation',
@@ -242,17 +270,7 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/profile/:user_id/',
-      component: Profile,
-      beforeEnter: requireAuth
-    },
-    {
-      path: '/profile/:user_id/edit',
-      component: Modifier,
-      beforeEnter: requireAuth
-    },
-    {
-      path: '/profile/:user_id/lectures/reviews',
+      path: '/my/lectures/reviews',
       component: LectureReviews,
       beforeEnter: requireAuth
     },
@@ -279,15 +297,6 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/auth/authorize',
-      name: 'authorize',
-      component: Authorize
-    },
-    {
-      path: '/auth/reset/authorize',
-      component: Modifier
-    },
-    {
       path: '/gate/manager/auth/login',
       component: AdminLogin
     },
@@ -311,10 +320,6 @@ export default new Router({
       ]
     },
     {
-      path: '/auth/signup',
-      component: Signup
-    },
-    {
       path: '/about',
       component: About
     },
@@ -325,10 +330,6 @@ export default new Router({
     {
       path: '/policy',
       component: Policy
-    },
-    {
-      path: '/auth/reset',
-      component: RenewAccount
     },
     {
       path: '/error/:code',

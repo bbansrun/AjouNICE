@@ -1,62 +1,45 @@
 <template>
-  <div
-    class="wrapper"
-    fix-page
-  >
-    <section data-form-center>
-      <header>
-        <h1 data-logo>
-          AjouNICE!
-        </h1>
-        <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
-      </header>
-      <form
-        data-auth-form
-        autocomplete="off"
-        @submit.prevent
+  <div class="wrapper">
+    <header data-logo>
+      <h2>Recovery</h2>
+      <small>계정 재설정</small>
+    </header>
+    <div class="input-form-wrapper">
+      <div class="input-form">
+        <input
+          v-model="email"
+          type="email"
+          placeholder="이메일"
+          required
+          :class="{ 'error': emailError }"
+          @keyup.enter="resetAccount"
+        >
+        <p
+          v-if="emailError"
+          class="auto-validate-noti"
+          :class="{ 'error': emailError }"
+        >
+          {{ emailErrorMsg }}
+        </p>
+      </div>
+      <div class="input-form">
+        <b-button
+          class="is-medium submit"
+          type="is-primary"
+          @click="resetAccount"
+        >
+          계정 재설정
+        </b-button>
+      </div>
+    </div>
+    <div class="input-form-controls">
+      <router-link
+        to="/"
+        class="underline underline-inline-block"
       >
-        <header data-logo>
-          <h2>Recovery</h2>
-          <small>계정 재설정</small>
-        </header>
-        <div class="input-form-wrapper">
-          <div class="input-form">
-            <input
-              v-model="email"
-              type="email"
-              placeholder="이메일"
-              required
-              :class="{ 'error': emailError }"
-              @keyup.enter="resetAccount"
-            >
-            <p
-              v-if="emailError"
-              class="auto-validate-noti"
-              :class="{ 'error': emailError }"
-            >
-              {{ emailErrorMsg }}
-            </p>
-          </div>
-          <div class="input-form">
-            <b-button
-              class="is-medium submit"
-              type="is-primary"
-              @click="resetAccount"
-            >
-              계정 재설정
-            </b-button>
-          </div>
-        </div>
-        <div class="input-form-controls">
-          <router-link
-            to="/"
-            class="underline underline-inline-block"
-          >
-            <small>처음으로</small>
-          </router-link>
-        </div>
-      </form>
-    </section>
+        <small>처음으로</small>
+      </router-link>
+    </div>
   </div>
 </template>
 

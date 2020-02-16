@@ -13,6 +13,7 @@ import BoardsAndPosts from './BoardsAndPosts.graphql'
 import Schedule from './Schedule.graphql'
 import Notice from './Notice.graphql'
 import AdminStatus from './AdminStatus.graphql'
+import GourmetCategories from './gourmet/AllCategories.graphql'
 
 export {
   Post,
@@ -29,5 +30,6 @@ export {
   UserModify,
   Schedule,
   Notice,
-  AdminStatus
+  AdminStatus,
+  GourmetCategories
 }

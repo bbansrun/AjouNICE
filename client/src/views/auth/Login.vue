@@ -1,87 +1,69 @@
 <template>
-  <div
-    class="wrapper"
-    fix-page
-  >
-    <section data-form-center>
-      <header>
-        <h1 data-logo>
-          AjouNICE!
-        </h1>
-        <h2>회원 로그인</h2>
-        <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
-      </header>
-      <form
-        data-auth-form
-        autocomplete="off"
-        @submit.prevent
+  <div class="wrapper">
+    <header data-logo>
+      <h2>LOGIN</h2>
+      <small>로그인</small>
+    </header>
+    <div class="input-form-wrapper">
+      <div class="input-form">
+        <input
+          v-model="userID"
+          type="text"
+          :class="{ 'error': errorValidation.userID && !userID }"
+          placeholder="아이디"
+          pattern=".{6,}"
+          required
+        >
+        <p
+          v-if="errorValidation.userID && !userID"
+          class="auto-validate-noti"
+          :class="{ 'error': errorValidation.userID && !userID }"
+        >
+          칸이 비어있습니다.
+        </p>
+      </div>
+      <div class="input-form">
+        <input
+          v-model="password"
+          type="password"
+          placeholder="패스워드"
+          pattern=".{8,}"
+          :class="{ 'error': errorValidation.password && !password }"
+          required
+          @keyup.enter="signin"
+        >
+        <p
+          v-if="errorValidation.password && !password"
+          class="auto-validate-noti"
+          :class="{ 'error': errorValidation.password && !password }"
+        >
+          칸이 비어있습니다.
+        </p>
+      </div>
+      <div class="input-form">
+        <b-button
+          class="is-medium submit"
+          type="is-primary"
+          @click="signin"
+        >
+          로그인
+        </b-button>
+      </div>
+    </div>
+    <div class="input-form-controls">
+      <router-link
+        to="/auth/recovery"
+        class="underline underline-inline-block"
       >
-        <header data-logo>
-          <h2>LOGIN</h2>
-          <small>로그인</small>
-        </header>
-        <div class="input-form-wrapper">
-          <div class="input-form">
-            <input
-              v-model="userID"
-              type="text"
-              :class="{ 'error': errorValidation.userID && !userID }"
-              placeholder="아이디"
-              pattern=".{6,}"
-              required
-            >
-            <p
-              v-if="errorValidation.userID && !userID"
-              class="auto-validate-noti"
-              :class="{ 'error': errorValidation.userID && !userID }"
-            >
-              칸이 비어있습니다.
-            </p>
-          </div>
-          <div class="input-form">
-            <input
-              v-model="password"
-              type="password"
-              placeholder="패스워드"
-              pattern=".{8,}"
-              :class="{ 'error': errorValidation.password && !password }"
-              required
-              @keyup.enter="signin"
-            >
-            <p
-              v-if="errorValidation.password && !password"
-              class="auto-validate-noti"
-              :class="{ 'error': errorValidation.password && !password }"
-            >
-              칸이 비어있습니다.
-            </p>
-          </div>
-          <div class="input-form">
-            <b-button
-              class="is-medium submit"
-              type="is-primary"
-              @click="signin"
-            >
-              로그인
-            </b-button>
-          </div>
-        </div>
-        <div class="input-form-controls">
-          <router-link
-            to="/auth/reset"
-            class="underline underline-inline-block"
-          >
-            <small>계정 재설정</small>
-          </router-link>
-          <router-link
-            to="/auth/signup"
-            class="btn rounded box-shadow text-inverse"
-          >
-            회원가입 &rarr;
-          </router-link>
-        </div>
-      </form>
-    </section>
+        <small>계정 재설정</small>
+      </router-link>
+      <router-link
+        to="/auth/signup"
+        class="btn rounded box-shadow text-inverse"
+      >
+        회원가입 &rarr;
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -90,7 +72,6 @@ import gql from 'graphql-tag'
 import jwt from 'jsonwebtoken'
 
 export default {
-  name: 'Login',
   data () {
     return {
       userID: '',

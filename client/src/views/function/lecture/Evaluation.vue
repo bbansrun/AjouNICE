@@ -34,19 +34,21 @@
                 :config="editorConfig"
               />
             </div>
-            <div class="input-form-controls">
-              <input
-                type="button"
-                class="btn box-shadow text-inverse btn-submit"
-                :value="form.submitButton"
+            <div class="input-form-controls buttons">
+              <b-button
+                type="is-primary"
                 @click="evaluate"
               >
-              <input
-                type="button"
-                class="btn box-shadow text-inverse btn-cancel"
-                value="취소"
+                <font-awesome-icon icon="pen" />&nbsp;
+                <span>{{ form.submitButton }}</span>
+              </b-button>
+              <b-button
+                type="is-danger"
                 @click="goBack()"
               >
+                <font-awesome-icon icon="times" />&nbsp;
+                <span>취소</span>
+              </b-button>
             </div>
           </form>
         </section>

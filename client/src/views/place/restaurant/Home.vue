@@ -7,9 +7,13 @@
       description="오늘의 학교 식단을 소개합니다."
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
     />
-    <div class="container">
-      Something
-    </div>
+    <main>
+      <div class="wrapper container">
+        <header class="underline underline-inline-block underline-animated">
+          <strong>오늘의식단</strong>
+        </header>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>

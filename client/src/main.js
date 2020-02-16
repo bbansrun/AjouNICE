@@ -27,7 +27,9 @@ import {
   faReply,
   faThList,
   faCopy,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faTimes,
+  faEnvelopeOpenText
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -92,6 +94,8 @@ library.add(faReply)
 library.add(faThList)
 library.add(faExclamationTriangle)
 library.add(faCopy)
+library.add(faTimes)
+library.add(faEnvelopeOpenText)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const shouldEncode = (url, options) => {

@@ -151,7 +151,8 @@ module.exports = {
         ['reg_dt', 'DESC']
       ];
       const include = [
-        { model: db.BoardComment, as: 'comments', }
+        { model: db.BoardComment, as: 'comments', },
+        { model: db.User, as: 'user', }
       ];
       return await findAll(db.Board, args, info, include, order);
     },

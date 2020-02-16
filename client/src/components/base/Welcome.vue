@@ -9,7 +9,7 @@
     <nav class="welcome-nav">
       <ul class="menu menu-horizontal">
         <li>
-          <router-link :to="`/profile/${idx}`">
+          <router-link to="/my">
             <font-awesome-icon icon="user" />&nbsp;
             <span>마이페이지</span>
           </router-link>

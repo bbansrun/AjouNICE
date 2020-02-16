@@ -172,7 +172,7 @@ type Query {
     colleges(exist_yn: String!): [College]
     departments(college_cd: String): [Department]
     department(dpt_cd: String!): Department
-    boards(depth: Int, title: String, parent: Int): [BoardCategory]
+    boards(depth: Int, title: String, parent: Int, category_type: String): [BoardCategory]
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
     posts(category_idx: ID): [Board]

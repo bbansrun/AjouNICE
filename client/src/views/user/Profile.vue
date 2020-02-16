@@ -19,8 +19,11 @@
             <div class="card">
               <div class="card-content">
                 <div class="columns">
-                  <div class="column is-3">
+                  <div class="column is-3 has-text-centered">
                     <figure>
+                      <div class="cover new-gravatar">
+                        프로필 이미지 수정
+                      </div>
                       <img
                         src="https://www.gravatar.com/avatar/00000000000000000000000000000000"
                         alt="gravatar"
@@ -162,7 +165,7 @@ export default {
       return urljoin(this.$route.path, '/edit')
     },
     myLectureReviewsLink () {
-      return `/profile/${this.$store.state.user.idx}/lectures/reviews`
+      return '/my/lectures/reviews'
     }
   },
   beforeCreate () {
@@ -275,6 +278,29 @@ select {
     & .subtitle {
       font-size: .8rem;
     }
+  }
+}
+
+figure {
+  position: relative;
+  display: inline-block;
+  > .cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.8);
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    &:hover {
+      display: block;
+    }
+  }
+  > img {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

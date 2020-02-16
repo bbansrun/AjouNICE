@@ -18,7 +18,6 @@
 
 <script>
 export default {
-  name: 'IconNav',
   props: {
     data: Array
   }

@@ -8,7 +8,7 @@
       background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
     />
     <main>
-      <div class="wrapper content">
+      <div class="wrapper container">
         <section class="shuttle">
           <header class="underline underline-inline-block">
             <strong>학교 셔틀버스</strong>

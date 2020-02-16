@@ -68,13 +68,14 @@
                 </p>
               </div>
             </div>
-            <div class="input-form-controls">
-              <input
-                type="submit"
-                class="btn btn-submit text-inverse"
-                value="이메일 발송"
+            <div class="input-form-controls buttons">
+              <b-button
+                type="is-primary"
                 @click="contact"
               >
+                <font-awesome-icon icon="envelope-open-text" />&nbsp;
+                <span>이메일 발송</span>
+              </b-button>
             </div>
           </form>
         </section>

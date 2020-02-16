@@ -7,7 +7,13 @@
       description=""
       background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
     />
-    <div class="container" />
+    <main>
+      <div class="wrapper container">
+        <header class="underline underline-inline-block underline-animated">
+          <strong>{{ }}</strong>
+        </header>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>

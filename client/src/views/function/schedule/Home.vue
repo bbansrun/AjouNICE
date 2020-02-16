@@ -2,17 +2,15 @@
   <div class="wrapper">
     <Navigation is-static />
     <main>
-      <div class="wrapper">
-        <section class="schedule container">
-          <header class="underline underline-inline-block underline-animated">
-            <strong>2020년도 학사일정</strong>
-          </header>
-          <b-table
-            :data="schedule.data"
-            :loading="loading"
-            :columns="schedule.columns"
-          />
-        </section>
+      <div class="wrapper container">
+        <header class="underline underline-inline-block underline-animated">
+          <strong>2020년도 학사일정</strong>
+        </header>
+        <b-table
+          :data="schedule.data"
+          :loading="loading"
+          :columns="schedule.columns"
+        />
       </div>
     </main>
     <Footer />

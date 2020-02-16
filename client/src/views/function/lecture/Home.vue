@@ -8,7 +8,7 @@
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
     />
     <main>
-      <div class="wrapper">
+      <div class="wrapper container">
         <div class="controls">
           <div class="buttons">
             <b-button
@@ -122,7 +122,7 @@ export default {
       return urljoin(this.$route.path, '/evaluate')
     },
     myLectureReviewsLink () {
-      return `/profile/${this.$store.state.user.idx}/lectures/reviews`
+      return '/my/lectures/reviews'
     }
   },
   mounted () {

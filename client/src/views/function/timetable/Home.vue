@@ -7,15 +7,13 @@
       description="시간표"
       background="https://www.dhnews.co.kr/news/photo/201905/102956_103026_2813.jpg"
     />
-    <div class="container">
-      <section class="timetable">
-        <article>
-          <header class="underline underline-inline-block">
-            시간표
-          </header>
-        </article>
-      </section>
-    </div>
+    <main>
+      <div class="wrapper container">
+        <header class="underline underline-inline-block underline-animated">
+          <strong>시간표</strong>
+        </header>
+      </div>
+    </main>
     <Footer />
   </div>
 </template>

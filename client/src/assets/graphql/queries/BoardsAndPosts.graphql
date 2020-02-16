@@ -6,12 +6,15 @@
         body
         view_cnt
         reg_dt
+        user {
+            nick_nm
+        }
         comments {
             text
         }
     }
 
-    boards(depth: 0) {
+    boards(depth: 0, category_type: "NORMAL") {
         category_nm
         title
         parent
