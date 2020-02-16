@@ -1,3 +1,5 @@
+$blue: #00A8CC;
+$red: #FF2E63;
 // Form Styles
 // Input
 select {
@@ -12,6 +14,10 @@ select {
     outline: none;
     border: none;
     box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
+}
+
+.v-select {
+    margin: .8rem 0;
 }
 
 input {
@@ -61,66 +67,59 @@ input {
     }
     &.error {
         color: #fff;
+        background: $red;
         &::placeholder {
             color: #fff;
         }
-        background: red;
     }
 }
 
 // Validation
 .auto-validate-noti {
     position: relative;
-    font-size: .6em;
+    font-size: .6rem;
     text-align: left;
     left: 50%;
     transform: translateX(-50%);
     margin: 5px 0;
     color: blue;
     &.error {
-        color: red;
+        color: $red;
     }
 }
 
 // Auth Center Align
 [data-form-center] {
     position: absolute;
-    display: flex;
-    min-width: 90vw;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    width: 60vw;
+    height: 50vh;
+    min-width: 50vw;
     min-height: 600px;
-    height: 90vh;
-    max-height: 90vh;
+    max-height: 95vh;
     top: 50%;
     left: 50%;
-    text-align: center;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,.24);
     box-sizing: border-box;
     transform: translate(-50%, -50%);
     > header {
         display: flex;
-        width: 100%;
-        flex: 1;
-        flex-grow: 1;
         flex-direction: column;
-        padding: 10px;
+        padding: 0 3rem;
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
         background-image: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: #fff;
-        > h1 {
-            font-size: 2.5rem;
-            text-shadow: 0 0 8px rgba(0,0,0,.24);
-            line-height: 1.2;
-            > small {
-                font-size: 1.6rem;
+        > svg {
+            width: 15rem;
+            & path {
+                fill: #fff;
+                box-shadow: 0 0 5px rgba(0,0,0,.8);
             }
-            margin-bottom: .8rem;
-        }
-        > small {
-            font-size: .8rem;
         }
     }
 }
@@ -129,114 +128,98 @@ input {
 form {
     &[data-auth-form] {
         position: relative;
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        flex-grow: 2;
-        align-items: center;
         width: 100%;
-        text-align: center;
-        overflow-y: scroll;
-        background: rgba(238, 238, 238, .5);
-        > header {
-            display: block;
-            width: 100%;
-            font-size: 2rem;
-            line-height: .8;
-            padding: 2rem 0;
-            color: #4b6ab9;
-            > h2 {
-                display: block;
-                margin-block-start: 0;
-                margin-block-end: 0;
-                margin-inline-start: 0px;
-                margin-inline-end: 0px;
-                line-height: inherit;
-            }
-        }
-        > .input-form-wrapper {
+        height: 100%;
+        overflow: hidden;
+        > .wrapper {
             position: relative;
-            width: 100%;
-            > .input-form {
-                > button {
-                    width: calc(100% - 4rem);
-                    margin: 1rem 0 0 0;
-                }
-                & input {
-                    &[type="button"] {
-                        cursor: pointer;
-                        color: #fff;
-                        background: #6a11cb;
-                        &.radio {
-                            font-weight: bold;
-                            padding: 5px 1rem;
-                            margin-right: 5px;
-                            transition: .2s all ease;
-                            &:last-of-type {
-                                margin: 0;
-                            }
-                            &:hover {
-                                background: green;
-                            }
-                            &-selected {
-                                background: green;
-                            }
-                        }
-                        &:hover {
-                            background-image: -webkit-linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-                            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-                            box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
-                        }
-                        &:disabled {
-                            background: green;
-                        }
-                        &.mini-inline {
-                            display: inline-block;
-                            font-size: .75em;
-                        }
-                    }
-                    &[name="IDNum"]:disabled {
-                        display: none;
-                    }
-                    &:not([type="checkbox"]):not([type="search"]):not(.mini-inline) {
-                        width: calc(90% - 20px);
-                        padding: 5px 10px;
-                        margin-top: 15px;
-                    }
-                    &[type="email"], &[type="password"], &[type="submit"] {
-                        font-size: .85em;
-                    }
-                }
-                > input, select, label {
-                    font-size: .85em;
-                }
-                & .auto-validate-noti {
-                    width: calc(90% - 20px);
-                } 
+            display: grid;
+            grid-template-rows: 100px auto;
+            width: inherit;
+            height: inherit;
+            background: rgba(238, 238, 238, .5);
+            > header {
                 display: block;
-            }
-            & .input-form-horizontal {
-                display: flex;
-                font-size: .85em;
-                flex-direction: row;
-                margin: 0 calc(5% + 10px);
-                margin-top: 5px;
-                padding: 5px 10px;
-                & .input-form-title {
-                    color: #333;
-                    text-align: left;
-                }
-                & .button-wrapper, .radio-wrapper {
-                    text-align: right;
-                }
-                + .input-form > input {
-                    margin-top: 5px;
+                width: 100%;
+                font-size: 2rem;
+                line-height: .8;
+                padding: 2rem 0;
+                color: #4b6ab9;
+                > h2 {
+                    display: block;
+                    margin-block-start: 0;
+                    margin-block-end: 0;
+                    margin-inline-start: 0px;
+                    margin-inline-end: 0px;
+                    line-height: inherit;
                 }
             }
-            + .input-form-controls {
-                margin-top: auto;
-                padding: 1rem 0;
+            .input-form {
+                width: inherit;
+                overflow-y: scroll;
+                > .input-form-wrapper {
+                    position: relative;
+                    width: 100%;
+                    > .input-form-group {
+                        padding: 0 2rem;
+                        &:last-of-type {
+                            margin: {
+                                bottom: .8rem;
+                            }
+                        }
+                        & input {
+                            &[type="button"] {
+                                cursor: pointer;
+                                color: #fff;
+                                background: #6a11cb;
+                                &.radio {
+                                    font-weight: bold;
+                                    padding: 5px 1rem;
+                                    margin-right: 5px;
+                                    transition: .2s all ease;
+                                    &:last-of-type {
+                                        margin: 0;
+                                    }
+                                    &:hover {
+                                        background: green;
+                                    }
+                                    &-selected {
+                                        background: green;
+                                    }
+                                }
+                                &:hover {
+                                    background-image: -webkit-linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+                                    background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+                                    box-shadow: 1px 5px 7px rgba(36, 37, 38, 0.13);
+                                }
+                                &:disabled {
+                                    background: green;
+                                }
+                                &.mini-inline {
+                                    display: inline-block;
+                                    font-size: .75em;
+                                }
+                            }
+                            &[name="IDNum"]:disabled {
+                                display: none;
+                            }
+                            &:not([type="checkbox"]):not([type="search"]):not(.mini-inline) {
+                                padding: 5px 10px;
+                                margin-top: .8rem;
+                            }
+                            &[type="email"], &[type="password"], &[type="submit"] {
+                                font-size: .85em;
+                            }
+                        }
+                        display: block;
+                    }
+                    + .input-form-controls {
+                        margin-top: auto;
+                        padding: 1rem 0;
+                    }
+                }
             }
+            
         }
         > footer {
             margin-top: auto;
@@ -281,6 +264,33 @@ form {
                     margin-right: .5rem;
                 }
             }
+        }
+    }
+}
+
+.input-form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin: {
+        top: .8rem;
+    }
+    > .input-form-grid-item {
+        display: flex;
+        align-items: center;
+        &:first-child {
+            font: {
+                size: .8rem;
+                weight: 500;
+            }
+            justify-content: flex-start;
+        }
+        &:last-child {
+            justify-content: flex-end;
+        }
+    }
+    &:last-child {
+        margin: {
+            bottom: .8rem;
         }
     }
 }

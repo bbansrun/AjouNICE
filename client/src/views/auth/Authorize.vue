@@ -5,7 +5,6 @@
 <script>
 import gql from 'graphql-tag'
 export default {
-  name: 'Authorize',
   beforeCreate () {
     document.body.classList.toggle('loading')
   },

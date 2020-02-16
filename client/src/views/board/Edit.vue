@@ -63,19 +63,23 @@
               <label for="images">이미지 삽입</label>
               <FileUpload />
             </div>
-            <div class="input-form-controls">
-              <input
-                type="button"
-                class="btn box-shadow text-inverse btn-submit"
-                :value="form.submitButton"
+            <div class="input-form-controls buttons">
+              <b-button
+                size="is-small"
+                type="is-info"
                 @click="mode.new ? writePost() : editPost()"
               >
-              <input
-                type="button"
-                class="btn box-shadow text-inverse btn-cancel"
-                value="취소"
+                <font-awesome-icon icon="pen" />&nbsp;
+                <span>{{ form.submitButton }}</span>
+              </b-button>
+              <b-button
+                size="is-small"
+                type="is-danger"
                 @click="goBack()"
               >
+                <font-awesome-icon icon="times" />&nbsp;
+                <span>취소</span>
+              </b-button>
             </div>
           </div>
         </form>
@@ -119,7 +123,8 @@ export default {
       sub_category_idx: null,
       editor: ClassicEditor,
       editorConfig: {
-        toolbar: []
+        toolbar: [],
+        language: 'ko'
       },
       mode: {
         new: false,

@@ -25,16 +25,11 @@ export default {
 
 <style lang="scss">
 @import "~buefy/dist/buefy.css";
-@import "~@/assets/styles/reset";
-@import "~@/assets/styles/fonts";
-@import "~@/assets/styles/index";
+@import '~vue-select/src/scss/vue-select';
+
+@import "~@/assets/styles/default";
 @import "~@/assets/styles/media";
 @import "~@/assets/styles/keyframes";
-@import "~@/assets/styles/components/Button";
-@import "~@/assets/styles/components/Link";
-@import "~@/assets/styles/components/Form";
-
-@import '~vue-select/src/scss/vue-select';
 
 #app {
   min-height: 100%;

@@ -92,7 +92,6 @@ import Landing from '@/components/base/Landing.vue'
 import Footer from '@/components/base/Footer.vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 export default {
-  name: 'Contact',
   components: {
     Navigation, Landing, Footer
   },

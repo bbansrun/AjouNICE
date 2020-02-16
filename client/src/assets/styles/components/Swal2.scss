@@ -1,0 +1,22 @@
+.swal2-container {
+    > .swal2-show {
+        max-height: 90vh;
+        overflow: hidden;
+        > .swal2-header {
+            > .swal2-title {
+                font: {
+                    size: 1.4rem;
+                }
+            }
+        }
+        > .swal2-content {
+            font: {
+                size: 1rem;
+            }
+            overflow: scroll;
+        }
+        > .swal2-footer {
+            text-align: center;
+        }
+    }
+}

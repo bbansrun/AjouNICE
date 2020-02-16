@@ -98,7 +98,6 @@
 
 <script>
 import Vue from 'vue'
-import { Tag } from 'buefy'
 import { ModelSelect } from 'vue-search-select'
 import VueDaumMap from 'vue-daum-map'
 import Navigation from '@/components/base/Navigation.vue'
@@ -106,7 +105,6 @@ import Landing from '@/components/base/Landing.vue'
 import Footer from '@/components/base/Footer.vue'
 import 'vue-search-select/dist/VueSearchSelect.css'
 
-Vue.use(Tag)
 Vue.use(VueDaumMap)
 Vue.use(ModelSelect)
 export default {

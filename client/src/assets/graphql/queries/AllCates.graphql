@@ -1,5 +1,5 @@
 query Categories($depth: Int!) {
-    boards(depth: $depth) {
+    boards(depth: $depth, category_type: "NORMAL") {
         title
         category_nm
         category_idx

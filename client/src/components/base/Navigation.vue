@@ -137,7 +137,7 @@ export default {
       return this.$store.state.user
     },
     userProfileLink () {
-      return `/profile/${this.$store.state.user.idx}`
+      return '/my'
     }
   },
   mounted () {

@@ -1,85 +1,61 @@
 <template>
-  <div
-    class="wrapper"
-    fix-page
-  >
-    <flash-message />
-    <section data-form-center>
-      <header>
-        <h1 data-logo>
-          AjouNICE!
-        </h1>
-        <small>아주대학교의 새로운 커뮤니티 서비스를 만듭니다.</small>
-      </header>
-      <form
-        data-auth-form
-        autocomplete="off"
-        @submit.prevent
-      >
-        <header data-logo>
-          <h2>ADMIN</h2>
-          <small>관리자 로그인</small>
-        </header>
-        <div class="divider" />
-        <div class="input-form-wrapper">
-          <div class="input-form">
-            <input
-              v-model="userID"
-              type="text"
-              :class="{ 'error': errorValidation.userID && !userID }"
-              placeholder="아이디"
-              pattern=".{6,}"
-              required
-            >
-            <p
-              v-if="errorValidation.userID && !userID"
-              class="auto-validate-noti"
-              :class="{ 'error': errorValidation.userID && !userID }"
-            >
-              칸이 비어있습니다.
-            </p>
-          </div>
-          <div class="input-form">
-            <input
-              v-model="password"
-              type="password"
-              placeholder="패스워드"
-              pattern=".{8,}"
-              :class="{ 'error': errorValidation.password && !password }"
-              required
-              @keyup.enter="signin"
-            >
-            <p
-              v-if="errorValidation.password && !password"
-              class="auto-validate-noti"
-              :class="{ 'error': errorValidation.password && !password }"
-            >
-              칸이 비어있습니다.
-            </p>
-          </div>
-          <div class="input-form">
-            <input
-              type="button"
-              value="로그인"
-              @click="signin"
-              @submit.prevent
-            >
-          </div>
-        </div>
-      </form>
-    </section>
+  <div class="wrapper">
+    <header data-logo>
+      <h2>ADMIN</h2>
+      <small>관리자 로그인</small>
+    </header>
+    <div class="divider" />
+    <div class="input-form-wrapper">
+      <div class="input-form">
+        <input
+          v-model="userID"
+          type="text"
+          :class="{ 'error': errorValidation.userID && !userID }"
+          placeholder="아이디"
+          pattern=".{6,}"
+          required
+        >
+        <p
+          v-if="errorValidation.userID && !userID"
+          class="auto-validate-noti"
+          :class="{ 'error': errorValidation.userID && !userID }"
+        >
+          칸이 비어있습니다.
+        </p>
+      </div>
+      <div class="input-form">
+        <input
+          v-model="password"
+          type="password"
+          placeholder="패스워드"
+          pattern=".{8,}"
+          :class="{ 'error': errorValidation.password && !password }"
+          required
+          @keyup.enter="signin"
+        >
+        <p
+          v-if="errorValidation.password && !password"
+          class="auto-validate-noti"
+          :class="{ 'error': errorValidation.password && !password }"
+        >
+          칸이 비어있습니다.
+        </p>
+      </div>
+      <div class="input-form">
+        <input
+          type="button"
+          value="로그인"
+          @click="signin"
+          @submit.prevent
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import VueFlashMessage from 'vue-flash-message'
 import gql from 'graphql-tag'
-
-Vue.use(VueFlashMessage)
-
 export default {
-  name: 'Login',
   data () {
     return {
       userID: '',
@@ -139,11 +115,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-@import "~@/assets/styles/reset";
-@import "~@/assets/styles/media";
-@import "~@/assets/styles/index";
-@import "~@/assets/styles/fonts";
-
-</style>

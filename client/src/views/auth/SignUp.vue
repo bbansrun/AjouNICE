@@ -4,307 +4,325 @@
       <h2>SIGN UP</h2>
       <small>회원가입</small>
     </header>
-    <div class="input-form-wrapper">
-      <div class="input-form">
-        <v-select
-          v-model="selectedUserType"
-          placeholder="구성원 여부를 선택해주세요."
-          :value="selectedUserType"
-          :options="userOptions"
-          :reduce="options => options.code"
-          label="label"
-          @input="selectedUser"
-        />
-        <div class="notice">
-          <span v-show="selectedUserType === 'U'"><strong>아주 구성원 외의 서비스 이용자는 서비스의 일부 기능이 제한됩니다.</strong></span>
-          <span v-show="selectedUserType !== 'U'"><strong>아주 구성원은 인증을 위해 ajou.ac.kr 이메일로 가입해주세요.</strong></span>
-        </div>
-      </div>
-      <div
-        v-if="selectedUserType === 'R' || selectedUserType === 'G'"
-        class="input-form"
-      >
-        <div class="input-group">
+    <div class="input-form">
+      <div class="input-form-wrapper">
+        <div class="input-form-group">
           <v-select
-            v-model="selectedCollege"
-            :class="{ 'error': errorValidation.college }"
-            placeholder="소속대학을 선택하여주세요."
-            :value="selectedCollege"
-            :options="collegeList"
-            :reduce="college => college.college_cd"
-            label="college_nm"
-            @input="selectedCollegeCd"
+            v-model="selectedUserType"
+            placeholder="구성원 여부를 선택해주세요."
+            :value="selectedUserType"
+            :options="userOptions"
+            :reduce="options => options.code"
+            label="label"
+            @input="selectedUser"
           />
-          <p
-            v-if="errorValidation.college"
-            class="auto-validate-noti"
-            :class="{ 'error': errorValidation.college }"
-          >
-            {{ errorMsg.college }}
-          </p>
-        </div>
-        <div class="input-group">
-          <v-select
-            v-if="selectedCollege"
-            v-model="selectedDpt"
-            :class="{ 'error': errorValidation.dpt }"
-            placeholder="소속학과를 선택하여주세요."
-            :value="selectedDpt"
-            :options="dptList"
-            :reduce="dpt => dpt.dpt_cd"
-            label="dpt_nm"
-            @input="selectedDptCd"
-          />
-          <p
-            v-if="errorValidation.dpt"
-            class="auto-validate-noti"
-            :class="{ 'error': errorValidation.dpt }"
-          >
-            {{ errorMsg.dpt }}
-          </p>
-          <div
-            v-if="selectedCollege && selectedDpt"
-            class="input-form input-form-horizontal"
-          >
-            <label
-              for="smajor"
-              role="title"
-              class="input-form-title flex-9"
-            >제2전공(복수전공/부전공)이 있습니다.</label>
-            <div class="input-form radio-wrapper flex-1">
-              <b-checkbox
-                id="smajor"
-                v-model="hasSubMajor"
-                size="is-medium"
-                name="smajor"
-              />
-            </div>
+          <div class="notice">
+            <b-notification
+              v-show="selectedUserType === 'U'"
+              type="is-info"
+              has-icon
+              aria-close-label="Close notification"
+            >
+              아주 구성원 외의 서비스 이용자는 서비스의 일부 기능이 제한됩니다.
+            </b-notification>
+            <b-notification
+              v-show="selectedUserType !== 'U'"
+              type="is-warning"
+              has-icon
+              aria-close-label="Close notification"
+              role="alert"
+            >
+              아주 구성원은 인증을 위해 ajou.ac.kr 이메일로 가입해주세요.
+            </b-notification>
+            <span><strong /></span>
           </div>
+        </div>
+        <div
+          v-if="selectedUserType === 'R' || selectedUserType === 'G'"
+          class="input-form-group"
+        >
           <div class="input-group">
             <v-select
-              v-if="hasSubMajor"
-              v-model="selectedSubCollege"
-              :class="{ 'error': errorValidation.subCollege }"
+              v-model="selectedCollege"
+              :class="{ 'error': errorValidation.college }"
               placeholder="소속대학을 선택하여주세요."
-              :value="selectedSubCollege"
+              :value="selectedCollege"
               :options="collegeList"
               :reduce="college => college.college_cd"
               label="college_nm"
-              @input="selectedSubCollegeCd"
+              @input="selectedCollegeCd"
             />
             <p
-              v-if="errorValidation.subCollege"
+              v-if="errorValidation.college"
               class="auto-validate-noti"
-              :class="{ 'error': errorValidation.subCollege }"
+              :class="{ 'error': errorValidation.college }"
             >
-              {{ errorMsg.subCollege }}
+              {{ errorMsg.college }}
             </p>
           </div>
           <div class="input-group">
             <v-select
-              v-if="hasSubMajor && selectedSubCollege"
-              v-model="selectedSubDpt"
-              :class="{ 'error': errorValidation.subDpt }"
+              v-if="selectedCollege"
+              v-model="selectedDpt"
+              :class="{ 'error': errorValidation.dpt }"
               placeholder="소속학과를 선택하여주세요."
-              :value="selectedSubDpt"
-              :options="dptSubList"
+              :value="selectedDpt"
+              :options="dptList"
               :reduce="dpt => dpt.dpt_cd"
               label="dpt_nm"
-              @input="selectedSubDptCd"
+              @input="selectedDptCd"
             />
             <p
-              v-if="errorValidation.subDpt"
+              v-if="errorValidation.dpt"
               class="auto-validate-noti"
-              :class="{ 'error': errorValidation.subDpt }"
+              :class="{ 'error': errorValidation.dpt }"
             >
-              {{ errorMsg.subDpt }}
+              {{ errorMsg.dpt }}
+            </p>
+            <div
+              v-if="selectedCollege && selectedDpt"
+              class="input-form-group input-form-grid"
+            >
+              <label
+                for="smajor"
+                role="title"
+                class="input-form-grid-item"
+              >제2전공(복수전공/부전공)이 있습니다.</label>
+              <div class="input-form-grid-item">
+                <b-checkbox
+                  id="smajor"
+                  v-model="hasSubMajor"
+                  size="is-small"
+                  name="smajor"
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <v-select
+                v-if="hasSubMajor"
+                v-model="selectedSubCollege"
+                :class="{ 'error': errorValidation.subCollege }"
+                placeholder="소속대학을 선택하여주세요."
+                :value="selectedSubCollege"
+                :options="collegeList"
+                :reduce="college => college.college_cd"
+                label="college_nm"
+                @input="selectedSubCollegeCd"
+              />
+              <p
+                v-if="errorValidation.subCollege"
+                class="auto-validate-noti"
+                :class="{ 'error': errorValidation.subCollege }"
+              >
+                {{ errorMsg.subCollege }}
+              </p>
+            </div>
+            <div class="input-group">
+              <v-select
+                v-if="hasSubMajor && selectedSubCollege"
+                v-model="selectedSubDpt"
+                :class="{ 'error': errorValidation.subDpt }"
+                placeholder="소속학과를 선택하여주세요."
+                :value="selectedSubDpt"
+                :options="dptSubList"
+                :reduce="dpt => dpt.dpt_cd"
+                label="dpt_nm"
+                @input="selectedSubDptCd"
+              />
+              <p
+                v-if="errorValidation.subDpt"
+                class="auto-validate-noti"
+                :class="{ 'error': errorValidation.subDpt }"
+              >
+                {{ errorMsg.subDpt }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="input-form-group">
+          <input
+            v-model="userName"
+            type="text"
+            :class="{ 'error': errorValidation.user_nm }"
+            placeholder="이름"
+            required
+          >
+          <p
+            v-if="errorValidation.user_nm"
+            class="auto-validate-noti"
+            :class="{ 'error': errorValidation.user_nm }"
+          >
+            {{ errorMsg.user_nm }}
+          </p>
+        </div>
+        <div class="input-form-group">
+          <input
+            v-model="userIDNum"
+            name="IDNum"
+            :class="{ 'error': errorValidation.user_st_id }"
+            :disabled="selectedUserType === 'U' || selectedUserType === 'E'"
+            type="text"
+            maxlength="9"
+            placeholder="학번"
+            required
+            pattern="[0-9]{9,}"
+          >
+          <p
+            v-if="errorValidation.user_st_id"
+            class="auto-validate-noti"
+            :class="{ 'error': errorValidation.user_st_id }"
+          >
+            {{ errorMsg.user_st_id }}
+          </p>
+        </div>
+        <div class="input-form-group">
+          <input
+            v-model="email"
+            name="email"
+            :class="{ 'error': errorValidation.email }"
+            type="email"
+            autocapitalize="none"
+            placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)"
+            required
+          >
+          <p
+            v-if="email && validatedEmail && !errorValidation.email"
+            class="auto-validate-noti"
+          >
+            사용 가능한 이메일입니다.
+          </p>
+          <p
+            v-if="errorValidation.email"
+            class="auto-validate-noti"
+            :class="{ 'error': errorValidation.email }"
+          >
+            {{ errorMsg.email }}
+          </p>
+        </div>
+        <div class="input-form-group">
+          <input
+            v-model="userID"
+            name="userID"
+            type="text"
+            placeholder="아이디"
+            :class="{ 'error': errorValidation.user_id }"
+            required
+            autocapitalize="none"
+            pattern="[0-9A-Za-z_]{6,}"
+            @blur="checkDupID"
+            @keyup.delete="initError('user_id')"
+          >
+          <p
+            v-if="userID && validatedUserID && !errorValidation.user_id"
+            class="auto-validate-noti"
+          >
+            사용 가능한 아이디입니다.
+          </p>
+          <p
+            v-if="errorValidation.user_id"
+            class="auto-validate-noti"
+            :class="{ 'error': errorValidation.user_id }"
+          >
+            {{ errorMsg.user_id }}
+          </p>
+        </div>
+        <div class="input-form-group">
+          <div class="input-group">
+            <input
+              v-model="password"
+              name="password"
+              type="password"
+              autocapitalize="none"
+              pattern=".{8,}"
+              placeholder="패스워드"
+              required
+              :class="{ 'error': errorValidation.user_pw }"
+            >
+            <p
+              v-if="errorValidation.user_pw"
+              class="auto-validate-noti"
+              :class="{ 'error': errorValidation.user_pw }"
+            >
+              {{ errorMsg.user_pw }}
+            </p>
+          </div>
+          <div class="input-group">
+            <input
+              v-model="passwordConfirm"
+              name="passwordConfirm"
+              type="password"
+              autocapitalize="none"
+              pattern=".{8,}"
+              placeholder="패스워드 재확인"
+              required
+              :class="{ 'error': errorValidation.user_pw_confirm }"
+            >
+            <p
+              v-if="passwordConfirm && validatedPWConfirm && !errorValidation.user_pw_confirm"
+              class="auto-validate-noti"
+            >
+              패스워드 확인이 일치합니다.
+            </p>
+            <p
+              v-if="errorValidation.user_pw_confirm"
+              class="auto-validate-noti"
+              :class="{ 'error': errorValidation.user_pw_confirm }"
+            >
+              {{ errorMsg.user_pw_confirm }}
             </p>
           </div>
         </div>
-      </div>
-      <div class="input-form">
-        <input
-          v-model="userName"
-          type="text"
-          :class="{ 'error': errorValidation.user_nm }"
-          placeholder="이름"
-          required
-        >
-        <p
-          v-if="errorValidation.user_nm"
-          class="auto-validate-noti"
-          :class="{ 'error': errorValidation.user_nm }"
-        >
-          {{ errorMsg.user_nm }}
-        </p>
-      </div>
-      <div class="input-form">
-        <input
-          v-model="userIDNum"
-          name="IDNum"
-          :class="{ 'error': errorValidation.user_st_id }"
-          :disabled="selectedUserType === 'U' || selectedUserType === 'E'"
-          type="text"
-          maxlength="9"
-          placeholder="학번"
-          required
-          pattern="[0-9]{9,}"
-        >
-        <p
-          v-if="errorValidation.user_st_id"
-          class="auto-validate-noti"
-          :class="{ 'error': errorValidation.user_st_id }"
-        >
-          {{ errorMsg.user_st_id }}
-        </p>
-      </div>
-      <div class="input-form">
-        <input
-          v-model="email"
-          name="email"
-          :class="{ 'error': errorValidation.email }"
-          type="email"
-          autocapitalize="none"
-          placeholder="이메일 (구성원은 @ajou.ac.kr으로만 사용가능)"
-          required
-        >
-        <p
-          v-if="email && validatedEmail && !errorValidation.email"
-          class="auto-validate-noti"
-        >
-          사용 가능한 이메일입니다.
-        </p>
-        <p
-          v-if="errorValidation.email"
-          class="auto-validate-noti"
-          :class="{ 'error': errorValidation.email }"
-        >
-          {{ errorMsg.email }}
-        </p>
-      </div>
-      <div class="input-form">
-        <input
-          v-model="userID"
-          name="userID"
-          type="text"
-          placeholder="아이디"
-          :class="{ 'error': errorValidation.user_id }"
-          required
-          autocapitalize="none"
-          pattern="[0-9A-Za-z_]{6,}"
-          @blur="checkDupID"
-          @keyup.delete="initError('user_id')"
-        >
-        <p
-          v-if="userID && validatedUserID && !errorValidation.user_id"
-          class="auto-validate-noti"
-        >
-          사용 가능한 아이디입니다.
-        </p>
-        <p
-          v-if="errorValidation.user_id"
-          class="auto-validate-noti"
-          :class="{ 'error': errorValidation.user_id }"
-        >
-          {{ errorMsg.user_id }}
-        </p>
-      </div>
-      <div class="input-form">
-        <div class="input-group">
+        <div class="input-form-group">
           <input
-            v-model="password"
-            name="password"
-            type="password"
+            id="nickNm"
+            v-model="nick_nm"
+            type="text"
+            name="nick_nm"
+            pattern="[(0-9A-Za-z_ㄱ-ㅎ가-힇)]{1,}"
             autocapitalize="none"
-            pattern=".{8,}"
-            placeholder="패스워드"
+            :class="{ 'error': errorValidation.nick_nm }"
+            placeholder="서비스에서 사용하실 별명을 입력하여주세요."
             required
-            :class="{ 'error': errorValidation.user_pw }"
+            @keyup.delete="initError('nick_nm')"
+            @blur="checkDupNickName"
           >
           <p
-            v-if="errorValidation.user_pw"
+            v-if="nick_nm && validatedNickname && !errorValidation.nick_nm"
             class="auto-validate-noti"
-            :class="{ 'error': errorValidation.user_pw }"
           >
-            {{ errorMsg.user_pw }}
+            사용 가능한 별명입니다.
+          </p>
+          <p
+            v-else-if="errorValidation.nick_nm"
+            class="auto-validate-noti"
+            :class="{ 'error': errorValidation.nick_nm }"
+          >
+            {{ errorMsg.nick_nm }}
           </p>
         </div>
-        <div class="input-group">
-          <input
-            v-model="passwordConfirm"
-            name="passwordConfirm"
-            type="password"
-            autocapitalize="none"
-            pattern=".{8,}"
-            placeholder="패스워드 재확인"
-            required
-            :class="{ 'error': errorValidation.user_pw_confirm }"
-          >
-          <p
-            v-if="passwordConfirm && validatedPWConfirm && !errorValidation.user_pw_confirm"
-            class="auto-validate-noti"
-          >
-            패스워드 확인이 일치합니다.
-          </p>
-          <p
-            v-if="errorValidation.user_pw_confirm"
-            class="auto-validate-noti"
-            :class="{ 'error': errorValidation.user_pw_confirm }"
-          >
-            {{ errorMsg.user_pw_confirm }}
-          </p>
-        </div>
-      </div>
-      <div class="input-form">
-        <input
-          id="nickNm"
-          v-model="nick_nm"
-          type="text"
-          name="nick_nm"
-          pattern="[(0-9A-Za-z_ㄱ-ㅎ가-힇)]{1,}"
-          autocapitalize="none"
-          :class="{ 'error': errorValidation.nick_nm }"
-          placeholder="서비스에서 사용하실 별명을 입력하여주세요."
-          required
-          @keyup.delete="initError('nick_nm')"
-          @blur="checkDupNickName"
-        >
-        <p
-          v-if="nick_nm && validatedNickname && !errorValidation.nick_nm"
-          class="auto-validate-noti"
-        >
-          사용 가능한 별명입니다.
-        </p>
-        <p
-          v-else-if="errorValidation.nick_nm"
-          class="auto-validate-noti"
-          :class="{ 'error': errorValidation.nick_nm }"
-        >
-          {{ errorMsg.nick_nm }}
-        </p>
-      </div>
-      <div class="input-form">
-        <div class="input-group input-form-horizontal">
-          <span
-            role="title"
-            class="input-form-title flex-6"
-          >성별 선택</span>
-          <div class="input-form button-wrapper flex-4">
-            <b-button
-              :type="{ 'is-primary': !gender, 'is-info': genderSelected.M }"
-              @click="selectedGender('M')"
-            >
-              남성
-            </b-button>
-            <b-button
-              :type="{ 'is-primary': !gender, 'is-info': genderSelected.W }"
-              @click="selectedGender('W')"
-            >
-              여성
-            </b-button>
+        <div class="input-form-group">
+          <div class="input-form-grid">
+            <span
+              role="title"
+              class="input-form-grid-item"
+            >성별 선택</span>
+            <div class="input-form-grid-item buttons">
+              <b-button
+                size="is-small"
+                :type="{ 'is-secondary': !gender, 'is-info': genderSelected.M }"
+                @click="selectedGender('M')"
+              >
+                남성
+              </b-button>
+              <b-button
+                size="is-small"
+                :type="{ 'is-secondary': !gender, 'is-info': genderSelected.W }"
+                @click="selectedGender('W')"
+              >
+                여성
+              </b-button>
+            </div>
           </div>
-        </div>
-        <div class="notice">
           <p
             v-if="errorValidation.gender"
             class="auto-validate-noti"
@@ -313,24 +331,25 @@
             {{ errorMsg.gender }}
           </p>
         </div>
-      </div>
-      <div class="input-form">
-        <div class="input-group input-form-horizontal">
-          <label
-            for="policy"
-            class="input-form-title flex-7"
-          >아주나이스의 서비스 정책 및 개인정보 수집 이용에 동의합니다.</label>
-          <b-button
-            class="flex-3"
-            :disabled="policy.agreed"
-            :type="{ 'is-primary': !policy.agreed, 'is-success': policy.agreed }"
-            expanded
-            @click="showPolicy"
-          >
-            {{ policy.msg }}
-          </b-button>
-        </div>
-        <div class="notice">
+        <div class="input-form-group">
+          <div class="input-form-grid">
+            <label
+              for="policy"
+              class="input-form-grid-item"
+            >서비스 가입전 약관 동의가 필요합니다.</label>
+            <div class="input-form-grid-item buttons">
+              <b-button
+                :disabled="policy.agreed"
+                size="is-small"
+                :type="{ 'is-primary': !policy.agreed, 'is-success': policy.agreed }"
+                expanded
+                @click="showPolicy"
+              >
+                <font-awesome-icon icon="check" />&nbsp;
+                <span>{{ policy.msg }}</span>
+              </b-button>
+            </div>
+          </div>
           <p
             v-if="errorValidation.policy"
             class="auto-validate-noti"
@@ -339,42 +358,35 @@
             {{ errorMsg.policy }}
           </p>
         </div>
+        <div class="input-form-group">
+          <b-button
+            class="is-medium submit"
+            type="is-dark"
+            expanded
+            @click="signup"
+          >
+            <font-awesome-icon icon="user-plus" />&nbsp;
+            <span>회원가입</span>
+          </b-button>
+        </div>
       </div>
-      <div class="input-form">
-        <b-button
-          class="is-medium submit"
-          type="is-primary"
-          @click="signup"
+      <div class="input-form-controls">
+        <router-link
+          to="/auth/login"
+          class="underline underline-inline-block"
         >
-          회원가입
-        </b-button>
+          <small>로그인 화면으로</small>
+        </router-link>
       </div>
-    </div>
-    <div class="input-form-controls">
-      <router-link
-        to="/"
-        class="underline underline-inline-block"
-      >
-        <small>로그인 화면으로</small>
-      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import { Button, Checkbox } from 'buefy'
-import vSelect from 'vue-select'
-
 import gql from 'graphql-tag'
 import { DupIDCheck, DupEmailCheck, DupNickCheck, Colleges, Departments } from '@/assets/graphql/queries'
 
-Vue.component('v-select', vSelect)
-Vue.use(Button)
-Vue.use(Checkbox)
-
 export default {
-  name: 'Signup',
   data () {
     return {
       email: '',
@@ -997,25 +1009,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-#swal2-content {
-    >.policy-wrapper {
-        >header {
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        >p {
-            text-align: left;
-            line-height: 1.6;
-        }
-    }
-}
-
-.v-select {
-    margin: 5px calc(5% + 10px);
-    +.notice {
-        font-size: 14px;
-    }
-}
-</style>

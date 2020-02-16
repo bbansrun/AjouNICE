@@ -1,0 +1,21 @@
+// Buefy Custom Styles
+// Notification
+article.notification {
+    font: {
+        size: .8rem;
+    }
+    &:not(:last-child) {
+        margin: {
+            bottom: .8rem;
+        }
+    }
+    padding: .4rem 1.25rem;
+    & .media {
+        align-items: center;
+        & .media-content {
+            font: {
+                weight: 600;
+            }
+        }
+    }
+}

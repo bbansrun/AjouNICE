@@ -123,7 +123,6 @@
 import Vue from 'vue'
 import urljoin from 'url-join'
 
-import { Tooltip } from 'buefy'
 import VueClipBoard from 'vue-clipboard2'
 import VueGallerySlideshow from 'vue-gallery-slideshow'
 
@@ -136,7 +135,6 @@ import Replies from '@/components/board/Replies.vue'
 import Footer from '@/components/base/Footer.vue'
 
 VueClipBoard.config.autoSetContainer = true
-Vue.use(Tooltip)
 Vue.use(VueClipBoard)
 export default {
   name: 'App',

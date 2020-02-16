@@ -29,7 +29,10 @@ import {
   faCopy,
   faExclamationTriangle,
   faTimes,
-  faEnvelopeOpenText
+  faEnvelopeOpenText,
+  faUserPlus,
+  faInfoCircle,
+  faCheck
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -49,12 +52,23 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { createUploadLink } from 'apollo-upload-client'
 import VueApollo from 'vue-apollo'
 
+import Buefy from 'buefy'
+
+import vSelect from 'vue-select'
+Vue.use(Buefy, {
+  defaultIconComponent: 'font-awesome-icon',
+  defaultIconPack: 'fas'
+})
+Vue.component('v-select', vSelect)
+
 Vue.use(VueApollo)
 Vue.use(VueCarousel)
 Vue.use(VueFeather)
 Vue.use(VueSweetalert2, {
   confirmButtonColor: '#00A8CC',
-  cancelButtonColor: '#FF2E63'
+  cancelButtonColor: '#FF2E63',
+  confirmButtonText: '확인',
+  cancelButtonText: '취소'
 })
 Vue.use(VueFlashMessage, {
   createShortcuts: true,
@@ -96,6 +110,9 @@ library.add(faExclamationTriangle)
 library.add(faCopy)
 library.add(faTimes)
 library.add(faEnvelopeOpenText)
+library.add(faUserPlus)
+library.add(faInfoCircle)
+library.add(faCheck)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const shouldEncode = (url, options) => {

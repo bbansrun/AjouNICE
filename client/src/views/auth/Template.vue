@@ -1,10 +1,11 @@
 <template>
-  <div fix-page>
-    <section data-form-center>
+  <main fix-page>
+    <section
+      data-form-center
+      class="auth has-text-centered"
+    >
       <header>
-        <h1 data-logo>
-          AjouNICE!
-        </h1>
+        <Logo />
         <small>아주대학교 대표 커뮤니티 서비스</small>
       </header>
       <form
@@ -15,12 +16,15 @@
         <router-view />
       </form>
     </section>
-  </div>
+  </main>
 </template>
 
 <script>
+import Logo from '@/assets/images/AjouNICE_shadow.svg'
 export default {
-
+  components: {
+    Logo
+  }
 }
 </script>
 

@@ -18,6 +18,7 @@
                 transform: rotateY(180deg);
     }
 }
+
 @-webkit-keyframes load-spinner {
     0% {
     -webkit-transform: rotateY(0);
@@ -34,6 +35,7 @@
     99% { opacity: 0.01;width: 100%; height: 100%;}
     100% { opacity: 0;width: 0; height: 0;}
 }  
+
 @keyframes fadeOut {
     0% { opacity: 1;}
     99% { opacity: 0.01;width: 100%; height: 100%;}
@@ -48,6 +50,7 @@
         opacity:1;
     }
 }
+
 @-moz-keyframes fadein { /* Firefox */
     from {
         opacity:0;
@@ -56,6 +59,7 @@
         opacity:1;
     }
 }
+
 @-webkit-keyframes fadein { /* Safari and Chrome */
     from {
         opacity:0;
@@ -64,6 +68,7 @@
         opacity:1;
     }
 }
+
 @-o-keyframes fadein { /* Opera */
     from {
         opacity:0;

@@ -4,65 +4,72 @@
       <h2>LOGIN</h2>
       <small>로그인</small>
     </header>
-    <div class="input-form-wrapper">
-      <div class="input-form">
-        <input
-          v-model="userID"
-          type="text"
-          :class="{ 'error': errorValidation.userID && !userID }"
-          placeholder="아이디"
-          pattern=".{6,}"
-          required
-        >
-        <p
-          v-if="errorValidation.userID && !userID"
-          class="auto-validate-noti"
-          :class="{ 'error': errorValidation.userID && !userID }"
-        >
-          칸이 비어있습니다.
-        </p>
+    <div class="input-form">
+      <div class="input-form-wrapper">
+        <div class="input-form-group">
+          <input
+            v-model="userID"
+            type="text"
+            :class="{ 'error': errorValidation.userID && !userID }"
+            placeholder="아이디"
+            pattern=".{6,}"
+            required
+          >
+          <p
+            v-if="errorValidation.userID && !userID"
+            class="auto-validate-noti"
+            :class="{ 'error': errorValidation.userID && !userID }"
+          >
+            칸이 비어있습니다.
+          </p>
+        </div>
+        <div class="input-form-group">
+          <input
+            v-model="password"
+            type="password"
+            placeholder="패스워드"
+            pattern=".{8,}"
+            :class="{ 'error': errorValidation.password && !password }"
+            required
+            @keyup.enter="signin"
+          >
+          <p
+            v-if="errorValidation.password && !password"
+            class="auto-validate-noti"
+            :class="{ 'error': errorValidation.password && !password }"
+          >
+            칸이 비어있습니다.
+          </p>
+        </div>
+        <div class="input-form-group buttons">
+          <b-button
+            class="is-medium submit"
+            size="is-medium"
+            type="is-dark"
+            expanded
+            @click="signin"
+          >
+            <font-awesome-icon icon="key" />&nbsp;
+            <span>로그인</span>
+          </b-button>
+        </div>
+        <div class="input-form-controls">
+          <router-link
+            to="/auth/recovery"
+            class="underline underline-inline-block"
+          >
+            <small>계정 재설정</small>
+          </router-link>
+        </div>
       </div>
-      <div class="input-form">
-        <input
-          v-model="password"
-          type="password"
-          placeholder="패스워드"
-          pattern=".{8,}"
-          :class="{ 'error': errorValidation.password && !password }"
-          required
-          @keyup.enter="signin"
+      <footer>
+        <router-link
+          to="/auth/signup"
+          class="btn rounded box-shadow text-inverse"
         >
-        <p
-          v-if="errorValidation.password && !password"
-          class="auto-validate-noti"
-          :class="{ 'error': errorValidation.password && !password }"
-        >
-          칸이 비어있습니다.
-        </p>
-      </div>
-      <div class="input-form">
-        <b-button
-          class="is-medium submit"
-          type="is-primary"
-          @click="signin"
-        >
-          로그인
-        </b-button>
-      </div>
-    </div>
-    <div class="input-form-controls">
-      <router-link
-        to="/auth/recovery"
-        class="underline underline-inline-block"
-      >
-        <small>계정 재설정</small>
-      </router-link>
-      <router-link
-        to="/auth/signup"
-        class="btn rounded box-shadow text-inverse"
-      >
-        회원가입 &rarr;
-      </router-link>
+          회원가입 &rarr;
+        </router-link>
+      </footer>
     </div>
   </div>
 </template>
@@ -143,6 +150,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.input-form-group.buttons {
+  margin: {
+    top: .8rem;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 body:not(.isMobile) {

@@ -4,41 +4,45 @@
       <h2>Recovery</h2>
       <small>계정 재설정</small>
     </header>
-    <div class="input-form-wrapper">
-      <div class="input-form">
-        <input
-          v-model="email"
-          type="email"
-          placeholder="이메일"
-          required
-          :class="{ 'error': emailError }"
-          @keyup.enter="resetAccount"
-        >
-        <p
-          v-if="emailError"
-          class="auto-validate-noti"
-          :class="{ 'error': emailError }"
-        >
-          {{ emailErrorMsg }}
-        </p>
+    <div class="input-form">
+      <div class="input-form-wrapper">
+        <div class="input-form-group">
+          <input
+            v-model="email"
+            type="email"
+            placeholder="이메일"
+            required
+            :class="{ 'error': emailError }"
+            @keyup.enter="resetAccount"
+          >
+          <p
+            v-if="emailError"
+            class="auto-validate-noti"
+            :class="{ 'error': emailError }"
+          >
+            {{ emailErrorMsg }}
+          </p>
+        </div>
+        <div class="input-form-group buttons">
+          <b-button
+            class="is-medium submit"
+            type="is-dark"
+            expanded
+            @click="resetAccount"
+          >
+            <font-awesome-icon icon="users-cog" />&nbsp;
+            <span>계정 재설정</span>
+          </b-button>
+        </div>
       </div>
-      <div class="input-form">
-        <b-button
-          class="is-medium submit"
-          type="is-primary"
-          @click="resetAccount"
+      <div class="input-form-controls">
+        <router-link
+          to="/"
+          class="underline underline-inline-block"
         >
-          계정 재설정
-        </b-button>
+          <small>처음으로</small>
+        </router-link>
       </div>
-    </div>
-    <div class="input-form-controls">
-      <router-link
-        to="/"
-        class="underline underline-inline-block"
-      >
-        <small>처음으로</small>
-      </router-link>
     </div>
   </div>
 </template>
@@ -119,3 +123,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.input-form-group.buttons {
+  margin: {
+    top: .8rem;
+  }
+}
+</style>

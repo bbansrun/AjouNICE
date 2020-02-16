@@ -18,15 +18,12 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { Table } from 'buefy'
 import Navigation from '@/components/base/Navigation.vue'
 import Footer from '@/components/base/Footer.vue'
 
 import gql from 'graphql-tag'
 import { Schedule } from '@/assets/graphql/queries'
 
-Vue.use(Table)
 export default {
   components: {
     Navigation,

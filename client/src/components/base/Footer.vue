@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="footer">
     <section class="wrapper">
       <div class="footer-content">
         <header>

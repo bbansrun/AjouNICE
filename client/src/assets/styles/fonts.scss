@@ -9,8 +9,34 @@
 }
 
 [data-logo] {
-     font-family: 'yg-jalnan' !important;
+     font: {
+          family: 'yg-jalnan' !important;
+     }
      letter-spacing: .01rem !important;
+}
+
+button, input, select, .v-select {
+     font: {
+          family: 'NanumSquare' !important;
+          weight: 500;
+          size: .85em;
+     }
+}
+
+label {
+     font: {
+          size: .6rem;
+     }
+}
+
+.v-select {
+     & li[role="option"] {
+          &:hover {
+               font: {
+                    weight: 600;
+               }
+          }
+     }
 }
 
 h1 {
@@ -35,6 +61,10 @@ h5 {
 
 h6 {
      font-size: .6rem;
+}
+
+small {
+  font-size: .4rem;
 }
 
 h1, h2, h3, h4, h5, h6, strong {

@@ -1,3 +1,12 @@
+@import "~@/assets/styles/reset";
+@import "~@/assets/styles/fonts";
+
+@import "~@/assets/styles/components/Swal2";
+@import "~@/assets/styles/components/BuefyCustom";
+@import "~@/assets/styles/components/Button";
+@import "~@/assets/styles/components/Link";
+@import "~@/assets/styles/components/Form";
+
 $logo: #0D4AB3;
 $logo_aux: #1F5ECC;
 $auth: auth;
@@ -82,19 +91,8 @@ body {
   height: 100vh;
 }
 
-@for $i from 1 through 9 {
-  $flex: $i;
-  .flex-#{$i} { 
-      flex: $flex;
-  }
-}
-
 br[media] {
   display: none;
-}
-
-small {
-  font-size: .6rem;
 }
 
 // Default
@@ -141,7 +139,7 @@ nav {
     transition: .5s all ease-out;
     &.active {
       > .fixed-nav {
-        background: linear-gradient(to right, #4481eb 0%, #04befe 100%);
+        background: #3e59ad;
         transition: .5s all ease-in-out;
       }
     }
@@ -344,7 +342,7 @@ ul.board-nav {
 }
 
 // Footer
-footer {
+.footer {
   padding: 2rem 0 0 0;
   background: #2c2c2c;
   color: #fff;

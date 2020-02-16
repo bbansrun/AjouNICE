@@ -97,16 +97,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { Table } from 'buefy'
 import Navigation from '@/components/base/Navigation.vue'
 import Landing from '@/components/base/Landing.vue'
 import Footer from '@/components/base/Footer.vue'
-
-Vue.use(Table)
-
 export default {
-  name: 'About',
   components: {
     Navigation, Landing, Footer
   },
