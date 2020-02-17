@@ -231,11 +231,14 @@ const link = split(
   httpLink // Http Link
 )
 
+const apolloClient = new ApolloClient({
+  link,
+  cache: new InMemoryCache()
+})
+Vue.prototype.$Apollo = apolloClient
+
 const apolloProvider = new VueApollo({
-  defaultClient: new ApolloClient({
-    link,
-    cache: new InMemoryCache()
-  })
+  defaultClient: apolloClient
 })
 
 Vue.config.productionTip = false

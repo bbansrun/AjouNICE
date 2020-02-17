@@ -59,10 +59,6 @@
                 :config="editorConfig"
               />
             </div>
-            <div class="input-form uploads">
-              <label for="images">이미지 삽입</label>
-              <FileUpload />
-            </div>
             <div class="input-form-controls buttons">
               <b-button
                 size="is-small"
@@ -90,6 +86,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import pathParser from 'path-parse'
@@ -99,23 +96,55 @@ import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import Heading from '@ckeditor/ckeditor5-heading/src/heading'
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote'
-import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
+import Image from '@ckeditor/ckeditor5-image/src/image'
+import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption'
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
-import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
+import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize'
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload'
-import UploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter'
-import { FileUpload, Navigation, Footer } from '@/components'
+import List from '@ckeditor/ckeditor5-list/src/list'
+import Table from '@ckeditor/ckeditor5-table/src/table'
+import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar'
+import { Navigation, Footer } from '@/components'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
-import { writePost, editPost } from '@/assets/graphql/mutations'
+import { writePost, editPost, singleUpload } from '@/assets/graphql/mutations'
+
+class ImageUploadToS3Adapter {
+  constructor (loader) {
+    this.loader = loader
+  }
+
+  upload () {
+    return this.loader.file
+      .then(file => new Promise((resolve, reject) => {
+        Vue.prototype.$Apollo.mutate({
+          mutation: gql`${singleUpload}`,
+          variables: {
+            file: file
+          }
+        }).then(result => {
+          console.log(result)
+          resolve(result)
+        }).catch(error => {
+          console.error(error)
+        })
+      }))
+  }
+}
+
+const ImageUploadToS3AdapterPlugin = (editor) => {
+  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+    return new ImageUploadToS3Adapter(loader)
+  }
+}
 
 export default {
   components: {
     Navigation,
-    Footer,
-    FileUpload
+    Footer
   },
   data () {
     return {
@@ -140,25 +169,46 @@ export default {
           ItalicPlugin,
           LinkPlugin,
           ParagraphPlugin,
+          Heading,
           Alignment,
           BlockQuote,
-          ImagePlugin,
-          ImageCaption,
+          Image,
           ImageToolbar,
+          ImageCaption,
           ImageStyle,
+          ImageResize,
           ImageUpload,
-          UploadAdapter
+          ImageUploadToS3AdapterPlugin,
+          Table,
+          TableToolbar,
+          List
         ],
         toolbar: {
           items: [
+            'heading',
+            '|',
             'bold',
             'italic',
-            'alignment',
             'link',
-            'undo',
-            'redo',
+            '|',
+            'alignment',
+            'bulletedList',
+            'numberedList',
             'blockquote',
+            '|',
+            'insertTable',
+            'mergeTableCells',
+            'tableColumn',
+            'tableRow',
+            '|',
             'imageUpload'
+          ]
+        },
+        heading: {
+          options: [
+            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
           ]
         },
         image: {
@@ -168,6 +218,9 @@ export default {
             '|',
             'imageTextAlternative'
           ]
+        },
+        simpleUpload: {
+          uploadUrl: `http://${require('ip').address()}:455/graphql`
         }
       },
       mode: {
@@ -176,6 +229,7 @@ export default {
       },
       title: '',
       form: {
+        post: {},
         title: '',
         editorData: '<p></p>',
         submitButton: ''
@@ -241,6 +295,7 @@ export default {
           id: this.$route.params.post_id
         }
       }).then(({ data }) => {
+        this.form.post = data.post
         this.form.title = data.post.title
         this.form.editorData = data.post.body
         document.body.classList.toggle('loading')
@@ -282,39 +337,31 @@ export default {
     },
     editPost () {
       const user = this.$store.state.user
-      this.$apollo.query({
-        query: gql`${CateInfo}`,
+      document.body.classList.toggle('loading')
+      this.$apollo.mutate({
+        mutation: gql`${editPost}`,
         variables: {
-          title: this.$route.params.category
+          board_idx: parseInt(this.$route.params.post_id),
+          category_idx: parseInt(this.form.post.category.category_idx),
+          user_idx: user.idx,
+          title: this.form.title,
+          body: this.form.editorData,
+          upt_ip: user.access_loc,
+          upt_dt: Date.now()
         }
       }).then(({ data }) => {
-        const cateId = data.boards[0].category_idx
         document.body.classList.toggle('loading')
-        this.$apollo.mutate({
-          mutation: gql`${editPost}`,
-          variables: {
-            board_idx: parseInt(this.$route.params.post_id),
-            category_idx: parseInt(cateId),
-            user_idx: user.idx,
-            title: this.form.title,
-            body: this.form.editorData,
-            upt_ip: user.access_loc,
-            upt_dt: Date.now()
-          }
-        }).then(({ data }) => {
-          document.body.classList.toggle('loading')
-          this.$swal({
-            type: 'success',
-            title: '게시!',
-            text: '게시물이 수정되었습니다.',
-            width: '90vw',
-            allowOutsideClick: false
-          }).then(() => {
-            let url = this.$route.path
-            url = url.split('/')
-            url.pop()
-            this.$router.push(urljoin(url.join('/'), 'view'))
-          })
+        this.$swal({
+          type: 'success',
+          title: '게시!',
+          text: '게시물이 수정되었습니다.',
+          width: '90vw',
+          allowOutsideClick: false
+        }).then(() => {
+          let url = this.$route.path
+          url = url.split('/')
+          url.pop()
+          this.$router.push(urljoin(url.join('/'), 'view'))
         })
       })
     },

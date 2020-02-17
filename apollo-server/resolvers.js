@@ -281,6 +281,8 @@ module.exports = {
     },
     singleUpload: async (root, { file, }, { db, }, info) => {
       // Upload Image to S3
+      const { filename, mimetype, createReadStream, } = await file;
+      console.log(createReadStream);
       // const { Location, } = await handleS3Upload(file);
       // return Location;
     },

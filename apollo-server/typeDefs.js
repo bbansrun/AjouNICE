@@ -10,9 +10,7 @@ enum Role {
 directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
 
 type File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
+    location: String!
 }
 
 type User {
@@ -194,7 +192,7 @@ type Mutation {
     resetEmailToken(email: String!): Boolean
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
     removePost(board_idx: Int!): Boolean
-    editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String): Board
+    editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, upt_ip: String, upt_dt: Date): Board
     writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String, reg_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): Boolean
     singleUpload(file: Upload!): File

@@ -29,6 +29,12 @@ label {
      }
 }
 
+i {
+     font: {
+          style: italic;
+     }
+}
+
 .v-select {
      & li[role="option"] {
           &:hover {

@@ -1,11 +1,12 @@
-mutation editPost($board_idx: Int!, $category_idx: Int!, $user_idx: Int!, $title: String!, $body: String!, $reg_ip: String!) {
+mutation editPost($board_idx: Int!, $category_idx: Int!, $user_idx: Int!, $title: String!, $body: String!, $upt_ip: String!, $upt_dt: Date) {
     editPost(
         board_idx: $board_idx,
         category_idx: $category_idx,
         user_idx: $user_idx,
         title: $title,
         body: $body,
-        reg_ip: $reg_ip
+        upt_ip: $upt_ip,
+        upt_dt: $upt_dt
     ) {
         board_idx
     }
