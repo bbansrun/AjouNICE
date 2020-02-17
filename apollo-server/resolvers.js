@@ -213,6 +213,9 @@ module.exports = {
       if (response) return true;
       else return false;
     },
+    async checkTokenValid (root, args, { db, }, info) {
+      return await findOne(db.User, args, info);
+    },
   },
   Mutation: {
     sendContactMail: async (root, { name, email, content, }) => {

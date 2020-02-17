@@ -160,43 +160,6 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-body:not(.isMobile) {
-  & [data-form-center] {
-    > header {
-      & h2 {
-        display: none;
-      }
-    }
-  }
-}
-
-body.isMobile {
-  & [data-form-center] {
-    > header {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-end;
-      min-height: unset;
-      max-height: 3rem;
-      padding: 0 .6rem .4rem .6rem;
-      > h1 {
-        font: {
-          size: 1.5rem;
-        }
-        margin-bottom: unset;
-      }
-      > h2 {
-        font: {
-          size: 1rem;
-        }
-      }
-      > small {
-        display: none;
-      }
-    }
-  }
-}
-
 .btn {
     font-size: 1rem;
     margin-top: 1rem;

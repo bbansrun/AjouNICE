@@ -7,6 +7,7 @@ import UploadFiles from './UploadFiles.graphql'
 import IncrementViewCount from './postViewed.graphql'
 
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
+import Authorize from './auth/Authorize.graphql'
 
 export {
   writePost,
@@ -16,5 +17,6 @@ export {
   removePost,
   UploadFiles,
   IncrementViewCount,
-  LoggedInLogger
+  LoggedInLogger,
+  Authorize
 }

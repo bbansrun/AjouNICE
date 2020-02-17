@@ -1,0 +1,6 @@
+query TokenAuthorization($token: String!) {
+    checkTokenValid(auth_token: $token) {
+        user_idx
+        auth_email_yn
+    }
+}

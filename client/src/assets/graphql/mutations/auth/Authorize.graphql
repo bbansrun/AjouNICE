@@ -1,0 +1,3 @@
+mutation Authorize($id: Int!) {
+    authorize(user_idx: $id)
+}

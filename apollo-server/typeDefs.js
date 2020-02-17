@@ -183,6 +183,7 @@ type Query {
     doesIDExists(user_id: String!): Boolean
     doesEmailExists(email: String!): Boolean
     doesNickExists(nick_nm: String!): Boolean
+    checkTokenValid(auth_token: String!): User
 }
 
 type Mutation {
