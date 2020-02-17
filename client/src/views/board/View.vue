@@ -27,23 +27,6 @@
               class="container"
               v-html="post.body"
             />
-            <div class="files">
-              <header>첨부 이미지</header>
-              <div class="image-wrapper">
-                <img
-                  v-for="(image, i) in images"
-                  :key="i"
-                  class="image"
-                  :src="image"
-                  @click="index = i"
-                >
-                <vue-gallery-slideshow
-                  :images="images"
-                  :index="index"
-                  @close="index = null"
-                />
-              </div>
-            </div>
             <hr>
             <div class="controls">
               <div class="meta-bottom has-text-right">
@@ -124,7 +107,6 @@ import Vue from 'vue'
 import urljoin from 'url-join'
 
 import VueClipBoard from 'vue-clipboard2'
-import VueGallerySlideshow from 'vue-gallery-slideshow'
 
 import gql from 'graphql-tag'
 import { Post } from '@/assets/graphql/queries'
@@ -140,8 +122,7 @@ export default {
   components: {
     Navigation,
     Replies,
-    Footer,
-    VueGallerySlideshow
+    Footer
   },
   data () {
     return {
@@ -158,20 +139,7 @@ export default {
           title: ''
         },
         comments: []
-      },
-      images: [
-        'https://placekitten.com/801/800',
-        'https://placekitten.com/802/800',
-        'https://placekitten.com/803/800',
-        'https://placekitten.com/804/800',
-        'https://placekitten.com/805/800',
-        'https://placekitten.com/806/800',
-        'https://placekitten.com/807/800',
-        'https://placekitten.com/808/800',
-        'https://placekitten.com/809/800',
-        'https://placekitten.com/810/800'
-      ],
-      index: null
+      }
     }
   },
   computed: {

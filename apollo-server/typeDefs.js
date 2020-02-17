@@ -9,10 +9,6 @@ enum Role {
 
 directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
 
-type File {
-    location: String!
-}
-
 type User {
     user_idx: ID!
     email: Email!
@@ -161,7 +157,6 @@ type Schedule {
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: Boolean
-    imageUploaded: File
 }
 
 type Query {
@@ -177,7 +172,6 @@ type Query {
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]
-    uploads: [File]
     doesIDExists(user_id: String!): Boolean
     doesEmailExists(email: String!): Boolean
     doesNickExists(nick_nm: String!): Boolean
@@ -195,7 +189,7 @@ type Mutation {
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, upt_ip: String, upt_dt: Date): Board
     writeReply(board_idx: Int!, user_idx: Int!, nick_nm: String!, text: String, reg_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): Boolean
-    singleUpload(file: Upload!): File
+    singleUpload(file: Upload!): String
     postViewed(board_idx: Int!): Board
 }
 `;

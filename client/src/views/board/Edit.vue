@@ -125,11 +125,11 @@ class ImageUploadToS3Adapter {
           variables: {
             file: file
           }
-        }).then(result => {
-          console.log(result)
-          resolve(result)
+        }).then(({ data: { singleUpload } }) => {
+          console.log(singleUpload)
+          resolve({ default: singleUpload })
         }).catch(error => {
-          console.error(error)
+          reject(error)
         })
       }))
   }

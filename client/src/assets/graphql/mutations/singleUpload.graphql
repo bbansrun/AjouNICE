@@ -1,5 +1,3 @@
 mutation singleUpload($file: Upload!) {
-    singleUpload(file: $file) {
-        location
-    }
+    singleUpload(file: $file)
 }

@@ -20,7 +20,6 @@ sequelize.sync({});
 const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
-const IMAGE_UPLOADED = 'IMAGE_UPLOADED';
 
 // AWS File Upload Handler
 const s3DefaultParams = {
@@ -103,9 +102,6 @@ module.exports = {
     },
     replyRemoved: {
       subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([REPLY_REMOVED]),
-    },
-    imageUploaded: {
-      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([IMAGE_UPLOADED]),
     },
   },
   Query: {
@@ -281,10 +277,8 @@ module.exports = {
     },
     singleUpload: async (root, { file, }, { db, }, info) => {
       // Upload Image to S3
-      const { filename, mimetype, createReadStream, } = await file;
-      console.log(createReadStream);
-      // const { Location, } = await handleS3Upload(file);
-      // return Location;
+      const { Location, } = await handleS3Upload(file);
+      return await Location;
     },
     postViewed: async (root, args, { db, }, info) => {
       const updated = await db.Board.increment('view_cnt', { by: 1, where: { board_idx: args.board_idx, }, });

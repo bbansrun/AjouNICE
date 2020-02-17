@@ -53,6 +53,7 @@ import { ApolloLink, split } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { getMainDefinition } from 'apollo-utilities'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { createUploadLink } from 'apollo-upload-client'
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 
 library.add(faSignOutAlt)
@@ -213,7 +214,11 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-const httpLink = authLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
+const uploadLink = authLink.concat(createUploadLink({
+  uri: `http://${require('ip').address()}:455/graphql`
+}))
+
+const httpLink = uploadLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
   .concat(createHttpLink({
     uri: `http://${require('ip').address()}:455/graphql`
     // fetch
