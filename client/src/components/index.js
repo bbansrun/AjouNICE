@@ -13,7 +13,6 @@ import Welcome from './base/Welcome.vue'
 
 // Board
 import BoardNav from './board/BoardNav.vue'
-import FileUpload from './board/FileUpload.vue'
 import PostList from './board/PostList.vue'
 import Replies from './board/Replies.vue'
 
@@ -34,7 +33,6 @@ export {
   Navigation,
   Welcome,
   BoardNav,
-  FileUpload,
   PostList,
   Replies,
   MyReviews,
