@@ -260,7 +260,9 @@ export default {
             nick_nm: user.nick_nm,
             title: this.form.title,
             body: this.form.editorData,
-            reg_ip: user.access_loc
+            reg_ip: user.access_loc,
+            reg_dt: Date.now(),
+            upt_ip: user.access_loc
           }
         }).then(({ data: { writePost: { board_idx } } }) => {
           document.body.classList.toggle('loading')
@@ -296,7 +298,8 @@ export default {
             user_idx: user.idx,
             title: this.form.title,
             body: this.form.editorData,
-            reg_ip: user.access_loc
+            upt_ip: user.access_loc,
+            upt_dt: Date.now()
           }
         }).then(({ data }) => {
           document.body.classList.toggle('loading')
