@@ -99,11 +99,14 @@ import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'
+import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote'
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption'
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload'
+import UploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter'
 import { FileUpload, Navigation, Footer } from '@/components'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
 import { writePost, editPost } from '@/assets/graphql/mutations'
@@ -137,19 +140,24 @@ export default {
           ItalicPlugin,
           LinkPlugin,
           ParagraphPlugin,
+          Alignment,
+          BlockQuote,
           ImagePlugin,
           ImageCaption,
           ImageToolbar,
           ImageStyle,
-          ImageUpload
+          ImageUpload,
+          UploadAdapter
         ],
         toolbar: {
           items: [
             'bold',
             'italic',
+            'alignment',
             'link',
             'undo',
             'redo',
+            'blockquote',
             'imageUpload'
           ]
         },
@@ -286,7 +294,6 @@ export default {
             board_idx: parseInt(this.$route.params.post_id),
             category_idx: parseInt(cateId),
             user_idx: user.idx,
-            nick_nm: user.nick_nm,
             title: this.form.title,
             body: this.form.editorData,
             reg_ip: user.access_loc
