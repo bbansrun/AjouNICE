@@ -137,7 +137,6 @@ import Footer from '@/components/base/Footer.vue'
 VueClipBoard.config.autoSetContainer = true
 Vue.use(VueClipBoard)
 export default {
-  name: 'App',
   components: {
     Navigation,
     Replies,

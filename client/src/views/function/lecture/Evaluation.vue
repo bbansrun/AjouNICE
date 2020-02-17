@@ -61,7 +61,7 @@
 <script>
 import { ModelSelect } from 'vue-search-select'
 import 'vue-search-select/dist/VueSearchSelect.css'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
 import { Navigation, Landing, Footer } from '@/components'
 export default {
   components: {

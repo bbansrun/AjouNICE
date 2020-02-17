@@ -42,6 +42,7 @@ import VueFlashMessage from 'vue-flash-message'
 import Buefy from 'buefy'
 import vSelect from 'vue-select'
 import VueSweetalert2 from 'vue-sweetalert2'
+import CKEditor from '@ckeditor/ckeditor5-vue'
 
 import 'vue-flash-message/dist/vue-flash-message.min.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
@@ -52,7 +53,6 @@ import { ApolloLink, split } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { getMainDefinition } from 'apollo-utilities'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { createUploadLink } from 'apollo-upload-client'
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 
 library.add(faSignOutAlt)
@@ -105,6 +105,7 @@ Vue.use(VueFlashMessage, {
     pauseOnInteract: true
   }
 })
+Vue.use(CKEditor)
 
 Vue.prototype.$Axios = axios
 const token = localStorage.getItem('accessToken')
@@ -212,11 +213,7 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-const uploadLink = authLink.concat(createUploadLink({
-  uri: `http://${require('ip').address()}:455/graphql`
-}))
-
-const httpLink = uploadLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
+const httpLink = authLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
   .concat(createHttpLink({
     uri: `http://${require('ip').address()}:455/graphql`
     // fetch

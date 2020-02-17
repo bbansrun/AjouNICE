@@ -15,7 +15,7 @@ import {
   BoardEditor,
   AuthTemplate,
   Login,
-  Signup,
+  SignUp,
   Recovery,
   Modifier,
   AdminDashboard,
@@ -25,7 +25,7 @@ import {
   AdminGourmet,
   AdminReviews,
   AdminPopup,
-  AdminPerimssion,
+  AdminPermission,
   AdminRestriction,
   ScheduleHome,
   TimetableHome,
@@ -156,7 +156,7 @@ export default new Router({
         },
         {
           path: 'signup',
-          component: Signup
+          component: SignUp
         },
         {
           path: 'recovery',
@@ -340,7 +340,7 @@ export default new Router({
         },
         {
           path: 'permissions',
-          component: AdminPerimssion
+          component: AdminPermission
         },
         {
           path: 'popups',

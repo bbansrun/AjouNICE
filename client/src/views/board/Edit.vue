@@ -90,17 +90,24 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import pathParser from 'path-parse'
-import CKEditor from '@ckeditor/ckeditor5-vue'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
+import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
+import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
+import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
+import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
+import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption'
+import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
+import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
+import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload'
 import { FileUpload, Navigation, Footer } from '@/components'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
 import { writePost, editPost } from '@/assets/graphql/mutations'
 
-Vue.use(CKEditor)
 export default {
   components: {
     Navigation,
@@ -123,8 +130,37 @@ export default {
       sub_category_idx: null,
       editor: ClassicEditor,
       editorConfig: {
-        toolbar: [],
-        language: 'ko'
+        language: 'ko',
+        plugins: [
+          EssentialsPlugin,
+          BoldPlugin,
+          ItalicPlugin,
+          LinkPlugin,
+          ParagraphPlugin,
+          ImagePlugin,
+          ImageCaption,
+          ImageToolbar,
+          ImageStyle,
+          ImageUpload
+        ],
+        toolbar: {
+          items: [
+            'bold',
+            'italic',
+            'link',
+            'undo',
+            'redo',
+            'imageUpload'
+          ]
+        },
+        image: {
+          toolbar: [
+            'imageStyle:full',
+            'imageStyle:side',
+            '|',
+            'imageTextAlternative'
+          ]
+        }
       },
       mode: {
         new: false,
@@ -136,33 +172,7 @@ export default {
         editorData: '<p></p>',
         submitButton: ''
       },
-      files: [],
-      accept: 'image/png,image/gif,image/jpeg,image/webp',
-      extensions: 'gif,jpg,jpeg,png,webp',
-      minSize: 1024,
-      size: 1024 * 1024 * 10,
-      multiple: true,
-      directory: false,
-      drop: true,
-      dropDirectory: true,
-      addIndex: false,
-      thread: 3,
-      name: 'file',
-      postAction: '/upload/post',
-      putAction: '/upload/put',
-      autoCompress: 1024 * 1024,
-      uploadAuto: false,
-      isOption: false,
-      addData: {
-        show: false,
-        name: '',
-        type: '',
-        content: ''
-      },
-      editFile: {
-        show: false,
-        name: ''
-      }
+      files: []
     }
   },
   computed: {

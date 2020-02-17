@@ -9,7 +9,9 @@ module.exports = {
     proxy: {
       '/api*': {
         target: `http://${require('ip').address()}:5000/`
-        // target: `http://${require('ip').address()}:5000/`
+      },
+      '/playground*': {
+        target: `http://${require('ip').address()}:455/`
       }
     }
   },
@@ -18,28 +20,31 @@ module.exports = {
   ],
   configureWebpack: {
     plugins: [
-      // CKEditor needs its own plugin to be built using webpack.
       new CKEditorWebpackPlugin({
-        // See https://ckeditor.com/docs/ckeditor5/latest/features/ui-language.html
         language: 'ko'
       })
     ]
   },
   runtimeCompiler: true,
   chainWebpack: config => {
-    // GraphQL Loader
-    config.module
-      .rule('graphql')
-      .test(/\.graphql$/)
-      .use('graphql-tag/loader')
-      .loader('graphql-tag/loader')
-      .end()
-    // CKE Loader
+    // SVG Loader
     config.module
       .rule('cke-svg')
       .test(/ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/)
       .use('raw-loader')
       .loader('raw-loader')
+      .end()
+
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear()
+    svgRule.exclude.add(path.join(__dirname, '..', 'node_modules', '@ckeditor'))
+    svgRule
+      .use('babel-loader')
+      .loader('babel-loader')
+      .end()
+      .use('vue-svg-loader')
+      .loader('vue-svg-loader')
+      .end()
 
     config.module
       .rule('cke-css')
@@ -55,15 +60,12 @@ module.exports = {
         })
       })
 
-    // SVG Loader
-    const svgRule = config.module.rule('svg')
-    svgRule.uses.clear()
-    svgRule.exclude.add(path.join(__dirname, 'node_modules', '@ckeditor'))
-    svgRule
-      .use('babel-loader')
-      .loader('babel-loader')
+    // GraphQL Loader
+    config.module
+      .rule('graphql')
+      .test(/\.graphql$/)
+      .use('graphql-tag/loader')
+      .loader('graphql-tag/loader')
       .end()
-      .use('vue-svg-loader')
-      .loader('vue-svg-loader')
   }
 }
