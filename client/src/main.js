@@ -3,9 +3,9 @@ import App from './App.vue'
 import axios from 'axios'
 import router from './router'
 import store from './store'
-
 import './filters'
 
+// Vendors
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faSignOutAlt,
@@ -35,58 +35,23 @@ import {
   faCheck
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
+import VueApollo from 'vue-apollo'
 import VueCarousel from '@chenfengyuan/vue-carousel'
 import VueFeather from 'vue-feather'
 import VueFlashMessage from 'vue-flash-message'
+import Buefy from 'buefy'
+import vSelect from 'vue-select'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 
-import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 import { ApolloClient } from 'apollo-client'
+import { WebSocketLink } from 'apollo-link-ws'
 import { ApolloLink, split } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
-import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { createUploadLink } from 'apollo-upload-client'
-import VueApollo from 'vue-apollo'
-
-import Buefy from 'buefy'
-
-import vSelect from 'vue-select'
-Vue.use(Buefy, {
-  defaultIconComponent: 'font-awesome-icon',
-  defaultIconPack: 'fas'
-})
-Vue.component('v-select', vSelect)
-
-Vue.use(VueApollo)
-Vue.use(VueCarousel)
-Vue.use(VueFeather)
-Vue.use(VueSweetalert2, {
-  confirmButtonColor: '#00A8CC',
-  cancelButtonColor: '#FF2E63',
-  confirmButtonText: '확인',
-  cancelButtonText: '취소'
-})
-Vue.use(VueFlashMessage, {
-  createShortcuts: true,
-  messageOptions: {
-    timeout: 1000,
-    important: true,
-    autoEmit: true,
-    pauseOnInteract: true
-  }
-})
-
-Vue.prototype.$Axios = axios
-const token = localStorage.getItem('accessToken')
-if (token) {
-  Vue.prototype.$Axios.defaults.headers.common.Authorization = `Bearer ${token}`
-} else {
-  Vue.prototype.$Axios.defaults.headers.common.Authorization = undefined
-}
+import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 
 library.add(faSignOutAlt)
 library.add(faUser)
@@ -114,6 +79,38 @@ library.add(faUserPlus)
 library.add(faInfoCircle)
 library.add(faCheck)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('v-select', vSelect)
+Vue.use(Buefy, {
+  defaultIconComponent: 'font-awesome-icon',
+  defaultIconPack: 'fas'
+})
+Vue.use(VueApollo)
+Vue.use(VueCarousel)
+Vue.use(VueFeather)
+Vue.use(VueSweetalert2, {
+  confirmButtonColor: '#00A8CC',
+  cancelButtonColor: '#FF2E63',
+  confirmButtonText: '확인',
+  cancelButtonText: '취소',
+  width: '90vw'
+})
+Vue.use(VueFlashMessage, {
+  createShortcuts: true,
+  messageOptions: {
+    timeout: 1000,
+    important: true,
+    autoEmit: true,
+    pauseOnInteract: true
+  }
+})
+
+Vue.prototype.$Axios = axios
+const token = localStorage.getItem('accessToken')
+if (token) {
+  Vue.prototype.$Axios.defaults.headers.common.Authorization = `Bearer ${token}`
+} else {
+  Vue.prototype.$Axios.defaults.headers.common.Authorization = undefined
+}
 
 const shouldEncode = (url, options) => {
   // if (process.env.NODE_ENV === 'development') return false
