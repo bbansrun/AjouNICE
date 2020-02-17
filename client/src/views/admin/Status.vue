@@ -11,7 +11,7 @@
             <span>{{ userCnt }}</span>
           </p>
           <p class="subtitle">
-            <small>{{ new Date() | moment('YYYY-MM-DD HH:mm') }} 기준</small>
+            <small>{{ new Date() | formatDateTime }} 기준</small>
           </p>
         </div>
         <div class="card-footer" />
@@ -23,7 +23,7 @@
             <span>{{ postCnt }}</span>
           </p>
           <p class="subtitle">
-            <small>{{ new Date() | moment('YYYY-MM-DD HH:mm') }} 기준</small>
+            <small>{{ new Date() | formatDateTime }} 기준</small>
           </p>
         </div>
         <div class="card-footer" />

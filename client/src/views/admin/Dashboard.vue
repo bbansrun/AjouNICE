@@ -31,14 +31,14 @@ export default {
           link: '/gate/manager/boards',
           icon: 'sticky-note',
           children: [
-            { id: uuid(), label: '일반 게시판', link: '#', icon: 'sticky-note' },
-            { id: uuid(), label: '맛집 게시판', link: '#', icon: 'sticky-note' },
-            { id: uuid(), label: '강의평가', link: '#', icon: 'sticky-note' }
+            { id: uuid(), label: '일반 게시판', link: '/gate/manager/boards', icon: 'sticky-note' },
+            { id: uuid(), label: '맛집 게시판', link: '/gate/manager/boards/gourmet', icon: 'sticky-note' },
+            { id: uuid(), label: '강의평가', link: '/gate/manager/boards/reivews', icon: 'sticky-note' }
           ]
         },
-        { id: uuid(), label: '권한 관리', link: '#', icon: 'sticky-note' },
-        { id: uuid(), label: '차단 관리', link: '#', icon: 'sticky-note' },
-        { id: uuid(), label: '팝업 관리', link: '#', icon: 'sticky-note' }
+        { id: uuid(), label: '권한 관리', link: '/gate/manager/permissions', icon: 'users-cog' },
+        { id: uuid(), label: '차단 관리', link: '/gate/manager/restrictions', icon: 'times' },
+        { id: uuid(), label: '팝업 관리', link: '/gate/manager/popups', icon: 'sticky-note' }
       ]
     }
   }

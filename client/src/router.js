@@ -2,52 +2,51 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store.js'
 
-import Home from '@/views/base/Home.vue'
-import Sitemap from '@/views/base/Sitemap.vue'
-import About from '@/views/base/About.vue'
-import ErrorPage from '@/views/base/ErrorPage.vue'
-import Policy from '@/views/base/Policy.vue'
-import Contact from '@/views/base/Contact.vue'
+import {
+  Home,
+  Sitemap,
+  About,
+  ErrorPage,
+  Policy,
+  Contact,
+  Board,
+  BoardSearch,
+  BoardView,
+  BoardEditor,
+  AuthTemplate,
+  Login,
+  Signup,
+  Recovery,
+  Modifier,
+  AdminDashboard,
+  AdminStatus,
+  AdminUsers,
+  AdminBoards,
+  AdminGourmet,
+  AdminReviews,
+  AdminPopup,
+  AdminPerimssion,
+  AdminRestriction,
+  ScheduleHome,
+  TimetableHome,
+  RealtyHome,
+  RestaurantHome,
+  GourmetHome,
+  GourmetList,
+  GourmetSearch,
+  GourmetView,
+  ReviewHome,
+  ReviewView,
+  ReviewEditor
+} from '@/views'
+
 import Invitation from '@/views/base/Invitation.vue'
-
-import AuthTemplate from '@/views/auth/Template.vue'
 import AdminLogin from '@/views/auth/AdminLogin.vue'
-import Login from '@/views/auth/Login.vue'
-import Recovery from '@/views/auth/Recovery.vue'
-import Modifier from '@/views/auth/ModifyAccount.vue'
-import Signup from '@/views/auth/SignUp.vue'
 import Authorize from '@/views/auth/Authorize.vue'
-
-import Board from '@/views/board/Board.vue'
-import BoardSearch from '@/views/board/Search.vue'
-import PostView from '@/views/board/View.vue'
-import Edit from '@/views/board/Edit.vue'
-
-import Dashboard from '@/views/admin/Dashboard.vue'
-import AdminStatus from '@/views/admin/Status.vue'
-import AdminUsers from '@/views/admin/Users.vue'
-import AdminBoards from '@/views/admin/Boards.vue'
-
 import Profile from '@/views/user/Profile.vue'
 import LectureReviews from '@/views/user/LectureReviews.vue'
-
 import BusStation from '@/views/place/bus/BusStation.vue'
-import Gourmet from '@/views/place/gourmet/Home.vue'
-import GourmetList from '@/views/place/gourmet/List.vue'
-
-import LectureHome from '@/views/function/lecture/Home.vue'
-import LectureReview from '@/views/function/lecture/Review.vue'
-import LectureEvaluation from '@/views/function/lecture/Evaluation.vue'
-
-import ScheduleHome from '@/views/function/schedule/Home.vue'
-
-import TimetableHome from '@/views/function/timetable/Home.vue'
-
-import RealtyHome from '@/views/place/realty/Home.vue'
-
 import LibraryHome from '@/views/place/library/Home.vue'
-
-import RestaurantHome from '@/views/place/restaurant/Home.vue'
 
 Vue.use(Router)
 
@@ -185,17 +184,17 @@ export default new Router({
     },
     {
       path: '/lectures',
-      component: LectureHome,
+      component: ReviewHome,
       beforeEnter: requireAuth
     },
     {
       path: '/lectures/evaluate',
-      component: LectureEvaluation,
+      component: ReviewEditor,
       beforeEnter: requireAuth
     },
     {
       path: '/lectures/:id/review',
-      component: LectureReview,
+      component: ReviewView,
       beforeEnter: requireAuth
     },
     {
@@ -226,17 +225,17 @@ export default new Router({
     },
     {
       path: '/board/new',
-      component: Edit,
+      component: BoardEditor,
       beforeEnter: requireAuth
     },
     {
       path: '/board/:post_id/view',
-      component: PostView,
+      component: BoardView,
       beforeEnter: requireAuth
     },
     {
       path: '/board/:post_id/edit',
-      component: Edit,
+      component: BoardEditor,
       beforeEnter: requireAuth
     },
     {
@@ -246,7 +245,7 @@ export default new Router({
     },
     {
       path: '/board/:category/new',
-      component: Edit,
+      component: BoardEditor,
       beforeEnter: requireAuth
     },
     {
@@ -256,12 +255,12 @@ export default new Router({
     },
     {
       path: '/board/:category/:name/new',
-      component: Edit,
+      component: BoardEditor,
       beforeEnter: requireAuth
     },
     {
       path: '/board/:category/:name/new',
-      component: Edit,
+      component: BoardEditor,
       beforeEnter: requireAuth
     },
     {
@@ -288,7 +287,7 @@ export default new Router({
     },
     {
       path: '/place/gourmet',
-      component: Gourmet,
+      component: GourmetHome,
       beforeEnter: requireAuth
     },
     {
@@ -297,12 +296,22 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
+      path: '/place/gourmet/:post_id/view',
+      component: GourmetView,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/place/gourmet/search',
+      component: GourmetSearch,
+      beforeEnter: requireAuth
+    },
+    {
       path: '/gate/manager/auth/login',
       component: AdminLogin
     },
     {
       path: '/gate/manager',
-      component: Dashboard,
+      component: AdminDashboard,
       beforeEnter: requireAdminAuth,
       children: [
         {
@@ -316,6 +325,26 @@ export default new Router({
         {
           path: 'boards',
           component: AdminBoards
+        },
+        {
+          path: 'boards/gourmet',
+          component: AdminGourmet
+        },
+        {
+          path: 'boards/reviews',
+          component: AdminReviews
+        },
+        {
+          path: 'restrictions',
+          component: AdminRestriction
+        },
+        {
+          path: 'permissions',
+          component: AdminPerimssion
+        },
+        {
+          path: 'popups',
+          component: AdminPopup
         }
       ]
     },

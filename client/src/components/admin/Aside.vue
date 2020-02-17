@@ -25,8 +25,11 @@
               <li
                 v-for="child in item.children"
                 :key="child.id"
+                class="has-text-right"
               >
-                <small>{{ child.label }}</small>
+                <router-link :to="child.link">
+                  <small>{{ child.label }}</small>
+                </router-link>
               </li>
             </ul>
           </li>
@@ -98,6 +101,16 @@ ul.menus {
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
+    }
+    > ul {
+      margin: {
+        left: 1rem;
+      }
+      > li {
+        padding: {
+          right: 1rem;
+        }
+      }
     }
     &.active {
       a {
