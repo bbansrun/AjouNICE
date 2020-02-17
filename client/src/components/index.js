@@ -18,7 +18,7 @@ import PostList from './board/PostList.vue'
 import Replies from './board/Replies.vue'
 
 // Reviews
-import MyReviews from './function/reviews/MyLectureReviews.vue'
+import MyReviews from './function/reviews/MyReviews.vue'
 
 // User
 import MyPosts from './user/MyPosts.vue'
