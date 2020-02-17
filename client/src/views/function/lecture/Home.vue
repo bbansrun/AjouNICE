@@ -86,14 +86,14 @@
 import urljoin from 'url-join'
 import { ModelSelect } from 'vue-search-select'
 import 'vue-search-select/dist/VueSearchSelect.css'
-
-import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
-import Footer from '@/components/base/Footer.vue'
+import { Navigation, Landing, Footer } from '@/components'
 
 export default {
   components: {
-    Navigation, Landing, Footer, ModelSelect
+    Navigation,
+    Landing,
+    Footer,
+    ModelSelect
   },
   data () {
     return {

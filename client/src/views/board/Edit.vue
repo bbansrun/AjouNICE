@@ -96,16 +96,16 @@ import urljoin from 'url-join'
 import pathParser from 'path-parse'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import FileUpload from '@/components/board/FileUpload.vue'
-import Navigation from '@/components/base/Navigation.vue'
-import Footer from '@/components/base/Footer.vue'
+import { FileUpload, Navigation, Footer } from '@/components'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
 import { writePost, editPost } from '@/assets/graphql/mutations'
 
 Vue.use(CKEditor)
 export default {
   components: {
-    Navigation, Footer, FileUpload
+    Navigation,
+    Footer,
+    FileUpload
   },
   data () {
     return {

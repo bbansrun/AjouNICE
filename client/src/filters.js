@@ -10,6 +10,9 @@ const filters = {
   },
   numberWithCommas (x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  },
+  truncate (value, length) {
+    return value.length > length ? value.subsr(0, length) + '...' : value
   }
 }
 

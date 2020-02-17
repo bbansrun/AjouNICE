@@ -17,16 +17,16 @@
 
 <script>
 import gql from 'graphql-tag'
-import Landing from '@/components/base/Landing.vue'
-import Navigation from '@/components/base/Navigation.vue'
-import PostList from '@/components/board/PostList.vue'
-import BoardNav from '@/components/board/BoardNav.vue'
-import Footer from '@/components/base/Footer.vue'
+import { Landing, Navigation, PostList, BoardNav, Footer } from '@/components'
 import { PostsByKeyword } from '@/assets/graphql/queries'
 export default {
   name: 'Board',
   components: {
-    Landing, Navigation, PostList, BoardNav, Footer
+    Landing,
+    Navigation,
+    PostList,
+    BoardNav,
+    Footer
   },
   data () {
     return {

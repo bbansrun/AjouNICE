@@ -1,0 +1,20 @@
+.flash {
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    z-index: 100;
+    > .flash__wrapper {
+      > .flash__message {
+        -webkit-animation: fadeOut 1s;
+        animation: fadeOut 1s;
+        animation-fill-mode: forwards;
+        animation-delay: 2s;
+        transition: .2s all cubic-bezier(.55, .055, .675, .19);
+        > .flash__message-content {
+          font: {
+            weight: bold;
+          }
+        }
+      }
+    }
+  }

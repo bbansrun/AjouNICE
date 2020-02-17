@@ -29,10 +29,7 @@
 </template>
 
 <script>
-import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
-import Footer from '@/components/base/Footer.vue'
-import MyReviews from '@/components/function/reviews/MyReviews.vue'
+import { Navigation, Landing, Footer, MyReviews } from '@/components'
 export default {
   components: {
     Navigation,

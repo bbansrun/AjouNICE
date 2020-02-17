@@ -42,6 +42,8 @@ import VueFlashMessage from 'vue-flash-message'
 import Buefy from 'buefy'
 import vSelect from 'vue-select'
 import VueSweetalert2 from 'vue-sweetalert2'
+
+import 'vue-flash-message/dist/vue-flash-message.min.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
 
 import { ApolloClient } from 'apollo-client'

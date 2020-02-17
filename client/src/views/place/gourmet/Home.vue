@@ -15,11 +15,7 @@
 <script>
 import gql from 'graphql-tag'
 import { GourmetCategories } from '@/assets/graphql/queries'
-
-import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
-import IconNav from '@/components/base/GourmetIconNav.vue'
-import Footer from '@/components/base/Footer.vue'
+import { Navigation, Landing, IconNav, Footer } from '@/components'
 export default {
   components: {
     Navigation,

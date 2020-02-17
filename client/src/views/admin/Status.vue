@@ -35,7 +35,7 @@
             <span>{{ 0 }}</span>
           </p>
           <p class="subtitle">
-            <small>{{ new Date() | moment('YYYY-MM-DD HH:mm') }} 기준</small>
+            <small>{{ new Date() | formatDateTime }} 기준</small>
           </p>
         </div>
         <div class="card-footer" />
@@ -45,12 +45,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import moment from 'vue-moment'
 import gql from 'graphql-tag'
 import { AdminStatus } from '@/assets/graphql/queries'
-
-Vue.use(moment)
 export default {
   data () {
     return {

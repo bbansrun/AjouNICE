@@ -1,4 +1,7 @@
 .swal2-container {
+    &.swal2-center {
+        background: rgba(0, 0, 0, .65);
+    }
     > .swal2-show {
         max-height: 90vh;
         overflow: hidden;

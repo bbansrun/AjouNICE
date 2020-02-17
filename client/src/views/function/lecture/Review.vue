@@ -18,12 +18,11 @@
 </template>
 
 <script>
-import Navigation from '@/components/base/Navigation.vue'
-import Footer from '@/components/base/Footer.vue'
-
+import { Navigation, Footer } from '@/components'
 export default {
   components: {
-    Navigation, Footer
+    Navigation,
+    Footer
   },
   data () {
     return {

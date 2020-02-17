@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <Navigation :scroll-base="scrollBase" />
-    <div class="container">
+    <main>
       <carousel
         ref="scrollBase"
         :data="carouselItems"
@@ -34,18 +34,14 @@
         show-thumbnail
         :items="posts"
       />
-    </div>
+    </main>
     <Footer />
   </div>
 </template>
 
 <script>
 import gql from 'graphql-tag'
-import Navigation from '@/components/base/Navigation.vue'
-import Welcome from '@/components/base/Welcome.vue'
-import IconNav from '@/components/base/IconNav.vue'
-import PostList from '@/components/board/PostList.vue'
-import Footer from '@/components/base/Footer.vue'
+import { Navigation, Welcome, IconNav, Footer, PostList } from '@/components'
 import { UserHome, Notice } from '@/assets/graphql/queries'
 
 export default {

@@ -129,11 +129,8 @@
 <script>
 import urljoin from 'url-join'
 import gql from 'graphql-tag'
-import Navigation from '@/components/base/Navigation.vue'
-import MyPosts from '@/components/user/MyPosts.vue'
-import MyReviews from '@/components/user/MyLectureReviews.vue'
-import Footer from '@/components/base/Footer.vue'
 import { User, Notice } from '@/assets/graphql/queries'
+import { Navigation, MyPosts, MyReviews, Footer } from '@/components'
 export default {
   components: {
     Navigation,

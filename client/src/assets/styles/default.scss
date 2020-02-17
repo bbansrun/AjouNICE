@@ -3,6 +3,7 @@
 
 @import "~@/assets/styles/components/Swal2";
 @import "~@/assets/styles/components/BuefyCustom";
+@import "~@/assets/styles/components/FlashCustom";
 @import "~@/assets/styles/components/Button";
 @import "~@/assets/styles/components/Link";
 @import "~@/assets/styles/components/Form";
@@ -19,10 +20,6 @@ $auth: auth;
   background: #667eea;
   color: #fff;
 }
-
-// a:hover {
-//   color: #fff !important;
-// }
 
 .content-wrapper {
   padding: .8rem;

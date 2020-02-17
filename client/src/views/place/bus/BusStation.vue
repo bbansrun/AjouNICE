@@ -100,9 +100,7 @@
 import Vue from 'vue'
 import { ModelSelect } from 'vue-search-select'
 import VueDaumMap from 'vue-daum-map'
-import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
-import Footer from '@/components/base/Footer.vue'
+import { Navigation, Landing, Footer } from '@/components'
 import 'vue-search-select/dist/VueSearchSelect.css'
 
 Vue.use(VueDaumMap)

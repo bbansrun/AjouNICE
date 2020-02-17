@@ -87,13 +87,13 @@
 
 <script>
 import gql from 'graphql-tag'
-import Navigation from '@/components/base/Navigation.vue'
-import Landing from '@/components/base/Landing.vue'
-import Footer from '@/components/base/Footer.vue'
+import { Navigation, Landing, Footer } from '@/components'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 export default {
   components: {
-    Navigation, Landing, Footer
+    Navigation,
+    Landing,
+    Footer
   },
   data () {
     return {

@@ -18,12 +18,9 @@
 </template>
 
 <script>
-import Navigation from '@/components/base/Navigation.vue'
-import Footer from '@/components/base/Footer.vue'
-
 import gql from 'graphql-tag'
 import { Schedule } from '@/assets/graphql/queries'
-
+import { Navigation, Footer } from '@/components'
 export default {
   components: {
     Navigation,

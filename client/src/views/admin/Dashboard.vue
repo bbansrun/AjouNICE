@@ -14,12 +14,11 @@
 
 <script>
 import uuid from 'uuid/v4'
-import Aside from '@/components/admin/Aside.vue'
-import Footer from '@/components/admin/Footer.vue'
-
+import { Aside, AdminFooter as Footer } from '@/components'
 export default {
   components: {
-    Aside, Footer
+    Aside,
+    Footer
   },
   data () {
     return {
