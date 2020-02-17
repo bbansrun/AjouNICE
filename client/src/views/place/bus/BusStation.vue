@@ -100,6 +100,7 @@
 import Vue from 'vue'
 import { ModelSelect } from 'vue-search-select'
 import VueDaumMap from 'vue-daum-map'
+import config from '@/assets/config/kakao.json'
 import { Navigation, Landing, Footer } from '@/components'
 import 'vue-search-select/dist/VueSearchSelect.css'
 
@@ -177,7 +178,7 @@ export default {
         height: '500px',
         margin: '1rem 0'
       },
-      appKey: '57ca092a89b95b1726db4a29813a43c5',
+      appKey: config.kakao.api.rest,
       center: { lat: 37.2791647, lng: 127.0431981 },
       level: 3,
       zoom: false,
@@ -348,7 +349,7 @@ export default {
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
     const kakaoMap = document.createElement('script')
-    kakaoMap.setAttribute('src', '//dapi.kakao.com/v2/maps/sdk.js?appkey=57ca092a89b95b1726db4a29813a43c5&autoload=false')
+    kakaoMap.setAttribute('src', `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.kakao.api.rest}&autoload=false`)
     document.body.appendChild(kakaoMap)
   },
   methods: {
