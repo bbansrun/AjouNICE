@@ -31,6 +31,20 @@
             <div class="controls">
               <div class="meta-bottom has-text-right">
                 <small>
+                  <span class="views">
+                    <font-awesome-icon icon="eye" />&nbsp;
+                    <span>{{ post.view_cnt }}</span>
+                  </span>
+                </small>&nbsp;
+                <small>
+                  <span class="comments">
+                    <font-awesome-icon icon="comments" />&nbsp;
+                    <span>{{ post.comments.length }}</span>
+                  </span>
+                </small>
+              </div>
+              <div class="meta-bottom has-text-right">
+                <small>
                   <span class="permalink">
                     <a :href="permalink">{{ permalink }}</a>&nbsp;
                     <b-tooltip
@@ -82,12 +96,17 @@
                 </b-button>
                 <b-button
                   size="is-small"
-                  type="is-danger"
+                  :type="{ 'is-danger': !onReport, 'is-warning': onReport }"
+                  @click="toggleReport"
                 >
                   <font-awesome-icon icon="exclamation-triangle" />&nbsp;
-                  <span>신고</span>
+                  <span>{{ !onReport ? '신고' : '취소' }}</span>
                 </b-button>
               </div>
+              <Report
+                v-show="onReport"
+                :id="parseInt($route.params.post_id)"
+              />
             </div>
             <hr>
             <Replies
@@ -105,22 +124,17 @@
 <script>
 import Vue from 'vue'
 import urljoin from 'url-join'
-
 import VueClipBoard from 'vue-clipboard2'
-
 import gql from 'graphql-tag'
 import { Post } from '@/assets/graphql/queries'
 import { removePost, IncrementViewCount } from '@/assets/graphql/mutations'
-
-import Navigation from '@/components/base/Navigation.vue'
-import Replies from '@/components/board/Replies.vue'
-import Footer from '@/components/base/Footer.vue'
-
+import { Navigation, Report, Replies, Footer } from '@/components'
 VueClipBoard.config.autoSetContainer = true
 Vue.use(VueClipBoard)
 export default {
   components: {
     Navigation,
+    Report,
     Replies,
     Footer
   },
@@ -128,6 +142,7 @@ export default {
     return {
       meta: {},
       user_idx: null,
+      onReport: false,
       post: {
         title: '',
         body: '',
@@ -189,6 +204,13 @@ export default {
     document.body.classList.remove('loading')
   },
   methods: {
+    toggleReport () {
+      if (this.onReport) {
+        this.onReport = false
+      } else {
+        this.onReport = true
+      }
+    },
     onCopy (e) {
       this.$swal('복사!', '복사되었습니다.', 'success')
     },

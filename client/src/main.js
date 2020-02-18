@@ -32,7 +32,8 @@ import {
   faEnvelopeOpenText,
   faUserPlus,
   faInfoCircle,
-  faCheck
+  faCheck,
+  faComments
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueApollo from 'vue-apollo'
@@ -81,6 +82,7 @@ library.add(faEnvelopeOpenText)
 library.add(faUserPlus)
 library.add(faInfoCircle)
 library.add(faCheck)
+library.add(faComments)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('v-select', vSelect)
 Vue.use(Buefy, {
@@ -95,7 +97,8 @@ Vue.use(VueSweetalert2, {
   cancelButtonColor: '#FF2E63',
   confirmButtonText: '확인',
   cancelButtonText: '취소',
-  width: '90vw'
+  width: '90vw',
+  allowOutsideClick: false
 })
 Vue.use(VueFlashMessage, {
   createShortcuts: true,

@@ -11,10 +11,6 @@
       @submit.prevent
     >
       <div class="input-form input-form-reply">
-        <font-awesome-icon
-          v-show="reply.mode.edit"
-          icon="pen"
-        />
         <input
           id="reply"
           v-model="reply.content"
@@ -33,11 +29,11 @@
         </b-switch>
         <b-button
           size="is-small"
-          type="is-primary"
+          :type="{ 'is-primary': !reply.mode.edit, 'is-warning': reply.mode.edit }"
           @click="makeReply"
         >
           <font-awesome-icon icon="pen" />&nbsp;
-          <span>작성</span>
+          <span>{{ reply.mode.edit ? '수정' : '작성' }}</span>
         </b-button>
       </div>
     </form>
@@ -52,33 +48,39 @@
       <div
         v-for="reply in content"
         :key="reply.cmt_idx"
-        class="card reply"
+        class="reply"
+        :class="{ 'counterpart': !checkMyReply(reply.commenter.user_idx), 'my': checkMyReply(reply.commenter.user_idx) }"
       >
         <div class="meta">
-          <header>{{ reply.nick_nm }}</header>
+          <header>{{ reply.commenter.nick_nm }}</header>
           <small class="timestamp">{{ reply.upt_dt | formatDateTime }}</small>
         </div>
-        <p class="content">
-          {{ reply.text }}
-        </p>
-        <div class="controls">
-          <button class="reply">
-            <font-awesome-icon icon="reply" />
-          </button>
-          <button
-            v-show="$store.state.user.idx === reply.user_idx"
-            class="edit"
-            @click="toggleEditReply(reply.cmt_idx, reply.text)"
-          >
-            <font-awesome-icon icon="pen" />
-          </button>
-          <button
-            v-show="$store.state.user.idx === reply.user_idx"
-            class="remove"
-            @click="removeReply(reply.cmt_idx)"
-          >
-            <font-awesome-icon icon="trash" />
-          </button>
+        <div class="reply-wrapper">
+          <p class="content">
+            {{ reply.text }}
+          </p>
+          <div class="controls">
+            <button class="reply">
+              <font-awesome-icon icon="reply" />&nbsp;
+              <span>대댓글</span>
+            </button>
+            <button
+              v-show="checkMyReply(reply.commenter.user_idx)"
+              class="edit"
+              @click="toggleEditReply(reply.cmt_idx, reply.text)"
+            >
+              <font-awesome-icon icon="pen" />&nbsp;
+              <span>수정</span>
+            </button>
+            <button
+              v-show="checkMyReply(reply.commenter.user_idx)"
+              class="remove"
+              @click="removeReply(reply.cmt_idx)"
+            >
+              <font-awesome-icon icon="trash" />&nbsp;
+              <span>삭제</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -86,13 +88,9 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import gql from 'graphql-tag'
-import { Switch } from 'buefy'
 import { replyWritten, replyRemoved } from '@/assets/graphql/subscriptions'
 import { writeReply, removeReply } from '@/assets/graphql/mutations'
-
-Vue.use(Switch)
 export default {
   props: {
     post: {
@@ -150,6 +148,9 @@ export default {
     })
   },
   methods: {
+    checkMyReply (id) {
+      return parseInt(this.$store.state.user.idx) === parseInt(id)
+    },
     makeReply () {
       if (this.reply.content && this.reply.content.length > 0) {
         this.$apollo.mutate({
@@ -215,62 +216,101 @@ label.switch {
   padding: 0 .5rem;
 }
 
-article {
-  padding: unset !important;
-  > header {
-    font: {
-      size: 1rem;
+div.reply {
+  position: relative;
+  margin: {
+    bottom: 1rem;
+  }
+  background: #363636;
+  color: #fff;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+  &.counterpart {
+    margin: {
+      left: 1rem;
+    }
+    &::before {
+      content: "";
+      width: 0px;
+      height: 0px;
+      position: absolute;
+      border-left: 10px solid transparent;
+      border-right: 10px solid #363636;
+      border-top: 10px solid #363636;
+      border-bottom: 10px solid transparent;
+      left: -19px;
+      top: 6px;
     }
   }
-}
-
-div.reply {
-  display: grid;
-  grid-template-columns: 1fr 7fr 2fr;
-  margin-bottom: 1rem;
+  &.my {
+    margin: {
+      right: 1rem;
+    }
+    &::before {
+      content: "";
+      width: 0px;
+      height: 0px;
+      position: absolute;
+      border-left: 10px solid #363636;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #363636;
+      border-bottom: 10px solid transparent;
+      right: -19px;
+      top: 6px;
+    }
+  }
   > .meta {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     padding: .4rem;
     > header {
       font: {
-        size: .8rem;
+        size: .6rem;
       }
     }
     > .timestamp {
+      font: {
+        size: .5rem;
+      }
       white-space: nowrap;
     }
   }
-  > .content {
-    display: flex;
-    align-items: center;
-    margin-bottom: unset;
-    padding: .4rem;
-    font: {
-      size: .8rem;
-    }
-  }
-  > .controls {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    & button {
+  > .reply-wrapper {
+    > .content {
+      margin-bottom: unset;
+      padding: .4rem;
       font: {
-        size: .8rem;
+        size: 1rem;
+        weight: 500;
       }
-      border: none;
-      outline: none;
-      width: 100%;
-      height: 100%;
-      color: #fff;
-      &.reply {
-        background: blue;
-      }
-      &.edit {
-        background: orange;
-      }
-      &.remove {
-        background: red;
+      min-height: 4rem;
+    }
+    > .controls {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      & button {
+        font: {
+          size: .8rem;
+        }
+        border: none;
+        outline: none;
+        width: 100%;
+        height: 100%;
+        padding: .4rem;
+        color: #fff;
+        &.reply {
+          background: #00A8CC;
+        }
+        &.edit {
+          background: #ffdd57;
+          color: #000;
+        }
+        &.remove {
+          background: #FF2E63;
+        }
       }
     }
   }

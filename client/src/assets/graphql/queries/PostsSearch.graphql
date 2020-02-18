@@ -6,6 +6,9 @@ query PostsSearch($keyword: String!) {
         body
         view_cnt
         reg_dt
+        user {
+            nick_nm
+        }
         comments {
             cmt_idx
             user_idx

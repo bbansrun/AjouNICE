@@ -28,13 +28,13 @@ db.Board.hasMany(db.BoardComment, {
 });
 
 db.BoardComment.belongsTo(db.Board, {
-  as: 'comments',
+  as: 'commented',
   foreignKey: 'board_idx',
   targetKey: 'board_idx',
 });
 
 db.User.hasMany(db.BoardComment, {
-  as: 'commenter',
+  as: 'replies',
   foreignKey: 'user_idx',
   sourceKey: 'user_idx',
 });

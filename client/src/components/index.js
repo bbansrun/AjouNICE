@@ -15,6 +15,7 @@ import Welcome from './base/Welcome.vue'
 import BoardNav from './board/BoardNav.vue'
 import PostList from './board/PostList.vue'
 import Replies from './board/Replies.vue'
+import Report from './board/Report.vue'
 
 // Reviews
 import MyReviews from './function/reviews/MyReviews.vue'
@@ -34,6 +35,7 @@ export {
   Welcome,
   BoardNav,
   PostList,
+  Report,
   Replies,
   MyReviews,
   MyPosts,

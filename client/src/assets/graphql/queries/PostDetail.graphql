@@ -4,6 +4,7 @@ query Post($id: ID!) {
         body
         reg_dt
         upt_dt
+        view_cnt
         category {
             title
             category_nm
@@ -15,7 +16,10 @@ query Post($id: ID!) {
         }
         comments {
             cmt_idx
-            user_idx
+            commenter {
+                user_idx
+                nick_nm
+            }
             text
             reg_dt
             upt_dt
