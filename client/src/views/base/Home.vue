@@ -2,6 +2,7 @@
   <div class="home">
     <Navigation :scroll-base="scrollBase" />
     <main>
+      <Popup />
       <carousel
         ref="scrollBase"
         :data="carouselItems"
@@ -41,17 +42,17 @@
 
 <script>
 import gql from 'graphql-tag'
-import { Navigation, Welcome, IconNav, Footer, PostList } from '@/components'
+import { Navigation, Welcome, IconNav, Footer, PostList, Popup } from '@/components'
 import { UserHome, Notice } from '@/assets/graphql/queries'
 
 export default {
-  name: 'Home',
   components: {
     Navigation,
     Welcome,
     IconNav,
     PostList,
-    Footer
+    Footer,
+    Popup
   },
   data () {
     return {
@@ -151,7 +152,6 @@ export default {
 .icon-nav {
   padding-top: 3rem;
 }
-
 </style>
 
 <style>

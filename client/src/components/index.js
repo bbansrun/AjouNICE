@@ -10,6 +10,7 @@ import Landing from './base/Landing.vue'
 import Loading from './base/Loading.vue'
 import Navigation from './base/Navigation.vue'
 import Welcome from './base/Welcome.vue'
+import Popup from './base/Popup.vue'
 
 // Board
 import BoardNav from './board/BoardNav.vue'
@@ -33,6 +34,7 @@ export {
   Loading,
   Navigation,
   Welcome,
+  Popup,
   BoardNav,
   PostList,
   Report,

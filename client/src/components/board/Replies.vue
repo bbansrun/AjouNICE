@@ -131,12 +131,12 @@ export default {
           }
         }).then(({ data }) => {
           this.reply.content = ''
-          this.flash('댓글을 달았습니다.', 'success')
+          this.flashSuccess('댓글을 달았습니다.')
         }).catch(error => {
           console.error(error)
         })
       } else {
-        this.flash('댓글을 입력해주세요.', 'error')
+        this.flashError('댓글을 입력해주세요.')
       }
     },
     removeReply (id) {
