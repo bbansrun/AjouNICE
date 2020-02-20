@@ -5,6 +5,7 @@ import AdminFooter from './admin/Footer.vue'
 
 // Base
 import Footer from './base/Footer.vue'
+import GourmetIconNav from './base/GourmetIconNav.vue'
 import IconNav from './base/IconNav.vue'
 import Landing from './base/Landing.vue'
 import Loading from './base/Loading.vue'
@@ -29,6 +30,7 @@ export {
   Aside,
   AdminFooter,
   Footer,
+  GourmetIconNav,
   IconNav,
   Landing,
   Loading,

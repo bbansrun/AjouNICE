@@ -85,6 +85,7 @@ type BoardCategory {
     category_idx: ID!
     category_nm: String
     category_type: String
+    category_icon: String
     title: String
     parent: Int
     depth: Int

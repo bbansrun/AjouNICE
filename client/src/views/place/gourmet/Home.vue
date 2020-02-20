@@ -15,7 +15,7 @@
 <script>
 import gql from 'graphql-tag'
 import { GourmetCategories } from '@/assets/graphql/queries'
-import { Navigation, Landing, IconNav, Footer } from '@/components'
+import { Navigation, Landing, GourmetIconNav as IconNav, Footer } from '@/components'
 export default {
   components: {
     Navigation,

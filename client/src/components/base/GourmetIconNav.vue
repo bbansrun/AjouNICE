@@ -8,7 +8,7 @@
       <router-link :to="`/place/gourmet/${icon.title}`">
         <div
           class="icon"
-          :style="{ 'background': `url('http://placehold.it/200x200') center/cover` }"
+          :style="{ 'background': `url('${icon.category_icon}') center/cover` }"
         />
         <p>{{ icon.category_nm }}</p>
       </router-link>
