@@ -37,14 +37,15 @@ import {
   GourmetView,
   ReviewHome,
   ReviewView,
-  ReviewEditor
+  ReviewEditor,
+  UserProfile,
+  UserEdit,
+  UserReviews
 } from '@/views'
 
 import Invitation from '@/views/base/Invitation.vue'
 import AdminLogin from '@/views/auth/AdminLogin.vue'
 import Authorize from '@/views/auth/Authorize.vue'
-import Profile from '@/views/user/Profile.vue'
-import LectureReviews from '@/views/user/LectureReviews.vue'
 import BusStation from '@/views/place/bus/BusStation.vue'
 import LibraryHome from '@/views/place/library/Home.vue'
 
@@ -175,7 +176,7 @@ export default new Router({
     },
     {
       path: '/my/edit',
-      component: Modifier,
+      component: UserEdit,
       beforeEnter: requireAuth
     },
     {
@@ -265,12 +266,12 @@ export default new Router({
     },
     {
       path: '/my',
-      component: Profile,
+      component: UserProfile,
       beforeEnter: requireAuth
     },
     {
       path: '/my/lectures/reviews',
-      component: LectureReviews,
+      component: UserReviews,
       beforeEnter: requireAuth
     },
     {

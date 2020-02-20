@@ -47,6 +47,11 @@ import Home from './base/Home.vue'
 import Policy from './base/Policy.vue'
 import Sitemap from './base/Sitemap.vue'
 
+// User
+import UserProfile from './user/Profile.vue'
+import UserEdit from './user/Edit.vue'
+import UserReviews from './user/LectureReviews.vue'
+
 export {
   About,
   Contact,
@@ -83,5 +88,8 @@ export {
   AdminStatus,
   AdminPopup,
   AdminRestriction,
-  AdminPermission
+  AdminPermission,
+  UserProfile,
+  UserEdit,
+  UserReviews
 }
