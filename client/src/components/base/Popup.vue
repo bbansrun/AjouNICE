@@ -63,7 +63,8 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2000;
-  width: 90vw;
+  min-width: 400px;
+  max-width: 90vw;
   height: auto;
   box-shadow: 0 0 5px rgba(0,0,0,.12);
   > .popup-menu {
@@ -80,6 +81,12 @@ export default {
       > .buttons {
         justify-content: flex-end;
       }
+    }
+  }
+  > article {
+    & img {
+      width: 100%;
+      height: auto;
     }
   }
 }
