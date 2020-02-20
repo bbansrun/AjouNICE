@@ -163,6 +163,7 @@ export default {
         category: {
           title: ''
         },
+        view_cnt: 0,
         comments: []
       }
     }
@@ -200,8 +201,8 @@ export default {
       variables: {
         id: parseInt(this.$route.params.post_id)
       }
-    }).then(({ data: { postViewed } }) => {
-
+    }).then(({ data: { postViewed: { view_cnt } } }) => {
+      this.post.view_cnt = view_cnt
     })
   },
   mounted () {
