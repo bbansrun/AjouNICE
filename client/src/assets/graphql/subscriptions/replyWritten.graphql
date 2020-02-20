@@ -1,9 +1,12 @@
 subscription {
     replyWritten {
         cmt_idx
-        user_idx
         text
         reg_dt
         upt_dt
+        commenter {
+            nick_nm
+            user_idx
+        }
     }
 }

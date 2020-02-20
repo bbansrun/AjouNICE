@@ -25,6 +25,7 @@ db.Board.hasMany(db.BoardComment, {
   sourceKey: 'board_idx',
   onDelete: 'cascade',
   foreignKeyConstraint: false,
+  hooks: true,
 });
 
 db.BoardComment.belongsTo(db.Board, {
@@ -34,7 +35,7 @@ db.BoardComment.belongsTo(db.Board, {
 });
 
 db.User.hasMany(db.BoardComment, {
-  as: 'replies',
+  as: 'comments',
   foreignKey: 'user_idx',
   sourceKey: 'user_idx',
 });

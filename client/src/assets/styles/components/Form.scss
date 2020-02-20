@@ -243,6 +243,9 @@ form {
         }
         & .input-form-controls {
             text-align: right;
+            &.buttons {
+                justify-content: flex-end;
+            }
             > .btn {
                 display: inline-block;
                 font: {

@@ -1,10 +1,8 @@
 <template>
   <section class="replies">
-    <article>
-      <header class="underline underline-inline-block underline-animated">
-        <strong>{{ content.length | numberWithCommas }}개의 댓글이 달렸습니다.</strong>
-      </header>
-    </article>
+    <header class="underline underline-inline-block underline-animated">
+      <strong>{{ content.length | numberWithCommas }}개의 댓글이 달렸습니다.</strong>
+    </header>
     <form
       class="reply edit"
       autocomplete="off"
@@ -48,6 +46,7 @@
       <div
         v-for="reply in content"
         :key="reply.cmt_idx"
+        :data-comment-id="reply.cmt_idx"
         class="reply"
         :class="{ 'counterpart': !checkMyReply(reply.commenter.user_idx), 'my': checkMyReply(reply.commenter.user_idx) }"
       >
@@ -89,7 +88,6 @@
 
 <script>
 import gql from 'graphql-tag'
-import { replyWritten, replyRemoved } from '@/assets/graphql/subscriptions'
 import { writeReply, removeReply } from '@/assets/graphql/mutations'
 export default {
   props: {
@@ -114,45 +112,13 @@ export default {
       }
     }
   },
-  mounted () {
-    const that = this
-    const writtenObserver = this.$apollo.subscribe({
-      query: gql`${replyWritten}`
-    })
-    const removedObserver = this.$apollo.subscribe({
-      query: gql`${replyRemoved}`
-    })
-
-    writtenObserver.subscribe({
-      next ({ data }) {
-        console.log(data.replyWritten)
-        that.flash('댓글을 달았습니다.', 'success')
-        that.content.unshift(data.replyWritten)
-        that.content = ''
-        // document.body.classList.toggle('loading')
-      },
-      error (error) {
-        console.error(error)
-      }
-    })
-
-    removedObserver.subscribe({
-      next ({ data }) {
-        that.flash('댓글을 삭제하였습니다.', 'success')
-        that.content.pop()
-        // document.body.classList.toggle('loading')
-      },
-      error (error) {
-        console.error(error)
-      }
-    })
-  },
   methods: {
     checkMyReply (id) {
       return parseInt(this.$store.state.user.idx) === parseInt(id)
     },
     makeReply () {
       if (this.reply.content && this.reply.content.length > 0) {
+        document.body.classList.add('loading')
         this.$apollo.mutate({
           mutation: gql`${writeReply}`,
           variables: {
@@ -161,10 +127,11 @@ export default {
             nick: this.$store.state.user.nick_nm,
             text: this.reply.content,
             ip: this.$store.state.user.access_loc
+            // anonymous: this.anonymous
           }
         }).then(({ data }) => {
-          // document.body.classList.toggle('loading')
           this.reply.content = ''
+          this.flash('댓글을 달았습니다.', 'success')
         }).catch(error => {
           console.error(error)
         })
@@ -173,24 +140,29 @@ export default {
       }
     },
     removeReply (id) {
-      this.$swal({
+      const self = this
+      self.$swal({
         title: '댓글을 삭제하시겠습니까?',
         text: '삭제한 댓글은 복구할 수 없습니다.',
-        width: '90vw',
-        type: 'warning',
+        type: 'question',
         showCancelButton: true,
         confirmButtonText: '삭제',
-        cancelButtonText: '취소'
-      }).then((result) => {
-        if (result.value) {
-          this.$apollo.mutate({
+        cancelButtonText: '취소',
+        preConfirm () {
+          document.body.classList.add('loading')
+          self.$apollo.mutate({
             mutation: gql`${removeReply}`,
             variables: {
               id: parseInt(id)
             }
           }).then(({ data }) => {
-            // document.body.classList.toggle('loading')
+          }).catch(error => {
+            console.error(error)
           })
+        }
+      }).then((result) => {
+        if (result.value) {
+          self.flash('댓글을 삭제하였습니다.', 'success')
         }
       })
     },

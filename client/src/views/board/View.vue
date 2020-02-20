@@ -48,6 +48,7 @@
                   <span class="permalink">
                     <a :href="permalink">{{ permalink }}</a>&nbsp;
                     <b-tooltip
+                      type="is-info"
                       label="클릭하시면 주소가 복사됩니다."
                       position="is-left"
                       animated
@@ -94,14 +95,21 @@
                   <font-awesome-icon icon="trash" />&nbsp;
                   <span>삭제</span>
                 </b-button>
-                <b-button
-                  size="is-small"
-                  :type="{ 'is-danger': !onReport, 'is-warning': onReport }"
-                  @click="toggleReport"
+                <b-tooltip
+                  type="is-info"
+                  label="허위내용을 포함하거나, 유해한 내용의 게시물 신고가 가능합니다."
+                  position="is-left"
+                  animated
                 >
-                  <font-awesome-icon icon="exclamation-triangle" />&nbsp;
-                  <span>{{ !onReport ? '신고' : '취소' }}</span>
-                </b-button>
+                  <b-button
+                    size="is-small"
+                    :type="{ 'is-danger': !onReport, 'is-warning': onReport }"
+                    @click="toggleReport"
+                  >
+                    <font-awesome-icon icon="exclamation-triangle" />&nbsp;
+                    <span>{{ !onReport ? '신고' : '취소' }}</span>
+                  </b-button>
+                </b-tooltip>
               </div>
               <Report
                 v-show="onReport"
@@ -111,7 +119,7 @@
             <hr>
             <Replies
               :post="parseInt($route.params.post_id)"
-              :content="post.comments"
+              :content.sync="post.comments"
             />
           </div>
         </section>
@@ -122,6 +130,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import Vue from 'vue'
 import urljoin from 'url-join'
 import VueClipBoard from 'vue-clipboard2'
@@ -129,6 +138,7 @@ import gql from 'graphql-tag'
 import { Post } from '@/assets/graphql/queries'
 import { removePost, IncrementViewCount } from '@/assets/graphql/mutations'
 import { Navigation, Report, Replies, Footer } from '@/components'
+import { replyWritten, replyRemoved } from '@/assets/graphql/subscriptions'
 VueClipBoard.config.autoSetContainer = true
 Vue.use(VueClipBoard)
 export default {
@@ -183,7 +193,7 @@ export default {
       }
     }).catch(error => {
       console.error(error)
-      // this.$router.push('/error/404')
+      this.$router.push('/error/500')
     })
     this.$apollo.mutate({
       mutation: gql`${IncrementViewCount}`,
@@ -196,6 +206,37 @@ export default {
   },
   mounted () {
     document.body.classList.remove('loading')
+    const self = this
+    const writtenObserver = this.$apollo.subscribe({
+      query: gql`${replyWritten}`
+    })
+    const removedObserver = this.$apollo.subscribe({
+      query: gql`${replyRemoved}`
+    })
+
+    writtenObserver.subscribe({
+      next ({ data: { replyWritten } }) {
+        self.post.comments.unshift(replyWritten)
+        document.body.classList.remove('loading')
+      },
+      error (error) {
+        this.flashError('댓글 작성 중 알 수 없는 오류가 발생했습니다.')
+        console.error(error)
+      }
+    })
+
+    removedObserver.subscribe({
+      next ({ data: { replyRemoved } }) {
+        self.post.comments = _.remove(self.post.comments, (item) => {
+          return item.cmt_idx !== replyRemoved.cmt_idx
+        })
+        document.body.classList.remove('loading')
+      },
+      error (error) {
+        this.flashError('댓글 삭제 중 알 수 없는 오류가 발생했습니다.')
+        console.error(error)
+      }
+    })
   },
   beforeUpdate () {
     document.body.classList.add('loading')
@@ -221,29 +262,34 @@ export default {
       return parseInt(this.$store.state.user.idx) === parseInt(this.post.user.user_idx)
     },
     removeArticle () {
-      const that = this
-      this.$swal({
+      const self = this
+      self.$swal({
         title: '삭제하시겠습니까?',
-        width: '90vw',
         text: '삭제 후 복구가 불가능합니다.',
-        type: 'warning',
+        type: 'question',
         showCancelButton: true,
         showLoaderOnConfirm: true,
         confirmButtonText: '삭제',
         cancelButtonText: '취소',
         preConfirm () {
-          that.$apollo.mutate({
+          document.body.classList.add('loading')
+          self.$apollo.mutate({
             mutation: gql`${removePost}`,
             variables: {
-              id: parseInt(that.$route.params.post_id)
+              id: parseInt(self.$route.params.post_id)
             }
           }).then(({ data }) => {
             return data
+          }).catch(error => {
+            console.error(error)
           })
         }
       }).then((result) => {
-        this.flash('삭제되었습니다.', 'success')
-        this.$router.push('/board')
+        if (result.value) {
+          this.flashSuccess('삭제되었습니다.')
+          document.body.classList.remove('loading')
+          this.$router.push('/board')
+        }
       })
     }
   }
@@ -343,6 +389,12 @@ article header span::before {
     &:last-child {
       margin-right: 0 !important;
     }
+  }
+}
+
+.meta-bottom {
+  margin: {
+    bottom: .5rem;
   }
 }
 </style>

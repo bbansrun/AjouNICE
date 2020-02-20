@@ -62,13 +62,18 @@
           </router-link>
         </div>
       </div>
-      <footer>
-        <router-link
+      <footer class="auth-footer buttons">
+        <b-button
+          class="is-medium"
+          size="is-medium"
+          type="is-info"
+          expanded
+          tag="router-link"
           to="/auth/signup"
-          class="btn rounded box-shadow text-inverse"
         >
-          회원가입 &rarr;
-        </router-link>
+          <font-awesome-icon icon="user-plus" />&nbsp;
+          <span>회원가입</span>
+        </b-button>
       </footer>
     </div>
   </div>
@@ -156,6 +161,10 @@ export default {
   margin: {
     top: .8rem;
   }
+}
+
+footer.auth-footer {
+  padding: 0 2rem;
 }
 </style>
 

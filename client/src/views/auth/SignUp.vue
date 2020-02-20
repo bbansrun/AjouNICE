@@ -334,6 +334,24 @@
         <div class="input-form-group">
           <div class="input-form-grid">
             <label
+              for="thumbnail"
+              class="input-form-grid-item"
+            >
+              프로필 이미지 업로드
+            </label>
+            <div class="input-form-grid-item thumbnail">
+              <div class="thumbnail-wrapper">
+                <div class="cover">
+                  이미지
+                </div>
+                <v-gravatar :email="email" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="input-form-group">
+          <div class="input-form-grid">
+            <label
               for="policy"
               class="input-form-grid-item"
             >서비스 가입전 약관 동의가 필요합니다.</label>
@@ -1009,3 +1027,33 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.thumbnail {
+  > .thumbnail-wrapper {
+    position: relative;
+    max-height: 80px;
+    > .cover {
+      position: absolute;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      color: #fff;
+      background: rgba(0,0,0,.8);
+    }
+    &:hover {
+      > .cover {
+        display: flex;
+        font: {
+          weight: 600;
+        }
+        cursor: pointer;
+      }
+    }
+  }
+}
+</style>

@@ -245,7 +245,15 @@ export default {
 <style lang="scss" scoped>
 
 section.my {
-  margin-bottom: 1rem;
+  margin: {
+    bottom: 1rem;
+  }
+  &-profile {
+    & .controls {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+    }
+  }
 }
 
 tr {
@@ -262,8 +270,8 @@ tr {
   justify-content: center;
 }
 
-select {
-  margin: 0;
+.select select {
+  margin-top: 0 !important;
 }
 
 .notice {
@@ -300,4 +308,5 @@ figure {
     height: 100%;
   }
 }
+
 </style>

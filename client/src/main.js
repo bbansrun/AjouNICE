@@ -44,6 +44,7 @@ import Buefy from 'buefy'
 import vSelect from 'vue-select'
 import VueSweetalert2 from 'vue-sweetalert2'
 import CKEditor from '@ckeditor/ckeditor5-vue'
+import Gravatar from 'vue-gravatar'
 
 import 'vue-flash-message/dist/vue-flash-message.min.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
@@ -84,6 +85,7 @@ library.add(faInfoCircle)
 library.add(faCheck)
 library.add(faComments)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('v-gravatar', Gravatar)
 Vue.component('v-select', vSelect)
 Vue.use(Buefy, {
   defaultIconComponent: 'font-awesome-icon',

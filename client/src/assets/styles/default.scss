@@ -132,7 +132,7 @@ nav {
     left: 0;
     width: 100vw;
     height: 45px !important;
-    z-index: 1000000;
+    z-index: 1001;
     transition: .5s all ease-out;
     &.active {
       > .fixed-nav {

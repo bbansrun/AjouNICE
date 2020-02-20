@@ -123,7 +123,7 @@ module.exports = {
     async user (root, args, { db, }, info) {
       const include = [
         { model: db.Board, as: 'articles', },
-        { model: db.BoardComment, as: 'commenter', }
+        { model: db.BoardComment, as: 'comments', }
       ];
       return await findOne(db.User, args, info, include);
     },
@@ -246,15 +246,23 @@ module.exports = {
       return await createOne(db.Board, args);
     },
     writeReply: async (root, args, { db, }, info) => {
+      let result;
       const created = await createOne(db.BoardComment, args);
-      pubsub.publish(REPLY_WRITTEN, { replyWritten: created.dataValues, });
-      return created.dataValues;
+      if (created) {
+        const include = [
+          { model: db.User, as: 'commenter', }
+        ];
+        result = await findOne(db.BoardComment, args, info, include);
+        pubsub.publish(REPLY_WRITTEN, { replyWritten: result, });
+      }
+      return result;
     },
     removeReply: async (root, args, { db, }, info) => {
+      const target = await findOne(db.BoardComment, args, info);
       const removed = await destroyOne(db.BoardComment, args);
-      pubsub.publish(REPLY_REMOVED, { replyRemoved: removed, });
+      pubsub.publish(REPLY_REMOVED, { replyRemoved: target, });
       if (removed) {
-        return true;
+        return target;
       } else {
         return false;
       }
