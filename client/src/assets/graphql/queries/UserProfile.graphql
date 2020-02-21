@@ -8,8 +8,10 @@ query UserProfile($id: Int!) {
         user_type
         articles {
             title
-            body
+            category_idx
             board_idx
+            view_cnt
+            reg_dt
         }
     }
 }

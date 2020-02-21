@@ -84,7 +84,23 @@
           </div>
         </section>
         <hr>
-        <MyPosts :posts="user.articles" />
+        <b-table :data="user.articles" :narrowed="true" :focusable="true" :mobile-cards="false">
+          <template slot-scope="props">
+            <b-table-column field="title" label="제목">
+              <router-link :to="`/board/${props.row.board_idx}/view`">{{ props.row.title }}</router-link>
+            </b-table-column>
+            <b-table-column field="category_idx" label="카테고리">
+              {{ props.row.category_idx }}
+            </b-table-column>
+            <b-table-column field="view_cnt" label="조회">
+              {{ props.row.view_cnt | numberWithCommas }}회
+            </b-table-column>
+            <b-table-column field="reg_dt" label="작성일">
+              {{ props.row.reg_dt | formatDateTime }}
+            </b-table-column>
+          </template>
+        </b-table>
+        <!-- <MyPosts :posts="user.articles" /> -->
         <hr>
         <MyReviews />
         <hr>
