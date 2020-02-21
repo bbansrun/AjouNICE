@@ -1,6 +1,7 @@
 query UserProfile($id: Int!) {
     user(user_idx: $id) {
         user_nm
+        user_profile
         nick_nm
         dpt_cd
         admin_type

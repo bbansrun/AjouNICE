@@ -22,14 +22,12 @@
                   <div class="column is-3 has-text-centered">
                     <figure>
                       <div class="cover new-gravatar">
-                        프로필 이미지 수정
+                        <strong>교체</strong>
                       </div>
-                      <img
-                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000"
-                        alt="gravatar"
-                        class="thumbnail"
-                      >
+                      <img v-show="user.user_profile" :src="user.user_profile" :alt="user.user_nm" />
+                      <v-gravatar v-show="!user.user_profile" :email="$store.state.user.email" />
                     </figure>
+                    <p v-show="!user.user_profile">지정하신 프로필 이미지가 없어 기본 이미지를 표시합니다.</p>
                   </div>
                   <div class="column is-9">
                     <p class="nickname">
@@ -143,6 +141,7 @@ export default {
       scrollBase: null,
       user: {
         user_nm: '',
+        user_profile: '',
         nick_nm: '',
         dpt_cd: '',
         admin_type: '',
@@ -289,17 +288,28 @@ tr {
 figure {
   position: relative;
   display: inline-block;
+  margin: 0;
+  max-width: 80px;
+  max-height: 80px;
+  &:hover {
+    > .cover {
+      cursor: pointer;
+      display: flex;
+    }
+  }
   > .cover {
     display: none;
     position: absolute;
     top: 0;
     left: 0;
     background: rgba(0,0,0,.8);
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
-    z-index: 1;
-    &:hover {
-      display: block;
+    z-index: 2;
+    & strong {
+      color: #fff;
     }
   }
   > img {
