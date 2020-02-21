@@ -95,6 +95,9 @@
           <b-table
             :data="dpt.data"
             :loading="loading"
+            :narrowed="true"
+            :focusable="true"
+            :mobile-cards="false"
           >
             <template slot-scope="props">
               <b-table-column

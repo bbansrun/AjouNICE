@@ -18,6 +18,9 @@
           :data="schedule.data"
           :loading="loading"
           :columns="schedule.columns"
+          :narrowed="true"
+          :focusable="true"
+          :mobile-cards="false"
         />
       </div>
     </main>
@@ -96,7 +99,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 tr {
   & td::before {
     white-space: nowrap;
