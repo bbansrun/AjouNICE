@@ -253,7 +253,8 @@ export default {
         this.$apollo.query({
             query: gql`${AllCates}`,
             variables: {
-            depth: 0
+              depth: 0,
+              category_type: "NORMAL"
             }
         }).then(({ data }) => {
             this.categories = data.boards

@@ -4,7 +4,7 @@
           <strong>학부/학과 코드관리</strong>
       </header>
       <article>
-          <b-table :columns="columns" :data="data" />
+          <b-table :columns="columns" :data="data" :mobile-cards="false" />
       </article>
   </section>
 </template>

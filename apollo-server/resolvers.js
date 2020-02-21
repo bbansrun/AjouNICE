@@ -135,7 +135,7 @@ module.exports = {
     async users (root, args, { db, }, info) {
       const include = [
         { model: db.Board, as: 'articles', },
-        { model: db.BoardComment, as: 'commenter', }
+        { model: db.BoardComment, as: 'comments', }
       ];
       return await findAll(db.User, args, info, include);
     },

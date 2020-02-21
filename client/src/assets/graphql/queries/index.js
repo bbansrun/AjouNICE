@@ -22,6 +22,7 @@ import Departments from './auth/DptByCollege.graphql'
 import TokenAuthorization from './auth/TokenAuthorization.graphql'
 // Admin
 import Codes from './admin/Codes.graphql'
+import Users from './admin/Users.graphql'
 
 export {
   Post,
@@ -46,5 +47,6 @@ export {
   Colleges,
   Departments,
   TokenAuthorization,
-  Codes
+  Codes,
+  Users
 }

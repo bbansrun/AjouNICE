@@ -9,6 +9,7 @@
         <span>신규 팝업 생성</span>
       </b-button>
     </div>
+    <hr>
   </section>
 </template>
 

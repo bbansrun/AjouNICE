@@ -1,7 +1,8 @@
-query Categories($depth: Int!) {
-    boards(depth: $depth, category_type: "NORMAL") {
+query Categories($depth: Int!, $category_type: String!) {
+    boards(depth: $depth, category_type: $category_type) {
         title
         category_nm
         category_idx
+        depth
     }
 }

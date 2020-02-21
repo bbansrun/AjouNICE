@@ -1,0 +1,24 @@
+{
+    users {
+        user_idx
+        email
+        user_id
+        user_nm
+        identity_num
+        admin_type
+        user_type
+        sex_gb
+        user_status
+        college_cd
+        dpt_cd
+        auth_email_yn
+        nick_nm
+        bamboo_stack
+        reg_ip
+        reg_dt
+        upt_ip
+        upt_dt
+        log_ip
+        log_dt
+    }
+}
