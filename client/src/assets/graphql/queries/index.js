@@ -20,6 +20,8 @@ import DupNickCheck from './auth/DupNickCheck.graphql'
 import Colleges from './auth/Colleges.graphql'
 import Departments from './auth/DptByCollege.graphql'
 import TokenAuthorization from './auth/TokenAuthorization.graphql'
+// Admin
+import Codes from './admin/Codes.graphql'
 
 export {
   Post,
@@ -43,5 +45,6 @@ export {
   DupNickCheck,
   Colleges,
   Departments,
-  TokenAuthorization
+  TokenAuthorization,
+  Codes
 }

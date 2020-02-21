@@ -2,10 +2,13 @@
 // Admin
 import AdminDashboard from './admin/Dashboard.vue'
 import AdminBoards from './admin/Boards.vue'
+import AdminCode from './admin/Code.vue'
 import AdminGourmet from './admin/Gourmet.vue'
+import AdminNewGourmet from './admin/NewGourmet.vue'
 import AdminReviews from './admin/Reviews.vue'
 import AdminUsers from './admin/Users.vue'
 import AdminStatus from './admin/Status.vue'
+import AdminNewPopup from './admin/NewPopup.vue'
 import AdminPopup from './admin/Popups.vue'
 import AdminRestriction from './admin/Restrictions.vue'
 import AdminPermission from './admin/Permissions.vue'
@@ -81,11 +84,14 @@ export {
   ScheduleHome,
   TimetableHome,
   AdminBoards,
+  AdminCode,
   AdminDashboard,
   AdminGourmet,
+  AdminNewGourmet,
   AdminReviews,
   AdminUsers,
   AdminStatus,
+  AdminNewPopup,
   AdminPopup,
   AdminRestriction,
   AdminPermission,

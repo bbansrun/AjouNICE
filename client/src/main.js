@@ -33,7 +33,8 @@ import {
   faUserPlus,
   faInfoCircle,
   faCheck,
-  faComments
+  faComments,
+  faList
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueApollo from 'vue-apollo'
@@ -84,6 +85,7 @@ library.add(faUserPlus)
 library.add(faInfoCircle)
 library.add(faCheck)
 library.add(faComments)
+library.add(faList)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('v-gravatar', Gravatar)
 Vue.component('v-select', vSelect)

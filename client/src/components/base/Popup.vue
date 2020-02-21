@@ -32,7 +32,7 @@
       <header />
       <p>
         <img
-          src="http://www.ajou.ac.kr/_attach/new/_images/2020/02/20/200220_main_visual01.jpg"
+          src="http://www.ajou.ac.kr/_attach/new/_images/2020/02/20/200220_main_visual02.jpg"
           alt="Popup"
         >
       </p>

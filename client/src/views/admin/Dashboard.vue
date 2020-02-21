@@ -23,8 +23,24 @@ export default {
   data () {
     return {
       modules: [
-        { id: uuid(), label: '홈', link: '/gate/manager', icon: 'home' },
-        { id: uuid(), label: '사용자 관리', link: '/gate/manager/users', icon: 'users' },
+        {
+          id: uuid(),
+          label: '홈',
+          link: '/gate/manager',
+          icon: 'home'
+        },
+        {
+          id: uuid(),
+          label: '코드 관리',
+          link: '/gate/manager/codes',
+          icon: 'list'
+        },
+        {
+          id: uuid(),
+          label: '사용자 관리',
+          link: '/gate/manager/users',
+          icon: 'users'
+        },
         {
           id: uuid(),
           label: '게시판 관리',
@@ -36,9 +52,24 @@ export default {
             { id: uuid(), label: '강의평가', link: '/gate/manager/boards/reivews', icon: 'sticky-note' }
           ]
         },
-        { id: uuid(), label: '권한 관리', link: '/gate/manager/permissions', icon: 'users-cog' },
-        { id: uuid(), label: '차단 관리', link: '/gate/manager/restrictions', icon: 'times' },
-        { id: uuid(), label: '팝업 관리', link: '/gate/manager/popups', icon: 'sticky-note' }
+        {
+          id: uuid(),
+          label: '권한 관리',
+          link: '/gate/manager/permissions',
+          icon: 'users-cog'
+        },
+        {
+          id: uuid(),
+          label: '차단 관리',
+          link: '/gate/manager/restrictions',
+          icon: 'times'
+        },
+        {
+          id: uuid(),
+          label: '팝업 관리',
+          link: '/gate/manager/popups',
+          icon: 'sticky-note'
+        }
       ]
     }
   }

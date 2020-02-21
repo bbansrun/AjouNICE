@@ -18,12 +18,15 @@ import {
   SignUp,
   Recovery,
   Modifier,
+  AdminCode,
   AdminDashboard,
   AdminStatus,
   AdminUsers,
   AdminBoards,
   AdminGourmet,
+  AdminNewGourmet,
   AdminReviews,
+  AdminNewPopup,
   AdminPopup,
   AdminPermission,
   AdminRestriction,
@@ -324,12 +327,20 @@ export default new Router({
           component: AdminUsers
         },
         {
+          path: 'codes',
+          component: AdminCode
+        },
+        {
           path: 'boards',
           component: AdminBoards
         },
         {
           path: 'boards/gourmet',
           component: AdminGourmet
+        },
+        {
+          path: 'boards/gourmet/new',
+          component: AdminNewGourmet
         },
         {
           path: 'boards/reviews',
@@ -346,6 +357,10 @@ export default new Router({
         {
           path: 'popups',
           component: AdminPopup
+        },
+        {
+          path: 'popups/new',
+          component: AdminNewPopup
         }
       ]
     },

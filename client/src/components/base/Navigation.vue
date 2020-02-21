@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import uuid from 'uuid/v4'
 export default {
   props: {
     isStatic: Boolean,
@@ -118,11 +119,51 @@ export default {
       isSlideNavActive: false,
       isFixedNavActive: false,
       services: [
-        { id: 1, label: '커뮤니티', link: '/board' },
-        { id: 2, label: '아주맛집', link: '/place/gourmet' },
-        { id: 3, label: '강의평가', link: '/lectures' },
-        { id: 4, label: '학사일정', link: '/schedule' },
-        { id: 5, label: 'Ajou버스', link: '/place/bus' }
+        {
+          id: uuid(),
+          label: '커뮤니티',
+          link: '/board'
+        },
+        {
+          id: uuid(),
+          label: '아주맛집',
+          link: '/place/gourmet'
+        },
+        {
+          id: uuid(),
+          label: '강의평가',
+          link: '/lectures'
+        },
+        {
+          id: uuid(),
+          label: '시간표',
+          link: '/timetable'
+        },
+        {
+          id: uuid(),
+          label: '학사일정',
+          link: '/schedule'
+        },
+        {
+          id: uuid(),
+          label: 'Ajou버스',
+          link: '/place/bus'
+        },
+        {
+          id: uuid(),
+          label: '부동산',
+          link: '/place/realty'
+        },
+        {
+          id: uuid(),
+          label: '도서관',
+          link: '/place/library'
+        },
+        {
+          id: uuid(),
+          label: '오늘의학식',
+          link: '/restaurant'
+        }
       ],
       footerLinks: [
         { id: 1, label: '서비스 소개', link: '/about' },
