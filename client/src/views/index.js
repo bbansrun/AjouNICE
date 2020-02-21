@@ -41,6 +41,7 @@ import TimetableHome from './function/timetable/Home.vue'
 import Board from './board/Board.vue'
 import BoardView from './board/View.vue'
 import BoardEditor from './board/Edit.vue'
+import BoardNew from './board/New.vue'
 import BoardSearch from './board/Search.vue'
 // Base
 import About from './base/About.vue'
@@ -64,6 +65,7 @@ export {
   Sitemap,
   Board,
   BoardView,
+  BoardNew,
   BoardEditor,
   BoardSearch,
   Login,

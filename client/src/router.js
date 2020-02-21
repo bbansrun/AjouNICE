@@ -12,6 +12,7 @@ import {
   Board,
   BoardSearch,
   BoardView,
+  BoardNew,
   BoardEditor,
   AuthTemplate,
   Login,
@@ -229,7 +230,7 @@ export default new Router({
     },
     {
       path: '/board/new',
-      component: BoardEditor,
+      component: BoardNew,
       beforeEnter: requireAuth
     },
     {
@@ -249,7 +250,7 @@ export default new Router({
     },
     {
       path: '/board/:category/new',
-      component: BoardEditor,
+      component: BoardNew,
       beforeEnter: requireAuth
     },
     {
@@ -259,12 +260,12 @@ export default new Router({
     },
     {
       path: '/board/:category/:name/new',
-      component: BoardEditor,
+      component: BoardNew,
       beforeEnter: requireAuth
     },
     {
       path: '/board/:category/:name/new',
-      component: BoardEditor,
+      component: BoardNew,
       beforeEnter: requireAuth
     },
     {

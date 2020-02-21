@@ -98,16 +98,17 @@
                         </p>
                     </div>
                     </div>
-                    <div class="input-form-group">
-                    <b-button
-                        class="submit"
-                        size="is-medium"
-                        type="is-dark"
-                        @click="resetAccount"
-                    >
-                        <font-awesome-icon icon="users-cog" />
-                        <span>계정 재설정</span>
-                    </b-button>
+                    <div class="input-form-group buttons">
+                      <b-button
+                          class="submit"
+                          size="is-medium"
+                          type="is-dark"
+                          expanded
+                          @click="resetAccount"
+                      >
+                          <font-awesome-icon icon="users-cog" />&nbsp;
+                          <span>계정 재설정</span>
+                      </b-button>
                     </div>
                 </div>
                 <div class="input-form-controls">
@@ -126,10 +127,14 @@
 </template>
 
 <script>
+import Logo from '@/assets/images/AjouNICE_shadow.svg'
 import pathParser from 'path-parse'
 import gql from 'graphql-tag'
 import { UserModify } from '@/assets/graphql/queries'
 export default {
+  components: {
+    Logo
+  },
   data () {
     return {
       email: '',
@@ -244,7 +249,6 @@ export default {
           title: '잠깐!',
           text: '누락된 데이터가 있거나 입력된 항목의 내용이 올바른 형식이 아닙니다.',
           type: 'error',
-          width: '90vw',
           footer: '<span>해당 항목을 확인 후 다시 시도하여주시기 바랍니다.<br />지속적으로 문제가 발생할 경우 관리자에게 문의하여주세요.</span>'
         })
       } else {
@@ -270,7 +274,6 @@ export default {
               title: '패스워드 변경 완료',
               text: '패스워드가 변경되었습니다.',
               type: 'success',
-              width: '90vw',
               footer: '<p>입력하신 새로운 비밀번호로 로그인하시면 서비스 이용이 가능합니다.</p>'
             }).then(() => {
               this.$store.dispatch('LOGOUT').then(() => {
