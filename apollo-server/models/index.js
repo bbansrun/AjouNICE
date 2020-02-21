@@ -15,9 +15,11 @@ db.College = require('./college')(sequelize, Sequelize);
 db.Department = require('./department')(sequelize, Sequelize);
 db.Board = require('./board')(sequelize, Sequelize);
 db.BoardCategory = require('./board_category')(sequelize, Sequelize);
-db.BoardComment = require('./board_comment.js')(sequelize, Sequelize);
+db.BoardComment = require('./board_comment')(sequelize, Sequelize);
 db.BoardVote = require('./board_vote')(sequelize, Sequelize);
 db.RestaurantBoard = require('./restaurant_board')(sequelize, Sequelize);
+db.RestaurantComment = require('./restaurant_comment')(sequelize, Sequelize);
+db.RestaurantImg = require('./restaurant_img')(sequelize, Sequelize);
 
 db.Board.hasMany(db.BoardComment, {
   as: 'comments',

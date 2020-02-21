@@ -140,6 +140,30 @@ type RestaurantBoard {
     upt_dt: Date
 }
 
+type RestaurantComment {
+    cmt_idx: Int!
+    res_idx: Int!
+    user_idx: Int!
+    user: User!
+    text: String
+    star: Int!
+    parent_idx: Int
+    reg_ip: String!
+    reg_dt: Date
+    upt_ip: String!
+    upt_dt: Date
+}
+
+type RestaurantImg {
+    img_idx: Int!
+    res_idx: Int!
+    img_path: String!
+    reg_ip: String!
+    reg_dt: Date
+    upt_ip: String!
+    upt_dt: Date
+}
+
 type Notice {
     unit: String!
     code: String!
