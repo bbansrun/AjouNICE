@@ -1,0 +1,12 @@
+subscription {
+    replyModified {
+        cmt_idx
+        text
+        reg_dt
+        upt_dt
+        commenter {
+            nick_nm
+            user_idx
+        }     
+    }
+}

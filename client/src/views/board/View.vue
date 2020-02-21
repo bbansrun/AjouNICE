@@ -138,7 +138,7 @@ import gql from 'graphql-tag'
 import { Post } from '@/assets/graphql/queries'
 import { removePost, IncrementViewCount } from '@/assets/graphql/mutations'
 import { Navigation, Report, Replies, Footer } from '@/components'
-import { replyWritten, replyRemoved } from '@/assets/graphql/subscriptions'
+import { replyWritten, replyRemoved, replyModified } from '@/assets/graphql/subscriptions'
 VueClipBoard.config.autoSetContainer = true
 Vue.use(VueClipBoard)
 export default {
@@ -214,6 +214,9 @@ export default {
     const removedObserver = this.$apollo.subscribe({
       query: gql`${replyRemoved}`
     })
+    const modifiedObserver = this.$apollo.subscribe({
+      query: gql`${replyModified}`
+    })
 
     writtenObserver.subscribe({
       next ({ data: { replyWritten } }) {
@@ -235,6 +238,17 @@ export default {
       },
       error (error) {
         this.flashError('댓글 삭제 중 알 수 없는 오류가 발생했습니다.')
+        console.error(error)
+      }
+    })
+
+    modifiedObserver.subscribe({
+      next ({ data: { replyModified } }) {
+        self.post.comments[_.findIndex(self.post.comments, (item) => (item.cmt_idx === replyModified.cmt_idx))] = replyModified
+        document.body.classList.remove('loading')
+      },
+      error (error) {
+        this.flashError('댓글 수정 중 알 수 없는 오류가 발생했습니다.')
         console.error(error)
       }
     })

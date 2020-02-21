@@ -20,6 +20,7 @@ sequelize.sync({});
 const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
+const REPLY_MODIFIED = 'REPLY_MODIFIED';
 
 // AWS File Upload Handler
 const s3DefaultParams = {
@@ -102,6 +103,9 @@ module.exports = {
     },
     replyRemoved: {
       subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([REPLY_REMOVED]),
+    },
+    replyModified: {
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([REPLY_MODIFIED]),
     },
   },
   Query: {
@@ -265,6 +269,19 @@ module.exports = {
         return target;
       } else {
         return false;
+      }
+    },
+    editReply: async (root, args, { db, }, info) => {
+      const updated = await updateOne(db.BoardComment, { text: args.text, }, { cmt_idx: args.cmt_idx, });
+      if (updated) {
+        const include = [
+          { model: db.User, as: 'commenter', }
+        ];
+        const result = await findOne(db.BoardComment, args, info, include);
+        pubsub.publish(REPLY_MODIFIED, { replyModified: result, });
+        return result;
+      } else {
+        return {};
       }
     },
     editPost: async (root, args, { db, }, info) => {

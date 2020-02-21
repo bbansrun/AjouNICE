@@ -1,6 +1,7 @@
 import writePost from './writePost.graphql'
 import writeReply from './writeReply.graphql'
 import removeReply from './removeReply.graphql'
+import editReply from './editReply.graphql'
 import editPost from './editPost.graphql'
 import removePost from './removePost.graphql'
 import UploadFiles from './UploadFiles.graphql'
@@ -11,9 +12,10 @@ import LoggedInLogger from './auth/LoggedInLogger.graphql'
 import Authorize from './auth/Authorize.graphql'
 
 export {
-  writePost,
   writeReply,
   removeReply,
+  editReply,
+  writePost,
   editPost,
   removePost,
   UploadFiles,

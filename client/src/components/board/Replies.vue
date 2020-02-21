@@ -28,7 +28,7 @@
         <b-button
           size="is-small"
           :type="{ 'is-primary': !reply.mode.edit, 'is-warning': reply.mode.edit }"
-          @click="makeReply"
+          @click="!(reply.mode.edit || reply.mode.replyHierarchical) ? makeReply() : editReply()"
         >
           <font-awesome-icon icon="pen" />&nbsp;
           <span>{{ reply.mode.edit ? '수정' : '작성' }}</span>
@@ -44,19 +44,19 @@
         <span>이 게시물의 첫번째 댓글 주인공이 되어주시겠어요?</span>
       </div>
       <div
-        v-for="reply in content"
-        :key="reply.cmt_idx"
-        :data-comment-id="reply.cmt_idx"
+        v-for="comment in content"
+        :key="comment.cmt_idx"
+        :data-comment-id="comment.cmt_idx"
         class="reply"
-        :class="{ 'counterpart': !checkMyReply(reply.commenter.user_idx), 'my': checkMyReply(reply.commenter.user_idx) }"
+        :class="{ 'counterpart': !checkMyReply(comment.commenter.user_idx), 'my': checkMyReply(comment.commenter.user_idx), 'target': parseInt(reply.target) === parseInt(comment.cmt_idx) }"
       >
         <div class="meta">
-          <header>{{ reply.commenter.nick_nm }}</header>
-          <small class="timestamp">{{ reply.upt_dt | formatDateTime }}</small>
+          <header>{{ comment.commenter.nick_nm }}</header>
+          <small class="timestamp">{{ comment.upt_dt | formatDateTime }}</small>
         </div>
         <div class="reply-wrapper">
           <p class="content">
-            {{ reply.text }}
+            {{ comment.text }}
           </p>
           <div class="controls">
             <button class="reply">
@@ -64,17 +64,17 @@
               <span>대댓글</span>
             </button>
             <button
-              v-show="checkMyReply(reply.commenter.user_idx)"
+              v-show="checkMyReply(comment.commenter.user_idx)"
               class="edit"
-              @click="toggleEditReply(reply.cmt_idx, reply.text)"
+              @click="toggleEditReply(comment.cmt_idx, comment.text)"
             >
               <font-awesome-icon icon="pen" />&nbsp;
               <span>수정</span>
             </button>
             <button
-              v-show="checkMyReply(reply.commenter.user_idx)"
+              v-show="checkMyReply(comment.commenter.user_idx)"
               class="remove"
-              @click="removeReply(reply.cmt_idx)"
+              @click="removeReply(comment.cmt_idx)"
             >
               <font-awesome-icon icon="trash" />&nbsp;
               <span>삭제</span>
@@ -88,7 +88,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { writeReply, removeReply } from '@/assets/graphql/mutations'
+import { writeReply, removeReply, editReply } from '@/assets/graphql/mutations'
 export default {
   props: {
     post: {
@@ -104,6 +104,7 @@ export default {
     return {
       anonymous: true,
       reply: {
+        target: null,
         mode: {
           edit: false,
           replyHierarchical: false
@@ -117,7 +118,7 @@ export default {
       return parseInt(this.$store.state.user.idx) === parseInt(id)
     },
     makeReply () {
-      if (this.reply.content && this.reply.content.length > 0) {
+      if (!this.reply.mode.edit && this.reply.content && this.reply.content.length > 0) {
         document.body.classList.add('loading')
         this.$apollo.mutate({
           mutation: gql`${writeReply}`,
@@ -166,14 +167,30 @@ export default {
         }
       })
     },
-    editReply (id, text) {
-
+    editReply () {
+      document.body.classList.add('loading')
+      this.$apollo.mutate({
+        mutation: gql`${editReply}`,
+        variables: {
+          id: parseInt(this.reply.target),
+          text: this.reply.content
+        }
+      }).then(({ data }) => {
+          this.reply.target = null
+          this.reply.mode.edit = false
+          this.reply.content = ''
+          this.flashSuccess('댓글을 수정했습니다.')
+      }).catch(error => {
+        console.error(error)
+      })
     },
     toggleEditReply (id, text) {
       if (this.reply.mode.edit) {
+        this.reply.target = null
         this.reply.mode.edit = false
         this.reply.content = ''
       } else {
+        this.reply.target = id
         this.reply.mode.edit = true
         this.reply.content = text
       }
@@ -205,10 +222,12 @@ div.reply {
       width: 0px;
       height: 0px;
       position: absolute;
-      border-left: 10px solid transparent;
-      border-right: 10px solid #363636;
-      border-top: 10px solid #363636;
-      border-bottom: 10px solid transparent;
+      border: {
+        left: 10px solid transparent;
+        right: 10px solid #363636;
+        top: 10px solid #363636;
+        bottom: 10px solid transparent;
+      }
       left: -19px;
       top: 6px;
     }
@@ -222,12 +241,30 @@ div.reply {
       width: 0px;
       height: 0px;
       position: absolute;
-      border-left: 10px solid #363636;
-      border-right: 10px solid transparent;
-      border-top: 10px solid #363636;
-      border-bottom: 10px solid transparent;
+      border: {
+        left: 10px solid #363636;
+        right: 10px solid transparent;
+        top: 10px solid #363636;
+        bottom: 10px solid transparent;
+      }
       right: -19px;
       top: 6px;
+    }
+  }
+  &.target {
+    font: {
+      weight: bolder;
+    }
+    background: rgba(255, 46, 99, .5);
+    &.my {
+      &::before {
+        border: {
+          left: 10px solid rgba(255, 46, 99, .5);
+          top: 10px solid rgba(255, 46, 99, .5);
+          right: 10px solid transparent;
+          bottom: 10px solid transparent;
+        }
+      }
     }
   }
   > .meta {
@@ -273,6 +310,9 @@ div.reply {
         height: 100%;
         padding: .4rem;
         color: #fff;
+        &:hover {
+          cursor: pointer;
+        }
         &.reply {
           background: #00A8CC;
         }

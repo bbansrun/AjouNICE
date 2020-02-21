@@ -181,6 +181,7 @@ type Schedule {
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: BoardComment
+    replyModified: BoardComment
 }
 
 type Query {
@@ -213,6 +214,7 @@ type Mutation {
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, upt_ip: String, upt_dt: Date): Board
     writeReply(board_idx: Int!, user_idx: Int!, text: String, reg_ip: String!, upt_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): BoardComment
+    editReply(cmt_idx: Int!, text: String): BoardComment
     singleUpload(file: Upload!): String
     postViewed(board_idx: Int!): Board
 }
