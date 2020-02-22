@@ -24,7 +24,7 @@
                     <input
                         type="email"
                         placeholder="이메일"
-                        :value="email"
+                        :value="$store.state.user.email"
                         disabled
                     >
                     </div>
@@ -196,9 +196,6 @@ export default {
   beforeCreate () {
     document.body.classList.add('auth')
   },
-  beforeMount () {
-    this.authorizeToken()
-  },
   methods: {
     initError (key) {
       this.errorValidation[key] = false
@@ -207,35 +204,6 @@ export default {
     occurError (key, msg) {
       this.errorValidation[key] = true
       this.errorMsg[key] = msg
-    },
-    authorizeToken () {
-      const _this = this
-      const pParser = pathParser(this.$route.path)
-      this.mode.reset = (pParser.dir === '/auth/reset' && pParser.name === 'authorize')
-      this.mode.modify = (pParser.dir.split('/')[1] === 'profile' && pParser.name === 'edit')
-      if (this.mode.reset || this.mode.modify) {
-        if (this.mode.reset && 'authToken' in this.$route.query) {
-          this.$apollo.query({
-            query: gql`{ findUserByToken(token: "${_this.$route.query.authToken}") { user_idx email } }`
-          }).then(result => {
-            this.email = result.data.findUserByToken.email
-          }).catch(error => {
-            console.error(error)
-            this.$router.push('/error/500')
-          })
-        } else if (this.mode.modify) {
-          this.$apollo.query({
-            query: gql`${UserModify}`,
-            variables: {
-              id: parseInt(this.$store.state.user.idx)
-            }
-          }).then(({ data: { user } }) => {
-            this.email = user.email
-          })
-        } else {
-          this.$router.push('/error/404')
-        }
-      }
     },
     resetAccount () {
       if (!this.password) {

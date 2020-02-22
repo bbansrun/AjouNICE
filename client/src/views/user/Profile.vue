@@ -22,7 +22,9 @@
                   <div class="column is-3 has-text-centered">
                     <figure>
                       <div class="cover new-gravatar">
-                        <strong>교체</strong>
+                        <b-upload v-model="thumbnail" accept="image/*">
+                          <strong>변경</strong>
+                        </b-upload>
                       </div>
                       <img v-show="user.user_profile" :src="user.user_profile" :alt="user.user_nm" />
                       <v-gravatar v-show="!user.user_profile" :email="$store.state.user.email" />
@@ -147,6 +149,7 @@
 import urljoin from 'url-join'
 import gql from 'graphql-tag'
 import { User, Notice } from '@/assets/graphql/queries'
+import { singleUpload } from '@/assets/graphql/mutations'
 import { Navigation, MyPosts, MyReviews, Footer } from '@/components'
 export default {
   components: {
@@ -158,6 +161,7 @@ export default {
   data () {
     return {
       scrollBase: null,
+      thumbnail: null,
       user: {
         user_nm: '',
         user_profile: '',
@@ -173,6 +177,20 @@ export default {
       dpt: {
         data: []
       }
+    }
+  },
+  watch: {
+    thumbnail (file) {
+      // S3 업로드 및 즉각 썸네일 반영
+      this.$apollo.mutate({
+        mutation: gql`${singleUpload}`,
+        variables: {
+          file: file,
+          type: 'profile'
+        }
+      }).then(({ data: { singleUpload }}) => {
+        this.user.user_profile = singleUpload
+      })
     }
   },
   computed: {
@@ -235,8 +253,7 @@ export default {
     secession () {
       this.$swal({
         title: '정말 탈퇴하시겠습니까?',
-        width: '90vw',
-        type: 'warning',
+        type: 'question',
         text: '탈퇴하시면 30일간 재가입이 불가합니다. 작성하신 모든 게시물은 삭제되나, 계정정보는 동의하셨던 약관 내용에 따라 1년간 보관후 폐기됩니다.',
         footer: '동의하시면 계속 진행하여주세요.',
         showCancelButton: true,
@@ -250,7 +267,7 @@ export default {
         if (result.value) {
           // 탈퇴 진행
           this.$store.dispatch('LOGOUT').then(() => {
-            this.flash('탈퇴되었습니다.', 'success')
+            this.flashSuccess('탈퇴되었습니다.')
             this.$router.push('/')
           })
         }
@@ -308,8 +325,11 @@ figure {
   position: relative;
   display: inline-block;
   margin: 0;
+  width: 80px;
+  height: 80px;
   max-width: 80px;
   max-height: 80px;
+  overflow: hidden;
   &:hover {
     > .cover {
       cursor: pointer;
@@ -327,6 +347,14 @@ figure {
     width: 100%;
     height: 100%;
     z-index: 2;
+    > label.upload {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
     & strong {
       color: #fff;
     }

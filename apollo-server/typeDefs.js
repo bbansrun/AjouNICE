@@ -215,7 +215,7 @@ type Mutation {
     writeReply(board_idx: Int!, user_idx: Int!, text: String, reg_ip: String!, upt_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): BoardComment
     editReply(cmt_idx: Int!, text: String): BoardComment
-    singleUpload(file: Upload!): String
+    singleUpload(file: Upload!, type: String!): String
     postViewed(board_idx: Int!): Board
 }
 `;

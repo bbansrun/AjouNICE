@@ -31,6 +31,12 @@ export default {
         },
         {
           id: uuid(),
+          label: '공지사항 관리',
+          link: '/gate/manager/notice',
+          icon: 'list'
+        },
+        {
+          id: uuid(),
           label: '코드 관리',
           link: '/gate/manager/codes',
           icon: 'list'
@@ -49,6 +55,7 @@ export default {
           children: [
             { id: uuid(), label: '일반 게시판', link: '/gate/manager/boards', icon: 'sticky-note' },
             { id: uuid(), label: '맛집 게시판', link: '/gate/manager/boards/gourmet', icon: 'sticky-note' },
+            { id: uuid(), label: '부동산', link: '/gate/manager/boards/realty', icon: 'sticky-note' },
             { id: uuid(), label: '강의평가', link: '/gate/manager/boards/reivews', icon: 'sticky-note' }
           ]
         },

@@ -285,7 +285,7 @@ module.exports = {
       }
     },
     editPost: async (root, args, { db, }, info) => {
-      const updated = await db.Board.update({ ...args, }, { where: { board_idx: args.board_idx, }, });
+      const updated = await updateOne(db.Board, { ...args, }, { board_idx: args.board_idx, });
       if (updated) {
         return await findOne(db.Board, args, info);
       } else {
@@ -300,10 +300,20 @@ module.exports = {
         return false;
       }
     },
-    singleUpload: async (root, { file, }, { db, }, info) => {
+    singleUpload: async (root, args, { db, }, info) => {
       // Upload Image to S3
-      const { Location, } = await handleS3Upload(file);
-      return await Location;
+      // Type: Board / Profile
+      // 타입에 따른 적절 분기처리
+      let url;
+      if (args.type === 'board') {
+        const { Location, } = await handleS3Upload(args.file);
+        url = Location;
+      } else if (args.type === 'profile') {
+        // const updated = await updateOne(db.User, {}, {});
+        const { Location, } = await handleS3Upload(args.file);
+        url = Location;
+      }
+      return await url;
     },
     postViewed: async (root, args, { db, }, info) => {
       const updated = await db.Board.increment('view_cnt', { by: 1, where: { board_idx: args.board_idx, }, });

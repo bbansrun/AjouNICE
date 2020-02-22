@@ -122,7 +122,8 @@ class ImageUploadToS3Adapter {
         Vue.prototype.$Apollo.mutate({
           mutation: gql`${singleUpload}`,
           variables: {
-            file: file
+            file: file,
+            type: "board"
           }
         }).then(({ data: { singleUpload } }) => {
           console.log(singleUpload)
