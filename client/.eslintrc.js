@@ -19,11 +19,11 @@ module.exports = {
     'html',
     'standard',
     'vue',
-    'eslint-snake-case'
+    'snakecasejs'
   ],
   rules: {
     // Snake Case Support
-    'eslint-snake-case/rule-name': 2,
+    'snakecasejs/snakecasejs': 'error',
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
