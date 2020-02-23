@@ -32,14 +32,13 @@ const s3DefaultParams = {
   ],
 };
 
-const handleS3Upload = async (file) => {
+const handleS3Upload = async (file, bucketDir, key) => {
   const { createReadStream, filename, mimetype, } = await file;
-  const key = uuid();
   return new Promise((resolve, reject) => {
     s3.upload({
       ...s3DefaultParams,
       Body: createReadStream(),
-      Key: `board/name/${key}.${fileExtension(filename)}`,
+      Key: `${bucketDir}/${key}.${fileExtension(filename)}`,
       ContentType: mimetype,
     }, (err, data) => {
       if (err) {
@@ -300,20 +299,28 @@ module.exports = {
         return false;
       }
     },
-    singleUpload: async (root, args, { db, }, info) => {
-      // Upload Image to S3
-      // Type: Board / Profile
-      // 타입에 따른 적절 분기처리
-      let url;
-      if (args.type === 'board') {
-        const { Location, } = await handleS3Upload(args.file);
-        url = Location;
-      } else if (args.type === 'profile') {
-        // const updated = await updateOne(db.User, {}, {});
-        const { Location, } = await handleS3Upload(args.file);
-        url = Location;
-      }
-      return await url;
+    // singleUpload: async (root, args, { db, }, info) => {
+    //   // Upload Image to S3
+    //   // Type: Board / Profile
+    //   // 타입에 따른 적절 분기처리
+    //   let url;
+    //   if (args.type === 'board') {
+    //     const { Location, } = await handleS3Upload(args.file);
+    //     url = Location;
+    //   } else if (args.type === 'profile') {
+    //     // const updated = await updateOne(db.User, {}, {});
+    //     const { Location, } = await handleS3Upload(args.file);
+    //     url = Location;
+    //   }
+    //   return await url;
+    // },
+    uploadedBoardImage: async (root, args, { db, }, info) => {
+      const { Location, } = await handleS3Upload(args.file, `board/${args.category_title}`, `${uuid()}_${Date.now().valueOf()}`);
+      return await Location;
+    },
+    uploadedProfileImage: async (root, args, { db, }, info) => {
+      const { Location, } = await handleS3Upload(args.file, 'user/profile', `${args.user_idx}_${uuid()}_${Date.now().valueOf()}`);
+      return await Location;
     },
     postViewed: async (root, args, { db, }, info) => {
       const updated = await db.Board.increment('view_cnt', { by: 1, where: { board_idx: args.board_idx, }, });

@@ -7,6 +7,11 @@ enum Role {
     USER
 }
 
+enum S3FileType {
+    BOARD
+    PROFILE
+}
+
 directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
 
 type User {
@@ -215,7 +220,8 @@ type Mutation {
     writeReply(board_idx: Int!, user_idx: Int!, text: String, reg_ip: String!, upt_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): BoardComment
     editReply(cmt_idx: Int!, text: String): BoardComment
-    singleUpload(file: Upload!, type: String!): String
+    uploadedProfileImage(file: Upload!, user_idx: Int!): String
+    uploadedBoardImage(file: Upload!, category_idx: Int!): String
     postViewed(board_idx: Int!): Board
 }
 `;
