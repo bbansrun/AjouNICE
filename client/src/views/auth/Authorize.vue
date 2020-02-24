@@ -37,7 +37,7 @@ export default {
           const { user_idx, auth_email_yn } = checkTokenValid
           if (auth_email_yn === 'Y') {
             alert('유효하지 않은 토큰입니다.')
-            // this.$router.push('/error/401')
+            this.$router.push('/error/403')
           } else {
             this.$apollo.mutate({
               mutation: gql`${Authorize}`,
