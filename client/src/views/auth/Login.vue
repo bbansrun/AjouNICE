@@ -106,8 +106,8 @@ export default {
         const userId = this.userID
         const password = this.password
         this.$store.dispatch('LOGIN', { userId, password })
-          .then(({ result }) => {
-            jwt.verify(result.access_token, '4j0uN1ce1', (err, { user: { access_loc } }) => {
+          .then(({ result: { access_token } }) => {
+            jwt.verify(access_token, '4j0uN1ce1', (err, { user: { access_loc } }) => {
               if (err) {
                 this.$router.push('/error/401')
               } else {
@@ -117,7 +117,7 @@ export default {
                     id: this.userID,
                     ip: access_loc
                   }
-                }).then(({ data: { auth_email_yn } }) => {
+                }).then(({ data: { lastLogin: { auth_email_yn } } }) => {
                   document.body.classList.toggle('loading')
                   if (auth_email_yn === 'N') {
                     this.$store.dispatch('LOGOUT').then(() => {

@@ -166,13 +166,12 @@ export default new Router({
         {
           path: 'recovery',
           component: Recovery
+        },
+        {
+          path: 'authorize',
+          component: Authorize
         }
       ]
-    },
-    {
-      path: '/auth/authorize',
-      name: 'authorize',
-      component: Authorize
     },
     {
       path: '/auth/reset/authorize',

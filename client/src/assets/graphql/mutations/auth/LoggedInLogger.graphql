@@ -1,3 +1,5 @@
 mutation LoggedInLogger($id: String!, $ip: String!) {
-    lastLogin(userId: $id, ip: $ip)
+    lastLogin(user_id: $id, ip: $ip) {
+        auth_email_yn
+    }
 }
