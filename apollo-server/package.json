@@ -31,6 +31,7 @@
     "graphql-disable-introspection": "^1.1.0",
     "graphql-fields": "^2.0.3",
     "graphql-playground-middleware-express": "^1.7.12",
+    "graphql-sequelize": "^9.4.0",
     "graphql-validation-complexity": "^0.2.5",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.0.1",

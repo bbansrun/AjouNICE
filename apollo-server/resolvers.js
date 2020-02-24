@@ -95,6 +95,10 @@ const updateOne = async (model, value, condArgs) => {
   return await model.update(value, { where: { ...condArgs, }, });
 };
 
+const increaseOne = async (model, field, size, conditions) => {
+  return await model.increment(field, { by: size, where: { ...conditions, }, });
+};
+
 module.exports = {
   Subscription: {
     replyWritten: {
@@ -341,7 +345,7 @@ module.exports = {
       }
     },
     postViewed: async (root, args, { db, }, info) => {
-      const updated = await db.Board.increment('view_cnt', { by: 1, where: { board_idx: args.board_idx, }, });
+      const updated = await increaseOne(db.Board, 'view_cnt', 1, { board_idx: args.board_idx, });
       if (updated) {
         return await findOne(db.Board, args, info);
       } else {
