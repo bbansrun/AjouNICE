@@ -22,14 +22,26 @@
                   <div class="column is-3 has-text-centered">
                     <figure>
                       <div class="cover new-gravatar">
-                        <b-upload v-model="thumbnail" accept="image/*">
+                        <b-upload
+                          v-model="thumbnail"
+                          accept="image/*"
+                        >
                           <strong>변경</strong>
                         </b-upload>
                       </div>
-                      <img v-show="user.user_profile" :src="user.user_profile" :alt="user.user_nm" />
-                      <v-gravatar v-show="!user.user_profile" :email="$store.state.user.email" />
+                      <img
+                        v-show="user.user_profile"
+                        :src="user.user_profile"
+                        :alt="user.user_nm"
+                      >
+                      <v-gravatar
+                        v-show="!user.user_profile"
+                        :email="$store.state.user.email"
+                      />
                     </figure>
-                    <p v-show="!user.user_profile">지정하신 프로필 이미지가 없어 기본 이미지를 표시합니다.</p>
+                    <p v-show="!user.user_profile">
+                      지정하신 프로필 이미지가 없어 기본 이미지를 표시합니다.
+                    </p>
                   </div>
                   <div class="column is-9">
                     <p class="nickname">
@@ -86,18 +98,37 @@
           </div>
         </section>
         <hr>
-        <b-table :data="user.articles" :narrowed="true" :focusable="true" :mobile-cards="false">
+        <b-table
+          :data="user.articles"
+          :narrowed="true"
+          :focusable="true"
+          :mobile-cards="false"
+        >
           <template slot-scope="props">
-            <b-table-column field="title" label="제목">
-              <router-link :to="`/board/${props.row.board_idx}/view`">{{ props.row.title }}</router-link>
+            <b-table-column
+              field="title"
+              label="제목"
+            >
+              <router-link :to="`/board/${props.row.board_idx}/view`">
+                {{ props.row.title }}
+              </router-link>
             </b-table-column>
-            <b-table-column field="category_idx" label="카테고리">
+            <b-table-column
+              field="category_idx"
+              label="카테고리"
+            >
               {{ props.row.category_idx }}
             </b-table-column>
-            <b-table-column field="view_cnt" label="조회">
+            <b-table-column
+              field="view_cnt"
+              label="조회"
+            >
               {{ props.row.view_cnt | numberWithCommas }}회
             </b-table-column>
-            <b-table-column field="reg_dt" label="작성일">
+            <b-table-column
+              field="reg_dt"
+              label="작성일"
+            >
               {{ props.row.reg_dt | formatDateTime }}
             </b-table-column>
           </template>
@@ -149,7 +180,7 @@
 import urljoin from 'url-join'
 import gql from 'graphql-tag'
 import { User, Notice } from '@/assets/graphql/queries'
-import { singleUpload } from '@/assets/graphql/mutations'
+import { ModifiedProfileImageURL } from '@/assets/graphql/mutations'
 import { Navigation, MyPosts, MyReviews, Footer } from '@/components'
 export default {
   components: {
@@ -179,26 +210,26 @@ export default {
       }
     }
   },
-  watch: {
-    thumbnail (file) {
-      // S3 업로드 및 즉각 썸네일 반영
-      this.$apollo.mutate({
-        mutation: gql`${singleUpload}`,
-        variables: {
-          file: file,
-          type: 'profile'
-        }
-      }).then(({ data: { singleUpload }}) => {
-        this.user.user_profile = singleUpload
-      })
-    }
-  },
   computed: {
     profileEditUrl () {
       return urljoin(this.$route.path, '/edit')
     },
     myLectureReviewsLink () {
       return '/my/lectures/reviews'
+    }
+  },
+  watch: {
+    thumbnail (file) {
+      // S3 업로드 및 즉각 썸네일 반영
+      this.$apollo.mutate({
+        mutation: gql`${ModifiedProfileImageURL}`,
+        variables: {
+          file,
+          user_idx: this.$store.state.user.idx
+        }
+      }).then(({ data: { modifiedProfileImage } }) => {
+        this.user.user_profile = modifiedProfileImage
+      })
     }
   },
   beforeCreate () {

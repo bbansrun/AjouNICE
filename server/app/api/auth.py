@@ -163,6 +163,7 @@ class RegisterAPI(Resource):
             'college_cd': request.json.get('collegeCd', None),
             'dpt_cd': request.json.get('dptCd', None),
             'nick_nm': request.json.get('nickNm', None),
+            'user_profile': request.json.get('userProfile', None),
             'auth_token': authToken,
             'reg_ip': request.remote_addr,
             'reg_dt': datetime.now(tz=timezone(timedelta(hours=9))),
