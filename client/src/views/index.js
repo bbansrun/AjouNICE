@@ -2,6 +2,7 @@
 // Admin
 import AdminDashboard from './admin/Dashboard.vue'
 import AdminBoards from './admin/Boards.vue'
+import AdminNewBoard from './admin/NewBoard.vue'
 import AdminCode from './admin/Code.vue'
 import AdminGourmet from './admin/Gourmet.vue'
 import AdminNewGourmet from './admin/NewGourmet.vue'
@@ -86,6 +87,7 @@ export {
   ScheduleHome,
   TimetableHome,
   AdminBoards,
+  AdminNewBoard,
   AdminCode,
   AdminDashboard,
   AdminGourmet,

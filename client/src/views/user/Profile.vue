@@ -352,49 +352,4 @@ tr {
   }
 }
 
-figure {
-  position: relative;
-  display: inline-block;
-  margin: 0;
-  width: 80px;
-  height: 80px;
-  max-width: 80px;
-  max-height: 80px;
-  overflow: hidden;
-  &:hover {
-    > .cover {
-      cursor: pointer;
-      display: flex;
-    }
-  }
-  > .cover {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(0,0,0,.8);
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    > label.upload {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-    }
-    & strong {
-      color: #fff;
-    }
-  }
-  > img {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-}
-
 </style>

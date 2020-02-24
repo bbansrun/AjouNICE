@@ -1,0 +1,3 @@
+mutation UploadedCategoryIcon($file: Upload!) {
+    uploadedCategoryIcon(file: $file)
+}

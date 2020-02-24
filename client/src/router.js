@@ -24,6 +24,7 @@ import {
   AdminStatus,
   AdminUsers,
   AdminBoards,
+  AdminNewBoard,
   AdminGourmet,
   AdminNewGourmet,
   AdminReviews,
@@ -333,6 +334,10 @@ export default new Router({
         {
           path: 'boards',
           component: AdminBoards
+        },
+        {
+          path: 'boards/new',
+          component: AdminNewBoard
         },
         {
           path: 'boards/gourmet',

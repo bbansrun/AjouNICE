@@ -11,6 +11,9 @@ import Authorize from './auth/Authorize.graphql'
 import UploadedProfileImageURL from './auth/UploadedProfileImageURL.graphql'
 import ModifiedProfileImageURL from './auth/ModifiedProfileImageURL.graphql'
 
+import UploadedCategoryIcon from './admin/UploadedCategoryIcon.graphql'
+import addCategory from './admin/addCategory.graphql'
+
 export {
   writeReply,
   removeReply,
@@ -22,5 +25,7 @@ export {
   LoggedInLogger,
   Authorize,
   UploadedProfileImageURL,
-  ModifiedProfileImageURL
+  ModifiedProfileImageURL,
+  UploadedCategoryIcon,
+  addCategory
 }

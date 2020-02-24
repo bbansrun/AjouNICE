@@ -311,21 +311,6 @@ module.exports = {
         return false;
       }
     },
-    // singleUpload: async (root, args, { db, }, info) => {
-    //   // Upload Image to S3
-    //   // Type: Board / Profile
-    //   // 타입에 따른 적절 분기처리
-    //   let url;
-    //   if (args.type === 'board') {
-    //     const { Location, } = await handleS3Upload(args.file);
-    //     url = Location;
-    //   } else if (args.type === 'profile') {
-    //     // const updated = await updateOne(db.User, {}, {});
-    //     const { Location, } = await handleS3Upload(args.file);
-    //     url = Location;
-    //   }
-    //   return await url;
-    // },
     uploadedBoardImage: async (root, args, { db, }, info) => {
       const { Location, } = await handleS3Upload(args.file, `board/${args.category_title}`, `${uuid()}_${Date.now().valueOf()}`);
       return await Location;
@@ -341,6 +326,18 @@ module.exports = {
         return await Location;
       } else {
         return '';
+      }
+    },
+    uploadedCategoryIcon: async (root, { file, }, { db, }, info) => {
+      const { Location, } = await handleS3Upload(file, 'restaurant/icon', `${uuid()}_${Date.now().valueOf()}}`);
+      return await Location;
+    },
+    addCategory: async (root, args, { db, }, info) => {
+      const created = await createOne(db.BoardCategory, args);
+      if (created) {
+        return await findOne(db.BoardCategory, args, info);
+      } else {
+        return {};
       }
     },
     postViewed: async (root, args, { db, }, info) => {
