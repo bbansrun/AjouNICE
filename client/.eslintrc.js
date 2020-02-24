@@ -19,11 +19,11 @@ module.exports = {
     'html',
     'standard',
     'vue',
-    'snakecasejs'
+    // 'snakecasejs'
   ],
   rules: {
     // Snake Case Support
-    'snakecasejs/snakecasejs': 'error',
+    // 'snakecasejs/snakecasejs': 'error',
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
