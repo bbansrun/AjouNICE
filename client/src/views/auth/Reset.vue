@@ -8,36 +8,13 @@
       <div class="input-form-wrapper">
         <div class="input-form-group">
           <input
+            v-model="email"
             type="email"
             placeholder="이메일"
-            :value="email"
             disabled
           >
         </div>
         <div class="input-form-group">
-          <div
-            v-if="mode.modify"
-            class="input-group"
-          >
-            <input
-              v-model="pre_password"
-              name="password"
-              autofocus
-              type="password"
-              autocapitalize="none"
-              pattern=".{8,}"
-              placeholder="기존 패스워드"
-              required
-              :class="{ 'error': errorValidation.pre_user_pw }"
-            >
-            <p
-              v-if="errorValidation.pre_user_pw"
-              class="auto-validate-noti"
-              :class="{ 'error': errorValidation.pre_user_pw }"
-            >
-              {{ errorMsg.pre_user_pw }}
-            </p>
-          </div>
           <div class="input-group">
             <input
               v-model="password"
@@ -84,14 +61,15 @@
             </p>
           </div>
         </div>
-        <div class="input-form-group">
+        <div class="input-form-group buttons">
           <b-button
             class="submit"
             size="is-medium"
             type="is-dark"
+            expanded
             @click="resetAccount"
           >
-            <font-awesome-icon icon="users-cog" />
+            <font-awesome-icon icon="users-cog" />&nbsp;
             <span>계정 재설정</span>
           </b-button>
         </div>
@@ -109,30 +87,26 @@
 </template>
 
 <script>
-import pathParser from 'path-parse'
+import Logo from '@/assets/images/AjouNICE_shadow.svg'
 import gql from 'graphql-tag'
-import { UserModify } from '@/assets/graphql/queries'
+import { TokenAuthorization } from '@/assets/graphql/queries'
 export default {
+  components: {
+    Logo
+  },
   data () {
     return {
       email: '',
-      pre_password: '',
       password: '',
       passwordConfirm: '',
       validatedPWConfirm: false,
       errorValidation: {
-        pre_user_pw: false,
         user_pw: false,
         user_pw_confirm: false
       },
       errorMsg: {
-        pre_user_pw: '',
         user_pw: '',
         user_pw_confirm: ''
-      },
-      mode: {
-        reset: false,
-        modify: false
       }
     }
   },
@@ -178,6 +152,32 @@ export default {
     this.authorizeToken()
   },
   methods: {
+    authorizeToken () {
+      document.body.classList.add('loading')
+      const params = this.$route.query
+      if ('authToken' in params) {
+        this.$apollo.query({
+          query: gql`${TokenAuthorization}`,
+          variables: {
+            token: params.authToken
+          }
+        }).then(({ data: { checkTokenValid } }) => {
+          const { email, user_idx, auth_email_yn } = checkTokenValid
+          if (auth_email_yn === 'Y') {
+            alert('유효하지 않은 토큰입니다.')
+            this.$router.push('/error/403')
+          } else {
+            document.body.classList.remove('loading')
+            this.email = email
+          }
+        }).catch(error => {
+          console.error(error)
+          this.$router.push('/error/500')
+        })
+      } else {
+        this.$router.push('/error/404')
+      }
+    },
     initError (key) {
       this.errorValidation[key] = false
       this.errorMsg[key] = ''
@@ -185,35 +185,6 @@ export default {
     occurError (key, msg) {
       this.errorValidation[key] = true
       this.errorMsg[key] = msg
-    },
-    authorizeToken () {
-      const _this = this
-      const pParser = pathParser(this.$route.path)
-      this.mode.reset = (pParser.dir === '/auth/reset' && pParser.name === 'authorize')
-      this.mode.modify = (pParser.dir.split('/')[1] === 'profile' && pParser.name === 'edit')
-      if (this.mode.reset || this.mode.modify) {
-        if (this.mode.reset && 'authToken' in this.$route.query) {
-          this.$apollo.query({
-            query: gql`{ findUserByToken(token: "${_this.$route.query.authToken}") { user_idx email } }`
-          }).then(result => {
-            this.email = result.data.findUserByToken.email
-          }).catch(error => {
-            console.error(error)
-            this.$router.push('/error/500')
-          })
-        } else if (this.mode.modify) {
-          this.$apollo.query({
-            query: gql`${UserModify}`,
-            variables: {
-              id: parseInt(this.$store.state.user.idx)
-            }
-          }).then(({ data: { user } }) => {
-            this.email = user.email
-          })
-        } else {
-          this.$router.push('/error/404')
-        }
-      }
     },
     resetAccount () {
       if (!this.password) {
@@ -227,21 +198,15 @@ export default {
           title: '잠깐!',
           text: '누락된 데이터가 있거나 입력된 항목의 내용이 올바른 형식이 아닙니다.',
           type: 'error',
-          width: '90vw',
           footer: '<span>해당 항목을 확인 후 다시 시도하여주시기 바랍니다.<br />지속적으로 문제가 발생할 경우 관리자에게 문의하여주세요.</span>'
         })
       } else {
         // 비밀번호 재설정 진행
         const data = {
+          mode: 'reset',
           authToken: this.$route.query.authToken,
           password: this.password,
           passwordConfirm: this.passwordConfirm
-        }
-        if (this.mode.reset) {
-          data.mode = 'reset'
-        } else if (this.mode.modify) {
-          data.mode = 'modify'
-          data.prePassword = this.pre_password
         }
         this.$Axios({
           method: 'POST',
@@ -253,12 +218,9 @@ export default {
               title: '패스워드 변경 완료',
               text: '패스워드가 변경되었습니다.',
               type: 'success',
-              width: '90vw',
               footer: '<p>입력하신 새로운 비밀번호로 로그인하시면 서비스 이용이 가능합니다.</p>'
             }).then(() => {
-              this.$store.dispatch('LOGOUT').then(() => {
-                this.$router.push('/')
-              })
+              this.$router.push('/')
             })
           } else {
             throw Error(result)

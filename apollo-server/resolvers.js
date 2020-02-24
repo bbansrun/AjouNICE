@@ -155,6 +155,18 @@ module.exports = {
       ];
       return await findAll(db.Board, args, info, include, order);
     },
+    async paginatedPosts (root, args, { db, }, info) {
+      // Pagination Test
+      const posts = await db.Board.paginate({
+        limit: 1,
+      });
+      console.log(posts.results[0]);
+      const returnType = {
+        totalCount: posts.length,
+        edges: posts,
+      };
+      return returnType;
+    },
     async post (root, args, { db, }, info) {
       const order = [
         [{ model: db.BoardComment, as: 'comments', }, 'reg_dt', 'DESC'],
@@ -225,13 +237,13 @@ module.exports = {
       sendConfirmMail(user_nm, email, auth_token, false);
       return true;
     },
-    lastLogin: async (root, { userId, ip, }, { db, }, info) => {
-      const updateLastLogin = await db.User.update({ log_ip: ip, log_dt: Date.now(), }, { where: { user_id: userId, }, });
-      if (updateLastLogin) return true;
-      else return false;
+    lastLogin: async (root, { user_id, ip, }, { db, }, info) => {
+      const updateLastLogin = await updateOne(db.User, { log_ip: ip, log_dt: Date.now(), }, { user_id, });
+      if (updateLastLogin) return await findOne(db.User, { user_id, }, info);
+      else return {};
     },
-    authorize: async (root, { user_idx, }, { db, }, info) => {
-      const updateAuthorized = await db.User.update({ auth_email_yn: 'Y', }, { where: { user_idx: user_idx, }, });
+    authorize: async (root, args, { db, }, info) => {
+      const updateAuthorized = await updateOne(db.User, { auth_email_yn: 'Y', }, args);
       if (updateAuthorized) return true;
       else return false;
     },
@@ -299,28 +311,34 @@ module.exports = {
         return false;
       }
     },
-    // singleUpload: async (root, args, { db, }, info) => {
-    //   // Upload Image to S3
-    //   // Type: Board / Profile
-    //   // 타입에 따른 적절 분기처리
-    //   let url;
-    //   if (args.type === 'board') {
-    //     const { Location, } = await handleS3Upload(args.file);
-    //     url = Location;
-    //   } else if (args.type === 'profile') {
-    //     // const updated = await updateOne(db.User, {}, {});
-    //     const { Location, } = await handleS3Upload(args.file);
-    //     url = Location;
-    //   }
-    //   return await url;
-    // },
     uploadedBoardImage: async (root, args, { db, }, info) => {
       const { Location, } = await handleS3Upload(args.file, `board/${args.category_title}`, `${uuid()}_${Date.now().valueOf()}`);
       return await Location;
     },
     uploadedProfileImage: async (root, args, { db, }, info) => {
-      const { Location, } = await handleS3Upload(args.file, 'user/profile', `${args.user_idx}_${uuid()}_${Date.now().valueOf()}`);
+      const { Location, } = await handleS3Upload(args.file, 'user/profile', `${uuid()}_${Date.now().valueOf()}`);
       return await Location;
+    },
+    modifiedProfileImage: async (root, { file, user_idx, }, { db, }, info) => {
+      const { Location, } = await handleS3Upload(file, 'user/profile', `${uuid()}_${Date.now().valueOf()}`);
+      const userProfileUpdated = await updateOne(db.User, { user_profile: Location, }, { user_idx, });
+      if (userProfileUpdated) {
+        return await Location;
+      } else {
+        return '';
+      }
+    },
+    uploadedCategoryIcon: async (root, { file, }, { db, }, info) => {
+      const { Location, } = await handleS3Upload(file, 'restaurant/icon', `${uuid()}_${Date.now().valueOf()}}`);
+      return await Location;
+    },
+    addCategory: async (root, args, { db, }, info) => {
+      const created = await createOne(db.BoardCategory, args);
+      if (created) {
+        return await findOne(db.BoardCategory, args, info);
+      } else {
+        return {};
+      }
     },
     postViewed: async (root, args, { db, }, info) => {
       const updated = await db.Board.increment('view_cnt', { by: 1, where: { board_idx: args.board_idx, }, });

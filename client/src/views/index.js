@@ -2,6 +2,7 @@
 // Admin
 import AdminDashboard from './admin/Dashboard.vue'
 import AdminBoards from './admin/Boards.vue'
+import AdminNewBoard from './admin/NewBoard.vue'
 import AdminCode from './admin/Code.vue'
 import AdminGourmet from './admin/Gourmet.vue'
 import AdminNewGourmet from './admin/NewGourmet.vue'
@@ -14,7 +15,7 @@ import AdminRestriction from './admin/Restrictions.vue'
 import AdminPermission from './admin/Permissions.vue'
 // Auth
 import Login from './auth/Login.vue'
-import Modifier from './auth/ModifyAccount.vue'
+import Reset from './auth/Reset.vue'
 import Recovery from './auth/Recovery.vue'
 import SignUp from './auth/SignUp.vue'
 import AuthTemplate from './auth/Template.vue'
@@ -69,7 +70,7 @@ export {
   BoardEditor,
   BoardSearch,
   Login,
-  Modifier,
+  Reset,
   Recovery,
   SignUp,
   AuthTemplate,
@@ -86,6 +87,7 @@ export {
   ScheduleHome,
   TimetableHome,
   AdminBoards,
+  AdminNewBoard,
   AdminCode,
   AdminDashboard,
   AdminGourmet,

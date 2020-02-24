@@ -1,5 +1,15 @@
 <template>
-  <div />
+  <div class="wrapper">
+    <header data-logo>
+      <h2>Authorize</h2>
+      <small>계정 인증</small>
+    </header>
+    <article>
+      <p class="has-text-centered">
+        서비스 인증 처리중입니다...
+      </p>
+    </article>
+  </div>
 </template>
 
 <script>
@@ -8,7 +18,8 @@ import { TokenAuthorization } from '@/assets/graphql/queries'
 import { Authorize } from '@/assets/graphql/mutations'
 export default {
   beforeCreate () {
-    document.body.classList.toggle('loading')
+    document.body.classList.add('auth')
+    document.body.classList.add('loading')
   },
   created () {
     this.authorizeToken()
@@ -26,15 +37,18 @@ export default {
           const { user_idx, auth_email_yn } = checkTokenValid
           if (auth_email_yn === 'Y') {
             alert('유효하지 않은 토큰입니다.')
-            this.$router.push('/error/401')
+            this.$router.push('/error/403')
           } else {
             this.$apollo.mutate({
               mutation: gql`${Authorize}`,
               variables: {
-                id: user_idx
+                id: parseInt(user_idx),
+                token: params.authToken
               }
             }).then(({ data: { authorize } }) => {
               if (authorize) {
+                document.body.classList.remove('loading')
+                this.flashSuccess('인증이 완료되었습니다. 로그인 후 사용가능합니다.')
                 this.$router.push('/')
               }
             })

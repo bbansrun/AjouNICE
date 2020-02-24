@@ -340,12 +340,25 @@
               프로필 이미지 업로드
             </label>
             <div class="input-form-grid-item thumbnail">
-              <div class="thumbnail-wrapper">
-                <div class="cover">
-                  이미지
+              <figure>
+                <div class="cover new-gravatar">
+                  <b-upload
+                    v-model="thumbnail"
+                    accept="image/*"
+                  >
+                    <strong>업로드</strong>
+                  </b-upload>
                 </div>
-                <v-gravatar :email="email" />
-              </div>
+                <img
+                  v-show="thumbnail"
+                  :src="thumbnail_src"
+                  alt="Profile"
+                >
+                <v-gravatar
+                  v-show="!thumbnail"
+                  :email="email"
+                />
+              </figure>
             </div>
           </div>
         </div>
@@ -403,7 +416,7 @@
 <script>
 import gql from 'graphql-tag'
 import { DupIDCheck, DupEmailCheck, DupNickCheck, Colleges, Departments } from '@/assets/graphql/queries'
-
+import { UploadedProfileImageURL } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -413,6 +426,8 @@ export default {
       userName: '',
       userID: '',
       userIDNum: '',
+      thumbnail: null,
+      thumbnail_src: '',
       validatedEmail: false,
       validatedUserID: false,
       validatedPWConfirm: false,
@@ -633,6 +648,16 @@ export default {
       if (value) {
         this.initError('subDpt')
       }
+    },
+    thumbnail (file) {
+      this.$apollo.mutate({
+        mutation: gql`${UploadedProfileImageURL}`,
+        variables: {
+          file
+        }
+      }).then(({ data: { uploadedProfileImage } }) => {
+        this.thumbnail_src = uploadedProfileImage
+      })
     }
   },
   beforeCreate () {
@@ -978,9 +1003,10 @@ export default {
             identityNum: (this.userIDNum ? this.userIDNum : null),
             userType: this.selectedUserType,
             sexGb: this.gender,
-            collegeCd: this.college,
-            dptCd: this.dpt,
-            nickNm: this.nick_nm
+            collegeCd: this.selectedCollege,
+            dptCd: this.selectedDpt,
+            nickNm: this.nick_nm,
+            userProfile: this.thumbnail_src
           }
         }).then(({ data }) => {
           document.body.classList.toggle('loading')
@@ -1056,4 +1082,50 @@ export default {
     }
   }
 }
+
+figure {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  width: 80px;
+  height: 80px;
+  max-width: 80px;
+  max-height: 80px;
+  overflow: hidden;
+  &:hover {
+    > .cover {
+      cursor: pointer;
+      display: flex;
+    }
+  }
+  > .cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.8);
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    > label.upload {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+    & strong {
+      color: #fff;
+    }
+  }
+  > img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 </style>

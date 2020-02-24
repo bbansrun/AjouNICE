@@ -1,0 +1,31 @@
+mutation addCategory(
+    $category_nm: String!,
+    $category_type: CategoryType!,
+    $title: String!,
+    $depth: Int!,
+    $access_auth: String!,
+    $private_yn: String!,
+    $category_icon: String,
+    $desc: String,
+    $reg_ip: String!,
+    $reg_dt: Date!,
+    $upt_ip: String!,
+    $upt_dt: Date!
+) {
+ addCategory(
+     category_nm: $category_nm,
+     category_type: $category_type,
+     title: $title,
+     depth: $depth,
+     access_auth: $access_auth,
+     private_yn: $private_yn,
+     category_icon: $category_icon,
+     desc: $desc,
+     reg_ip: $reg_ip,
+     reg_dt: $reg_dt,
+     upt_ip: $upt_ip,
+     upt_dt: $upt_dt
+ ) {
+     category_idx
+ }
+}

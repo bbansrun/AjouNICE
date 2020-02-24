@@ -16,14 +16,15 @@ import {
   BoardEditor,
   AuthTemplate,
   Login,
+  Reset,
   SignUp,
   Recovery,
-  Modifier,
   AdminCode,
   AdminDashboard,
   AdminStatus,
   AdminUsers,
   AdminBoards,
+  AdminNewBoard,
   AdminGourmet,
   AdminNewGourmet,
   AdminReviews,
@@ -166,17 +167,16 @@ export default new Router({
         {
           path: 'recovery',
           component: Recovery
+        },
+        {
+          path: 'authorize',
+          component: Authorize
+        },
+        {
+          path: 'authorize/reset',
+          component: Reset
         }
       ]
-    },
-    {
-      path: '/auth/authorize',
-      name: 'authorize',
-      component: Authorize
-    },
-    {
-      path: '/auth/reset/authorize',
-      component: Modifier
     },
     {
       path: '/my/edit',
@@ -334,6 +334,10 @@ export default new Router({
         {
           path: 'boards',
           component: AdminBoards
+        },
+        {
+          path: 'boards/new',
+          component: AdminNewBoard
         },
         {
           path: 'boards/gourmet',
