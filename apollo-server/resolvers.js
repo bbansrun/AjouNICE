@@ -122,11 +122,13 @@ module.exports = {
       return await findOne(db.BoardComment, args, info, include);
     },
     async schedule (root, args, { db, }, info) {
+      // RESTful API Wrapper (from Auth Server)
       const response = await fetch(`http://${require('ip').address()}:5000/api/schedule`);
       const result = await response.json();
       return result.result;
     },
     async notice (root, args, { db, }, info) {
+      // RESTful API Wrapper (from Auth Server)
       const response = await fetch(`http://${require('ip').address()}:5000/api/notice/${args.code}`);
       const result = await response.json();
       return result.result;
@@ -174,7 +176,7 @@ module.exports = {
       const salt = await bcrypt.genSalt(10);
       const rawToken = await bcrypt.hash(`AjouNICE!|authToken|${email}|${Date.now()}`, salt);
       const newToken = crypto.createHash('sha256').update(rawToken).digest('hex');
-      const user = await db.User.update({ auth_token: newToken, auth_email_yn: 'N', }, { where: { email: email, }, });
+      const user = await updateOne(db.User, { auth_token: newToken, auth_email_yn: 'N', }, { email, });
       sendConfirmMail(undefined, email, newToken, true);
       if (user) return true;
       else return false;
