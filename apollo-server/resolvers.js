@@ -2,17 +2,13 @@ const uuid = require('uuid/v4');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
-const jwt = require('jsonwebtoken');
 const { Op, } = require('sequelize');
 const { sequelize, } = require('./models');
-const fileExtension = require('file-extension');
-const graphqlFields = require('graphql-fields');
 const { PubSub, } = require('apollo-server-express');
-const { sendConfirmMail, sendContactMail, } = require('./mailer/mailUtils');
-
-const AWS = require('aws-sdk');
-AWS.config.loadFromPath(`${__dirname}/config/aws.json`);
-const s3 = new AWS.S3();
+const { tokenVerify, } = require('./function/jwt/verifier');
+const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
+const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtilsmailUtils');
+const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, } = require('./function/db/handler');
 
 sequelize.sync({});
 
@@ -21,83 +17,6 @@ const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
 const REPLY_MODIFIED = 'REPLY_MODIFIED';
-
-// AWS File Upload Handler
-const s3DefaultParams = {
-  ACL: 'public-read',
-  Bucket: 'ajounice',
-  Conditions: [
-    ['content-length-range', 0, 1024 ** 2 * 20], // Max: 20MB per each
-    { acl: 'public-read', }
-  ],
-};
-
-const handleS3Upload = async (file, bucketDir, key) => {
-  const { createReadStream, filename, mimetype, } = await file;
-  return new Promise((resolve, reject) => {
-    s3.upload({
-      ...s3DefaultParams,
-      Body: createReadStream(),
-      Key: `${bucketDir}/${key}.${fileExtension(filename)}`,
-      ContentType: mimetype,
-    }, (err, data) => {
-      if (err) {
-        console.error(`[AWS] ${err}`);
-        console.log(err);
-        reject(err);
-      } else {
-        console.log('[AWS] 성공적으로 데이터 업로드 완료');
-        console.log(data);
-        resolve(data);
-      }
-    });
-  });
-};
-
-// JWT Token Verify
-const tokenVerify = (token) => (new Promise((resolve, reject) => {
-  jwt.verify(token, '4j0uN1ce1', (err, decoded) => {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(decoded);
-    }
-  });
-}));
-
-const findOne = async (model, args, info, include = [], order = []) => {
-  return await model.findOne({
-    attributes: graphqlFields(info),
-    where: { ...args, },
-    include,
-    order,
-  });
-};
-
-const findAll = async (model, args, info, include = [], order = []) => {
-  return await model.findAll({
-    attributes: graphqlFields(info),
-    where: { ...args, },
-    include,
-    order,
-  });
-};
-
-const createOne = async (model, args) => {
-  return await model.create({ ...args, });
-};
-
-const destroyOne = async (model, args) => {
-  return await model.destroy({ where: { ...args, }, });
-};
-
-const updateOne = async (model, value, condArgs) => {
-  return await model.update(value, { where: { ...condArgs, }, });
-};
-
-const increaseOne = async (model, field, size, conditions) => {
-  return await model.increment(field, { by: size, where: { ...conditions, }, });
-};
 
 module.exports = {
   Subscription: {
