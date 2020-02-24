@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <header class="underline underline-inline-block underline-animated">
-      <strong>맛집 신규 모듈 생성</strong>
+      <strong>신규 게시판 모듈 생성</strong>
     </header>
     <form
       data-post-form
@@ -20,6 +20,10 @@
         >
       </div>
       <div class="input-form">
+        <label for="inherited">대분류</label>
+        <v-select />
+      </div>
+      <div class="input-form">
         <label for="title">영문명</label>
         <div class="input-form-group">
           <input
@@ -27,7 +31,7 @@
             v-model="title"
             type="text"
             name="title"
-            placeholder="URL로 들어갈 구분자입니다. (/place/gourmet/:category)"
+            placeholder="URL로 들어갈 구분자입니다. (/board/:category[depth0]/:category[depth1]...)"
             required
             :class="{ 'error': titleError }"
           >
@@ -94,21 +98,10 @@
               :src="icon_src"
               alt="카테고리 대표 이미지"
             >
-            <div
+            <v-gravatar
               v-show="!icon"
-              class="profile profile-warning"
-            >
-              <v-gravatar
-                :email="$store.state.user.email"
-              />
-              <b-notification
-                type="is-info"
-                has-icon
-                aria-close-label="닫기"
-              >
-                대표 아이콘 미등록시, 서비스 표시 디자인에 문제가 생길 수 있습니다.
-              </b-notification>
-            </div>
+              :email="$store.state.user.email"
+            />
           </figure>
         </div>
       </div>
@@ -167,12 +160,11 @@ export default {
   },
   methods: {
     createNewModule () {
-      document.body.classList.add('loading')
       this.$apollo.mutate({
         mutation: gql`${addCategory}`,
         variables: {
           category_nm: this.category_nm,
-          category_type: 'GOURMET',
+          category_type: 'NORMAL',
           title: this.title,
           depth: this.depth,
           access_auth: this.access_auth,
@@ -185,12 +177,7 @@ export default {
           upt_dt: Date.now()
         }
       }).then(({ data: { addCategory } }) => {
-        document.body.classList.remove('loading')
-        this.flashSuccess('모듈을 생성하였습니다.')
-        this.$router.push('/gate/manager/boards/gourmet')
-      }).catch(error => {
-        document.body.classList.remove('loading')
-        console.error(error)
+        console.log(addCategory)
       })
     }
   }
