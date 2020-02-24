@@ -12,4 +12,4 @@ const tokenVerify = (token) => (new Promise((resolve, reject) => {
   });
 }));
 
-export { tokenVerify };
+module.exports = { tokenVerify, };

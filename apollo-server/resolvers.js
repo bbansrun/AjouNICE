@@ -7,7 +7,7 @@ const { sequelize, } = require('./models');
 const { PubSub, } = require('apollo-server-express');
 const { tokenVerify, } = require('./function/jwt/verifier');
 const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
-const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtilsmailUtils');
+const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtils');
 const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, } = require('./function/db/handler');
 
 sequelize.sync({});

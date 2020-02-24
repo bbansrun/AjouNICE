@@ -35,4 +35,4 @@ const handleS3Upload = async (file, bucketDir, key) => {
   });
 };
 
-export { handleS3Upload };
+module.exports = { handleS3Upload, };

@@ -35,4 +35,4 @@ const increaseOne = async (model, field, size, conditions) => {
   return await model.increment(field, { by: size, where: { ...conditions, }, });
 };
 
-export { findOne, findAll, createOne, destroyOne, updateOne, increaseOne };
+module.exports = { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, };
