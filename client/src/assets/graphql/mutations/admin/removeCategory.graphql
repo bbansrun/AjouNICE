@@ -1,0 +1,3 @@
+mutation removeCategory($category_idx: Int!) {
+    removeCategory(category_idx: $category_idx)
+}
