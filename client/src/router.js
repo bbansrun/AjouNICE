@@ -16,9 +16,9 @@ import {
   BoardEditor,
   AuthTemplate,
   Login,
+  Reset,
   SignUp,
   Recovery,
-  Modifier,
   AdminCode,
   AdminDashboard,
   AdminStatus,
@@ -170,12 +170,12 @@ export default new Router({
         {
           path: 'authorize',
           component: Authorize
+        },
+        {
+          path: 'authorize/reset',
+          component: Reset
         }
       ]
-    },
-    {
-      path: '/auth/reset/authorize',
-      component: Modifier
     },
     {
       path: '/my/edit',
