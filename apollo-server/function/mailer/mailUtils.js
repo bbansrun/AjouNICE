@@ -2,7 +2,7 @@ const confirmTemplate = require('./emailConfirmTemplate');
 const contactTemplate = require('./emailContactTemplate');
 const sgMail = require('@sendgrid/mail');
 
-sgMail.setApiKey(require('../config/config.json').development.mailapikey);
+sgMail.setApiKey(require('../../config/config.json').development.mailapikey);
 
 const sendConfirmMail = async (user_nm, email, authToken, isResetEmail = false) => {
   let url;
