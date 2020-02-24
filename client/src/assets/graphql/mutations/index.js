@@ -4,7 +4,6 @@ import removeReply from './removeReply.graphql'
 import editReply from './editReply.graphql'
 import editPost from './editPost.graphql'
 import removePost from './removePost.graphql'
-import UploadFiles from './UploadFiles.graphql'
 import IncrementViewCount from './postViewed.graphql'
 
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
@@ -19,7 +18,6 @@ export {
   writePost,
   editPost,
   removePost,
-  UploadFiles,
   IncrementViewCount,
   LoggedInLogger,
   Authorize,
