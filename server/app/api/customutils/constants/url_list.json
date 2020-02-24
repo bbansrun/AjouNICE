@@ -155,7 +155,7 @@
       "code": "C_NS03",
       "boardName": "공지사항",
       "link": "http://physics.ajou.ac.kr/physics/board/board01.jsp"
-    },
+    },   
     {
       "name": "자연과학대학 - 생명과학과",
       "code": "C_NS04",
@@ -264,7 +264,8 @@
       "name": "의과대학",
       "code": "C_MS01",
       "boardName": "공지사항",
-      "link": "http://ts.ajoumc.or.kr/Board/Retrieve.aspx?cp=1&sid=&rc=10&mc=UH00100033&ssc=0010&ssgc=UH&smpc=UH00100006&CCP=1"
+      "link": "http://ts.ajoumc.or.kr/Board/Retrieve.aspx?cp=1&sid=&rc=10&mc=UH00100033&ssc=0010&ssgc=UH&smpc=UH00100006&CCP=1",
+      "baseUrl": "http://ts.ajoumc.or.kr/Main/MainType08.aspx?cp=1&sid=&rc=10&ssc=0010&ssgc=UH&CCP=1"
     },
     {
       "name": "간호대학",
