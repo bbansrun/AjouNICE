@@ -237,13 +237,13 @@ module.exports = {
       sendConfirmMail(user_nm, email, auth_token, false);
       return true;
     },
-    lastLogin: async (root, { userId, ip, }, { db, }, info) => {
-      const updateLastLogin = await db.User.update({ log_ip: ip, log_dt: Date.now(), }, { where: { user_id: userId, }, });
-      if (updateLastLogin) return true;
-      else return false;
+    lastLogin: async (root, { user_id, ip, }, { db, }, info) => {
+      const updateLastLogin = await updateOne(db.User, { log_ip: ip, log_dt: Date.now(), }, { user_id, });
+      if (updateLastLogin) return await findOne(db.User, { user_id, }, info);
+      else return {};
     },
-    authorize: async (root, { user_idx, }, { db, }, info) => {
-      const updateAuthorized = await db.User.update({ auth_email_yn: 'Y', }, { where: { user_idx: user_idx, }, });
+    authorize: async (root, args, { db, }, info) => {
+      const updateAuthorized = await updateOne(db.User, { auth_email_yn: 'Y', }, args);
       if (updateAuthorized) return true;
       else return false;
     },

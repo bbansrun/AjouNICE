@@ -978,8 +978,8 @@ export default {
             identityNum: (this.userIDNum ? this.userIDNum : null),
             userType: this.selectedUserType,
             sexGb: this.gender,
-            collegeCd: this.college,
-            dptCd: this.dpt,
+            collegeCd: this.selectedCollege,
+            dptCd: this.selectedDpt,
             nickNm: this.nick_nm
           }
         }).then(({ data }) => {

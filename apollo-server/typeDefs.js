@@ -212,8 +212,8 @@ type Query {
 type Mutation {
     sendContactMail(name: String!, email: String!, content: String!): Boolean
     sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean
-    lastLogin(userId: String!, ip: String!): Boolean
-    authorize(user_idx: Int!): Boolean
+    lastLogin(user_id: String!, ip: String!): User
+    authorize(user_idx: Int!, auth_token: String!): Boolean
     resetEmailToken(email: String!): Boolean
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String!, upt_ip: String!): Board
     removePost(board_idx: Int!): Boolean
