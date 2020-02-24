@@ -24,7 +24,7 @@
           label="이름"
           sortable
         >
-          {{ props.row.user_nm }}
+          <strong>{{ props.row.user_nm }}</strong>
         </b-table-column>
 
         <b-table-column
@@ -38,13 +38,22 @@
         <b-table-column
           label="설정"
         >
-          <b-button
-            type="is-danger"
-            size="is-small"
-          >
-            <font-awesome-icon icon="times" />&nbsp;
-            <span>삭제</span>
-          </b-button>
+          <div class="buttons">
+            <b-button
+              type="is-warning"
+              size="is-small"
+            >
+              <font-awesome-icon icon="exclamation-triangle" />&nbsp;
+              <span>수정</span>
+            </b-button>
+            <b-button
+              type="is-danger"
+              size="is-small"
+            >
+              <font-awesome-icon icon="times" />&nbsp;
+              <span>삭제</span>
+            </b-button>
+          </div>
         </b-table-column>
       </template>
     </b-table>
