@@ -22,17 +22,14 @@
             <div class="input-form-wrapper">
               <div class="input-form-group">
                 <input
+                  v-model="email"
                   type="email"
                   placeholder="이메일"
-                  :value="$store.state.user.email"
                   disabled
                 >
               </div>
               <div class="input-form-group">
-                <div
-                  v-if="mode.modify"
-                  class="input-group"
-                >
+                <div class="input-group">
                   <input
                     v-model="pre_password"
                     name="password"
@@ -128,9 +125,6 @@
 
 <script>
 import Logo from '@/assets/images/AjouNICE_shadow.svg'
-import pathParser from 'path-parse'
-import gql from 'graphql-tag'
-import { UserModify } from '@/assets/graphql/queries'
 export default {
   components: {
     Logo
@@ -151,10 +145,6 @@ export default {
         pre_user_pw: '',
         user_pw: '',
         user_pw_confirm: ''
-      },
-      mode: {
-        reset: false,
-        modify: false
       }
     }
   },
@@ -196,6 +186,9 @@ export default {
   beforeCreate () {
     document.body.classList.add('auth')
   },
+  mounted () {
+    this.email = this.$store.state.user.email
+  },
   methods: {
     initError (key) {
       this.errorValidation[key] = false
@@ -222,20 +215,16 @@ export default {
       } else {
         // 비밀번호 재설정 진행
         const data = {
+          mode: 'modify',
           authToken: this.$route.query.authToken,
           password: this.password,
-          passwordConfirm: this.passwordConfirm
-        }
-        if (this.mode.reset) {
-          data.mode = 'reset'
-        } else if (this.mode.modify) {
-          data.mode = 'modify'
-          data.prePassword = this.pre_password
+          passwordConfirm: this.passwordConfirm,
+          prePassword: this.pre_password
         }
         this.$Axios({
           method: 'POST',
           url: '/api/auth/update',
-          data: data
+          data
         }).then(result => {
           if (result.status === 201) {
             this.$swal({
