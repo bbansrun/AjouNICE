@@ -155,6 +155,18 @@ module.exports = {
       ];
       return await findAll(db.Board, args, info, include, order);
     },
+    async paginatedPosts (root, args, { db, }, info) {
+      // Pagination Test
+      const posts = await db.Board.paginate({
+        limit: 1,
+      });
+      console.log(posts.results[0]);
+      const returnType = {
+        totalCount: posts.length,
+        edges: posts,
+      };
+      return returnType;
+    },
     async post (root, args, { db, }, info) {
       const order = [
         [{ model: db.BoardComment, as: 'comments', }, 'reg_dt', 'DESC'],

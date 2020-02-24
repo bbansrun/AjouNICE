@@ -112,14 +112,14 @@ db.Department.belongsTo(db.College, {
 });
 
 // Paginations
-const paginateOptions = {
+const paginateOptions = (primaryKeyField) => ({
   methodName: 'paginate',
-  primaryKeyField: 'id',
-};
+  primaryKeyField,
+});
 
-withPagination(paginateOptions)(db.Board);
-withPagination(paginateOptions)(db.BoardComment);
-withPagination(paginateOptions)(db.RestaurantBoard);
-withPagination(paginateOptions)(db.RestaurantComment);
+withPagination(paginateOptions('board_idx'))(db.Board);
+withPagination(paginateOptions('cmt_idx'))(db.BoardComment);
+withPagination(paginateOptions('board_idx'))(db.RestaurantBoard);
+withPagination(paginateOptions('cmt_idx'))(db.RestaurantComment);
 
 module.exports = db;
