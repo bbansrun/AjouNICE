@@ -273,5 +273,10 @@ module.exports = {
         return {};
       }
     },
+    removeCategory: async (root, args, { db, }, info) => {
+      const removed = await destroyOne(db.BoardCategory, args);
+      if (removed) return true;
+      else return false;
+    },
   },
 };

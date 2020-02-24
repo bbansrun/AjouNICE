@@ -232,5 +232,5 @@ type Mutation {
     uploadedBoardImage(file: Upload!, category_idx: Int!): String
     uploadedCategoryIcon(file: Upload!): String
     addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): BoardCategory
-}
-`;
+    removeCategory(category_idx: Int!): Boolean
+}`;

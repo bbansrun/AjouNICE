@@ -13,6 +13,7 @@ import ModifiedProfileImageURL from './auth/ModifiedProfileImageURL.graphql'
 
 import UploadedCategoryIcon from './admin/UploadedCategoryIcon.graphql'
 import addCategory from './admin/addCategory.graphql'
+import removeCategory from './admin/removeCategory.graphql'
 
 export {
   writeReply,
@@ -27,5 +28,6 @@ export {
   UploadedProfileImageURL,
   ModifiedProfileImageURL,
   UploadedCategoryIcon,
-  addCategory
+  addCategory,
+  removeCategory
 }
