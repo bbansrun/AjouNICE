@@ -331,8 +331,17 @@ module.exports = {
       return await Location;
     },
     uploadedProfileImage: async (root, args, { db, }, info) => {
-      const { Location, } = await handleS3Upload(args.file, 'user/profile', `${args.user_idx}_${uuid()}_${Date.now().valueOf()}`);
+      const { Location, } = await handleS3Upload(args.file, 'user/profile', `${uuid()}_${Date.now().valueOf()}`);
       return await Location;
+    },
+    modifiedProfileImage: async (root, { file, user_idx, }, { db, }, info) => {
+      const { Location, } = await handleS3Upload(file, 'user/profile', `${uuid()}_${Date.now().valueOf()}`);
+      const userProfileUpdated = await updateOne(db.User, { user_profile: Location, }, { user_idx, });
+      if (userProfileUpdated) {
+        return await Location;
+      } else {
+        return '';
+      }
     },
     postViewed: async (root, args, { db, }, info) => {
       const updated = await db.Board.increment('view_cnt', { by: 1, where: { board_idx: args.board_idx, }, });

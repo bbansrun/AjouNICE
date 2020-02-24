@@ -10,6 +10,8 @@ import singleUpload from './singleUpload.graphql'
 
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
 import Authorize from './auth/Authorize.graphql'
+import UploadedProfileImageURL from './auth/UploadedProfileImageURL.graphql'
+import ModifiedProfileImageURL from './auth/ModifiedProfileImageURL.graphql'
 
 export {
   writeReply,
@@ -22,5 +24,7 @@ export {
   IncrementViewCount,
   singleUpload,
   LoggedInLogger,
-  Authorize
+  Authorize,
+  UploadedProfileImageURL,
+  ModifiedProfileImageURL
 }
