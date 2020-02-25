@@ -76,6 +76,13 @@ export default {
           label: '팝업 관리',
           link: '/gate/manager/popups',
           icon: 'sticky-note'
+        },
+        {
+          id: uuid(),
+          label: 'API 관리',
+          link: `http://${require('ip').address()}:455/playground`,
+          outLink: true,
+          icon: 'sticky-note'
         }
       ]
     }
