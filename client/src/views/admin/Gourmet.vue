@@ -8,10 +8,19 @@
         type="is-primary"
         size="is-small"
         tag="router-link"
-        to="/gate/manager/boards/gourmet/new"
+        to="/gate/manager/boards/gourmet/new/module"
       >
         <font-awesome-icon icon="pen" />&nbsp;
-        <span>신규 맛집 게시</span>
+        <span>신규 맛집 모듈</span>
+      </b-button>
+      <b-button
+        type="is-primary"
+        size="is-small"
+        tag="router-link"
+        to="/gate/manager/boards/gourmet/new/place"
+      >
+        <font-awesome-icon icon="pen" />&nbsp;
+        <span>신규 맛집 등록</span>
       </b-button>
     </div>
     <hr>

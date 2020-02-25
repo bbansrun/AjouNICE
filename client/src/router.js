@@ -344,7 +344,7 @@ export default new Router({
           component: AdminGourmet
         },
         {
-          path: 'boards/gourmet/new',
+          path: 'boards/gourmet/new/module',
           component: AdminNewGourmet
         },
         {

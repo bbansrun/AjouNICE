@@ -26,6 +26,9 @@ import MyReviews from './function/reviews/MyReviews.vue'
 import MyPosts from './user/MyPosts.vue'
 import MyLectureReviews from './user/MyLectureReviews.vue'
 
+// Gourmet
+import GourmetList from './place/gourmet/GourmetList.vue'
+
 export {
   Aside,
   AdminFooter,
@@ -43,5 +46,6 @@ export {
   Replies,
   MyReviews,
   MyPosts,
-  MyLectureReviews
+  MyLectureReviews,
+  GourmetList
 }

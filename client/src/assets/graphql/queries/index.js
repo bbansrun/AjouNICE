@@ -25,7 +25,9 @@ import Codes from './admin/Codes.graphql'
 import Users from './admin/Users.graphql'
 
 // Posts
-import Pagination from './posts/PaginatedPosts.graphql'
+import BoardByType from './posts/BoardByType.graphql'
+import PaginationPosts from './posts/PaginatedPosts.graphql'
+import PaginationGourmets from './posts/PaginatedGourmets.graphql'
 
 export {
   Post,
@@ -52,5 +54,7 @@ export {
   TokenAuthorization,
   Codes,
   Users,
-  Pagination
+  BoardByType,
+  PaginationPosts,
+  PaginationGourmets
 }

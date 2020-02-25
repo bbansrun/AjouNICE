@@ -119,7 +119,7 @@ const paginateOptions = (primaryKeyField) => ({
 
 withPagination(paginateOptions('board_idx'))(db.Board);
 withPagination(paginateOptions('cmt_idx'))(db.BoardComment);
-withPagination(paginateOptions('board_idx'))(db.RestaurantBoard);
+withPagination(paginateOptions('res_idx'))(db.RestaurantBoard);
 withPagination(paginateOptions('cmt_idx'))(db.RestaurantComment);
 
 module.exports = db;

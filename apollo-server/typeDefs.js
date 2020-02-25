@@ -190,6 +190,14 @@ type Schedule {
 }
 
 # Types for pagination
+interface Edge {
+    cursor: String
+}
+
+interface PaginatedUnit {
+    totalCount: Int!
+    pageInfo: PageInfo!
+}
 
 type PageInfo {
     hasNext: Boolean
@@ -198,14 +206,25 @@ type PageInfo {
     after: String
 }
 
-type Posts {
+type Posts implements PaginatedUnit {
     totalCount: Int!
     pageInfo: PageInfo!
     edges: [PostEdge]
 }
 
-type PostEdge {
+type Gourmets implements PaginatedUnit {
+    totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [GourmetEdge]
+}
+
+type PostEdge implements Edge {
     node: Board,
+    cursor: String
+}
+
+type GourmetEdge implements Edge {
+    node: RestaurantBoard,
     cursor: String
 }
 
@@ -226,7 +245,9 @@ type Query {
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
     posts(category_idx: ID): [Board]
+    boardByType(category_type: CategoryType, title: String): BoardCategory
     paginatedPosts(category_idx: ID!, limit: Int!, end_cursor: String): Posts
+    paginatedGourmets(category_idx: ID!, limit: Int!, end_cursor: String): Gourmets
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]

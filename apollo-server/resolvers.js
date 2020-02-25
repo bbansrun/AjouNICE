@@ -147,6 +147,11 @@ module.exports = {
     async gourmets (root, args, { db, }, info) {
       return await findAll(db.RestaurantBoard, args, info);
     },
+    // Renew Resolve Functions Below
+    async boardByType (root, args, { db, }, info) {
+      return await findOne(db.BoardCategory, args, info);
+    },
+    // Pagination
     async paginatedPosts (root, { category_idx, limit, end_cursor, }, { db, }, info) {
       return await db.Board.paginate({
         limit,
@@ -158,6 +163,14 @@ module.exports = {
           { model: db.User, as: 'user', },
           { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
         ],
+      });
+    },
+    async paginatedGourmets (root, { category_idx, limit, end_cursor, }, { db, }, info) {
+      return await db.RestaurantBoard.paginate({
+        limit,
+        desc: true,
+        where: { category_idx, },
+        after: end_cursor,
       });
     },
   },
@@ -292,8 +305,17 @@ module.exports = {
     pageInfo: (parent) => (parent.cursors),
     edges: (parent) => (parent.results),
   },
+  Gourmets: {
+    totalCount: (parent) => (parent.results.length),
+    pageInfo: (parent) => (parent.cursors),
+    edges: (parent) => (parent.results),
+  },
   PostEdge: {
     node: (parent) => (parent),
     cursor: (parent) => (Buffer.from(`[${parent.board_idx}]`).toString('base64')),
+  },
+  GourmetEdge: {
+    node: (parent) => (parent),
+    cursor: (parent) => (Buffer.from(`[${parent.res_idx}]`).toString('base64')),
   },
 };

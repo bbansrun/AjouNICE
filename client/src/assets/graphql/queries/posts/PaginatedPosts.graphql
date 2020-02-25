@@ -9,7 +9,6 @@ query Pagination($cateType: ID!, $size: Int! = 10, $cursor: String){
     }
     edges {
      	node {
-        __typename
         board_idx
         title
         body

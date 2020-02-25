@@ -51,7 +51,17 @@
     </section>
     <div class="container">
       <PostList :items="posts" />
-      <infinite-loading @infinite="infiniteHandler" />
+      <infinite-loading
+        spinner="waveDots"
+        @infinite="infiniteHandler"
+      >
+        <div slot="no-more">
+          더 이상 게시물이 없어요.
+        </div>
+        <div slot="no-results">
+          찾으시는 게시물이 없어요.
+        </div>
+      </infinite-loading>
     </div>
     <Footer />
   </div>
@@ -61,7 +71,7 @@
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import { Landing, Navigation, PostList, BoardNav, Footer } from '@/components'
-import { CateInfo, PostsByCate, SubCates, BoardsAndPosts, Pagination } from '@/assets/graphql/queries'
+import { CateInfo, PostsByCate, SubCates, PaginationPosts } from '@/assets/graphql/queries'
 export default {
   components: {
     Landing,
@@ -107,13 +117,13 @@ export default {
     }
   },
   beforeCreate () {
-    document.body.classList.toggle('loading')
+    document.body.classList.add('loading')
   },
   beforeMount () {
     this.init()
   },
   created () {
-    document.body.classList.toggle('loading')
+    document.body.classList.remove('loading')
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
@@ -125,12 +135,12 @@ export default {
     infiniteHandler ($state) {
       // Get Pagination Data
       this.$apollo.query({
-        query: gql`${Pagination}`,
+        query: gql`${PaginationPosts}`,
         variables: {
           cateType: 2,
           cursor: this.cursor
         }
-      }).then(({ data: { paginatedPosts: { totalCount, pageInfo, edges } } }) => {
+      }).then(({ data: { paginatedPosts: { pageInfo, edges } } }) => {
         this.posts = this.posts.concat(edges)
         if (pageInfo.hasNext) {
           this.cursor = pageInfo.after
