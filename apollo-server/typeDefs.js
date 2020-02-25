@@ -134,9 +134,9 @@ type RestaurantBoard {
     res_idx: ID!
     user: User!
     user_idx: Int!
+    category_idx: Int!
     res_nm: String
     res_icon: String
-    res_category: String
     star_avg: Int
     res_menu: String
     res_info: String
@@ -188,6 +188,26 @@ type Schedule {
     etc: String!
 }
 
+# Types for pagination
+
+type PageInfo {
+    hasNext: Boolean
+    hasPrevious: Boolean
+    before: String
+    after: String
+}
+
+type Posts {
+    totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [PostEdge]
+}
+
+type PostEdge {
+    node: Board,
+    cursor: String
+}
+
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: BoardComment
@@ -200,11 +220,12 @@ type Query {
     colleges(exist_yn: String!): [College]
     departments(college_cd: String): [Department]
     department(dpt_cd: String!): Department
+    gourmets: [RestaurantBoard]
     boards(depth: Int, title: String, parent: Int, category_type: String): [BoardCategory]
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
     posts(category_idx: ID): [Board]
-    paginatedPosts(category_idx: ID!): [Board]
+    paginatedPosts(category_idx: ID!): Posts
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]

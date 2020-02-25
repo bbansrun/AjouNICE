@@ -3,6 +3,7 @@ query Categories($depth: Int!, $category_type: String!) {
         title
         category_nm
         category_idx
+        category_icon
         depth
     }
 }

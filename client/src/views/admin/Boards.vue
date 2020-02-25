@@ -112,6 +112,7 @@ export default {
         showCancelButton: true,
         confirmButtonText: '삭제',
         cancelButtonText: '취소',
+        showLoaderOnConfirm: true,
         preConfirm () {
           return self.$apollo.mutate({
             mutation: gql`${removeCategory}`,
