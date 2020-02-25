@@ -226,7 +226,7 @@ type Query {
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
     posts(category_idx: ID): [Board]
-    paginatedPosts(category_idx: ID!): Posts
+    paginatedPosts(category_idx: ID!, limit: Int!, end_cursor: String): Posts
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]

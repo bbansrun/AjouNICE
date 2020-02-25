@@ -24,6 +24,9 @@ import TokenAuthorization from './auth/TokenAuthorization.graphql'
 import Codes from './admin/Codes.graphql'
 import Users from './admin/Users.graphql'
 
+// Posts
+import Pagination from './posts/PaginatedPosts.graphql'
+
 export {
   Post,
   PostsByKeyword,
@@ -48,5 +51,6 @@ export {
   Departments,
   TokenAuthorization,
   Codes,
-  Users
+  Users,
+  Pagination
 }

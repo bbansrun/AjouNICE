@@ -147,11 +147,12 @@ module.exports = {
     async gourmets (root, args, { db, }, info) {
       return await findAll(db.RestaurantBoard, args, info);
     },
-    async paginatedPosts (root, args, { db, }, info) {
+    async paginatedPosts (root, { category_idx, limit, end_cursor, }, { db, }, info) {
       return await db.Board.paginate({
-        limit: 10,
+        limit,
         desc: true,
-        where: { ...args, },
+        where: { category_idx, },
+        after: end_cursor,
         include: [
           { model: db.BoardCategory, as: 'category', },
           { model: db.User, as: 'user', },

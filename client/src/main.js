@@ -46,6 +46,7 @@ import VueFeather from 'vue-feather'
 import VueFlashMessage from 'vue-flash-message'
 import Buefy from 'buefy'
 import vSelect from 'vue-select'
+import InfiniteLoading from 'vue-infinite-loading'
 import VueSweetalert2 from 'vue-sweetalert2'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import Gravatar from 'vue-gravatar'
@@ -99,6 +100,7 @@ Vue.use(Buefy, {
   defaultIconComponent: 'font-awesome-icon',
   defaultIconPack: 'fas'
 })
+Vue.use(InfiniteLoading)
 Vue.use(VueApollo)
 Vue.use(VueCarousel)
 Vue.use(VueFeather)
