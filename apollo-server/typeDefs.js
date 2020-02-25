@@ -88,7 +88,7 @@ type Board {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
-    comments: [BoardComment!]!
+    comments: [BoardComment]
 }
 
 type BoardCategory {
@@ -112,14 +112,14 @@ type BoardCategory {
 type BoardComment {
     cmt_idx: ID!
     board_idx: Int!
-    to: Board!
+    from: Board!
     user_idx: Int!
+    commenter: User
     text: String
-    reg_ip: String
-    reg_dt: Date
+    reg_ip: String!
+    reg_dt: Date!
     upt_ip: String
     upt_dt: Date
-    commenter: User
 }
 
 type BoardVote {
@@ -134,6 +134,7 @@ type RestaurantBoard {
     res_idx: ID!
     user: User!
     user_idx: Int!
+    category: BoardCategory!
     category_idx: Int!
     res_nm: String
     res_icon: String
@@ -144,8 +145,8 @@ type RestaurantBoard {
     res_lon: Int
     res_addr: String
     res_phone: String
-    reg_ip: String
-    reg_dt: Date
+    reg_ip: String!
+    reg_dt: Date!
     upt_ip: String
     upt_dt: Date
 }
@@ -159,8 +160,8 @@ type RestaurantComment {
     star: Int!
     parent_idx: Int
     reg_ip: String!
-    reg_dt: Date
-    upt_ip: String!
+    reg_dt: Date!
+    upt_ip: String
     upt_dt: Date
 }
 
@@ -169,8 +170,8 @@ type RestaurantImg {
     res_idx: Int!
     img_path: String!
     reg_ip: String!
-    reg_dt: Date
-    upt_ip: String!
+    reg_dt: Date!
+    upt_ip: String
     upt_dt: Date
 }
 

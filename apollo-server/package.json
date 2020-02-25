@@ -34,6 +34,7 @@
     "graphql-sequelize": "^9.4.0",
     "graphql-validation-complexity": "^0.2.5",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
     "mysql2": "^2.0.1",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.2",

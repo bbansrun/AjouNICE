@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const uuid = require('uuid/v4');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -78,14 +79,6 @@ module.exports = {
       ];
       return await findAll(db.Board, args, info, include, order);
     },
-    async paginatedPosts (root, args, { db, }, info) {
-      return await db.Board.paginate({
-        limit: 5,
-        desc: true,
-        raw: true,
-        where: { ...args, },
-      });
-    },
     async post (root, args, { db, }, info) {
       const order = [
         [{ model: db.BoardComment, as: 'comments', }, 'reg_dt', 'DESC'],
@@ -96,6 +89,9 @@ module.exports = {
         { model: db.User, as: 'user', },
         { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
       ];
+      // Test (Temporarily)
+      const result = await findOne(db.Board, args, info, include, order);
+      console.log(result);
       return await findOne(db.Board, args, info, include, order);
     },
     async postsByKeyword (root, args, { db, }, info) {
@@ -150,6 +146,18 @@ module.exports = {
     },
     async gourmets (root, args, { db, }, info) {
       return await findAll(db.RestaurantBoard, args, info);
+    },
+    async paginatedPosts (root, args, { db, }, info) {
+      return await db.Board.paginate({
+        limit: 10,
+        desc: true,
+        where: { ...args, },
+        include: [
+          { model: db.BoardCategory, as: 'category', },
+          { model: db.User, as: 'user', },
+          { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
+        ],
+      });
     },
   },
   Mutation: {
