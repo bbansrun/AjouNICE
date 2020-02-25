@@ -79,16 +79,12 @@ module.exports = {
       return await findAll(db.Board, args, info, include, order);
     },
     async paginatedPosts (root, args, { db, }, info) {
-      // Pagination Test
-      const posts = await db.Board.paginate({
-        limit: 1,
+      return await db.Board.paginate({
+        limit: 5,
+        desc: true,
+        raw: true,
+        where: { ...args, },
       });
-      console.log(posts.results[0]);
-      const returnType = {
-        totalCount: posts.length,
-        edges: posts,
-      };
-      return returnType;
     },
     async post (root, args, { db, }, info) {
       const order = [
@@ -151,6 +147,9 @@ module.exports = {
     },
     async checkTokenValid (root, args, { db, }, info) {
       return await findOne(db.User, args, info);
+    },
+    async gourmets (root, args, { db, }, info) {
+      return await findAll(db.RestaurantBoard, args, info);
     },
   },
   Mutation: {
@@ -278,5 +277,14 @@ module.exports = {
       if (removed) return true;
       else return false;
     },
+  },
+  Posts: {
+    totalCount: (parent) => (parent.results.length),
+    pageInfo: (parent) => (parent.cursors),
+    edges: (parent) => (parent.results),
+  },
+  PostEdge: {
+    node: (parent) => (parent),
+    cursor: (parent) => (Buffer.from(`[${parent.board_idx}]`).toString('base64')),
   },
 };

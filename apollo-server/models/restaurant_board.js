@@ -9,15 +9,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
     },
+    category_idx: {
+      type: DataTypes.INTEGER(10).UNSIGNED,
+      allowNull: false,
+    },
     res_nm: {
       type: DataTypes.STRING(50),
     },
     res_icon: {
       type: DataTypes.STRING(500),
       allowNull: true,
-    },
-    res_category: {
-      type: DataTypes.STRING(10),
     },
     star_avg: {
       type: DataTypes.INTEGER(20),

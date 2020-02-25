@@ -1,69 +1,88 @@
 <template>
-  <div class="wrapper">
-    <header data-logo>
-      <h2>ADMIN</h2>
-      <small>관리자</small>
-    </header>
-    <div class="input-form">
-      <div class="input-form-wrapper">
-        <div class="input-form-group">
-          <input
-            v-model="userID"
-            type="text"
-            :class="{ 'error': errorValidation.userID && !userID }"
-            placeholder="아이디"
-            pattern=".{6,}"
-            required
-          >
-          <p
-            v-if="errorValidation.userID && !userID"
-            class="auto-validate-noti"
-            :class="{ 'error': errorValidation.userID && !userID }"
-          >
-            칸이 비어있습니다.
-          </p>
+  <main fix-page>
+    <section
+      data-form-center
+      class="auth has-text-centered"
+    >
+      <header>
+        <Logo />
+        <small>아주대학교 대표 커뮤니티 서비스</small>
+      </header>
+      <form
+        data-auth-form
+        autocomplete="off"
+        @submit.prevent
+      >
+        <div class="wrapper">
+          <header data-logo>
+            <h2>ADMIN</h2>
+            <small>관리자</small>
+          </header>
+          <div class="input-form">
+            <div class="input-form-wrapper">
+              <div class="input-form-group">
+                <input
+                  v-model="userID"
+                  type="text"
+                  :class="{ 'error': errorValidation.userID && !userID }"
+                  placeholder="아이디"
+                  pattern=".{6,}"
+                  required
+                >
+                <p
+                  v-if="errorValidation.userID && !userID"
+                  class="auto-validate-noti"
+                  :class="{ 'error': errorValidation.userID && !userID }"
+                >
+                  칸이 비어있습니다.
+                </p>
+              </div>
+              <div class="input-form-group">
+                <input
+                  v-model="password"
+                  type="password"
+                  placeholder="패스워드"
+                  pattern=".{8,}"
+                  :class="{ 'error': errorValidation.password && !password }"
+                  required
+                  @keyup.enter="signin"
+                >
+                <p
+                  v-if="errorValidation.password && !password"
+                  class="auto-validate-noti"
+                  :class="{ 'error': errorValidation.password && !password }"
+                >
+                  칸이 비어있습니다.
+                </p>
+              </div>
+              <div class="input-form-group buttons">
+                <b-button
+                  class="is-medium submit"
+                  size="is-medium"
+                  type="is-dark"
+                  expanded
+                  @click="signin"
+                >
+                  <font-awesome-icon icon="key" />&nbsp;
+                  <span>로그인</span>
+                </b-button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="input-form-group">
-          <input
-            v-model="password"
-            type="password"
-            placeholder="패스워드"
-            pattern=".{8,}"
-            :class="{ 'error': errorValidation.password && !password }"
-            required
-            @keyup.enter="signin"
-          >
-          <p
-            v-if="errorValidation.password && !password"
-            class="auto-validate-noti"
-            :class="{ 'error': errorValidation.password && !password }"
-          >
-            칸이 비어있습니다.
-          </p>
-        </div>
-        <div class="input-form-group buttons">
-          <b-button
-            class="is-medium submit"
-            size="is-medium"
-            type="is-dark"
-            expanded
-            @click="signin"
-          >
-            <font-awesome-icon icon="key" />&nbsp;
-            <span>로그인</span>
-          </b-button>
-        </div>
-      </div>
-    </div>
-  </div>
+      </form>
+    </section>
+  </main>
 </template>
 
 <script>
 import gql from 'graphql-tag'
+import Logo from '@/assets/images/AjouNICE_shadow.svg'
 import { LoggedInLogger } from '@/assets/graphql/mutations'
 import jwt from 'jsonwebtoken'
 
 export default {
+  components: { Logo },
   data () {
     return {
       userID: '',

@@ -40,10 +40,22 @@
         <b-table-column
           field="title"
           label="영문명"
-          width="20%"
+          width="15%"
           sortable
         >
           {{ props.row.title }}
+        </b-table-column>
+        <b-table-column
+          field="category_icon"
+          label="아이콘"
+          width="5%"
+        >
+          <figure>
+            <img
+              :src="props.row.category_icon"
+              :alt="`[Gourmet] '${props.row.title}' Icon`"
+            >
+          </figure>
         </b-table-column>
         <b-table-column
           field="settings"
@@ -105,6 +117,7 @@ export default {
         showCancelButton: true,
         confirmButtonText: '삭제',
         cancelButtonText: '취소',
+        showLoaderOnConfirm: true,
         preConfirm () {
           return self.$apollo.mutate({
             mutation: gql`${removeCategory}`,
