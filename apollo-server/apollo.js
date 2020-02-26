@@ -32,7 +32,7 @@ const server = new ApolloServer({
   validationRules: [
     // NoIntrospection, // When Production
     depthLimit(5), // Limited GraphQL Query Depth
-    createComplexityLimitRule(700, { // Limited GraphQL Query Complexity
+    createComplexityLimitRule(800, { // Limited GraphQL Query Complexity
       onCost: cost => console.log(`[Apollo] Query Costs: ${cost}`),
     })
   ],

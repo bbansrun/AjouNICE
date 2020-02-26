@@ -307,6 +307,18 @@ module.exports = {
       if (removed) return true;
       else return false;
     },
+    addGourmetPlace: async (root, args, { db, }, info) => {
+      const created = await createOne(db.RestaurantBoard, args);
+      if (created) {
+        return await findOne(db.RestaurantBoard, args, info);
+      } else {
+        return {};
+      }
+    },
+    addGourmetResIcon: async (root, { file, }, { db, }, info) => {
+      const { Location, } = await handleS3Upload(file, 'restaurant/res_img', `${uuid()}_${Date.now().valueOf()}`);
+      return Location;
+    },
   },
   Posts: connection,
   Gourmets: connection,

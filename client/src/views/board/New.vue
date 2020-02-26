@@ -87,8 +87,6 @@
 <script>
 import Vue from 'vue'
 import gql from 'graphql-tag'
-import urljoin from 'url-join'
-import pathParser from 'path-parse'
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
@@ -123,7 +121,7 @@ class ImageUploadToS3Adapter {
           mutation: gql`${singleUpload}`,
           variables: {
             file: file,
-            type: "board"
+            type: 'board'
           }
         }).then(({ data: { singleUpload } }) => {
           console.log(singleUpload)
@@ -227,8 +225,8 @@ export default {
       form: {
         post: {},
         title: '',
-        editorData: '<p></p>',
-      },
+        editorData: '<p></p>'
+      }
     }
   },
   computed: {
@@ -251,31 +249,31 @@ export default {
   beforeMount () {
     this.title = '게시물 작성'
     if (!this.$route.params.category) {
-        this.$apollo.query({
-            query: gql`${AllCates}`,
-            variables: {
-              depth: 0,
-              category_type: "NORMAL"
-            }
-        }).then(({ data }) => {
-            this.categories = data.boards
-        }).catch(error => {
-            console.error(error)
-        })
+      this.$apollo.query({
+        query: gql`${AllCates}`,
+        variables: {
+          depth: 0,
+          category_type: 'NORMAL'
+        }
+      }).then(({ data }) => {
+        this.categories = data.boards
+      }).catch(error => {
+        console.error(error)
+      })
     } else {
-        this.$apollo.query({
-            query: gql`${CateInfo}`,
-            variables: {
-            title: this.$route.params.category
-            }
-        }).then(({ data }) => {
-            this.categories.push(data.boards[0].category_nm)
-            this.selectedCategory = data.boards[0].category_idx
-            this.category_idx = data.boards[0].category_idx
-            this.selectedCategoryTitle = data.boards[0].category_nm
-            this.category = data.boards[0].category_nm
-            this.getCateDepth1()
-        })
+      this.$apollo.query({
+        query: gql`${CateInfo}`,
+        variables: {
+          title: this.$route.params.category
+        }
+      }).then(({ data }) => {
+        this.categories.push(data.boards[0].category_nm)
+        this.selectedCategory = data.boards[0].category_idx
+        this.category_idx = data.boards[0].category_idx
+        this.selectedCategoryTitle = data.boards[0].category_nm
+        this.category = data.boards[0].category_nm
+        this.getCateDepth1()
+      })
     }
   },
   methods: {

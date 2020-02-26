@@ -236,6 +236,7 @@ export default {
           user_idx: this.$store.state.user.idx
         }
       }).then(({ data: { modifiedProfileImage } }) => {
+        this.flashSuccess('프로필이 변경되었습니다.')
         this.user.user_profile = modifiedProfileImage
       })
     }

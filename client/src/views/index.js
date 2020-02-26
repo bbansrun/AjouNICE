@@ -6,6 +6,7 @@ import AdminNewBoard from './admin/NewBoard.vue'
 import AdminCode from './admin/Code.vue'
 import AdminGourmet from './admin/Gourmet.vue'
 import AdminNewGourmet from './admin/NewGourmet.vue'
+import AdminNewGourmetPlace from './admin/NewGourmetPlace.vue'
 import AdminReviews from './admin/Reviews.vue'
 import AdminUsers from './admin/Users.vue'
 import AdminStatus from './admin/Status.vue'
@@ -92,6 +93,7 @@ export {
   AdminDashboard,
   AdminGourmet,
   AdminNewGourmet,
+  AdminNewGourmetPlace,
   AdminReviews,
   AdminUsers,
   AdminStatus,
