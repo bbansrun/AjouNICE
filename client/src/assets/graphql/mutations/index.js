@@ -16,6 +16,7 @@ import addCategory from './admin/addCategory.graphql'
 import removeCategory from './admin/removeCategory.graphql'
 import addGourmetPlace from './admin/addGourmetPlace.graphql'
 import addGourmetResIcon from './admin/addGourmetResIcon.graphql'
+import addGourmetResources from './admin/addGourmetResources.graphql'
 import removeGourmet from './admin/removeGourmet.graphql'
 
 export {
@@ -35,5 +36,6 @@ export {
   removeCategory,
   addGourmetPlace,
   addGourmetResIcon,
+  addGourmetResources,
   removeGourmet
 }

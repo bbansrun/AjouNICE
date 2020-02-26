@@ -70,6 +70,21 @@
               </article>
             </div>
             <hr>
+            <div class="images">
+              <img
+                v-for="(image, i) in slideImages"
+                :key="i"
+                class="image"
+                :src="image"
+                @click="index = i"
+              >
+              <vue-gallery-slideshow
+                :images="slideImages"
+                :index="index"
+                @close="index = null"
+              />
+            </div>
+            <hr>
             <div class="controls">
               <div class="meta-bottom has-text-right">
                 <small>
@@ -156,6 +171,7 @@
 import _ from 'lodash'
 import Vue from 'vue'
 import VueClipBoard from 'vue-clipboard2'
+import VueGallerySlideshow from 'vue-gallery-slideshow'
 import gql from 'graphql-tag'
 import { GourmetById } from '@/assets/graphql/queries'
 import { IncrementViewCount } from '@/assets/graphql/mutations'
@@ -168,10 +184,13 @@ export default {
     Navigation,
     Report,
     Replies,
-    Footer
+    Footer,
+    VueGallerySlideshow
   },
   data () {
     return {
+      index: null,
+      slideImages: [],
       meta: {},
       user_idx: null,
       onReport: false,
@@ -195,7 +214,8 @@ export default {
         res_phone: '',
         reg_dt: '',
         upt_dt: '',
-        comments: []
+        comments: [],
+        resources: []
       }
     }
   },
@@ -216,6 +236,9 @@ export default {
         this.$router.push('/error/404')
       } else {
         this.post = gourmetById
+        this.post.resources.forEach(item => {
+          this.slideImages.push(item.img_path)
+        })
         this.$apollo.mutate({
           mutation: gql`${IncrementViewCount}`,
           variables: {
@@ -401,6 +424,15 @@ article header span::before {
 .meta-bottom {
   margin: {
     bottom: .5rem;
+  }
+}
+
+.images {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  > .image {
+    max-width: 100px;
+    max-height: 100px;
   }
 }
 </style>

@@ -133,6 +133,19 @@ db.RestaurantComment.belongsTo(db.RestaurantBoard, {
   targetKey: 'res_idx',
 });
 
+// --- RestaurantBoard -> RestaurantImg (1:N)
+db.RestaurantBoard.hasMany(db.RestaurantImg, {
+  as: 'resources',
+  foreignKey: 'res_idx',
+  sourceKey: 'res_idx',
+});
+
+db.RestaurantImg.belongsTo(db.RestaurantBoard, {
+  as: 'resources',
+  foreignKey: 'res_idx',
+  targetKey: 'res_idx',
+});
+
 // - From BoardCategory
 // --- BoardCategory -> Board (1:N)
 db.BoardCategory.hasMany(db.Board, {

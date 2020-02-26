@@ -29,5 +29,11 @@ query GourmetById($id: ID!) {
             reg_dt
             upt_dt
         }
+        resources {
+            img_idx
+            img_path
+            reg_dt
+            upt_dt
+        }
     }
 }

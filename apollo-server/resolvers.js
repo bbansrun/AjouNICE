@@ -170,7 +170,8 @@ module.exports = {
     async gourmetById (root, args, { db, }, info) {
       const include = [
         { model: db.BoardCategory, as: 'category', },
-        { model: db.RestaurantComment, as: 'comments', include: [{ model: db.User, as: 'user', }], }
+        { model: db.RestaurantComment, as: 'comments', include: [{ model: db.User, as: 'user', }], },
+        { model: db.RestaurantImg, as: 'resources', }
       ];
       return await findOne(db.RestaurantBoard, args, info, include);
     },
@@ -336,8 +337,17 @@ module.exports = {
       }
     },
     addGourmetResIcon: async (root, { file, }, { db, }, info) => {
-      const { Location, } = await handleS3Upload(file, 'restaurant/res_img', `${uuid()}_${Date.now().valueOf()}`);
+      const { Location, } = await handleS3Upload(file, 'restaurant/icon', `${uuid()}_${Date.now().valueOf()}`);
       return Location;
+    },
+    addGourmetResources: async (root, { res_idx, files, reg_ip, reg_dt, upt_ip, upt_dt, }, { db, }, info) => {
+      const status = [];
+      await Promise.all(files.map(async (file) => {
+        const { Location, } = await handleS3Upload(file, 'restaurant/res_img', `res_${res_idx}_${uuid()}_${Date.now().valueOf()}`);
+        const fileCreated = await createOne(db.RestaurantImg, { res_idx, img_path: Location, reg_ip, reg_dt, upt_ip, upt_dt, });
+        status.push(fileCreated !== undefined);
+      }));
+      return status.every((succeeded) => (succeeded === true));
     },
   },
   Posts: connection,

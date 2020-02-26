@@ -65,6 +65,7 @@
     "vue-daum-map": "^1.0.15",
     "vue-feather": "^1.0.0",
     "vue-flash-message": "^0.7.2",
+    "vue-gallery-slideshow": "^1.5.0",
     "vue-graphql-loader": "^0.3.3",
     "vue-gravatar": "^1.3.1",
     "vue-infinite-loading": "^2.4.4",

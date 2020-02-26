@@ -153,6 +153,7 @@ type RestaurantBoard {
     upt_ip: String
     upt_dt: Date
     comments: [RestaurantComment]
+    resources: [RestaurantImg]
 }
 
 type RestaurantComment {
@@ -289,4 +290,5 @@ type Mutation {
     removeCategory(category_idx: Int!): Boolean
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): RestaurantBoard
     addGourmetResIcon(file: Upload!): String
+    addGourmetResources(res_idx: Int!, files: [Upload!], reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): Boolean
 }`;
