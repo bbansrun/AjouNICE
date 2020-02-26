@@ -24,6 +24,73 @@ db.RestaurantComment = require('./restaurant_comment')(sequelize, Sequelize);
 db.RestaurantImg = require('./restaurant_img')(sequelize, Sequelize);
 
 // Relationships
+// - From User
+// --- User -> Board (1:N)
+db.User.hasMany(db.Board, {
+  as: 'articles',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.Board.belongsTo(db.User, {
+  as: 'user',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
+// --- User -> RestaurantBoard (1:N)
+db.User.hasMany(db.RestaurantBoard, {
+  as: 'resPosts',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.RestaurantBoard.belongsTo(db.User, {
+  as: 'resPosts',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
+
+// --- User -> BoardComment (1:N)
+db.User.hasMany(db.BoardComment, {
+  as: 'comments',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.BoardComment.belongsTo(db.User, {
+  as: 'commenter',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
+
+// --- User -> RestaurantComment (1:N)
+db.User.hasMany(db.RestaurantComment, {
+  as: 'gmComments',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.RestaurantComment.belongsTo(db.User, {
+  as: 'user',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
+
+// --- User -> BoardVote (1:N)
+db.User.hasMany(db.BoardVote, {
+  as: 'voteTo',
+  foreignKey: 'user_idx',
+  sourceKey: 'user_idx',
+});
+
+db.BoardVote.belongsTo(db.User, {
+  as: 'voter',
+  foreignKey: 'user_idx',
+  targetKey: 'user_idx',
+});
+
+// - From Board
+// --- Board -> BoardComment (1:N)
 db.Board.hasMany(db.BoardComment, {
   as: 'comments',
   foreignKey: 'board_idx',
@@ -39,36 +106,7 @@ db.BoardComment.belongsTo(db.Board, {
   targetKey: 'board_idx',
 });
 
-db.User.hasMany(db.BoardComment, {
-  as: 'comments',
-  foreignKey: 'user_idx',
-  sourceKey: 'user_idx',
-});
-
-db.BoardComment.belongsTo(db.User, {
-  as: 'commenter',
-  foreignKey: 'user_idx',
-  targetKey: 'user_idx',
-});
-
-db.User.hasMany(db.Board, {
-  as: 'articles',
-  foreignKey: 'user_idx',
-  sourceKey: 'user_idx',
-});
-
-db.User.hasMany(db.BoardVote, {
-  as: 'voteTo',
-  foreignKey: 'user_idx',
-  sourceKey: 'user_idx',
-});
-
-db.BoardVote.belongsTo(db.User, {
-  as: 'voter',
-  foreignKey: 'user_idx',
-  targetKey: 'user_idx',
-});
-
+// --- Board -> BoardVote (1:N)
 db.Board.hasMany(db.BoardVote, {
   as: 'votes',
   foreignKey: 'board_idx',
@@ -81,12 +119,22 @@ db.BoardVote.belongsTo(db.Board, {
   targetKey: 'board_idx',
 });
 
-db.Board.belongsTo(db.User, {
-  as: 'user',
-  foreignKey: 'user_idx',
-  targetKey: 'user_idx',
+// - From RestaurantBoard
+// --- RestaurantBoard -> RestaurantComment (1:N)
+db.RestaurantBoard.hasMany(db.RestaurantComment, {
+  as: 'comments',
+  foreignKey: 'res_idx',
+  sourceKey: 'res_idx',
 });
 
+db.RestaurantComment.belongsTo(db.RestaurantBoard, {
+  as: 'gmCommented',
+  foreignKey: 'res_idx',
+  targetKey: 'res_idx',
+});
+
+// - From BoardCategory
+// --- BoardCategory -> Board (1:N)
 db.BoardCategory.hasMany(db.Board, {
   as: 'posts',
   foreignKey: 'category_idx',
@@ -99,18 +147,7 @@ db.Board.belongsTo(db.BoardCategory, {
   targetKey: 'category_idx',
 });
 
-db.College.hasMany(db.Department, {
-  as: 'departments',
-  foreignKey: 'college_cd',
-  sourceKey: 'college_cd',
-});
-
-db.Department.belongsTo(db.College, {
-  as: 'departments',
-  foreignKey: 'college_cd',
-  targetKey: 'college_cd',
-});
-
+// --- BoardCategory -> RestaurantBoard (1:N)
 db.BoardCategory.hasMany(db.RestaurantBoard, {
   as: 'category',
   foreignKey: 'category_idx',
@@ -121,6 +158,19 @@ db.RestaurantBoard.belongsTo(db.BoardCategory, {
   as: 'category',
   foreignKey: 'category_idx',
   targetKey: 'category_idx',
+});
+
+// College <-> Department
+db.College.hasMany(db.Department, {
+  as: 'departments',
+  foreignKey: 'college_cd',
+  sourceKey: 'college_cd',
+});
+
+db.Department.belongsTo(db.College, {
+  as: 'departments',
+  foreignKey: 'college_cd',
+  targetKey: 'college_cd',
 });
 
 // Paginations

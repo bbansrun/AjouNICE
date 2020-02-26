@@ -20,11 +20,18 @@
               </div>
               <div class="info">
                 <span>
-                  <small>{{ item.node.reg_dt | formatDateTime }}</small>
+                  <small>{{ item.node.res_info }}</small>
                 </span>
               </div>
               <div class="ratings">
-                별이 5개
+                <b-rate
+                  v-model="item.node.star_avg"
+                  :max="5"
+                  :show-score="true"
+                  :rtl="false"
+                  :spaced="false"
+                  :disabled="true"
+                />
               </div>
             </div>
           </div>

@@ -152,6 +152,7 @@ type RestaurantBoard {
     reg_dt: Date!
     upt_ip: String
     upt_dt: Date
+    comments: [RestaurantComment]
 }
 
 type RestaurantComment {
@@ -240,6 +241,7 @@ type Query {
     colleges(exist_yn: String!): [College]
     departments(college_cd: String): [Department]
     department(dpt_cd: String!): Department
+    gourmetById(res_idx: ID!): RestaurantBoard
     gourmets: [RestaurantBoard]
     gourmetsByCate(category_idx: Int!): [RestaurantBoard]
     boards(depth: Int, title: String, parent: Int, category_type: CategoryType): [BoardCategory]

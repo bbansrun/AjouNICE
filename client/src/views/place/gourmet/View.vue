@@ -6,27 +6,69 @@
         <section class="post">
           <header>
             <div class="header grid">
-              <h3>{{ post.title }}</h3>
+              <h3>{{ post.res_nm }}</h3>
               <small class="category has-text-right">
                 <router-link
                   class="underline underline-animated"
-                  :to="`/board/${post.category.title}`"
+                  :to="`/place/gourmet/${post.category.title}`"
                 >{{ post.category.category_nm }} 게시판</router-link>
               </small>
             </div>
             <div class="meta has-text-right">
               <small>
-                <span class="writer">{{ post.user.nick_nm }}</span>&nbsp;
-                <span class="date">{{ post.reg_dt | formatDateTime }}</span>&nbsp;
+                <span class="date">{{ post.reg_dt | formatDateTime }}</span>
               </small>
             </div>
           </header>
           <hr>
           <div class="content">
-            <div
-              class="container"
-              v-html="post.body"
-            />
+            <div class="container">
+              <article>
+                <header>
+                  <strong>{{ post.res_info }}</strong>
+                </header>
+                <figure>
+                  <img
+                    :src="post.res_icon"
+                    :alt="`[맛집] ${post.category.category_nm} - ${post.res_nm}`"
+                  >
+                  <figcaption>{{ `[맛집] ${post.category.category_nm} - ${post.res_nm}` }}</figcaption>
+                </figure>
+                <div class="content">
+                  <div class="info">
+                    <h5>메뉴</h5>
+                    <b-taglist>
+                      <b-tag
+                        v-for="item in post.res_menu.split(',')"
+                        :key="item"
+                        type="is-info"
+                      >
+                        {{ item }}
+                      </b-tag>
+                    </b-taglist>
+                  </div>
+                  <div class="info">
+                    <h5>주소</h5>
+                    <p>{{ post.res_addr }}</p>
+                  </div>
+                  <div class="info">
+                    <h5>연락처</h5>
+                    <p>{{ post.res_phone }}</p>
+                  </div>
+                </div>
+                <div class="info">
+                  <h5>사용자 평점</h5>
+                  <b-rate
+                    v-model="post.star_avg"
+                    :max="5"
+                    :show-score="true"
+                    :rtl="false"
+                    :spaced="false"
+                    :disabled="true"
+                  />
+                </div>
+              </article>
+            </div>
             <hr>
             <div class="controls">
               <div class="meta-bottom has-text-right">
@@ -71,33 +113,14 @@
                   tag="router-link"
                   size="is-small"
                   type="is-primary"
-                  to="/board"
+                  :to="`/place/gourmet/${post.category.title}`"
                 >
                   <font-awesome-icon icon="th-list" />&nbsp;
                   <span>목록으로</span>
                 </b-button>
-                <b-button
-                  v-show="articleWriter()"
-                  tag="router-link"
-                  size="is-small"
-                  type="is-warning"
-                  :to="editArticle"
-                >
-                  <font-awesome-icon icon="pen" />&nbsp;
-                  <span>수정</span>
-                </b-button>
-                <b-button
-                  v-show="articleWriter()"
-                  size="is-small"
-                  type="is-danger"
-                  @click="removeArticle()"
-                >
-                  <font-awesome-icon icon="trash" />&nbsp;
-                  <span>삭제</span>
-                </b-button>
                 <b-tooltip
                   type="is-info"
-                  label="허위내용을 포함하거나, 유해한 내용의 게시물 신고가 가능합니다."
+                  label="갱신이 필요하거나 잘못된 내용이 있다면 신고해주세요."
                   position="is-left"
                   animated
                 >
@@ -132,13 +155,12 @@
 <script>
 import _ from 'lodash'
 import Vue from 'vue'
-import urljoin from 'url-join'
 import VueClipBoard from 'vue-clipboard2'
 import gql from 'graphql-tag'
-import { Post } from '@/assets/graphql/queries'
-import { removePost, IncrementViewCount } from '@/assets/graphql/mutations'
+import { GourmetById } from '@/assets/graphql/queries'
+import { IncrementViewCount } from '@/assets/graphql/mutations'
 import { Navigation, Report, Replies, Footer } from '@/components'
-import { replyWritten, replyRemoved, replyModified } from '@/assets/graphql/subscriptions'
+// import { replyWritten, replyRemoved, replyModified } from '@/assets/graphql/subscriptions'
 VueClipBoard.config.autoSetContainer = true
 Vue.use(VueClipBoard)
 export default {
@@ -154,27 +176,30 @@ export default {
       user_idx: null,
       onReport: false,
       post: {
-        title: '',
-        body: '',
-        user: {
-          user_idx: null,
-          nick_nm: ''
-        },
+        res_idx: '',
         category: {
-          title: ''
+          title: '',
+          category_type: '',
+          category_nm: '',
+          category_idx: ''
         },
+        res_nm: '',
+        res_icon: '',
+        star_avg: 0,
         view_cnt: 0,
+        res_menu: '',
+        res_info: '',
+        res_lat: null,
+        res_lon: null,
+        res_addr: '',
+        res_phone: '',
+        reg_dt: '',
+        upt_dt: '',
         comments: []
       }
     }
   },
   computed: {
-    editArticle () {
-      let url = this.$route.path
-      url = url.split('/')
-      url.pop()
-      return urljoin(url.join('/'), 'edit')
-    },
     permalink () {
       return window.location.href
     }
@@ -182,76 +207,76 @@ export default {
   beforeMount () {
     document.body.classList.add('loading')
     this.$apollo.query({
-      query: gql`${Post}`,
+      query: gql`${GourmetById}`,
       variables: {
-        id: this.$route.params.post_id
+        id: parseInt(this.$route.params.post_id)
       }
-    }).then(({ data }) => {
-      if (data.post === null) {
+    }).then(({ data: { gourmetById } }) => {
+      if (gourmetById === null) {
         this.$router.push('/error/404')
       } else {
-        this.post = data.post
+        this.post = gourmetById
+        this.$apollo.mutate({
+          mutation: gql`${IncrementViewCount}`,
+          variables: {
+            id: parseInt(this.$route.params.post_id)
+          }
+        }).then(({ data: { postViewed: { view_cnt } } }) => {
+          this.post.view_cnt = view_cnt
+        })
       }
     }).catch(error => {
       console.error(error)
       this.$router.push('/error/500')
     })
-    this.$apollo.mutate({
-      mutation: gql`${IncrementViewCount}`,
-      variables: {
-        id: parseInt(this.$route.params.post_id)
-      }
-    }).then(({ data: { postViewed: { view_cnt } } }) => {
-      this.post.view_cnt = view_cnt
-    })
   },
   mounted () {
     document.body.classList.remove('loading')
-    const self = this
-    const writtenObserver = this.$apollo.subscribe({
-      query: gql`${replyWritten}`
-    })
-    const removedObserver = this.$apollo.subscribe({
-      query: gql`${replyRemoved}`
-    })
-    const modifiedObserver = this.$apollo.subscribe({
-      query: gql`${replyModified}`
-    })
+    // const self = this
+    // const writtenObserver = this.$apollo.subscribe({
+    //   query: gql`${replyWritten}`
+    // })
+    // const removedObserver = this.$apollo.subscribe({
+    //   query: gql`${replyRemoved}`
+    // })
+    // const modifiedObserver = this.$apollo.subscribe({
+    //   query: gql`${replyModified}`
+    // })
 
-    writtenObserver.subscribe({
-      next ({ data: { replyWritten } }) {
-        self.post.comments.unshift(replyWritten)
-        document.body.classList.remove('loading')
-      },
-      error (error) {
-        this.flashError('댓글 작성 중 알 수 없는 오류가 발생했습니다.')
-        console.error(error)
-      }
-    })
+    // writtenObserver.subscribe({
+    //   next ({ data: { replyWritten } }) {
+    //     self.post.comments.unshift(replyWritten)
+    //     document.body.classList.remove('loading')
+    //   },
+    //   error (error) {
+    //     self.flashError('댓글 작성 중 알 수 없는 오류가 발생했습니다.')
+    //     console.error(error)
+    //   }
+    // })
 
-    removedObserver.subscribe({
-      next ({ data: { replyRemoved } }) {
-        self.post.comments = _.remove(self.post.comments, (item) => {
-          return item.cmt_idx !== replyRemoved.cmt_idx
-        })
-        document.body.classList.remove('loading')
-      },
-      error (error) {
-        this.flashError('댓글 삭제 중 알 수 없는 오류가 발생했습니다.')
-        console.error(error)
-      }
-    })
+    // removedObserver.subscribe({
+    //   next ({ data: { replyRemoved } }) {
+    //     self.post.comments = _.remove(self.post.comments, (item) => {
+    //       return item.cmt_idx !== replyRemoved.cmt_idx
+    //     })
+    //     document.body.classList.remove('loading')
+    //   },
+    //   error (error) {
+    //     self.flashError('댓글 삭제 중 알 수 없는 오류가 발생했습니다.')
+    //     console.error(error)
+    //   }
+    // })
 
-    modifiedObserver.subscribe({
-      next ({ data: { replyModified } }) {
-        self.post.comments[_.findIndex(self.post.comments, (item) => (item.cmt_idx === replyModified.cmt_idx))] = replyModified
-        document.body.classList.remove('loading')
-      },
-      error (error) {
-        this.flashError('댓글 수정 중 알 수 없는 오류가 발생했습니다.')
-        console.error(error)
-      }
-    })
+    // modifiedObserver.subscribe({
+    //   next ({ data: { replyModified } }) {
+    //     self.post.comments[_.findIndex(self.post.comments, (item) => (item.cmt_idx === replyModified.cmt_idx))] = replyModified
+    //     document.body.classList.remove('loading')
+    //   },
+    //   error (error) {
+    //     self.flashError('댓글 수정 중 알 수 없는 오류가 발생했습니다.')
+    //     console.error(error)
+    //   }
+    // })
   },
   beforeUpdate () {
     document.body.classList.add('loading')
@@ -272,40 +297,6 @@ export default {
     },
     onError (e) {
       this.$swal('에러!', '복사 중 에러가 발생하였습니다.', 'error')
-    },
-    articleWriter () {
-      return parseInt(this.$store.state.user.idx) === parseInt(this.post.user.user_idx)
-    },
-    removeArticle () {
-      const self = this
-      self.$swal({
-        title: '삭제하시겠습니까?',
-        text: '삭제 후 복구가 불가능합니다.',
-        type: 'question',
-        showCancelButton: true,
-        showLoaderOnConfirm: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        preConfirm () {
-          document.body.classList.add('loading')
-          self.$apollo.mutate({
-            mutation: gql`${removePost}`,
-            variables: {
-              id: parseInt(self.$route.params.post_id)
-            }
-          }).then(({ data }) => {
-            return data
-          }).catch(error => {
-            console.error(error)
-          })
-        }
-      }).then((result) => {
-        if (result.value) {
-          this.flashSuccess('삭제되었습니다.')
-          document.body.classList.remove('loading')
-          this.$router.push('/board')
-        }
-      })
     }
   }
 }

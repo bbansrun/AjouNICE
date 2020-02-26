@@ -97,9 +97,6 @@ module.exports = {
         { model: db.User, as: 'user', },
         { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
       ];
-      // Test (Temporarily)
-      const result = await findOne(db.Board, args, info, include, order);
-      console.log(result);
       return await findOne(db.Board, args, info, include, order);
     },
     async postsByKeyword (root, args, { db, }, info) {
@@ -168,6 +165,14 @@ module.exports = {
     // Common
     async CateById (root, args, { db, }, info) {
       return await findOne(db.BoardCategory, args, info);
+    },
+    // Gourmet
+    async gourmetById (root, args, { db, }, info) {
+      const include = [
+        { model: db.BoardCategory, as: 'category', },
+        { model: db.RestaurantComment, as: 'comments', include: [{ model: db.User, as: 'user', }], }
+      ];
+      return await findOne(db.RestaurantBoard, args, info, include);
     },
     // Pagination
     async paginatedPosts (root, { category_idx, limit, end_cursor, }, { db, }, info) {

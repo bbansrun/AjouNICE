@@ -13,7 +13,6 @@ import BoardsAndPosts from './BoardsAndPosts.graphql'
 import Schedule from './Schedule.graphql'
 import Notice from './Notice.graphql'
 import AdminStatus from './AdminStatus.graphql'
-import GourmetCategories from './gourmet/AllCategories.graphql'
 import DupIDCheck from './auth/DupIDCheck.graphql'
 import DupEmailCheck from './auth/DupEmailCheck.graphql'
 import DupNickCheck from './auth/DupNickCheck.graphql'
@@ -29,6 +28,10 @@ import Users from './admin/Users.graphql'
 import BoardByType from './posts/BoardByType.graphql'
 import PaginationPosts from './posts/PaginatedPosts.graphql'
 import PaginationGourmets from './posts/PaginatedGourmets.graphql'
+
+// Gourmet
+import GourmetCategories from './gourmet/AllCategories.graphql'
+import GourmetById from './gourmet/GourmetById.graphql'
 
 export {
   Post,
@@ -46,7 +49,6 @@ export {
   Schedule,
   Notice,
   AdminStatus,
-  GourmetCategories,
   DupIDCheck,
   DupEmailCheck,
   DupNickCheck,
@@ -58,5 +60,7 @@ export {
   Users,
   BoardByType,
   PaginationPosts,
-  PaginationGourmets
+  PaginationGourmets,
+  GourmetById,
+  GourmetCategories
 }

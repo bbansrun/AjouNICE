@@ -1,0 +1,33 @@
+query GourmetById($id: ID!) {
+    gourmetById(res_idx: $id) {
+        res_idx
+        category {
+            title
+            category_type
+            category_nm
+            category_idx
+        }
+        res_nm
+        res_icon
+        star_avg
+        view_cnt
+        res_menu
+        res_info
+        res_lat
+        res_lon
+        res_addr
+        res_phone
+        reg_dt
+        upt_dt
+        comments {
+            cmt_idx
+            user {
+                nick_nm
+            }
+            text
+            star
+            reg_dt
+            upt_dt
+        }
+    }
+}
