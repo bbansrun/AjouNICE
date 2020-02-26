@@ -1,0 +1,8 @@
+query BoardByType($cateType: CategoryType!, $title: String!) {
+  boardByType(category_type: $cateType, title: $title) {
+    category_nm
+    category_idx
+    access_auth
+    private_yn
+  }
+}

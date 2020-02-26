@@ -1,0 +1,31 @@
+mutation addGourmetPlace(
+        $res_nm: String!,
+        $category_idx: Int!,
+        $user_idx: Int!,
+        $res_menu: String,
+        $res_info: String,
+        $res_addr: String, 
+        $res_phone: String,
+        $res_icon: String,
+        $reg_ip: String!,
+        $reg_dt: Date!,
+        $upt_ip: String!,
+        $upt_dt: Date!
+    ) {
+        addGourmetPlace (
+            res_nm: $res_nm,
+            category_idx: $category_idx,
+            user_idx: $user_idx,
+            res_menu: $res_menu,
+            res_info: $res_info,
+            res_addr: $res_addr,
+            res_phone: $res_phone,
+            res_icon: $res_icon,
+            reg_ip: $reg_ip,
+            reg_dt: $reg_dt,
+            upt_ip: $upt_ip,
+            upt_dt: $upt_dt
+        ) {
+            res_idx
+        }
+}

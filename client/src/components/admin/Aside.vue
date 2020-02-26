@@ -17,10 +17,21 @@
             :key="item.id"
             :class="{ 'active': item.link === $route.path }"
           >
-            <router-link :to="item.link">
+            <router-link
+              v-if="!item.outLink"
+              :to="item.link"
+            >
               <font-awesome-icon :icon="item.icon" />
               <span>{{ item.label }}</span>
             </router-link>
+            <a
+              v-else
+              :href="item.link"
+              target="_blank"
+            >
+              <font-awesome-icon :icon="item.icon" />
+              <span>{{ item.label }}</span>
+            </a>
             <ul v-show="item.hasOwnProperty('children')">
               <li
                 v-for="child in item.children"

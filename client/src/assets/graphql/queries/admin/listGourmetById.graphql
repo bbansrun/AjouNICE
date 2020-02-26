@@ -1,0 +1,23 @@
+query listGourmetById($category_idx: Int!) {
+    gourmetsByCate(category_idx: $category_idx) {
+        category {
+            category_idx
+            category_nm
+        }
+        res_idx
+        res_nm
+        res_menu
+        res_info
+        res_icon
+        res_phone
+        res_addr
+        star_avg
+        view_cnt
+        reg_dt
+        upt_dt
+    }
+    CateById(category_idx: $category_idx) {
+        category_idx
+        category_nm
+    }
+}

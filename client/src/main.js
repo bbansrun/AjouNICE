@@ -37,7 +37,8 @@ import {
   faList,
   faArrowUp,
   faAngleLeft,
-  faAngleRight
+  faAngleRight,
+  faTag
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueApollo from 'vue-apollo'
@@ -46,6 +47,7 @@ import VueFeather from 'vue-feather'
 import VueFlashMessage from 'vue-flash-message'
 import Buefy from 'buefy'
 import vSelect from 'vue-select'
+import InfiniteLoading from 'vue-infinite-loading'
 import VueSweetalert2 from 'vue-sweetalert2'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import Gravatar from 'vue-gravatar'
@@ -92,6 +94,7 @@ library.add(faList)
 library.add(faArrowUp)
 library.add(faAngleLeft)
 library.add(faAngleRight)
+library.add(faTag)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('v-gravatar', Gravatar)
 Vue.component('v-select', vSelect)
@@ -99,6 +102,7 @@ Vue.use(Buefy, {
   defaultIconComponent: 'font-awesome-icon',
   defaultIconPack: 'fas'
 })
+Vue.use(InfiniteLoading)
 Vue.use(VueApollo)
 Vue.use(VueCarousel)
 Vue.use(VueFeather)

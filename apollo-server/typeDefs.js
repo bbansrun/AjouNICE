@@ -12,12 +12,14 @@ enum CategoryType {
     GOURMET
 }
 
-enum S3FileType {
+enum S3UploadType {
     BOARD
     PROFILE
+    NEWCATEGORY
+    GOURMET
 }
 
-directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
+directive @auth(requires: Role = ADMIN) on FIELD_DEFINITION | ENUM_VALUE
 
 type User {
     user_idx: ID!
@@ -94,7 +96,7 @@ type Board {
 type BoardCategory {
     category_idx: ID!
     category_nm: String
-    category_type: String
+    category_type: CategoryType
     category_icon: String
     title: String
     parent: Int
@@ -139,6 +141,7 @@ type RestaurantBoard {
     res_nm: String
     res_icon: String
     star_avg: Int
+    view_cnt: Int
     res_menu: String
     res_info: String
     res_lat: Int
@@ -190,6 +193,13 @@ type Schedule {
 }
 
 # Types for pagination
+interface Edge {
+    cursor: String
+}
+
+interface PaginatedUnit {
+    pageInfo: PageInfo!
+}
 
 type PageInfo {
     hasNext: Boolean
@@ -198,14 +208,23 @@ type PageInfo {
     after: String
 }
 
-type Posts {
-    totalCount: Int!
+type Posts implements PaginatedUnit {
     pageInfo: PageInfo!
     edges: [PostEdge]
 }
 
-type PostEdge {
+type Gourmets implements PaginatedUnit {
+    pageInfo: PageInfo!
+    edges: [GourmetEdge]
+}
+
+type PostEdge implements Edge {
     node: Board,
+    cursor: String
+}
+
+type GourmetEdge implements Edge {
+    node: RestaurantBoard,
     cursor: String
 }
 
@@ -222,26 +241,35 @@ type Query {
     departments(college_cd: String): [Department]
     department(dpt_cd: String!): Department
     gourmets: [RestaurantBoard]
-    boards(depth: Int, title: String, parent: Int, category_type: String): [BoardCategory]
+    gourmetsByCate(category_idx: Int!): [RestaurantBoard]
+    boards(depth: Int, title: String, parent: Int, category_type: CategoryType): [BoardCategory]
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
     posts(category_idx: ID): [Board]
-    paginatedPosts(category_idx: ID!): Posts
+    boardByType(category_type: CategoryType, title: String): BoardCategory
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]
+    # Common
+    CateById(category_idx: Int!): BoardCategory
+    # Auth
     doesIDExists(user_id: String!): Boolean
     doesEmailExists(email: String!): Boolean
     doesNickExists(nick_nm: String!): Boolean
     checkTokenValid(auth_token: String!): User
+    # Pagination
+    paginatedPosts(category_idx: ID!, limit: Int!, end_cursor: String): Posts
+    paginatedGourmets(category_idx: ID!, limit: Int!, end_cursor: String): Gourmets
 }
 
 type Mutation {
+    # Auth
     sendContactMail(name: String!, email: String!, content: String!): Boolean
     sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean
     lastLogin(user_id: String!, ip: String!): User
     authorize(user_idx: Int!, auth_token: String!): Boolean
     resetEmailToken(email: String!): Boolean
+    # Standards
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String!, upt_ip: String!): Board
     removePost(board_idx: Int!): Boolean
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, upt_ip: String, upt_dt: Date): Board
@@ -253,6 +281,10 @@ type Mutation {
     modifiedProfileImage(file: Upload!, user_idx: Int!): String
     uploadedBoardImage(file: Upload!, category_idx: Int!): String
     uploadedCategoryIcon(file: Upload!): String
+    removeGourmet(res_idx: Int!): Boolean
+    # Admin
     addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): BoardCategory
     removeCategory(category_idx: Int!): Boolean
+    addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): RestaurantBoard
+    addGourmetResIcon(file: Upload!): String
 }`;

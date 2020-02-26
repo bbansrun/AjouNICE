@@ -1,4 +1,4 @@
-query Categories($depth: Int!, $category_type: String!) {
+query Categories($depth: Int!, $category_type: CategoryType!) {
     boards(depth: $depth, category_type: $category_type) {
         title
         category_nm

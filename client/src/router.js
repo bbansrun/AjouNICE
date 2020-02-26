@@ -26,7 +26,9 @@ import {
   AdminBoards,
   AdminNewBoard,
   AdminGourmet,
+  AdminGourmetList,
   AdminNewGourmet,
+  AdminNewGourmetPlace,
   AdminReviews,
   AdminNewPopup,
   AdminPopup,
@@ -344,8 +346,16 @@ export default new Router({
           component: AdminGourmet
         },
         {
-          path: 'boards/gourmet/new',
+          path: 'boards/gourmet/new/module',
           component: AdminNewGourmet
+        },
+        {
+          path: 'boards/gourmet/new/place',
+          component: AdminNewGourmetPlace
+        },
+        {
+          path: 'boards/gourmet/:category_idx',
+          component: AdminGourmetList
         },
         {
           path: 'boards/reviews',

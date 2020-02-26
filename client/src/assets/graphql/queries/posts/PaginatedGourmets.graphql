@@ -1,0 +1,24 @@
+query Pagination($cateId: ID!, $size: Int! = 10, $cursor: String){
+  paginatedGourmets(category_idx: $cateId, limit: $size, end_cursor: $cursor) {
+    pageInfo {
+      hasNext
+      hasPrevious
+      before
+      after
+    }
+    edges {
+     	node {
+        res_idx
+        res_nm
+        res_icon
+        res_menu
+        res_info
+        star_avg
+        res_addr
+        reg_dt
+        upt_dt
+      }
+      cursor
+    }
+  }
+}

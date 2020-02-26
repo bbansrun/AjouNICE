@@ -10,21 +10,21 @@
     >
       <div
         v-for="post in items"
-        :key="post.board_idx"
+        :key="post.node.board_idx"
         class="post"
       >
-        <router-link :to="`/board/${post.board_idx}/view`">
+        <router-link :to="`/board/${post.node.board_idx}/view`">
           <article class="post">
             <header>
               <div class="wrapper">
-                <h3>{{ post.title }}</h3>
+                <h3>{{ post.node.title }}</h3>
                 <div class="meta">
                   <div class="info">
-                    <span><small>{{ post.user.nick_nm }}</small></span>&nbsp;
+                    <span><small>{{ post.node.user.nick_nm }}</small></span>&nbsp;
                   </div>
                   <div class="info">
-                    <span><small>{{ post.reg_dt | formatDateTime }}</small></span>&nbsp;
-                    <span><small><font-awesome-icon icon="eye" /> {{ post.view_cnt | numberWithCommas }}</small></span>&nbsp;
+                    <span><small>{{ post.node.reg_dt | formatDateTime }}</small></span>&nbsp;
+                    <span><small><font-awesome-icon icon="eye" /> {{ post.node.view_cnt | numberWithCommas }}</small></span>&nbsp;
                   </div>
                 </div>
               </div>
@@ -39,14 +39,11 @@
               </div>
             </header>
             <div class="replies">
-              <span>{{ post.comments.length > 99 ? '100+' : (post.comments.length | numberWithCommas) }}</span>
+              <span>{{ post.node.comments.length > 99 ? '100+' : (post.node.comments.length | numberWithCommas) }}</span>
               <h6>댓글</h6>
             </div>
           </article>
         </router-link>
-      </div>
-      <div class="view-more has-text-centered">
-        <a>게시물 더보기</a>
       </div>
     </div>
     <div
@@ -151,19 +148,6 @@ section.popular {
         }
       }
     }
-  }
-}
-
-.view-more {
-  display: block;
-  width: 100%;
-  font-size: .6rem;
-  padding: .5rem;
-  color: #000;
-  text-align: center;
-  &:hover {
-    color: #fff;
-    background: #333;
   }
 }
 

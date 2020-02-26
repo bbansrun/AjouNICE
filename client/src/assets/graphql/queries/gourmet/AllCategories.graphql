@@ -1,5 +1,5 @@
 {
-    boards(depth: 0, category_type: "GOURMET") {
+    boards(depth: 0, category_type: GOURMET) {
         category_idx
         category_nm
         category_icon

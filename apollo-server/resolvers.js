@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const uuid = require('uuid/v4');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -6,7 +5,6 @@ const fetch = require('node-fetch');
 const { Op, } = require('sequelize');
 const { sequelize, } = require('./models');
 const { PubSub, } = require('apollo-server-express');
-const { tokenVerify, } = require('./function/jwt/verifier');
 const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
 const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtils');
 const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, } = require('./function/db/handler');
@@ -18,6 +16,16 @@ const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
 const REPLY_MODIFIED = 'REPLY_MODIFIED';
+
+const connection = {
+  pageInfo: (parent) => (parent.cursors),
+  edges: (parent) => (parent.results),
+};
+
+const edge = {
+  node: (parent) => (parent),
+  cursor: (parent) => (Buffer.from(`[${parent.board_idx}]`).toString('base64')),
+};
 
 module.exports = {
   Subscription: {
@@ -147,16 +155,40 @@ module.exports = {
     async gourmets (root, args, { db, }, info) {
       return await findAll(db.RestaurantBoard, args, info);
     },
-    async paginatedPosts (root, args, { db, }, info) {
+    async gourmetsByCate (root, args, { db, }, info) {
+      const include = [
+        { model: db.BoardCategory, as: 'category', }
+      ];
+      return await findAll(db.RestaurantBoard, args, info, include);
+    },
+    // Renew Resolve Functions Below
+    async boardByType (root, args, { db, }, info) {
+      return await findOne(db.BoardCategory, args, info);
+    },
+    // Common
+    async CateById (root, args, { db, }, info) {
+      return await findOne(db.BoardCategory, args, info);
+    },
+    // Pagination
+    async paginatedPosts (root, { category_idx, limit, end_cursor, }, { db, }, info) {
       return await db.Board.paginate({
-        limit: 10,
+        limit,
         desc: true,
-        where: { ...args, },
+        where: { category_idx, },
+        after: end_cursor,
         include: [
           { model: db.BoardCategory, as: 'category', },
           { model: db.User, as: 'user', },
           { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
         ],
+      });
+    },
+    async paginatedGourmets (root, { category_idx, limit, end_cursor, }, { db, }, info) {
+      return await db.RestaurantBoard.paginate({
+        limit,
+        desc: true,
+        where: { category_idx, },
+        after: end_cursor,
       });
     },
   },
@@ -285,14 +317,26 @@ module.exports = {
       if (removed) return true;
       else return false;
     },
+    removeGourmet: async (root, args, { db, }, info) => {
+      const removed = await destroyOne(db.RestaurantBoard, args);
+      if (removed) return true;
+      else return false;
+    },
+    addGourmetPlace: async (root, args, { db, }, info) => {
+      const created = await createOne(db.RestaurantBoard, args);
+      if (created) {
+        return await findOne(db.RestaurantBoard, args, info);
+      } else {
+        return {};
+      }
+    },
+    addGourmetResIcon: async (root, { file, }, { db, }, info) => {
+      const { Location, } = await handleS3Upload(file, 'restaurant/res_img', `${uuid()}_${Date.now().valueOf()}`);
+      return Location;
+    },
   },
-  Posts: {
-    totalCount: (parent) => (parent.results.length),
-    pageInfo: (parent) => (parent.cursors),
-    edges: (parent) => (parent.results),
-  },
-  PostEdge: {
-    node: (parent) => (parent),
-    cursor: (parent) => (Buffer.from(`[${parent.board_idx}]`).toString('base64')),
-  },
+  Posts: connection,
+  Gourmets: connection,
+  PostEdge: edge,
+  GourmetEdge: edge,
 };

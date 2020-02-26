@@ -21,8 +21,14 @@ import Colleges from './auth/Colleges.graphql'
 import Departments from './auth/DptByCollege.graphql'
 import TokenAuthorization from './auth/TokenAuthorization.graphql'
 // Admin
+import GourmetListByCate from './admin/listGourmetById.graphql'
 import Codes from './admin/Codes.graphql'
 import Users from './admin/Users.graphql'
+
+// Posts
+import BoardByType from './posts/BoardByType.graphql'
+import PaginationPosts from './posts/PaginatedPosts.graphql'
+import PaginationGourmets from './posts/PaginatedGourmets.graphql'
 
 export {
   Post,
@@ -47,6 +53,10 @@ export {
   Colleges,
   Departments,
   TokenAuthorization,
+  GourmetListByCate,
   Codes,
-  Users
+  Users,
+  BoardByType,
+  PaginationPosts,
+  PaginationGourmets
 }

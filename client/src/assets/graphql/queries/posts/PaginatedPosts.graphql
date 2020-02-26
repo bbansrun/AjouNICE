@@ -1,0 +1,32 @@
+query Pagination($cateType: ID!, $size: Int! = 10, $cursor: String){
+  paginatedPosts(category_idx: $cateType, limit: $size, end_cursor: $cursor) {
+    pageInfo {
+      hasNext
+      hasPrevious
+      before
+      after
+    }
+    edges {
+     	node {
+        board_idx
+        title
+        body
+        view_cnt
+        reg_dt
+        upt_dt
+        user {
+            nick_nm
+        }
+        comments {
+            commenter {
+                nick_nm
+            }
+            text
+            reg_dt
+            upt_dt
+        }
+      }
+      cursor
+    }
+  }
+}
