@@ -139,6 +139,7 @@ type RestaurantBoard {
     res_nm: String
     res_icon: String
     star_avg: Int
+    view_cnt: Int
     res_menu: String
     res_info: String
     res_lat: Int
@@ -195,7 +196,6 @@ interface Edge {
 }
 
 interface PaginatedUnit {
-    totalCount: Int!
     pageInfo: PageInfo!
 }
 
@@ -207,13 +207,11 @@ type PageInfo {
 }
 
 type Posts implements PaginatedUnit {
-    totalCount: Int!
     pageInfo: PageInfo!
     edges: [PostEdge]
 }
 
 type Gourmets implements PaginatedUnit {
-    totalCount: Int!
     pageInfo: PageInfo!
     edges: [GourmetEdge]
 }

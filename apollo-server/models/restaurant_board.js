@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
     },
+    view_cnt: {
+      type: DataTypes.INTEGER(10).UNSIGNED,
+      allowNull: false,
+      defaultValue: 0,
+    },
     res_nm: {
       type: DataTypes.STRING(50),
     },

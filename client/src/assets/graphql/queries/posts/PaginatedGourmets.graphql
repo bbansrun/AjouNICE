@@ -1,6 +1,5 @@
 query Pagination($cateId: ID!, $size: Int! = 10, $cursor: String){
   paginatedGourmets(category_idx: $cateId, limit: $size, end_cursor: $cursor) {
-    totalCount
     pageInfo {
       hasNext
       hasPrevious

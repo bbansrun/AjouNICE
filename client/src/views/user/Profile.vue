@@ -103,6 +103,14 @@
           :narrowed="true"
           :focusable="true"
           :mobile-cards="false"
+
+          paginated
+          :total="user.articles.length"
+          :per-page="5"
+          aria-next-label="다음 페이지"
+          aria-previous-label="이전 페이지"
+          aria-page-label="페이지"
+          aria-current-label="현재 페이지"
         >
           <template slot-scope="props">
             <b-table-column

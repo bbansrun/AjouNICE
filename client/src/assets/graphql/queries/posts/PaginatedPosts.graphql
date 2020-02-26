@@ -1,6 +1,5 @@
 query Pagination($cateType: ID!, $size: Int! = 10, $cursor: String){
   paginatedPosts(category_idx: $cateType, limit: $size, end_cursor: $cursor) {
-    totalCount
     pageInfo {
       hasNext
       hasPrevious

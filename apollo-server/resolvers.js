@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const uuid = require('uuid/v4');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -6,7 +5,6 @@ const fetch = require('node-fetch');
 const { Op, } = require('sequelize');
 const { sequelize, } = require('./models');
 const { PubSub, } = require('apollo-server-express');
-const { tokenVerify, } = require('./function/jwt/verifier');
 const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
 const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtils');
 const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, } = require('./function/db/handler');
@@ -18,6 +16,16 @@ const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
 const REPLY_MODIFIED = 'REPLY_MODIFIED';
+
+const connection = {
+  pageInfo: (parent) => (parent.cursors),
+  edges: (parent) => (parent.results),
+};
+
+const edge = {
+  node: (parent) => (parent),
+  cursor: (parent) => (Buffer.from(`[${parent.board_idx}]`).toString('base64')),
+};
 
 module.exports = {
   Subscription: {
@@ -300,22 +308,8 @@ module.exports = {
       else return false;
     },
   },
-  Posts: {
-    totalCount: (parent) => (parent.results.length),
-    pageInfo: (parent) => (parent.cursors),
-    edges: (parent) => (parent.results),
-  },
-  Gourmets: {
-    totalCount: (parent) => (parent.results.length),
-    pageInfo: (parent) => (parent.cursors),
-    edges: (parent) => (parent.results),
-  },
-  PostEdge: {
-    node: (parent) => (parent),
-    cursor: (parent) => (Buffer.from(`[${parent.board_idx}]`).toString('base64')),
-  },
-  GourmetEdge: {
-    node: (parent) => (parent),
-    cursor: (parent) => (Buffer.from(`[${parent.res_idx}]`).toString('base64')),
-  },
+  Posts: connection,
+  Gourmets: connection,
+  PostEdge: edge,
+  GourmetEdge: edge,
 };
