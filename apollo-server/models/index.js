@@ -111,6 +111,18 @@ db.Department.belongsTo(db.College, {
   targetKey: 'college_cd',
 });
 
+db.BoardCategory.hasMany(db.RestaurantBoard, {
+  as: 'category',
+  foreignKey: 'category_idx',
+  sourceKey: 'category_idx',
+});
+
+db.RestaurantBoard.belongsTo(db.BoardCategory, {
+  as: 'category',
+  foreignKey: 'category_idx',
+  targetKey: 'category_idx',
+});
+
 // Paginations
 const paginateOptions = (primaryKeyField) => ({
   methodName: 'paginate',

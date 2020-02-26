@@ -241,20 +241,25 @@ type Query {
     departments(college_cd: String): [Department]
     department(dpt_cd: String!): Department
     gourmets: [RestaurantBoard]
+    gourmetsByCate(category_idx: Int!): [RestaurantBoard]
     boards(depth: Int, title: String, parent: Int, category_type: CategoryType): [BoardCategory]
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
     posts(category_idx: ID): [Board]
     boardByType(category_type: CategoryType, title: String): BoardCategory
-    paginatedPosts(category_idx: ID!, limit: Int!, end_cursor: String): Posts
-    paginatedGourmets(category_idx: ID!, limit: Int!, end_cursor: String): Gourmets
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]
+    # Common
+    CateById(category_idx: Int!): BoardCategory
+    # Auth
     doesIDExists(user_id: String!): Boolean
     doesEmailExists(email: String!): Boolean
     doesNickExists(nick_nm: String!): Boolean
     checkTokenValid(auth_token: String!): User
+    # Pagination
+    paginatedPosts(category_idx: ID!, limit: Int!, end_cursor: String): Posts
+    paginatedGourmets(category_idx: ID!, limit: Int!, end_cursor: String): Gourmets
 }
 
 type Mutation {
@@ -276,6 +281,7 @@ type Mutation {
     modifiedProfileImage(file: Upload!, user_idx: Int!): String
     uploadedBoardImage(file: Upload!, category_idx: Int!): String
     uploadedCategoryIcon(file: Upload!): String
+    removeGourmet(res_idx: Int!): Boolean
     # Admin
     addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): BoardCategory
     removeCategory(category_idx: Int!): Boolean

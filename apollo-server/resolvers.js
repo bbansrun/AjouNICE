@@ -155,8 +155,18 @@ module.exports = {
     async gourmets (root, args, { db, }, info) {
       return await findAll(db.RestaurantBoard, args, info);
     },
+    async gourmetsByCate (root, args, { db, }, info) {
+      const include = [
+        { model: db.BoardCategory, as: 'category', }
+      ];
+      return await findAll(db.RestaurantBoard, args, info, include);
+    },
     // Renew Resolve Functions Below
     async boardByType (root, args, { db, }, info) {
+      return await findOne(db.BoardCategory, args, info);
+    },
+    // Common
+    async CateById (root, args, { db, }, info) {
       return await findOne(db.BoardCategory, args, info);
     },
     // Pagination
@@ -304,6 +314,11 @@ module.exports = {
     },
     removeCategory: async (root, args, { db, }, info) => {
       const removed = await destroyOne(db.BoardCategory, args);
+      if (removed) return true;
+      else return false;
+    },
+    removeGourmet: async (root, args, { db, }, info) => {
+      const removed = await destroyOne(db.RestaurantBoard, args);
       if (removed) return true;
       else return false;
     },

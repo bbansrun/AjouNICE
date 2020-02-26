@@ -21,6 +21,7 @@ import Colleges from './auth/Colleges.graphql'
 import Departments from './auth/DptByCollege.graphql'
 import TokenAuthorization from './auth/TokenAuthorization.graphql'
 // Admin
+import GourmetListByCate from './admin/listGourmetById.graphql'
 import Codes from './admin/Codes.graphql'
 import Users from './admin/Users.graphql'
 
@@ -52,6 +53,7 @@ export {
   Colleges,
   Departments,
   TokenAuthorization,
+  GourmetListByCate,
   Codes,
   Users,
   BoardByType,

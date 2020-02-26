@@ -1,0 +1,3 @@
+mutation removeGourmet($resId: Int!) {
+    removeGourmet(res_idx: $resId)
+}
