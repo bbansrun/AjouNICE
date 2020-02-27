@@ -19,6 +19,7 @@ module.exports = {
     'html',
     'standard',
     'vue',
+    'graphql'
     // 'snakecasejs'
   ],
   rules: {
