@@ -76,13 +76,6 @@ export default {
           label: '팝업 관리',
           link: '/gate/manager/popups',
           icon: 'sticky-note'
-        },
-        {
-          id: uuid(),
-          label: 'API 관리',
-          link: `http://${require('ip').address()}:455/playground`,
-          outLink: true,
-          icon: 'sticky-note'
         }
       ]
     }
@@ -90,13 +83,18 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .admin {
-  display: grid;
-  grid-template-columns: 1fr 9fr;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   min-height: calc(100vh - 32px);
   > aside {
     background: #e3e3e3;
+    min-width: 200px;
+    height: calc(100vh - 32px);
+    min-height: calc(1200px * 6 / 19);
+    overflow: hidden;
   }
 }
 
@@ -105,8 +103,18 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   column-gap: 1rem;
 }
+</style>
 
+<style lang="scss" scoped>
 main {
   padding: 1rem 2rem;
+}
+
+.wrapper {
+  width: 1200px;
+  min-width: 1200px;
+  height: 100vh;
+  min-height: calc(1200px * 6 / 19);
+  overflow: hidden;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <section class="gourmet">
     <header class="underline underline-inline-block underline-animated">
       <strong>신규 맛집 등록</strong>
     </header>
@@ -160,7 +160,7 @@
         </b-button>
       </div>
     </form>
-  </div>
+  </section>
 </template>
 
 <script>

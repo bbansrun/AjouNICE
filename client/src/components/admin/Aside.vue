@@ -36,6 +36,13 @@
         </b-menu-list>
         <b-menu-list label="조작">
           <b-menu-item
+            tag="a"
+            target="_blank"
+            label="API 관리"
+            href="http://localhost:455/playground"
+            icon="cog"
+          />
+          <b-menu-item
             tag="router-link"
             label="메인으로"
             to="/"
@@ -92,4 +99,19 @@ aside {
   padding: 0 .5rem;
 }
 
+</style>
+
+<style lang="scss">
+ul.menu-list {
+ > li {
+   > a {
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     > span:first-of-type {
+       margin-right: .5rem;
+     }
+   }
+ }
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <section class="boards">
     <header class="underline underline-inline-block underline-animated">
       <strong>신규 게시판 모듈 생성</strong>
     </header>
@@ -117,7 +117,7 @@
         </b-button>
       </div>
     </form>
-  </div>
+  </section>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <section class="gourmet">
     <header class="underline underline-inline-block underline-animated">
       <strong>맛집 신규 모듈 생성</strong>
     </header>
@@ -124,7 +124,7 @@
         </b-button>
       </div>
     </form>
-  </div>
+  </section>
 </template>
 
 <script>
