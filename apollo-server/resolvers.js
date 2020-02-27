@@ -57,7 +57,11 @@ module.exports = {
     },
   },
   Query: {
+    // Common
     // College
+    async allColleges (root, args, { db, }, info) {
+      return await findAll(db.College, args, info);
+    },
     async colleges (root, args, { db, }, info) {
       const include = [
         { model: db.Department, as: 'departments', }

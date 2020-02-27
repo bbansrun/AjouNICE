@@ -19,6 +19,9 @@ import {
   Reset,
   SignUp,
   Recovery,
+  AdminNotice,
+  AdminNewNotice,
+  AdminNewCode,
   AdminCode,
   AdminDashboard,
   AdminStatus,
@@ -326,12 +329,24 @@ export default new Router({
           component: AdminStatus
         },
         {
+          path: 'notice',
+          component: AdminNotice
+        },
+        {
+          path: 'notice/new',
+          component: AdminNewNotice
+        },
+        {
           path: 'users',
           component: AdminUsers
         },
         {
           path: 'codes',
           component: AdminCode
+        },
+        {
+          path: 'codes/new',
+          component: AdminNewCode
         },
         {
           path: 'boards',

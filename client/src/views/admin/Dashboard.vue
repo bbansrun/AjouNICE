@@ -88,13 +88,17 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  min-height: calc(100vh - 32px);
+  max-height: calc(100vh - 32px);
   > aside {
-    background: #e3e3e3;
+    color: #fff;
+    background: #2C3745;
     min-width: 200px;
     height: calc(100vh - 32px);
     min-height: calc(1200px * 6 / 19);
     overflow: hidden;
+    & a {
+      color: #fff;
+    }
   }
 }
 
@@ -106,8 +110,15 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+footer {
+  z-index: 100;
+}
+
 main {
+  width: 100%;
+  background: #F9FBFF;
   padding: 1rem 2rem;
+  overflow-y: scroll;
 }
 
 .wrapper {

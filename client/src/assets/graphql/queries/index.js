@@ -1,3 +1,7 @@
+// Common
+import AllColleges from './common/Colleges.graphql'
+
+// 정리 필요
 import CateInfo from './CateInfo.graphql'
 import PostsByCate from './PostsByCate.graphql'
 import PostsByKeyword from './PostsSearch.graphql'
@@ -34,6 +38,7 @@ import GourmetCategories from './gourmet/AllCategories.graphql'
 import GourmetById from './gourmet/GourmetById.graphql'
 
 export {
+  AllColleges,
   Post,
   PostsByKeyword,
   CateInfo,

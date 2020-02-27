@@ -271,6 +271,7 @@ const query = `
 type Query {
     users: [User]
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
+    allColleges: [College]
     colleges(exist_yn: String!): [College]
     departments(college_cd: String): [Department]
     department(dpt_cd: String!): Department
@@ -325,6 +326,8 @@ type Mutation {
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): RestaurantBoard
     addGourmetResIcon(file: Upload!): String
     addGourmetResources(res_idx: Int!, files: [Upload!], reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): Boolean
+    addNewDepartment(dpt_nm: String!, dpt_cd: String!): Department
+    addNewCollege(college_nm: String!, college_cd: String!): College
 }
 `;
 

@@ -1,0 +1,6 @@
+{
+    allColleges {
+        college_nm
+        college_cd
+    }
+}

@@ -3,6 +3,17 @@
     <header class="underline underline-inline-block underline-animated">
       <strong>학부/학과 코드관리</strong>
     </header>
+    <div class="buttons">
+      <b-button
+        type="is-primary"
+        size="is-small"
+        tag="router-link"
+        to="/gate/manager/codes/new"
+      >
+        <font-awesome-icon icon="pen" />&nbsp;
+        <span>신규 코드 등록</span>
+      </b-button>
+    </div>
     <article>
       <b-table
         :data="data"

@@ -23,6 +23,7 @@
             tag="router-link"
             :to="item.link"
             class="link"
+            :active="$route.path === item.link"
           >
             <b-menu-item
               v-for="child in item.children"
@@ -41,16 +42,19 @@
             label="API 관리"
             href="http://localhost:455/playground"
             icon="cog"
+            :active="false"
           />
           <b-menu-item
             tag="router-link"
             label="메인으로"
             to="/"
             icon="home"
+            :active="false"
           />
           <b-menu-item
             label="로그아웃"
             icon="sign-out-alt"
+            :active="false"
             @click="logout"
           />
         </b-menu-list>
@@ -83,7 +87,15 @@ export default {
 
 <style lang="scss" scoped>
 aside {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  & small {
+    > strong {
+      color: #fff;
+    }
+  }
+  & hr {
+    margin: .5rem 2rem;
+  }
 }
 
 .container {
@@ -99,6 +111,10 @@ aside {
   padding: 0 .5rem;
 }
 
+.menu-label {
+  color: #fff;
+  font-weight: bold;
+}
 </style>
 
 <style lang="scss">
