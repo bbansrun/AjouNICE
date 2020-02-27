@@ -7,7 +7,7 @@
       data-post-form
       @submit.prevent
     >
-      <div class="input-form">
+      <div class="input-form-group">
         <label for="category_nm">제목</label>
         <input
           id="title"

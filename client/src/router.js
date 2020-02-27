@@ -21,8 +21,10 @@ import {
   Recovery,
   AdminNotice,
   AdminNewNotice,
+  AdminEditNotice,
   AdminNewCode,
   AdminCode,
+  AdminEditCode,
   AdminDashboard,
   AdminStatus,
   AdminUsers,
@@ -32,6 +34,7 @@ import {
   AdminGourmetList,
   AdminNewGourmet,
   AdminNewGourmetPlace,
+  AdminEditGourmetPlace,
   AdminReviews,
   AdminNewPopup,
   AdminPopup,
@@ -333,6 +336,10 @@ export default new Router({
           component: AdminNotice
         },
         {
+          path: 'notice/:notice_idx/edit',
+          component: AdminEditNotice
+        },
+        {
           path: 'notice/new',
           component: AdminNewNotice
         },
@@ -347,6 +354,10 @@ export default new Router({
         {
           path: 'codes/new',
           component: AdminNewCode
+        },
+        {
+          path: 'codes/edit/:record',
+          component: AdminEditCode
         },
         {
           path: 'boards',
@@ -371,6 +382,10 @@ export default new Router({
         {
           path: 'boards/gourmet/:category_idx',
           component: AdminGourmetList
+        },
+        {
+          path: 'boards/gourmet/:category_idx/edit/:res_idx',
+          component: AdminEditGourmetPlace
         },
         {
           path: 'boards/reviews',

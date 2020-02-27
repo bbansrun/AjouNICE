@@ -272,6 +272,7 @@ type Query {
     users: [User]
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
     allColleges: [College]
+    college(college_cd: String!): College
     colleges(exist_yn: String!): [College]
     departments(college_cd: String): [Department]
     department(dpt_cd: String!): Department

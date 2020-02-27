@@ -26,6 +26,7 @@
     <hr>
     <b-table
       :data="boards"
+      :loading="loading"
     >
       <template slot-scope="props">
         <b-table-column
@@ -73,6 +74,8 @@
             <b-button
               type="is-warning"
               size="is-small"
+              tag="router-link"
+              :to="`/gate/manager/boards/gourmet/${props.row.category.category_idx}/edit/${props.row.res_idx}`"
             >
               <font-awesome-icon icon="exclamation-triangle" />&nbsp;
               <span>수정</span>
@@ -101,7 +104,8 @@ export default {
   data () {
     return {
       boards: [],
-      cateInfo: {}
+      cateInfo: {},
+      loading: true
     }
   },
   mounted () {
@@ -113,35 +117,36 @@ export default {
     }).then(({ data: { gourmetsByCate, CateById } }) => {
       this.boards = gourmetsByCate
       this.cateInfo = CateById
+      this.loading = false
     })
   },
   methods: {
     removeItem (name, id) {
       const self = this
-      this.$swal({
-        type: 'question',
+      this.$buefy.dialog.confirm({
         title: `'${name}' 삭제`,
-        text: `맛집 ${name}을 삭제하시겠습니까?`,
-        showCancelButton: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        showLoaderOnConfirm: true,
-        preConfirm () {
-          return self.$apollo.mutate({
+        message: `맛집 <strong>${name}</strong>을 삭제하시겠습니까?`,
+        confirmText: '진행',
+        cancelText: '취소',
+        type: 'is-warning',
+        hasIcon: true,
+        icon: 'question',
+        onConfirm: () => {
+          document.body.classList.add('loading')
+          self.$apollo.mutate({
             mutation: gql`${removeGourmet}`,
             variables: {
               resId: parseInt(id)
             }
           }).then(({ data: { removeGourmet } }) => {
-            return removeGourmet
+            if (removeGourmet) {
+              self.boards = _.remove(self.boards, (item) => (item.res_idx !== id))
+              document.body.classList.remove('loading')
+              self.$buefy.toast.open(`맛집 ${name}이 삭제되었습니다.`)
+            }
           }).catch(error => {
             console.error(error)
           })
-        }
-      }).then((result) => {
-        if (result.value) {
-          this.boards = _.remove(this.boards, (item) => (item.res_idx !== id))
-          this.flashSuccess(`맛집 ${name}이 삭제되었습니다.`)
         }
       })
     }

@@ -39,7 +39,8 @@ import {
   faAngleLeft,
   faAngleRight,
   faTag,
-  faCog
+  faCog,
+  faQuestion
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueApollo from 'vue-apollo'
@@ -97,6 +98,7 @@ library.add(faAngleLeft)
 library.add(faAngleRight)
 library.add(faTag)
 library.add(faCog)
+library.add(faQuestion)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('v-gravatar', Gravatar)
 Vue.component('v-select', vSelect)

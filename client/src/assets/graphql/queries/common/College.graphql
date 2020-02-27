@@ -1,0 +1,7 @@
+query College($code: String!) {
+    college(college_cd: $code) {
+        id
+        college_cd
+        college_nm
+    }
+}

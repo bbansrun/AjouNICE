@@ -59,6 +59,9 @@ module.exports = {
   Query: {
     // Common
     // College
+    async college (root, args, { db, }, info) {
+      return await findOne(db.College, args, info);
+    },
     async allColleges (root, args, { db, }, info) {
       return await findAll(db.College, args, info);
     },

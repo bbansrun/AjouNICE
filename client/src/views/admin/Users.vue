@@ -49,6 +49,7 @@
             <b-button
               type="is-danger"
               size="is-small"
+              @click="removeUser(props.row.user_idx)"
             >
               <font-awesome-icon icon="times" />&nbsp;
               <span>삭제</span>
@@ -80,6 +81,32 @@ export default {
     }).then(({ data: { users } }) => {
       this.users = users
     })
+  },
+  methods: {
+    removeUser (user) {
+      this.$buefy.dialog.prompt({
+        title: '경고',
+        message: '사용자 처리는 <strong>상태값 변경을 권장</strong>합니다.<br>가급적 삭제를 지양해주시기 바랍니다.<br>그럼에도 불구하고 계속해서 진행을 원하시면, <br><strong>확인</strong>을 입력해주시기 바랍니다.<br><small>(사용자 삭제에 대한 위험성을 인지하고 확인하였습니다.)</small>',
+        inputAttrs: {
+          placeholder: '\'확인\'을 입력해주세요.',
+          maxlength: 2
+        },
+        confirmText: '진행',
+        cancelText: '취소',
+        trapFocus: true,
+        icon: 'exclamation-triangle',
+        hasIcon: true,
+        type: 'is-danger',
+        onConfirm: (value) => {
+          if (value === '확인') {
+            this.$buefy.toast.open('사용자 데이터 삭제를 진행합니다.')
+          } else {
+            this.$buefy.toast.open('입력값 오류. 취소되었습니다.')
+          }
+        },
+        onCancel: () => this.$buefy.toast.open('취소되었습니다.')
+      })
+    }
   }
 }
 </script>

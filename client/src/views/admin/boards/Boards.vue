@@ -105,31 +105,41 @@ export default {
   methods: {
     removeCategory (name, id) {
       const self = this
-      this.$swal({
-        type: 'question',
+      this.$buefy.dialog.prompt({
         title: `'${name}' 삭제`,
-        text: `게시판 ${name} 모듈을 삭제하시겠습니까?`,
-        showCancelButton: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        showLoaderOnConfirm: true,
-        preConfirm () {
-          return self.$apollo.mutate({
-            mutation: gql`${removeCategory}`,
-            variables: {
-              category_idx: parseInt(id)
-            }
-          }).then(({ data: { removeCategory } }) => {
-            return removeCategory
-          }).catch(error => {
-            console.error(error)
-          })
-        }
-      }).then((result) => {
-        if (result.value) {
-          this.boards = _.remove(this.boards, (item) => (item.category_idx !== id))
-          this.flashSuccess(`${name} 모듈이 삭제되었습니다.`)
-        }
+        message: `게시판 <strong>${name}</strong> 모듈을 삭제하시겠습니까?<br>관련 게시물 모두 함께 삭제됩니다.<br>신중히 선택해주세요.<br>진행하시려면 <strong>확인</strong>을 입력해주세요.`,
+        inputAttrs: {
+          placeholder: '\'확인\'을 입력해주세요.',
+          maxlength: 2
+        },
+        confirmText: '삭제',
+        cancelText: '취소',
+        type: 'is-danger',
+        hasIcon: true,
+        icon: 'exclamation-triangle',
+        trapFocus: true,
+        onConfirm: (value) => {
+          if (value === '확인') {
+            document.body.classList.add('loading')
+            self.$apollo.mutate({
+              mutation: gql`${removeCategory}`,
+              variables: {
+                category_idx: parseInt(id)
+              }
+            }).then(({ data: { removeCategory } }) => {
+              if (removeCategory) {
+                document.body.classList.remove('loading')
+                self.boards = _.remove(self.boards, (item) => (item.category_idx !== id))
+                self.$buefy.toast.open(`${name} 모듈이 삭제되었습니다.`)
+              }
+            }).catch(error => {
+              console.error(error)
+            })
+          } else {
+            this.$buefy.toast.open('입력값 오류. 취소되었습니다.')
+          }
+        },
+        onCancel: () => this.$buefy.toast.open('취소되었습니다.')
       })
     }
   }
