@@ -25,7 +25,7 @@ input {
         background: grey;
         color: #fff;
     }
-    &[type="password"], &[type="email"], &[type="text"] {
+    &[type="password"], &[type="email"], &[type="text"], &[type="tel"] {
         position: relative;
         width: 100%;
         padding: 5px 10px;
@@ -227,7 +227,6 @@ form {
     }
     &[data-post-form] {
         color: #666;
-        box-shadow: 0 5px 5px rgba(0,0,0,.12);
         & .input-form {
             padding: .5rem 0;
             &:not(.editor):not(.uploads):not(.controls) {

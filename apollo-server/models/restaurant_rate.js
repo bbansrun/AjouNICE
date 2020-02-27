@@ -1,27 +1,21 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('BOARD', {
-    board_idx: {
+  return sequelize.define('RESTAURANT_RATE', {
+    rate_idx: {
       type: DataTypes.INTEGER(10).UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,
     },
-    category_idx: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
+    res_idx: {
+      type: DataTypes.INTEGER(20).UNSIGNED,
       allowNull: false,
     },
     user_idx: {
       type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
     },
-    title: {
-      type: DataTypes.STRING(100),
-    },
-    body: {
-      type: DataTypes.STRING(20000),
-    },
-    view_cnt: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
+    score: {
+      type: DataTypes.INTEGER(1).UNSIGNED,
       allowNull: false,
       defaultValue: 0,
     },
@@ -45,8 +39,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     hooks: {
-      afterUpdate: (board, options) => {
-        board.upt_dt = DataTypes.NOW;
+      afterUpdate: (restaurantRate, options) => {
+        restaurantRate.upt_dt = DataTypes.NOW;
       },
     },
     timestamps: false,

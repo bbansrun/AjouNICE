@@ -1,7 +1,9 @@
-module.exports = `
+const scalars = `
 scalar Email
 scalar Date
+`;
 
+const enums = `
 enum Role {
     ADMIN
     USER
@@ -18,18 +20,22 @@ enum S3UploadType {
     NEWCATEGORY
     GOURMET
 }
+`;
 
+const directives = `
 directive @auth(requires: Role = ADMIN) on FIELD_DEFINITION | ENUM_VALUE
+`;
 
+const customTypes = `
 type User {
     user_idx: ID!
     email: Email!
-    user_id: String
+    user_id: String!
     password: String
     user_nm: String
     identity_num: String
-    user_type: String
     admin_type: String
+    user_type: String
     sex_gb: String
     user_status: String
     policy_yn: Boolean
@@ -47,9 +53,9 @@ type User {
     upt_dt: Date
     log_ip: String
     log_dt: Date
-    articles: [Board!]!
-    comments: [BoardComment!]!
-    restaurants: [RestaurantBoard!]!
+    articles: [Board]
+    comments: [BoardComment]
+    restaurants: [RestaurantBoard]
 }
 
 type College {
@@ -61,15 +67,15 @@ type College {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
-    departments: [Department!]
+    departments: [Department]
 }
 
 type Department {
     id: ID!
+    college_cd: String!
+    college: College!
     dpt_cd: String
     dpt_nm: String
-    college: College!
-    college_cd: String!
     exist_yn: String
     reg_ip: String
     reg_dt: Date
@@ -97,29 +103,30 @@ type BoardCategory {
     category_idx: ID!
     category_nm: String
     category_type: CategoryType
-    category_icon: String
     title: String
     parent: Int
     depth: Int
     access_auth: String
     private_yn: String
+    category_icon: String
     desc: String
     reg_ip: String
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
-    posts: [Board!]!
+    posts: [Board]
 }
 
 type BoardComment {
     cmt_idx: ID!
     board_idx: Int!
-    from: Board!
     user_idx: Int!
+    from: Board!
     commenter: User
     text: String
-    reg_ip: String!
-    reg_dt: Date!
+    parent_idx: Int
+    reg_ip: String
+    reg_dt: Date
     upt_ip: String
     upt_dt: Date
 }
@@ -127,9 +134,13 @@ type BoardComment {
 type BoardVote {
     vote_idx: ID!
     board_idx: Int!
+    user_idx: Int!
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
     to: Board!
     by: User!
-    user_idx: Int!
 }
 
 type RestaurantBoard {
@@ -144,12 +155,12 @@ type RestaurantBoard {
     view_cnt: Int
     res_menu: String
     res_info: String
-    res_lat: Int
-    res_lon: Int
+    res_lat: Float
+    res_lon: Float
     res_addr: String
     res_phone: String
-    reg_ip: String!
-    reg_dt: Date!
+    reg_ip: String
+    reg_dt: Date
     upt_ip: String
     upt_dt: Date
     comments: [RestaurantComment]
@@ -164,8 +175,8 @@ type RestaurantComment {
     text: String
     star: Int!
     parent_idx: Int
-    reg_ip: String!
-    reg_dt: Date!
+    reg_ip: String
+    reg_dt: Date
     upt_ip: String
     upt_dt: Date
 }
@@ -174,8 +185,21 @@ type RestaurantImg {
     img_idx: Int!
     res_idx: Int!
     img_path: String!
-    reg_ip: String!
-    reg_dt: Date!
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
+}
+
+type RestaurantRate {
+    rate_idx: ID!
+    res_idx: Int!
+    resource: RestaurantBoard!
+    user_idx: Int!
+    user: User!
+    score: Int
+    reg_ip: String
+    reg_dt: Date
     upt_ip: String
     upt_dt: Date
 }
@@ -229,13 +253,21 @@ type GourmetEdge implements Edge {
     node: RestaurantBoard,
     cursor: String
 }
+`;
 
+const subscription = `
 type Subscription {
     replyWritten: BoardComment
     replyRemoved: BoardComment
     replyModified: BoardComment
+    gourmetRated: RestaurantBoard
+    gourmetReplyWritten: RestaurantComment
+    gourmetReplyRemoved: RestaurantComment
+    gourmetReplyModified: RestaurantComment
 }
+`;
 
+const query = `
 type Query {
     users: [User]
     user(user_idx: Int, nick_nm: String, email: String, token: String): User
@@ -264,7 +296,9 @@ type Query {
     paginatedPosts(category_idx: ID!, limit: Int!, end_cursor: String): Posts
     paginatedGourmets(category_idx: ID!, limit: Int!, end_cursor: String): Gourmets
 }
+`;
 
+const mutation = `
 type Mutation {
     # Auth
     sendContactMail(name: String!, email: String!, content: String!): Boolean
@@ -291,4 +325,15 @@ type Mutation {
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): RestaurantBoard
     addGourmetResIcon(file: Upload!): String
     addGourmetResources(res_idx: Int!, files: [Upload!], reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): Boolean
-}`;
+}
+`;
+
+module.exports = `
+${scalars}
+${enums}
+${directives}
+${customTypes}
+${subscription}
+${query}
+${mutation}
+`;

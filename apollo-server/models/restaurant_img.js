@@ -4,10 +4,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(20).UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false,
     },
     res_idx: {
       type: DataTypes.INTEGER(20).UNSIGNED,
-      defaultValue: null,
+      allowNull: false,
     },
     img_path: {
       type: DataTypes.STRING(500),
@@ -28,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     upt_dt: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   }, {
     hooks: {

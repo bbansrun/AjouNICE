@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(20).UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false,
     },
     user_idx: {
       type: DataTypes.INTEGER(10).UNSIGNED,
@@ -13,13 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
     },
-    view_cnt: {
-      type: DataTypes.INTEGER(10).UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
     res_nm: {
       type: DataTypes.STRING(50),
+      allowNull: false,
     },
     res_icon: {
       type: DataTypes.STRING(500),
@@ -27,31 +24,29 @@ module.exports = (sequelize, DataTypes) => {
     },
     star_avg: {
       type: DataTypes.INTEGER(20),
-      allowNull: true,
+    },
+    view_cnt: {
+      type: DataTypes.INTEGER(10).UNSIGNED,
+      allowNull: false,
+      defaultValue: 0,
     },
     res_menu: {
       type: DataTypes.STRING(10000),
-      allowNull: true,
     },
     res_info: {
       type: DataTypes.STRING(10000),
-      allowNull: true,
     },
     res_lat: {
-      type: DataTypes.GEOMETRY('POINT', 4326),
-      allowNull: true,
+      type: DataTypes.DECIMAL(16, 14),
     },
     res_lon: {
-      type: DataTypes.GEOMETRY('POINT', 4326),
-      allowNull: true,
+      type: DataTypes.DECIMAL(17, 14),
     },
     res_addr: {
       type: DataTypes.STRING(500),
-      allowNull: true,
     },
     res_phone: {
       type: DataTypes.STRING(50),
-      allowNull: true,
     },
     reg_ip: {
       type: DataTypes.STRING(40),
@@ -69,6 +64,7 @@ module.exports = (sequelize, DataTypes) => {
     upt_dt: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
   }, {
     hooks: {

@@ -3,6 +3,7 @@ const app = require('./middlewares/app');
 const { encodeTextBody, } = require('./middlewares/securityModule');
 
 const config = require('./config/config.json');
+const { tokenVerify, } = require('./function/jwt/verifier');
 
 const { LoggerExtension, } = require('apollo-server-logger');
 const { RedisCache, } = require('apollo-server-cache-redis');
@@ -52,11 +53,18 @@ const server = new ApolloServer({
     tracing: true,
   })],
   context: async ({ req, }) => {
-    let token;
-    if (req.headers.Authorization) {
-      token = req.headers.Authorization.substr(7);
-    }
-    return { db, token, };
+    let userInfo;
+    const token = req.headers.Authorization || '';
+    tokenVerify(token)
+      .then((decoded) => {
+        userInfo = decoded;
+      })
+      .catch((error) => {
+        userInfo = null;
+        console.error(error);
+        throw new AuthenticationError(error);
+      });
+    return { db, userInfo, };
   },
 });
 

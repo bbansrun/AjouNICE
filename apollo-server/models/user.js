@@ -1,17 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('USER', {
     user_idx: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER(10).UNSIGNED,
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
-      unique: true,
     },
     email: {
       type: DataTypes.STRING(256),
-      allowNull: true,
       unique: true,
-      defaultValue: null,
       validate: {
         isEmail: { args: true, msg: '이메일 형식이 올바르지 않습니다.', },
       },
@@ -27,13 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_nm: {
       type: DataTypes.STRING(50),
-      allowNull: true,
-      defaultValue: null,
     },
     identity_num: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      unique: true,
+      type: DataTypes.INTEGER(11).UNSIGNED,
     },
     admin_type: {
       type: DataTypes.STRING(10),
@@ -47,8 +40,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     sex_gb: {
       type: DataTypes.STRING(1),
-      allowNull: true,
-      defaultValue: null,
     },
     user_status: {
       type: DataTypes.STRING(1),
@@ -57,15 +48,13 @@ module.exports = (sequelize, DataTypes) => {
     policy_yn: {
       type: DataTypes.STRING(1),
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 'N',
     },
     college_cd: {
-      type: DataTypes.STRING(9),
-      allowNull: true,
+      type: DataTypes.STRING(10),
     },
     dpt_cd: {
-      type: DataTypes.STRING(12),
-      allowNull: true,
+      type: DataTypes.STRING(13),
     },
     auth_email_yn: {
       type: DataTypes.STRING(1),
@@ -74,19 +63,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     auth_token: {
       type: DataTypes.STRING(64),
-      allowNull: true,
     },
     user_profile: {
       type: DataTypes.STRING(256),
-      allowNull: true,
     },
     nick_nm: {
       type: DataTypes.STRING(50),
-      allowNull: true,
     },
     bamboo_stack: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
+      type: DataTypes.INTEGER(10).UNSIGNED,
     },
     links: {
       type: DataTypes.STRING(256),
@@ -120,6 +105,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.NOW,
     },
   }, {
+    hooks: {
+      afterUpdate: (user, options) => {
+        user.upt_dt = DataTypes.NOW;
+      },
+    },
     timestamps: false,
     freezeTableName: true,
     charset: 'utf8',

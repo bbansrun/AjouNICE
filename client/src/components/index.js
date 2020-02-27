@@ -28,6 +28,7 @@ import MyLectureReviews from './user/MyLectureReviews.vue'
 
 // Gourmet
 import GourmetList from './place/gourmet/GourmetList.vue'
+import GourmetReplies from './place/gourmet/Replies.vue'
 
 export {
   Aside,
@@ -47,5 +48,6 @@ export {
   MyReviews,
   MyPosts,
   MyLectureReviews,
-  GourmetList
+  GourmetList,
+  GourmetReplies
 }

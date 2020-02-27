@@ -4,40 +4,35 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(10).UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false,
     },
     board_idx: {
-      type: DataTypes.INTEGER(10),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.INTEGER(10).UNSIGNED,
+      allowNull: false,
     },
     user_idx: {
-      type: DataTypes.INTEGER(10),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.INTEGER(10).UNSIGNED,
+      allowNull: false,
     },
     text: {
       type: DataTypes.STRING(1000),
-      allowNull: true,
-      defaultValue: null,
     },
     reg_ip: {
-      type: DataTypes.STRING(40, true),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.STRING(40),
+      allowNull: false,
     },
     reg_dt: {
       type: DataTypes.DATE,
-      allowNull: true, // 왜 allowNull??
+      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
     upt_ip: {
-      type: DataTypes.STRING(40, true),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.STRING(40),
+      allowNull: false,
     },
     upt_dt: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
   }, {

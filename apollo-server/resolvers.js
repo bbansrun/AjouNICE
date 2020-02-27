@@ -5,6 +5,7 @@ const fetch = require('node-fetch');
 const { Op, } = require('sequelize');
 const { sequelize, } = require('./models');
 const { PubSub, } = require('apollo-server-express');
+const bucketUploadConfig = require('./function/aws/bucketUploadConfig');
 const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
 const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtils');
 const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, } = require('./function/db/handler');
@@ -16,6 +17,10 @@ const pubsub = new PubSub();
 const REPLY_WRITTEN = 'REPLY_WRITTEN';
 const REPLY_REMOVED = 'REPLY_REMOVED';
 const REPLY_MODIFIED = 'REPLY_MODIFIED';
+const GOURMET_RATED = 'GOURMET_RATED';
+const GOURMET_REPLY_WRITTEN = 'GOURMET_REPLY_WRITTEN';
+const GOURMET_REPLY_REMOVED = 'GOURMET_REPLY_REMOVED';
+const GOURMET_REPLY_MODIFIED = 'GOURMET_REPLY_MODIFIED';
 
 const connection = {
   pageInfo: (parent) => (parent.cursors),
@@ -37,6 +42,18 @@ module.exports = {
     },
     replyModified: {
       subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([REPLY_MODIFIED]),
+    },
+    gourmetRated: {
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([GOURMET_RATED]),
+    },
+    gourmetReplyWritten: {
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([GOURMET_REPLY_WRITTEN]),
+    },
+    gourmetReplyRemoved: {
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([GOURMET_REPLY_REMOVED]),
+    },
+    gourmetReplyModified: {
+      subscribe: (root, args, { db, }, info) => pubsub.asyncIterator([GOURMET_REPLY_MODIFIED]),
     },
   },
   Query: {

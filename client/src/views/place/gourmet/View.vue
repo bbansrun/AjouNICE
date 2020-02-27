@@ -175,7 +175,7 @@ import VueGallerySlideshow from 'vue-gallery-slideshow'
 import gql from 'graphql-tag'
 import { GourmetById } from '@/assets/graphql/queries'
 import { IncrementViewCount } from '@/assets/graphql/mutations'
-import { Navigation, Report, Replies, Footer } from '@/components'
+import { Navigation, Report, GourmetReplies as Replies, Footer } from '@/components'
 // import { replyWritten, replyRemoved, replyModified } from '@/assets/graphql/subscriptions'
 VueClipBoard.config.autoSetContainer = true
 Vue.use(VueClipBoard)

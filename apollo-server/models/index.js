@@ -22,6 +22,7 @@ db.BoardVote = require('./board_vote')(sequelize, Sequelize);
 db.RestaurantBoard = require('./restaurant_board')(sequelize, Sequelize);
 db.RestaurantComment = require('./restaurant_comment')(sequelize, Sequelize);
 db.RestaurantImg = require('./restaurant_img')(sequelize, Sequelize);
+db.RestaurantRate = require('./restaurant_rate')(sequelize, Sequelize);
 
 // Relationships
 // - From User

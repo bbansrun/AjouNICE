@@ -3,7 +3,7 @@
     <div class="admin admin-dashboard">
       <Aside :modules="modules" />
       <main>
-        <div class="wrapper content">
+        <div class="container">
           <router-view />
         </div>
       </main>

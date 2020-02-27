@@ -1,71 +1,62 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('BOARD_CATEGORY', {
     category_idx: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER(10).UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false,
     },
     category_nm: {
-      type: DataTypes.STRING(50, true),
+      type: DataTypes.STRING(50),
       allowNull: true,
       defaultValue: null,
     },
     category_type: {
-      type: DataTypes.STRING(10, true),
+      type: DataTypes.STRING(10),
       allowNull: false,
       defaultValue: 'NORMAL',
     },
-    category_icon: {
-      type: DataTypes.STRING(500, true),
-      allowNull: true,
-    },
     title: {
-      type: DataTypes.STRING(50, true),
-      allowNull: true,
-      defaultValue: 'title',
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     parent: {
-      type: DataTypes.TINYINT(20).UNSIGNED.ZEROFILL, // length가 20에 zerofill 거는데 왜??
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.TINYINT(20).UNSIGNED,
     },
     depth: {
       type: DataTypes.TINYINT(3).UNSIGNED,
       allowNull: false,
     },
     access_auth: {
-      type: DataTypes.STRING(50, true),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.STRING(50),
     },
     private_yn: {
-      type: DataTypes.STRING(1, true),
-      allowNull: false,
+      type: DataTypes.STRING(1),
       defaultValue: 'Y',
+      allowNull: false,
+    },
+    category_icon: {
+      type: DataTypes.STRING(500),
     },
     desc: {
-      type: DataTypes.STRING(50, true),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.STRING(50),
     },
     reg_ip: {
-      type: DataTypes.STRING(40, true),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.STRING(40),
+      allowNull: false,
     },
     reg_dt: {
       type: DataTypes.DATE,
-      allowNull: true, // 왜 allowNull??
+      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
     upt_ip: {
-      type: DataTypes.STRING(40, true),
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.STRING(40),
+      allowNull: false,
     },
     upt_dt: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
   }, {
