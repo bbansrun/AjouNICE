@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     college_nm: {
       type: DataTypes.STRING(6),
       allowNull: false,
-      unique: true,
     },
     exist_yn: {
       type: DataTypes.STRING(1),

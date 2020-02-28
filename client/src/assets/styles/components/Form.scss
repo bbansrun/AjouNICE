@@ -1,6 +1,17 @@
 $blue: #00A8CC;
 $red: #FF2E63;
 // Form Styles
+.input-form-group {
+    display: grid;
+    grid-template-columns: 1fr 9fr;
+    align-items: center;
+    margin-bottom: .5rem;
+    > label {
+        text-align: right;
+        padding-right: .5rem;
+    }
+}
+
 // Input
 select {
     -webkit-appearance: none;

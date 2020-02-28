@@ -1,0 +1,7 @@
+mutation modCollege($id: Int!, $code: String, $name: String) {
+    modCollege(id: $id, college_cd: $code, college_nm: $name) {
+        id
+        college_cd
+        college_nm
+    }
+}

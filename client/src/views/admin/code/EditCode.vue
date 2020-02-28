@@ -9,27 +9,16 @@
     >
       <div class="input-form-group">
         <label for="type">학부/학과 구분</label>
-        <span>선택하신 레코드는 <strong>{{ type }}</strong>입니다.</span>
-        <b-notification
-          type="is-info"
-          has-icon
-          aria-close-label="닫기"
-        >
-          학부 / 학과가 서로 다른 테이블을 사용하고 있어 상호 변경이 불가능합니다. 상호 변경을 하실 경우, 레코드를 삭제하시고 새로 생성하시기 바랍니다.
-        </b-notification>
-      </div>
-      <div
-        v-show="mode === 'dpt'"
-        class="input-form-group"
-      >
-        <label for="college">소속 학부</label>
-        <v-select
-          placeholder="소속대학을 선택해주세요."
-        >
-          <template v-slot:no-options>
-            일치하는 옵션이 없어요.
-          </template>
-        </v-select>
+        <div class="input-form-wrapper">
+          <span>선택하신 레코드는 <strong>{{ type }}</strong>입니다.</span>
+          <b-notification
+            type="is-info"
+            has-icon
+            aria-close-label="닫기"
+          >
+            학부 / 학과가 서로 다른 테이블을 사용하고 있어 상호 변경이 불가능합니다. 상호 변경을 하실 경우, 레코드를 삭제하시고 새로 생성하시기 바랍니다.
+          </b-notification>
+        </div>
       </div>
       <div class="input-form-group">
         <label for="code">코드</label>
@@ -70,26 +59,17 @@
 <script>
 import gql from 'graphql-tag'
 import { College, AllColleges, Department } from '@/assets/graphql/queries'
+import { modCollege, modDepartment } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
       mode: '',
       type: '',
+      typeDef: '',
       maxLength: 20,
       form: {
         code: '',
         name: ''
-      }
-    }
-  },
-  watch: {
-    mode (code) {
-      if (code === 'dpt') {
-        this.$apollo.query({
-          query: gql`${AllColleges}`
-        }).then(({ data: { allColleges } }) => {
-          console.log(allColleges)
-        })
       }
     }
   },
@@ -103,6 +83,7 @@ export default {
         this.type = '학과'
         this.maxLength = 6
       }
+      this.typeDef = type
       this.form.code = value
       this.$apollo.query({
         query: gql`${type === 'college' ? College : type === 'dpt' ? Department : {}}`,
@@ -133,8 +114,6 @@ export default {
     }
   },
   methods: {
-    onSelected ({ code }) {
-    },
     submit () {
       this.$buefy.dialog.confirm({
         title: '코드 변경',
@@ -145,6 +124,16 @@ export default {
         hasIcon: true,
         onConfirm: () => {
           this.$buefy.toast.open('코드 변경 작업을 진행합니다.')
+          this.$apollo.mutate({
+            mutation: gql`${this.typeDef === 'college' ? modCollege : this.typeDef === modDepartment ? modDepartment : {}}`,
+            variables: {
+              ...this.form
+            }
+          }).then(({ data }) => {
+            console.log(data)
+          }).catch(error => {
+            console.error(error)
+          })
         }
       })
     }

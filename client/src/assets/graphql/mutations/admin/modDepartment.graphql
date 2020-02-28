@@ -1,0 +1,7 @@
+mutation modDepartment($id: Int!, $code: String, $name: String) {
+    modDepartment(id: $id, dpt_cd: $code, dpt_nm: $name) {
+        id
+        dpt_cd
+        dpt_nm
+    }
+}

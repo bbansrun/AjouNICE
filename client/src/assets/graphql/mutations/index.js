@@ -18,6 +18,10 @@ import addGourmetPlace from './admin/addGourmetPlace.graphql'
 import addGourmetResIcon from './admin/addGourmetResIcon.graphql'
 import addGourmetResources from './admin/addGourmetResources.graphql'
 import removeGourmet from './admin/removeGourmet.graphql'
+import modCollege from './admin/modCollege.graphql'
+import modDepartment from './admin/modDepartment.graphql'
+import createCollege from './admin/createCollege.graphql'
+import createDepartment from './admin/createDepartment.graphql'
 
 export {
   writeReply,
@@ -37,5 +41,9 @@ export {
   addGourmetPlace,
   addGourmetResIcon,
   addGourmetResources,
-  removeGourmet
+  removeGourmet,
+  modCollege,
+  modDepartment,
+  createCollege,
+  createDepartment
 }

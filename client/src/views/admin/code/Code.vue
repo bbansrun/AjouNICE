@@ -89,8 +89,8 @@ export default {
     const data = []
     this.$apollo.query({
       query: gql`${Codes}`
-    }).then(({ data: { colleges, departments } }) => {
-      colleges.forEach(item => {
+    }).then(({ data: { allColleges, departments } }) => {
+      allColleges.forEach(item => {
         data.push({ id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm })
       })
       departments.forEach(item => {

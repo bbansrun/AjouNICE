@@ -329,6 +329,10 @@ type Mutation {
     addGourmetResources(res_idx: Int!, files: [Upload!], reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): Boolean
     addNewDepartment(dpt_nm: String!, dpt_cd: String!): Department
     addNewCollege(college_nm: String!, college_cd: String!): College
+    modCollege(id: Int!, college_nm: String, college_cd: String): College
+    modDepartment(id: Int!, dpt_nm: String, dpt_cd: String): Department
+    createCollege(college_nm: String!, college_cd: String!, exist_yn: String!, reg_ip: String!, upt_ip: String!): College
+    createDepartment(college_cd: String!, dpt_nm: String!, dpt_cd: String!, exist_yn: String!, reg_ip: String!, upt_ip: String!): Department
 }
 `;
 

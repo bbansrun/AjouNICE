@@ -373,6 +373,52 @@ module.exports = {
       }));
       return status.every((succeeded) => (succeeded === true));
     },
+    modCollege: async (root, { id, college_cd, college_nm, }, { db, }, info) => {
+      const variables = {};
+      if (college_cd) {
+        variables.college_cd = college_cd;
+      }
+      if (college_nm) {
+        variables.college_nm = college_nm;
+      }
+      const updated = await updateOne(db.College, variables, { id, });
+      if (updated) {
+        return await findOne(db.College, { id, college_cd, college_nm, }, info);
+      } else {
+        return {};
+      }
+    },
+    modDepartment: async (root, { id, dpt_cd, dpt_nm, }, { db, }, info) => {
+      const variables = {};
+      if (dpt_cd) {
+        variables.dpt_cd = dpt_cd;
+      }
+      if (dpt_nm) {
+        variables.dpt_nm = dpt_nm;
+      }
+      const updated = await updateOne(db.Department, variables, { id, });
+      if (updated) {
+        return await findOne(db.Department, { id, dpt_cd, dpt_nm, }, info);
+      } else {
+        return {};
+      }
+    },
+    createCollege: async (root, args, { db, }, info) => {
+      const created = await createOne(db.College, args);
+      if (created) {
+        return await findOne(db.College, args, info);
+      } else {
+        return {};
+      }
+    },
+    createDepartment: async (root, args, { db, }, info) => {
+      const created = await createOne(db.Department, args);
+      if (created) {
+        return await findOne(db.Department, args, info);
+      } else {
+        return {};
+      }
+    },
   },
   Posts: connection,
   Gourmets: connection,

@@ -55,15 +55,15 @@ const server = new ApolloServer({
   context: async ({ req, }) => {
     let userInfo;
     const token = req.headers.Authorization || '';
-    tokenVerify(token)
-      .then((decoded) => {
-        userInfo = decoded;
-      })
-      .catch((error) => {
-        userInfo = null;
-        console.error(error);
-        throw new AuthenticationError(error);
-      });
+    // tokenVerify(token)
+    //   .then((decoded) => {
+    //     userInfo = decoded;
+    //   })
+    //   .catch((error) => {
+    //     userInfo = null;
+    //     console.error(error);
+    //     throw new AuthenticationError(error);
+    //   });
     return { db, userInfo, };
   },
 });

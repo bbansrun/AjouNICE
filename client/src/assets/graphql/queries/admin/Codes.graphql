@@ -1,5 +1,5 @@
 {
-    colleges(exist_yn: "Y") {
+    allColleges {
         college_cd
         college_nm
     }
