@@ -8,9 +8,7 @@ mutation addGourmetPlace(
         $res_phone: String,
         $res_icon: String,
         $reg_ip: String!,
-        $reg_dt: Date!,
         $upt_ip: String!,
-        $upt_dt: Date!
     ) {
         addGourmetPlace (
             res_nm: $res_nm,
@@ -22,9 +20,7 @@ mutation addGourmetPlace(
             res_phone: $res_phone,
             res_icon: $res_icon,
             reg_ip: $reg_ip,
-            reg_dt: $reg_dt,
             upt_ip: $upt_ip,
-            upt_dt: $upt_dt
         ) {
             res_idx
         }

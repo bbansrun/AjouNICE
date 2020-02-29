@@ -1,0 +1,7 @@
+query CateById($id: ID) {
+    boardById(category_idx: $id) {
+        category_nm
+        title
+        depth
+    }
+}

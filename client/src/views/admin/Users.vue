@@ -39,13 +39,31 @@
           label="설정"
         >
           <div class="buttons">
-            <b-button
-              type="is-warning"
-              size="is-small"
+            <b-dropdown
+              hoverable
+              aria-role="list"
             >
-              <font-awesome-icon icon="exclamation-triangle" />&nbsp;
-              <span>수정</span>
-            </b-button>
+              <b-button
+                slot="trigger"
+                type="is-warning"
+                size="is-small"
+              >
+                <font-awesome-icon icon="user-cog" />&nbsp;
+                <span>수정</span>
+              </b-button>
+              <b-dropdown-item aria-role="listitem">
+                영구정지
+              </b-dropdown-item>
+              <b-dropdown-item aria-role="listitem">
+                탈퇴복원
+              </b-dropdown-item>
+              <b-dropdown-item aria-role="listitem">
+                일시잠금
+              </b-dropdown-item>
+              <b-dropdown-item aria-role="listitem">
+                계정복원(암호 초기화)
+              </b-dropdown-item>
+            </b-dropdown>&nbsp;
             <b-button
               type="is-danger"
               size="is-small"

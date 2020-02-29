@@ -5,20 +5,21 @@ scalar Date
 
 const enums = `
 enum Role {
-    ADMIN
-    USER
+    ADMIN                   # Service Module Managerable
+    USER                    # Just for using service contents
 }
 
 enum CategoryType {
     NORMAL
     GOURMET
+    REALTY
 }
 
 enum S3UploadType {
-    BOARD
-    PROFILE
-    NEWCATEGORY
-    GOURMET
+    CATE_ICON               # Regular Board, Gourmet, Realty, etc,.
+    EDITOR_ATTACHMENTS      # Board Attachments Using CKEditor
+    POST_ATTACHMENTS        # Board Attachments except Editor Attachments
+    PROFILE                 # Profile Images
 }
 `;
 
@@ -283,6 +284,7 @@ type Query {
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
     posts(category_idx: ID): [Board]
+    boardById(category_idx: ID): BoardCategory
     boardByType(category_type: CategoryType, title: String): BoardCategory
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
@@ -322,9 +324,9 @@ type Mutation {
     uploadedCategoryIcon(file: Upload!): String
     removeGourmet(res_idx: Int!): Boolean
     # Admin
-    addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): BoardCategory
+    addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, upt_ip: String!): BoardCategory
     removeCategory(category_idx: Int!): Boolean
-    addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): RestaurantBoard
+    addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
     addGourmetResIcon(file: Upload!): String
     addGourmetResources(res_idx: Int!, files: [Upload!], reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): Boolean
     addNewDepartment(dpt_nm: String!, dpt_cd: String!): Department

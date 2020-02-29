@@ -2,10 +2,11 @@
 import College from './common/College.graphql'
 import AllColleges from './common/Colleges.graphql'
 import Department from './common/Department.graphql'
+import PostsByCate from './common/PostsByCate.graphql'
+import CateById from './common/CateById.graphql'
 
 // 정리 필요
 import CateInfo from './CateInfo.graphql'
-import PostsByCate from './PostsByCate.graphql'
 import PostsByKeyword from './PostsSearch.graphql'
 import SubCates from './SubCates.graphql'
 import Post from './PostDetail.graphql'
@@ -40,6 +41,7 @@ import GourmetCategories from './gourmet/AllCategories.graphql'
 import GourmetById from './gourmet/GourmetById.graphql'
 
 export {
+  CateById,
   College,
   AllColleges,
   Department,

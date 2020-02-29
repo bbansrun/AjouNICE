@@ -13,7 +13,7 @@
       <div class="input-form-group" />
       <div class="input-form-controls buttons">
         <b-button
-          type="is-danger"
+          type="is-primary"
           size="is-small"
           @click="editItem"
         >
@@ -21,7 +21,7 @@
           <span>수정</span>
         </b-button>
         <b-button
-          type="is-warning"
+          type="is-dark"
           size="is-small"
           @click="$router.go(-1)"
         >

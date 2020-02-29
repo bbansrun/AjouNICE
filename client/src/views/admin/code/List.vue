@@ -14,64 +14,79 @@
         <span>신규 코드 등록</span>
       </b-button>
     </div>
-    <article>
-      <b-table
-        :data="data"
-        :loading="loading"
-        :mobile-cards="false"
-      >
-        <template slot-scope="props">
-          <b-table-column
-            field="type"
-            label="구분"
-            sortable
-          >
-            {{ props.row.type }}
-          </b-table-column>
+    <hr>
+    <b-table
+      :data="data"
+      :loading="loading"
+      :mobile-cards="false"
+    >
+      <template slot-scope="props">
+        <b-table-column
+          field="type"
+          label="구분"
+          sortable
+        >
+          {{ props.row.type }}
+        </b-table-column>
 
-          <b-table-column
-            field="code"
-            label="코드"
-            sortable
-          >
-            {{ props.row.code }}
-          </b-table-column>
+        <b-table-column
+          field="code"
+          label="코드"
+          sortable
+        >
+          {{ props.row.code }}
+        </b-table-column>
 
-          <b-table-column
-            field="value"
-            label="값"
-            sortable
-          >
-            <strong>{{ props.row.value }}</strong>
-          </b-table-column>
+        <b-table-column
+          field="value"
+          label="값"
+          sortable
+        >
+          <strong>{{ props.row.value }}</strong>
+        </b-table-column>
 
-          <b-table-column
-            field="settings"
-            label="설정"
-          >
-            <div class="buttons">
-              <b-button
-                type="is-warning"
-                size="is-small"
-                tag="router-link"
-                :to="`/gate/manager/codes/edit/${props.row.id}`"
-              >
-                <font-awesome-icon icon="exclamation-triangle" />&nbsp;
-                <span>수정</span>
-              </b-button>
-              <b-button
-                type="is-danger"
-                size="is-small"
-                @click="removeItem(props.row.id)"
-              >
-                <font-awesome-icon icon="times" />&nbsp;
-                <span>삭제</span>
-              </b-button>
-            </div>
-          </b-table-column>
-        </template>
-      </b-table>
-    </article>
+        <b-table-column
+          field="reg_dt"
+          label="생성일"
+          sortable
+        >
+          {{ props.row.reg_dt | formatDateTime }}
+        </b-table-column>
+
+        <b-table-column
+          field="upt_dt"
+          label="최종수정"
+          sortable
+        >
+          {{ props.row.upt_dt | formatDateTime }}
+        </b-table-column>
+
+        <b-table-column
+          field="settings"
+          label="설정"
+        >
+          <div class="buttons">
+            <b-button
+              type="is-light"
+              size="is-small"
+              tag="router-link"
+              :to="`/gate/manager/codes/edit/${props.row.id}`"
+            >
+              <font-awesome-icon icon="pen" />&nbsp;
+              <span>수정</span>
+            </b-button>
+            <b-button
+              type="is-danger"
+              size="is-small"
+              @click="removeItem(props.row.id)"
+            >
+              <font-awesome-icon icon="trash" />&nbsp;
+              <span>삭제</span>
+            </b-button>
+          </div>
+        </b-table-column>
+      </template>
+    </b-table>
   </section>
 </template>
 
@@ -91,10 +106,10 @@ export default {
       query: gql`${Codes}`
     }).then(({ data: { allColleges, departments } }) => {
       allColleges.forEach(item => {
-        data.push({ id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm })
+        data.push({ id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
       })
       departments.forEach(item => {
-        data.push({ id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm })
+        data.push({ id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
       })
       this.data = data
       this.loading = false

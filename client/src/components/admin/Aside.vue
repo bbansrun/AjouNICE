@@ -2,9 +2,7 @@
   <aside>
     <div class="container">
       <header>
-        <h2 data-logo>
-          AjouNICE!
-        </h2>
+        <Logo />
         <small>
           <strong>관리자</strong>
         </small>
@@ -64,7 +62,11 @@
 </template>
 
 <script>
+import Logo from '@/assets/images/AjouNICE_shadow.svg'
 export default {
+  components: {
+    Logo
+  },
   props: {
     modules: {
       type: Array,
@@ -86,6 +88,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+svg {
+  fill: #fff;
+}
+
 aside {
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   & small {

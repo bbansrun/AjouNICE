@@ -1,0 +1,40 @@
+//
+// CKEditor Custom Image Upload Adapter applied to Amazon S3
+//
+// 2020. 02. Created by J.W.Jeon
+// http://github.com/this-is-g1
+// Team bbansrun. AjouNICE! - Community Service for Ajou University
+//
+
+import Vue from 'vue'
+import gql from 'graphql-tag'
+
+class ImageUploadToS3Adapter {
+  constructor (loader) {
+    this.loader = loader
+  }
+
+  upload () {
+    return this.loader.file
+      .then(file => new Promise((resolve, reject) => {
+        Vue.prototype.$apollo.mutate({
+          mutation: gql``
+        }).then(({ data }) => {
+          resolve({ default: '' })
+        }).catch(error => {
+          console.error(error)
+          reject(error)
+        })
+      }))
+  }
+}
+
+const ImageUploadToS3AdapterPlugin = (editor) => {
+  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+    return new ImageUploadToS3Adapter(loader)
+  }
+}
+
+export {
+  ImageUploadToS3AdapterPlugin
+}

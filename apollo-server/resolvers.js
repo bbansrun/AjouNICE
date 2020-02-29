@@ -183,6 +183,9 @@ module.exports = {
       return await findAll(db.RestaurantBoard, args, info, include);
     },
     // Renew Resolve Functions Below
+    async boardById (root, args, { db, }, info) {
+      return await findOne(db.BoardCategory, args, info);
+    },
     async boardByType (root, args, { db, }, info) {
       return await findOne(db.BoardCategory, args, info);
     },

@@ -28,11 +28,14 @@ import {
   AdminDashboard,
   AdminStatus,
   AdminUsers,
+  AdminEditBoard,
   AdminBoards,
+  AdminBoardList,
   AdminNewBoard,
   AdminGourmet,
   AdminGourmetList,
   AdminNewGourmet,
+  AdminEditGourmet,
   AdminNewGourmetPlace,
   AdminEditGourmetPlace,
   AdminReviews,
@@ -40,6 +43,7 @@ import {
   AdminPopup,
   AdminPermission,
   AdminRestriction,
+  AdminRealty,
   ScheduleHome,
   TimetableHome,
   RealtyHome,
@@ -384,12 +388,28 @@ export default new Router({
           component: AdminGourmetList
         },
         {
-          path: 'boards/gourmet/:category_idx/edit/:res_idx',
+          path: 'boards/gourmet/:category_idx/edit',
+          component: AdminEditGourmet
+        },
+        {
+          path: 'boards/gourmet/:category_idx/place/:res_idx/edit',
           component: AdminEditGourmetPlace
         },
         {
           path: 'boards/reviews',
           component: AdminReviews
+        },
+        {
+          path: 'boards/realty',
+          component: AdminRealty
+        },
+        {
+          path: 'boards/:category_idx',
+          component: AdminBoardList
+        },
+        {
+          path: 'boards/:category_idx/edit',
+          component: AdminEditBoard
         },
         {
           path: 'restrictions',

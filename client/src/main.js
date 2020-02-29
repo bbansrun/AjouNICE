@@ -11,6 +11,7 @@ import {
   faSignOutAlt,
   faUser,
   faUsers,
+  faUserCog,
   faUsersCog,
   faUserLock,
   faPen,
@@ -38,6 +39,7 @@ import {
   faArrowUp,
   faAngleLeft,
   faAngleRight,
+  faArrowDown,
   faTag,
   faCog,
   faQuestion,
@@ -70,6 +72,7 @@ import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
 library.add(faSignOutAlt)
 library.add(faUser)
 library.add(faUsers)
+library.add(faUserCog)
 library.add(faUsersCog)
 library.add(faUserLock)
 library.add(faPen)
@@ -95,6 +98,7 @@ library.add(faCheck)
 library.add(faComments)
 library.add(faList)
 library.add(faArrowUp)
+library.add(faArrowDown)
 library.add(faAngleLeft)
 library.add(faAngleRight)
 library.add(faTag)

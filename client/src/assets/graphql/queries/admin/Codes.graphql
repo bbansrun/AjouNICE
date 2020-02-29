@@ -2,10 +2,14 @@
     allColleges {
         college_cd
         college_nm
+        reg_dt
+        upt_dt
     }
 
     departments {
         dpt_cd
         dpt_nm
+        reg_dt
+        upt_dt
     }
 }

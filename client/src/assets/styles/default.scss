@@ -1,5 +1,6 @@
 @import "~@/assets/styles/reset";
 @import "~@/assets/styles/fonts";
+@import "~@/assets/styles/variables";
 
 @import "~@/assets/styles/components/Swal2";
 @import "~@/assets/styles/components/BuefyCustom";
@@ -8,17 +9,13 @@
 @import "~@/assets/styles/components/Link";
 @import "~@/assets/styles/components/Form";
 
-$logo: #0D4AB3;
-$logo_aux: #1F5ECC;
-$auth: auth;
-
 ::-webkit-scrollbar {
   display: none;
 }
 
 ::selection {
   background: #667eea;
-  color: #fff;
+  color: $white;
 }
 
 .content-wrapper {
@@ -44,7 +41,7 @@ body {
         > .wrapper {
           > p {
             > strong {
-              color: #fff;
+              color: $white;
             }
           }
         }
@@ -60,7 +57,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  color: #fff;
+  color: $white;
   background: rgba(0,0,0,.95);
   z-index: 10000000000;
   > .wrapper {
@@ -148,7 +145,7 @@ nav {
       align-items: center;
       padding: 8px;
       width: 100%;
-      color: #fff;
+      color: $white;
       box-shadow: 0 5px 5px rgba(0,0,0,.2);
       z-index: 1;
       > .icon-wrapper {
@@ -172,7 +169,7 @@ nav {
             position: absolute;
             height: 3px;
             width: 100%;
-            background: #fff;
+            background: $white;
             border-radius: 3px;
             opacity: 1;
             left: 0;
@@ -212,7 +209,7 @@ nav {
           display: inline-block;
           font-size: 18px;
           > a {
-            color: #fff;
+            color: $white;
           }
         }
       }
@@ -238,7 +235,7 @@ nav {
     row-gap: 1rem;
     padding: 2rem 0;
     background: $logo_aux;
-    color: #fff;
+    color: $white;
     & .icon-wrapper {
       text-align: center;
       & a {
@@ -258,7 +255,7 @@ nav {
         box-shadow: 0 2px 5px rgba(0,0,0,.4);
       }
       & a {
-        color: #fff;
+        color: $white;
       }
       & p {
         margin-top: 8px;
@@ -290,7 +287,7 @@ main {
 .landing {
   position: relative;
   text-align: center;
-  color: #fff;
+  color: $white;
   padding: 6rem 0;
   z-index: 0;
   > .cover {
@@ -315,7 +312,7 @@ main {
 
 // Board
 ul.board-nav {
-  background: #fff;
+  background: $white;
   & li {
     display: inline-block;
     & a {
@@ -327,14 +324,14 @@ ul.board-nav {
       transition: .2s all ease;
       &:hover {
         background: $logo;
-        color: #fff;
+        color: $white;
       }
     }
   }
   & li.active {
     background: $logo;
     & a {
-      color: #fff;
+      color: $white;
     }
   }
 }
@@ -343,7 +340,7 @@ ul.board-nav {
 .footer {
   padding: 2rem 0 0 0;
   background: #2c2c2c;
-  color: #fff;
+  color: $white;
   & a {
     font: {
       size: .8rem;
@@ -391,7 +388,7 @@ ul.board-nav {
   max-height: 100vh;
   justify-content: center;
   align-items: center;
-  background: #fff;
+  background: $white;
   > #error_code {
       margin-top: 2rem;
       > h1 {
@@ -449,12 +446,12 @@ ul.board-nav {
 // v-select
 .v-select {
   font-size: 1rem;
-  background: #fff;
+  background: $white;
   box-shadow: 0 2px 2px rgba(36, 37, 38, 0.08);
   >.vs__dropdown-toggle+[role="listbox"]>li {
     transition: .2s background-color ease;
     &:hover {
-      color: #fff !important;
+      color: $white !important;
       background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
@@ -465,12 +462,12 @@ ul.board-nav {
   }
   &.error {
     >.vs__dropdown-toggle {
-      background: red;
+      background: $red;
       & input[type="search"] {
-          color: #fff;
+          color: $white;
       }
       & .vs__open-indicator {
-          fill: #fff;
+          fill: $white;
       }
     }
   }
@@ -502,7 +499,7 @@ ul.board-nav {
       }
   }
   background: url('http://www.ajou.ac.kr/_attach/new/_images/2020/02/20/200220_main_visual02.jpg') no-repeat center center/cover;
-  color: #fff;
+  color: $white;
   font-size: 1.5rem;
   min-height: 12rem;
 }
@@ -563,7 +560,7 @@ figure {
       height: 100%;
     }
     & strong {
-      color: #fff;
+      color: $white;
     }
   }
   > img {

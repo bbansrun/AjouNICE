@@ -1,24 +1,19 @@
 <template>
-  <footer class="footer">
+  <footer class="footer admin-footer">
     <section class="wrapper">
       <div class="footer-content">
-        <header>
-          <span data-logo><small>AjouNICE!</small></span>&nbsp;<small>관리자 페이지는 PC에 최적화되어있습니다.</small>
-        </header>
+        <Logo />
+        <span>관리자 페이지는 PC 화면에 최적화되었습니다.</span>
       </div>
     </section>
   </footer>
 </template>
 
 <script>
+import Logo from '@/assets/images/AjouNICE_shadow.svg'
 export default {
-  data () {
-    return {
-      year: null
-    }
-  },
-  mounted () {
-    this.year = new Date().getUTCFullYear()
+  components: {
+    Logo
   }
 }
 </script>
@@ -26,5 +21,21 @@ export default {
 <style lang="scss" scoped>
 footer {
   padding: unset;
+  & .footer-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start !important;
+    align-items: center;
+    min-height: unset !important;
+    max-height: 32px;
+    & svg {
+      fill: #fff;
+      width: 100px;
+      max-height: 32px;
+    }
+    & span {
+      font-size: .8rem;
+    }
+  }
 }
 </style>

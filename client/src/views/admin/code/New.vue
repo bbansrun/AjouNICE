@@ -1,7 +1,7 @@
 <template>
   <section class="codes">
     <header class="underline underline-inline-block underline-animated">
-      <strong>신규 코드 작성</strong>
+      <strong>신규 코드 등록</strong>
     </header>
     <form
       data-post-form
@@ -14,14 +14,14 @@
             placeholder="학부/학과 여부를 선택해주세요."
             :options="options"
             :class="{'error': validation.mode === false }"
-            @input="onSelected"
+            @input="selectedType"
           >
             <template v-slot:no-options>
               일치하는 옵션이 없어요.
             </template>
           </v-select>
           <p
-            v-if="validation.mode === false"
+            v-show="validation.mode === false"
             class="auto-validate-noti"
             :class="{'error': validation.mode === false }"
           >
@@ -50,7 +50,7 @@
             </template>
           </v-select>
           <p
-            v-if="validation.dptParent === false"
+            v-show="validation.dptParent === false"
             class="auto-validate-noti"
             :class="{'error': validation.dptParent === false }"
           >
@@ -73,11 +73,13 @@
             :maxlength="maxLength"
           >
           <p
-            v-if="validation.code === false"
+            v-show="validation.code === false"
             class="auto-validate-noti"
             :class="{'error': validation.code === false }"
           >
-            코드를 입력해주세요.
+            <span v-if="mode === 'college'">코드명은 학과 특징을 드러내는 영문와 _으로 이루어진 4자리로 구성되어야합니다.</span>
+            <span v-if="mode === 'dpt'">코드명은 학과코드와 일련번호(숫자)를 포함한 6자리로 구성되어야합니다. {{ form.college_cd ? ` (학과코드: ${form.college_cd})` : '' }}</span>
+            <span v-else>구분 선택 후 코드를 입력하시기 바랍니다.</span>
           </p>
         </div>
       </div>
@@ -94,7 +96,7 @@
             :placeholder="placeholder.name"
           >
           <p
-            v-if="validation.name === false"
+            v-show="validation.name === false"
             class="auto-validate-noti"
             :class="{'error': validation.name === false }"
           >
@@ -119,10 +121,10 @@
           @click="submit"
         >
           <font-awesome-icon icon="pen" />&nbsp;
-          <span>작성</span>
+          <span>등록</span>
         </b-button>
         <b-button
-          type="is-danger"
+          type="is-dark"
           size="is-small"
           @click="$router.go(-1)"
         >
@@ -141,7 +143,7 @@ import { createCollege, createDepartment } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
-      private_yn_label: '비공개',
+      private_yn_label: '공개',
       mode: '',
       colleges: [],
       options: [
@@ -152,10 +154,10 @@ export default {
         code: '사용할 코드를 명명해주세요. 예) 학부: C_AX, 학과: C_AX01',
         name: '이 코드는 어떤 곳을 의미하나요? 예) OO학과, OO대학'
       },
-      maxLength: 20,
+      maxLength: 6,
       form: {
         college_cd: '',
-        exist_yn: 'N',
+        exist_yn: 'Y',
         code: '',
         name: '',
         reg_ip: '',
@@ -171,6 +173,25 @@ export default {
     }
   },
   watch: {
+    'form.name' (value) {
+      this.validateInput('name')
+    },
+    'form.code' (value) {
+      // Custom Validation
+      if (value) {
+        if (value.includes(this.form.college_cd)) {
+          if (value.length === this.maxLength) {
+            this.validation.code = true
+          } else {
+            this.validation.code = false
+          }
+        } else {
+          this.validation.code = false
+        }
+      } else {
+        this.validation.code = false
+      }
+    },
     'form.exist_yn' (value) {
       if (value === 'Y') {
         this.private_yn_label = '공개'
@@ -193,7 +214,37 @@ export default {
     this.form.upt_ip = this.$store.state.user.access_loc
   },
   methods: {
-    onSelected ({ code }) {
+    validateInput (key, compare = null) {
+      // Form Data가 적절한 조건 만족하였는지 판단
+      // compare의 경우 object type data를 받을 경우,
+      // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
+      if (compare) {
+        if (Object.prototype.hasOwnProperty.call(compare, 'value') && Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
+          if (compare.checkIsCorrect) {
+            if (this.form[key] === compare.value) {
+              this.validation[key] = true
+            } else {
+              this.validation[key] = false
+            }
+          } else {
+            if (this.form[key] !== compare.value) {
+              this.validation[key] = true
+            } else {
+              this.validation[key] = false
+            }
+          }
+        } else {
+          throw Error('파라미터 compare 값이 유효하지 않습니다.')
+        }
+      } else {
+        if (this.form[key]) {
+          this.validation[key] = true
+        } else {
+          this.validation[key] = false
+        }
+      }
+    },
+    selectedType ({ code }) {
       this.mode = code
       if (code === 'college') {
         this.placeholder.code = '사용할 코드를 명명해주세요. 예) 학부: C_AX'
@@ -204,18 +255,16 @@ export default {
         this.placeholder.name = '이 코드는 어떤 곳을 의미하나요? 예) OO학과'
         this.maxLength = 6
       }
+      this.validation.mode = true
+    },
+    selectedCollegeCd (value) {
+      this.form.college_cd = value
+      this.form.code = value
+      this.validation.dptParent = true
     },
     validate () {
-      if (this.form.code) {
-        this.validation.code = true
-      } else {
-        this.validation.code = false
-      }
-      if (this.form.name) {
-        this.validation.name = true
-      } else {
-        this.validation.name = false
-      }
+      this.validateInput('code')
+      this.validateInput('name')
       if (this.mode) {
         this.validation.mode = true
         if (this.mode === 'dpt') {
@@ -280,10 +329,6 @@ export default {
           confirmText: '확인'
         })
       }
-    },
-    selectedCollegeCd (value) {
-      this.form.college_cd = value
-      this.form.code = value
     }
   }
 }

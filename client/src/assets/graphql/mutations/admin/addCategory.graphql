@@ -8,9 +8,7 @@ mutation addCategory(
     $category_icon: String,
     $desc: String,
     $reg_ip: String!,
-    $reg_dt: Date!,
     $upt_ip: String!,
-    $upt_dt: Date!
 ) {
  addCategory(
      category_nm: $category_nm,
@@ -22,9 +20,7 @@ mutation addCategory(
      category_icon: $category_icon,
      desc: $desc,
      reg_ip: $reg_ip,
-     reg_dt: $reg_dt,
      upt_ip: $upt_ip,
-     upt_dt: $upt_dt
  ) {
      category_idx
  }

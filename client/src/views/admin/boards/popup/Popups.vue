@@ -1,5 +1,5 @@
 <template>
-  <section class="status reviews">
+  <section class="status popups">
     <header class="underline underline-inline-block underline-animated">
       <strong>팝업 모듈 관리</strong>
     </header>

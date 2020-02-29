@@ -1,5 +1,5 @@
 <template>
-  <section class="popup">
+  <section class="popups">
     <header class="underline underline-inline-block underline-animated">
       <strong>신규 팝업 생성</strong>
     </header>

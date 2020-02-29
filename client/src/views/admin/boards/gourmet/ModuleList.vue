@@ -75,10 +75,12 @@
         >
           <div class="buttons">
             <b-button
-              type="is-warning"
+              type="is-light"
               size="is-small"
+              tag="router-link"
+              :to="`/gate/manager/boards/gourmet/${props.row.category_idx}/edit`"
             >
-              <font-awesome-icon icon="exclamation-triangle" />&nbsp;
+              <font-awesome-icon icon="pen" />&nbsp;
               <span>수정</span>
             </b-button>
             <b-button
@@ -86,7 +88,7 @@
               size="is-small"
               @click="removeCategory(props.row.category_nm, props.row.category_idx)"
             >
-              <font-awesome-icon icon="times" />&nbsp;
+              <font-awesome-icon icon="trash" />&nbsp;
               <span>삭제</span>
             </b-button>
           </div>

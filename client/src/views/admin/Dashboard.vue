@@ -56,7 +56,7 @@ export default {
             { id: uuid(), label: '일반 게시판', link: '/gate/manager/boards', icon: 'sticky-note' },
             { id: uuid(), label: '맛집 게시판', link: '/gate/manager/boards/gourmet', icon: 'sticky-note' },
             { id: uuid(), label: '부동산', link: '/gate/manager/boards/realty', icon: 'sticky-note' },
-            { id: uuid(), label: '강의평가', link: '/gate/manager/boards/reivews', icon: 'sticky-note' }
+            { id: uuid(), label: '강의평가', link: '/gate/manager/boards/reviews', icon: 'sticky-note' }
           ]
         },
         {
@@ -111,7 +111,11 @@ export default {
 
 <style lang="scss" scoped>
 footer {
+  height: 32px;
   z-index: 100;
+  & .footer-content {
+    max-height: 32px;
+  }
 }
 
 main {
@@ -122,7 +126,7 @@ main {
 }
 
 .wrapper {
-  width: 1200px;
+  width: 100%;
   min-width: 1200px;
   height: 100vh;
   min-height: calc(1200px * 6 / 19);

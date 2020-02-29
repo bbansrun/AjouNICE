@@ -17,6 +17,7 @@
     <hr>
     <b-table
       :data="boards"
+      :loading="loading"
       :mobile-cards="false"
     >
       <template slot-scope="props">
@@ -35,7 +36,9 @@
           sortable
           width="50%"
         >
-          <strong>{{ props.row.category_nm }}</strong>
+          <router-link :to="`/gate/manager/boards/${props.row.category_idx}`">
+            <strong>{{ props.row.category_nm }}</strong>
+          </router-link>
         </b-table-column>
         <b-table-column
           field="title"
@@ -59,10 +62,12 @@
         >
           <div class="buttons">
             <b-button
-              type="is-warning"
+              type="is-light"
               size="is-small"
+              tag="router-link"
+              :to="`/gate/manager/boards/${props.row.category_idx}/edit`"
             >
-              <font-awesome-icon icon="exclamation-triangle" />&nbsp;
+              <font-awesome-icon icon="pen" />&nbsp;
               <span>수정</span>
             </b-button>
             <b-button
@@ -70,7 +75,7 @@
               size="is-small"
               @click="removeCategory(props.row.category_nm, props.row.category_idx)"
             >
-              <font-awesome-icon icon="times" />&nbsp;
+              <font-awesome-icon icon="trash" />&nbsp;
               <span>삭제</span>
             </b-button>
           </div>
@@ -88,7 +93,8 @@ import { removeCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
-      boards: []
+      boards: [],
+      loading: true
     }
   },
   mounted () {
@@ -99,6 +105,7 @@ export default {
         category_type: 'NORMAL'
       }
     }).then(({ data: { boards } }) => {
+      this.loading = false
       this.boards = boards
     })
   },

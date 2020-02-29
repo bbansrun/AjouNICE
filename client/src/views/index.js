@@ -2,30 +2,35 @@
 // Admin
 import AdminUsers from './admin/Users.vue'
 import AdminStatus from './admin/Status.vue'
-import AdminReviews from './admin/Reviews.vue'
 import AdminDashboard from './admin/Dashboard.vue'
 import AdminPermission from './admin/Permissions.vue'
 import AdminRestriction from './admin/Restrictions.vue'
 
-import AdminBoards from './admin/boards/Boards.vue'
-import AdminNewBoard from './admin/boards/NewBoard.vue'
+import AdminBoards from './admin/boards/ModuleList.vue'
+import AdminNewBoard from './admin/boards/NewModule.vue'
+import AdminEditBoard from './admin/boards/EditModule.vue'
+import AdminBoardList from './admin/boards/Posts.vue'
 
 import AdminPopup from './admin/boards/popup/Popups.vue'
 import AdminNewPopup from './admin/boards/popup/NewPopup.vue'
 
-import AdminNotice from './admin/boards/notice/Notice.vue'
-import AdminNewNotice from './admin/boards/notice/NewNotice.vue'
-import AdminEditNotice from './admin/boards/notice/EditNotice.vue'
+import AdminNotice from './admin/boards/notice/List.vue'
+import AdminNewNotice from './admin/boards/notice/New.vue'
+import AdminEditNotice from './admin/boards/notice/Edit.vue'
 
-import AdminCode from './admin/code/Code.vue'
-import AdminNewCode from './admin/code/NewCode.vue'
-import AdminEditCode from './admin/code/EditCode.vue'
+import AdminCode from './admin/code/List.vue'
+import AdminNewCode from './admin/code/New.vue'
+import AdminEditCode from './admin/code/Edit.vue'
 
-import AdminGourmet from './admin/boards/gourmet/Gourmet.vue'
-import AdminNewGourmet from './admin/boards/gourmet/NewGourmet.vue'
-import AdminGourmetList from './admin/boards/gourmet/GourmetList.vue'
-import AdminNewGourmetPlace from './admin/boards/gourmet/NewGourmetPlace.vue'
-import AdminEditGourmetPlace from './admin/boards/gourmet/EditGourmetPlace.vue'
+import AdminGourmet from './admin/boards/gourmet/ModuleList.vue'
+import AdminNewGourmet from './admin/boards/gourmet/NewModule.vue'
+import AdminEditGourmet from './admin/boards/gourmet/EditModule.vue'
+import AdminGourmetList from './admin/boards/gourmet/PlaceList.vue'
+import AdminNewGourmetPlace from './admin/boards/gourmet/NewPlace.vue'
+import AdminEditGourmetPlace from './admin/boards/gourmet/EditPlace.vue'
+
+import AdminRealty from './admin/boards/realty/List.vue'
+import AdminReviews from './admin/boards/reviews/List.vue'
 
 // Auth
 import Login from './auth/Login.vue'
@@ -110,10 +115,12 @@ export {
   ScheduleHome,
   TimetableHome,
   AdminBoards,
+  AdminEditBoard,
   AdminNotice,
   AdminNewNotice,
   AdminEditNotice,
   AdminNewBoard,
+  AdminBoardList,
   AdminNewCode,
   AdminEditCode,
   AdminCode,
@@ -121,15 +128,17 @@ export {
   AdminGourmet,
   AdminGourmetList,
   AdminNewGourmet,
+  AdminEditGourmet,
   AdminNewGourmetPlace,
   AdminEditGourmetPlace,
-  AdminReviews,
   AdminUsers,
   AdminStatus,
   AdminNewPopup,
   AdminPopup,
   AdminRestriction,
   AdminPermission,
+  AdminRealty,
+  AdminReviews,
   UserProfile,
   UserEdit,
   UserReviews

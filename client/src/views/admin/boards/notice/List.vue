@@ -25,6 +25,29 @@
         >
           {{ props.row.id }}
         </b-table-column>
+        <b-table-column
+          field="settings"
+          label="설정"
+        >
+          <div class="buttons">
+            <b-button
+              type="is-light"
+              size="is-small"
+              tag="router-link"
+              :to="`/gate/manager/notice/${props.row.id}/edit`"
+            >
+              <font-awesome-icon icon="pen" />&nbsp;
+              <span>수정</span>
+            </b-button>
+            <b-button
+              type="is-danger"
+              size="is-small"
+            >
+              <font-awesome-icon icon="trash" />&nbsp;
+              <span>삭제</span>
+            </b-button>
+          </div>
+        </b-table-column>
       </template>
     </b-table>
   </section>

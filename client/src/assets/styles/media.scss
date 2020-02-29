@@ -17,7 +17,7 @@
         display: block !important;
     }
 
-    footer {
+    footer:not(.admin-footer) {
         > .wrapper {
             width: 85% !important;
             > .footer-content {

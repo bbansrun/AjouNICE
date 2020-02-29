@@ -27,6 +27,7 @@
     <b-table
       :data="boards"
       :loading="loading"
+      :mobile-cards="false"
     >
       <template slot-scope="props">
         <b-table-column
@@ -41,7 +42,7 @@
         <b-table-column
           field="res_nm"
           label="업소명"
-          width="50%"
+          width="20%"
           sortable
         >
           <strong>{{ props.row.res_nm }}</strong>
@@ -49,7 +50,7 @@
         <b-table-column
           field="res_info"
           label="소개"
-          width="15%"
+          width="45%"
         >
           {{ props.row.res_info }}
         </b-table-column>
@@ -72,12 +73,12 @@
         >
           <div class="buttons">
             <b-button
-              type="is-warning"
+              type="is-light"
               size="is-small"
               tag="router-link"
-              :to="`/gate/manager/boards/gourmet/${props.row.category.category_idx}/edit/${props.row.res_idx}`"
+              :to="`/gate/manager/boards/gourmet/${props.row.category.category_idx}/place/${props.row.res_idx}/edit`"
             >
-              <font-awesome-icon icon="exclamation-triangle" />&nbsp;
+              <font-awesome-icon icon="pen" />&nbsp;
               <span>수정</span>
             </b-button>
             <b-button
@@ -85,7 +86,7 @@
               size="is-small"
               @click="removeItem(props.row.res_nm, props.row.res_idx)"
             >
-              <font-awesome-icon icon="times" />&nbsp;
+              <font-awesome-icon icon="trash" />&nbsp;
               <span>삭제</span>
             </b-button>
           </div>
@@ -108,7 +109,7 @@ export default {
       loading: true
     }
   },
-  mounted () {
+  beforeMount () {
     this.$apollo.query({
       query: gql`${GourmetListByCate}`,
       variables: {
@@ -118,6 +119,12 @@ export default {
       this.boards = gourmetsByCate
       this.cateInfo = CateById
       this.loading = false
+      if (CateById === null) {
+        this.$router.push('/error/404')
+      }
+    }).catch(error => {
+      console.error(error)
+      this.$router.push('/error/404')
     })
   },
   methods: {
