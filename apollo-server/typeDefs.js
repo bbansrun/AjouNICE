@@ -23,6 +23,28 @@ enum S3UploadType {
 }
 `;
 
+const input = `
+input ImgProfileInput {
+    raw: Boolean!
+    user_idx: Int
+}
+
+input ImgEditorInput {
+    category: String!
+}
+
+input ImgGourmetResInput {
+    res_idx: Int!
+}
+
+input S3UploadInput {
+    PROFILE: ImgProfileInput
+    CATE_ICON: Boolean
+    POST_ATTACHMENTS: ImgGourmetResInput
+    EDITOR_ATTACHMENTS: ImgEditorInput
+}
+`;
+
 const directives = `
 directive @auth(requires: Role = ADMIN) on FIELD_DEFINITION | ENUM_VALUE
 `;
@@ -310,7 +332,9 @@ type Mutation {
     lastLogin(user_id: String!, ip: String!): User
     authorize(user_idx: Int!, auth_token: String!): Boolean
     resetEmailToken(email: String!): Boolean
-    # Standards
+    # Common
+    imageUpload(uploadType: S3UploadType!, file: Upload!, options: S3UploadInput!): String
+    batchImageUpload(uploadType: S3UploadType!, files: [Upload!]!, options: S3UploadInput!): [String]
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String!, upt_ip: String!): Board
     removePost(board_idx: Int!): Boolean
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, upt_ip: String, upt_dt: Date): Board
@@ -318,17 +342,11 @@ type Mutation {
     writeReply(board_idx: Int!, user_idx: Int!, text: String, reg_ip: String!, upt_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): BoardComment
     editReply(cmt_idx: Int!, text: String): BoardComment
-    uploadedProfileImage(file: Upload!): String
-    modifiedProfileImage(file: Upload!, user_idx: Int!): String
-    uploadedBoardImage(file: Upload!, category_idx: Int!): String
-    uploadedCategoryIcon(file: Upload!): String
     removeGourmet(res_idx: Int!): Boolean
     # Admin
     addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, upt_ip: String!): BoardCategory
     removeCategory(category_idx: Int!): Boolean
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
-    addGourmetResIcon(file: Upload!): String
-    addGourmetResources(res_idx: Int!, files: [Upload!], reg_ip: String!, reg_dt: Date!, upt_ip: String!, upt_dt: Date!): Boolean
     addNewDepartment(dpt_nm: String!, dpt_cd: String!): Department
     addNewCollege(college_nm: String!, college_cd: String!): College
     modCollege(id: Int!, college_nm: String, college_cd: String): College
@@ -341,6 +359,7 @@ type Mutation {
 module.exports = `
 ${scalars}
 ${enums}
+${input}
 ${directives}
 ${customTypes}
 ${subscription}

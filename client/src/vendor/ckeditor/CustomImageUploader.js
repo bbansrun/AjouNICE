@@ -8,6 +8,7 @@
 
 import Vue from 'vue'
 import gql from 'graphql-tag'
+import { singleUpload } from '@/assets/graphql/mutations'
 
 class ImageUploadToS3Adapter {
   constructor (loader) {
@@ -17,10 +18,19 @@ class ImageUploadToS3Adapter {
   upload () {
     return this.loader.file
       .then(file => new Promise((resolve, reject) => {
-        Vue.prototype.$apollo.mutate({
-          mutation: gql``
-        }).then(({ data }) => {
-          resolve({ default: '' })
+        Vue.prototype.$Apollo.mutate({
+          mutation: gql`${singleUpload}`,
+          variables: {
+            uploadType: 'EDITOR_ATTACHMENTS',
+            file,
+            options: {
+              EDITOR_ATTACHMENTS: {
+                category: 'TEST'
+              }
+            }
+          }
+        }).then(({ data: { singleUpload } }) => {
+          resolve({ default: singleUpload })
         }).catch(error => {
           console.error(error)
           reject(error)

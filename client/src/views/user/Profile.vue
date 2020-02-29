@@ -188,7 +188,7 @@
 import urljoin from 'url-join'
 import gql from 'graphql-tag'
 import { User, Notice } from '@/assets/graphql/queries'
-import { ModifiedProfileImageURL } from '@/assets/graphql/mutations'
+import { singleUpload } from '@/assets/graphql/mutations'
 import { Navigation, MyPosts, MyReviews, Footer } from '@/components'
 export default {
   components: {
@@ -230,14 +230,20 @@ export default {
     thumbnail (file) {
       // S3 업로드 및 즉각 썸네일 반영
       this.$apollo.mutate({
-        mutation: gql`${ModifiedProfileImageURL}`,
+        mutation: gql`${singleUpload}`,
         variables: {
           file,
-          user_idx: this.$store.state.user.idx
+          uploadType: 'PROFILE',
+          options: {
+            PROFILE: {
+              raw: false,
+              user_idx: this.$store.state.user.idx
+            }
+          }
         }
-      }).then(({ data: { modifiedProfileImage } }) => {
-        this.flashSuccess('프로필이 변경되었습니다.')
-        this.user.user_profile = modifiedProfileImage
+      }).then(({ data: { singleUpload } }) => {
+        this.$buefy.toast.open('프로필이 변경되었습니다.')
+        this.user.user_profile = singleUpload
       })
     }
   },

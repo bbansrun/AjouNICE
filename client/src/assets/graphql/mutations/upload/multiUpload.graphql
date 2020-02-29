@@ -1,0 +1,3 @@
+mutation multiUpload($uploadType: S3UploadType!, $files: [Upload!]!, $options: S3UploadInput!) {
+    batchImageUpload(uploadType: $uploadType, files: $files, options: $options)
+}

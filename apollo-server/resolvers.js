@@ -5,12 +5,27 @@ const fetch = require('node-fetch');
 const { Op, } = require('sequelize');
 const { sequelize, } = require('./models');
 const { PubSub, } = require('apollo-server-express');
-const bucketUploadConfig = require('./function/aws/bucketUploadConfig');
+const { PROFILE, EDITOR_ATTACHMENTS, CATE_ICON, POST_ATTACHMENTS, } = require('./function/aws/bucketUploadConfig');
 const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
 const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtils');
 const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, } = require('./function/db/handler');
 
 sequelize.sync({});
+
+// S3 Upload Config
+const s3Config = (uploadType, options) => {
+  let config;
+  if (uploadType === 'EDITOR_ATTACHMENTS') {
+    config = EDITOR_ATTACHMENTS(options[uploadType].category);
+  } else if (uploadType === 'POST_ATTACHMENTS') {
+    config = POST_ATTACHMENTS(options[uploadType].res_idx);
+  } else if (uploadType === 'PROFILE') {
+    config = PROFILE(options[uploadType].user_idx);
+  } else {
+    config = CATE_ICON();
+  }
+  return config;
+};
 
 // Subscription Websocket
 const pubsub = new PubSub();
@@ -226,6 +241,22 @@ module.exports = {
     },
   },
   Mutation: {
+    async imageUpload (root, { uploadType, file, options, }, { db, }, info) {
+      // 단일 S3 업로드
+      const { key, filename, } = s3Config(uploadType, options);
+      const { Location, } = await handleS3Upload(file, key, filename);
+      return Location;
+    },
+    async batchImageUpload (root, { uploadType, files, options, }, { db, }, info) {
+      // 배치식 S3 업로드
+      const locations = [];
+      await Promise.all(files.map(async (file) => {
+        const { key, filename, } = s3Config(uploadType, options);
+        const { Location, } = await handleS3Upload(file, key, filename);
+        locations.push(Location);
+      }));
+      return locations;
+    },
     sendContactMail: async (root, { name, email, content, }) => {
       sendContactMail(name, email, content);
       return true;
@@ -308,27 +339,6 @@ module.exports = {
         return false;
       }
     },
-    uploadedBoardImage: async (root, args, { db, }, info) => {
-      const { Location, } = await handleS3Upload(args.file, `board/${args.category_title}`, `${uuid()}_${Date.now().valueOf()}`);
-      return await Location;
-    },
-    uploadedProfileImage: async (root, args, { db, }, info) => {
-      const { Location, } = await handleS3Upload(args.file, 'user/profile', `${uuid()}_${Date.now().valueOf()}`);
-      return await Location;
-    },
-    modifiedProfileImage: async (root, { file, user_idx, }, { db, }, info) => {
-      const { Location, } = await handleS3Upload(file, 'user/profile', `${uuid()}_${Date.now().valueOf()}`);
-      const userProfileUpdated = await updateOne(db.User, { user_profile: Location, }, { user_idx, });
-      if (userProfileUpdated) {
-        return await Location;
-      } else {
-        return '';
-      }
-    },
-    uploadedCategoryIcon: async (root, { file, }, { db, }, info) => {
-      const { Location, } = await handleS3Upload(file, 'restaurant/icon', `${uuid()}_${Date.now().valueOf()}}`);
-      return await Location;
-    },
     addCategory: async (root, args, { db, }, info) => {
       const created = await createOne(db.BoardCategory, args);
       if (created) {
@@ -362,19 +372,6 @@ module.exports = {
       } else {
         return {};
       }
-    },
-    addGourmetResIcon: async (root, { file, }, { db, }, info) => {
-      const { Location, } = await handleS3Upload(file, 'restaurant/icon', `${uuid()}_${Date.now().valueOf()}`);
-      return Location;
-    },
-    addGourmetResources: async (root, { res_idx, files, reg_ip, reg_dt, upt_ip, upt_dt, }, { db, }, info) => {
-      const status = [];
-      await Promise.all(files.map(async (file) => {
-        const { Location, } = await handleS3Upload(file, 'restaurant/res_img', `res_${res_idx}_${uuid()}_${Date.now().valueOf()}`);
-        const fileCreated = await createOne(db.RestaurantImg, { res_idx, img_path: Location, reg_ip, reg_dt, upt_ip, upt_dt, });
-        status.push(fileCreated !== undefined);
-      }));
-      return status.every((succeeded) => (succeeded === true));
     },
     modCollege: async (root, { id, college_cd, college_nm, }, { db, }, info) => {
       const variables = {};

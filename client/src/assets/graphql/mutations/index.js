@@ -1,10 +1,10 @@
-import writePost from './writePost.graphql'
-import writeReply from './writeReply.graphql'
-import removeReply from './removeReply.graphql'
-import editReply from './editReply.graphql'
-import editPost from './editPost.graphql'
-import removePost from './removePost.graphql'
-import IncrementViewCount from './postViewed.graphql'
+import writePost from './post/writePost.graphql'
+import writeReply from './post/writeReply.graphql'
+import removeReply from './post/removeReply.graphql'
+import editReply from './post/editReply.graphql'
+import editPost from './post/editPost.graphql'
+import removePost from './post/removePost.graphql'
+import IncrementViewCount from './post/postViewed.graphql'
 
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
 import Authorize from './auth/Authorize.graphql'
@@ -22,6 +22,9 @@ import modCollege from './admin/modCollege.graphql'
 import modDepartment from './admin/modDepartment.graphql'
 import createCollege from './admin/createCollege.graphql'
 import createDepartment from './admin/createDepartment.graphql'
+
+import singleUpload from './upload/singleUpload.graphql'
+import multiUpload from './upload/multiUpload.graphql'
 
 export {
   writeReply,
@@ -45,5 +48,7 @@ export {
   modCollege,
   modDepartment,
   createCollege,
-  createDepartment
+  createDepartment,
+  singleUpload,
+  multiUpload
 }

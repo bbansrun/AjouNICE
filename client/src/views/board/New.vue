@@ -85,59 +85,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import gql from 'graphql-tag'
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
-import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
-import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import Heading from '@ckeditor/ckeditor5-heading/src/heading'
-import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'
-import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote'
-import Image from '@ckeditor/ckeditor5-image/src/image'
-import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
-import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption'
-import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
-import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize'
-import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload'
-import List from '@ckeditor/ckeditor5-list/src/list'
-import Table from '@ckeditor/ckeditor5-table/src/table'
-import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar'
 import { Navigation, Footer } from '@/components'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
-import { writePost, singleUpload } from '@/assets/graphql/mutations'
-
-class ImageUploadToS3Adapter {
-  constructor (loader) {
-    this.loader = loader
-  }
-
-  upload () {
-    return this.loader.file
-      .then(file => new Promise((resolve, reject) => {
-        Vue.prototype.$Apollo.mutate({
-          mutation: gql`${singleUpload}`,
-          variables: {
-            file: file,
-            type: 'board'
-          }
-        }).then(({ data: { singleUpload } }) => {
-          console.log(singleUpload)
-          resolve({ default: singleUpload })
-        }).catch(error => {
-          reject(error)
-        })
-      }))
-  }
-}
-
-const ImageUploadToS3AdapterPlugin = (editor) => {
-  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-    return new ImageUploadToS3Adapter(loader)
-  }
-}
+import { writePost } from '@/assets/graphql/mutations'
+import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/DefaultImportSet'
 
 export default {
   components: {
@@ -159,68 +111,7 @@ export default {
       sub_category: '',
       sub_category_idx: null,
       editor: ClassicEditor,
-      editorConfig: {
-        language: 'ko',
-        plugins: [
-          EssentialsPlugin,
-          BoldPlugin,
-          ItalicPlugin,
-          LinkPlugin,
-          ParagraphPlugin,
-          Heading,
-          Alignment,
-          BlockQuote,
-          Image,
-          ImageToolbar,
-          ImageCaption,
-          ImageStyle,
-          ImageResize,
-          ImageUpload,
-          ImageUploadToS3AdapterPlugin,
-          Table,
-          TableToolbar,
-          List
-        ],
-        toolbar: {
-          items: [
-            'heading',
-            '|',
-            'bold',
-            'italic',
-            'link',
-            '|',
-            'alignment',
-            'bulletedList',
-            'numberedList',
-            'blockquote',
-            '|',
-            'insertTable',
-            'mergeTableCells',
-            'tableColumn',
-            'tableRow',
-            '|',
-            'imageUpload'
-          ]
-        },
-        heading: {
-          options: [
-            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
-          ]
-        },
-        image: {
-          toolbar: [
-            'imageStyle:full',
-            'imageStyle:side',
-            '|',
-            'imageTextAlternative'
-          ]
-        },
-        simpleUpload: {
-          uploadUrl: `http://${require('ip').address()}:455/graphql`
-        }
-      },
+      editorConfig,
       title: '',
       form: {
         post: {},

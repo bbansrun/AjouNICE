@@ -1,0 +1,3 @@
+mutation singleUpload($uploadType: S3UploadType!, $file: Upload!, $options: S3UploadInput!) {
+    imageUpload(uploadType: $uploadType, file: $file, options: $options)
+}
