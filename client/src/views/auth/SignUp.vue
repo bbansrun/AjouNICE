@@ -414,8 +414,9 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import gql from 'graphql-tag'
-import { DupIDCheck, DupEmailCheck, DupNickCheck, Colleges, Departments } from '@/assets/graphql/queries'
+import { DupIDCheck, DupEmailCheck, DupNickCheck, AllColleges, Departments } from '@/assets/graphql/queries'
 import { UploadedProfileImageURL } from '@/assets/graphql/mutations'
 export default {
   data () {
@@ -607,9 +608,9 @@ export default {
       }
       if (value === 'R' || value === 'G') {
         this.$apollo.query({
-          query: gql`${Colleges}`
-        }).then(({ data: { colleges } }) => {
-          this.collegeList = colleges
+          query: gql`${AllColleges}`
+        }).then(({ data: { allColleges } }) => {
+          this.collegeList = _.filter(allColleges, item => (item.exist_yn === 'Y'))
         })
       }
     },

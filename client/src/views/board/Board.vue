@@ -56,7 +56,8 @@
         @infinite="infiniteHandler"
       >
         <div slot="no-more">
-          더 이상 게시물이 없어요.
+          <font-awesome-icon icon="times" />&nbsp;
+          <span>더 이상 게시물이 없어요.</span>
         </div>
         <div slot="no-results">
           찾으시는 게시물이 없어요.

@@ -89,7 +89,7 @@ import gql from 'graphql-tag'
 import { Navigation, Footer } from '@/components'
 import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
 import { writePost } from '@/assets/graphql/mutations'
-import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/DefaultImportSet'
+import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/index'
 
 export default {
   components: {

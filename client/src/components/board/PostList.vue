@@ -62,7 +62,7 @@ export default {
     showThumbnail: Boolean,
     items: {
       type: Array,
-      required: true
+      default: () => ([])
     }
   }
 }

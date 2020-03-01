@@ -30,7 +30,8 @@
           @infinite="infiniteHandler"
         >
           <div slot="no-more">
-            더 이상 게시물이 없어요.
+            <font-awesome-icon icon="times" />&nbsp;
+            <span>더 이상 게시물이 없어요.</span>
           </div>
           <div slot="no-results">
             찾으시는 게시물이 없어요.
@@ -55,31 +56,26 @@ export default {
   },
   data () {
     return {
+      category: this.$route.params.category,
       scrollBase: null,
-      board: {
-        category_nm: '',
-        category_idx: '',
-        access_auth: '',
-        private_yn: ''
-      },
       items: [],
       cursor: ''
     }
   },
-  beforeCreate () {
-    document.body.classList.add('loading')
-  },
-  beforeMount () {
-    this.init()
-  },
-  created () {
-    document.body.classList.remove('loading')
+  apollo: {
+    board: {
+      query: gql`${BoardByType}`,
+      variables () {
+        return {
+          cateType: 'GOURMET',
+          title: this.category
+        }
+      },
+      update: data => data.boardByType
+    }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
-  },
-  updated () {
-    this.init()
   },
   methods: {
     infiniteHandler ($state) {
@@ -97,17 +93,6 @@ export default {
         } else {
           $state.complete()
         }
-      })
-    },
-    init () {
-      this.$apollo.query({
-        query: gql`${BoardByType}`,
-        variables: {
-          cateType: 'GOURMET',
-          title: this.$route.params.category
-        }
-      }).then(({ data: { boardByType } }) => {
-        this.board = boardByType
       })
     }
   }

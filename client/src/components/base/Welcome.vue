@@ -1,10 +1,10 @@
 <template>
   <section
-    v-if="$store.state.user"
+    v-if="!anonymous"
     class="welcome signed-in-user"
   >
     <header>
-      <h4>{{ name }}님, 환영합니다.</h4>
+      <h4>{{ $store.state.user.name }}님, 환영합니다.</h4>
     </header>
     <nav class="welcome-nav">
       <ul class="menu menu-horizontal">
@@ -46,8 +46,8 @@
 <script>
 export default {
   props: {
-    name: { type: String, required: true },
-    idx: { type: Number, required: true }
+    me: { type: Object, default: () => ({ user_nm: null }) },
+    anonymous: { type: Boolean, required: true }
   },
   methods: {
     logout () {

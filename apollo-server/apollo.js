@@ -10,14 +10,11 @@ const { RedisCache, } = require('apollo-server-cache-redis');
 const {
   ApolloServer,
   gql,
-  AuthenticationError,
-  ForbiddenError,
 } = require('apollo-server-express');
 
 const db = require('./models');
 const typeDefs = gql(require('./typeDefs'));
 const resolvers = require('./resolvers');
-const directiveResolvers = require('./directiveResolvers');
 
 const depthLimit = require('graphql-depth-limit');
 const NoIntrospection = require('graphql-disable-introspection');
@@ -29,7 +26,6 @@ const server = new ApolloServer({
   resolverValidationOptions: {
     requireResolversForResolveType: false,
   },
-  directiveResolvers,
   validationRules: [
     // NoIntrospection, // When Production
     depthLimit(5), // Limited GraphQL Query Depth
@@ -53,18 +49,14 @@ const server = new ApolloServer({
     tracing: true,
   })],
   context: async ({ req, }) => {
-    let userInfo;
-    const token = req.headers.Authorization || '';
-    // tokenVerify(token)
-    //   .then((decoded) => {
-    //     userInfo = decoded;
-    //   })
-    //   .catch((error) => {
-    //     userInfo = null;
-    //     console.error(error);
-    //     throw new AuthenticationError(error);
-    //   });
-    return { db, userInfo, };
+    let user;
+    const token = req.headers.authorization || null;
+    if (!token.includes('Bearer')) {
+      user = null;
+    } else {
+      user = (await tokenVerify(token.split(' ')[1])).user;
+    }
+    return { db, user, };
   },
 });
 

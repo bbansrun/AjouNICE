@@ -1,11 +1,37 @@
 import Vue from 'vue'
-import App from './App.vue'
 import axios from 'axios'
-import router from './router'
+import App from './App.vue'
 import store from './store'
+import router from './router'
+
 import './filters'
 
-// Vendors
+import Buefy from 'buefy'
+import vSelect from 'vue-select'
+import Gravatar from 'vue-gravatar'
+import VueFeather from 'vue-feather'
+import VueSweetalert2 from 'vue-sweetalert2'
+import CKEditor from '@ckeditor/ckeditor5-vue'
+import VueFlashMessage from 'vue-flash-message'
+import InfiniteLoading from 'vue-infinite-loading'
+import VueCarousel from '@chenfengyuan/vue-carousel'
+
+// ApolloClient
+import VueApollo from 'vue-apollo'
+import { ApolloClient } from 'apollo-client'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { WebSocketLink } from 'apollo-link-ws'
+import { ApolloLink, split } from 'apollo-link'
+import { createHttpLink } from 'apollo-link-http'
+import { getMainDefinition } from 'apollo-utilities'
+import { createUploadLink } from 'apollo-upload-client'
+import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
+
+// Component Styles
+import 'vue-flash-message/dist/vue-flash-message.min.css'
+import 'sweetalert2/dist/sweetalert2.min.css'
+
+// Font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faSignOutAlt,
@@ -46,29 +72,37 @@ import {
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import VueApollo from 'vue-apollo'
-import VueCarousel from '@chenfengyuan/vue-carousel'
-import VueFeather from 'vue-feather'
-import VueFlashMessage from 'vue-flash-message'
-import Buefy from 'buefy'
-import vSelect from 'vue-select'
-import InfiniteLoading from 'vue-infinite-loading'
-import VueSweetalert2 from 'vue-sweetalert2'
-import CKEditor from '@ckeditor/ckeditor5-vue'
-import Gravatar from 'vue-gravatar'
 
-import 'vue-flash-message/dist/vue-flash-message.min.css'
-import 'sweetalert2/dist/sweetalert2.min.css'
+// JWT Token (Authentication / Authorization)
+let token
+const tokenExists = store.state.accessToken
 
-import { ApolloClient } from 'apollo-client'
-import { WebSocketLink } from 'apollo-link-ws'
-import { ApolloLink, split } from 'apollo-link'
-import { createHttpLink } from 'apollo-link-http'
-import { getMainDefinition } from 'apollo-utilities'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { createUploadLink } from 'apollo-upload-client'
-import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
+// Component Option Variables
+const buefyOptions = {
+  defaultIconComponent: 'font-awesome-icon',
+  defaultIconPack: 'fas'
+}
 
+const sweetalert2Options = {
+  width: '90vw',
+  confirmButtonColor: '#00A8CC',
+  cancelButtonColor: '#FF2E63',
+  confirmButtonText: '확인',
+  cancelButtonText: '취소',
+  allowOutsideClick: false
+}
+
+const flashMessageOptions = {
+  createShortcuts: true,
+  messageOptions: {
+    timeout: 1000,
+    important: true,
+    autoEmit: true,
+    pauseOnInteract: true
+  }
+}
+
+// Font-awesome Libraries
 library.add(faSignOutAlt)
 library.add(faUser)
 library.add(faUsers)
@@ -105,125 +139,31 @@ library.add(faTag)
 library.add(faCog)
 library.add(faQuestion)
 library.add(faTimesCircle)
+
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('v-gravatar', Gravatar)
 Vue.component('v-select', vSelect)
-Vue.use(Buefy, {
-  defaultIconComponent: 'font-awesome-icon',
-  defaultIconPack: 'fas'
-})
-Vue.use(InfiniteLoading)
-Vue.use(VueApollo)
-Vue.use(VueCarousel)
-Vue.use(VueFeather)
-Vue.use(VueSweetalert2, {
-  width: '90vw',
-  confirmButtonColor: '#00A8CC',
-  cancelButtonColor: '#FF2E63',
-  confirmButtonText: '확인',
-  cancelButtonText: '취소',
-  allowOutsideClick: false
-})
-Vue.use(VueFlashMessage, {
-  createShortcuts: true,
-  messageOptions: {
-    timeout: 1000,
-    important: true,
-    autoEmit: true,
-    pauseOnInteract: true
-  }
-})
-Vue.use(CKEditor)
 
+Vue.use(CKEditor)
+Vue.use(VueApollo)
+Vue.use(VueFeather)
+Vue.use(VueCarousel)
+Vue.use(InfiniteLoading)
+Vue.use(Buefy, buefyOptions)
+Vue.use(VueSweetalert2, sweetalert2Options)
+Vue.use(VueFlashMessage, flashMessageOptions)
+
+// Axios
 Vue.prototype.$Axios = axios
-const token = localStorage.getItem('accessToken')
-if (token) {
-  Vue.prototype.$Axios.defaults.headers.common.Authorization = `Bearer ${token}`
+if (tokenExists) {
+  token = `Bearer ${tokenExists}`
+  Vue.prototype.$Axios.defaults.headers.common.Authorization = token
 } else {
+  token = null
   Vue.prototype.$Axios.defaults.headers.common.Authorization = undefined
 }
 
-const shouldEncode = (url, options) => {
-  // if (process.env.NODE_ENV === 'development') return false
-  if (!options.method || options.method.toLowerCase() !== 'post') return false
-  url = url.split('?')[0].split('#')[0]
-  if (!url.endsWith('/graphql')) return false
-  return true
-}
-
-const encodeTextBody = (text) => {
-  const buffer = new Uint8Array(new TextEncoder().encode(text))
-  return btoa(unescape(encodeURIComponent(String.fromCharCode.apply(null, buffer))))
-}
-
-const decodeTextBody = (text) => {
-  const buffer = new Uint8Array(
-    [...atob(text)].map(char => char.charCodeAt(0))
-  )
-  return new TextDecoder().decode(buffer)
-}
-
-const response = (req) => {
-  const isCrypting = true
-  const keys = []; const all = []; const headers = {}; let header
-
-  req.getAllResponseHeaders()
-    .replace(/^(.*?):\s*([\s\S]*?)$/gm, (m, key, value) => {
-      keys.push((key = key.toLowerCase()))
-      all.push([key, value])
-      header = headers[key]
-      headers[key] = header ? `${header},${value}` : value
-    })
-
-  return {
-    ok: ((req.status / 200) | 0) === 1,
-    status: req.status,
-    statusText: req.statusText,
-    url: req.responseURL,
-    clone: response,
-    text: async () => (isCrypting
-      ? await decodeTextBody(req.responseText)
-      : req.responseText
-    ),
-    json: async () => JSON.parse(isCrypting
-      ? await decodeTextBody(req.responseText)
-      : req.responseText
-    ),
-    blob: () => Promise.resolve(new Blob([req.response])),
-    headers: {
-      keys: () => keys,
-      entries: () => all,
-      get: n => headers[n.toLowerCase()],
-      has: n => n.toLowerCase() in headers
-    }
-  }
-}
-
-const fetch = (url, options) => {
-  options = options || {}
-  const isEncoding = shouldEncode(url, options)
-  return new Promise(async (resolve, reject) => {
-    const req = new XMLHttpRequest()
-    req.open(options.method || 'get', url)
-    for (const i in options.headers) {
-      if (isEncoding && i.toLowerCase() === 'content-type') {
-        req.setRequestHeader(i, 'text/plain; charset=UTF-8')
-        req.setRequestHeader('Content-Transfer-Encoding', 'base64')
-      } else {
-        req.setRequestHeader(i, options.headers[i])
-      }
-    }
-    req.withCredentials = options.credentials === 'include'
-    req.onload = () => {
-      resolve(response(req))
-    }
-    req.onerror = reject
-
-    const body = options.body
-    req.send(isEncoding ? await encodeTextBody(body) : body)
-  })
-}
-
+// Apollo Client
 const wsLink = new WebSocketLink({
   uri: `ws://${require('ip').address()}:455/graphql`,
   options: {
@@ -235,7 +175,7 @@ const authLink = new ApolloLink((operation, forward) => {
   operation.setContext(context => ({
     headers: {
       ...context.headers,
-      Authorization: `Bearer ${token}`
+      authorization: token
     }
   }))
   return forward(operation)
@@ -262,11 +202,11 @@ const link = split(
   wsLink, // Websocket Link
   httpLink // Http Link
 )
-
 const apolloClient = new ApolloClient({
   link,
   cache: new InMemoryCache()
 })
+
 Vue.prototype.$Apollo = apolloClient
 
 const apolloProvider = new VueApollo({
@@ -274,7 +214,6 @@ const apolloProvider = new VueApollo({
 })
 
 Vue.config.productionTip = false
-
 new Vue({
   router,
   store,

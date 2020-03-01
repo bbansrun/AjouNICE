@@ -8,12 +8,12 @@
         :data="carouselItems"
       />
       <Welcome
-        :name="user.user_nm"
-        :idx="parseInt(user.user_idx)"
+        :anonymous="!$store.state.user"
+        :user="me"
       />
       <IconNav :data="iconNav" />
       <div
-        v-show="$store.state.user"
+        v-show="carouselRadio && carouselRadio.length > 0"
         class="broadcast"
       >
         <feather type="radio" />
@@ -25,7 +25,7 @@
           direction="up"
         />
       </div>
-      <PostList
+      <!-- <PostList
         show-header
         show-thumbnail
         :items="posts"
@@ -34,7 +34,7 @@
         show-header
         show-thumbnail
         :items="posts"
-      />
+      /> -->
     </main>
     <Footer />
   </div>
@@ -44,7 +44,7 @@
 import uuid from 'uuid/v4'
 import gql from 'graphql-tag'
 import { Navigation, Welcome, IconNav, Footer, PostList, Popup } from '@/components'
-import { UserHome, Notice } from '@/assets/graphql/queries'
+import { Notice, Profile } from '@/assets/graphql/queries'
 
 export default {
   components: {
@@ -57,11 +57,8 @@ export default {
   },
   data () {
     return {
+      me: null,
       scrollBase: null,
-      user: {
-        user_nm: '',
-        idx: null
-      },
       iconNav: [
         {
           id: uuid(),
@@ -131,58 +128,57 @@ export default {
       posts: []
     }
   },
-  beforeCreate () {
-    if (this.$store.state.user) {
-      this.$apollo.query({
-        query: gql`${UserHome}`,
-        variables: {
-          id: this.$store.state.user.idx
-        }
-      }).then(({ data: { user, posts } }) => {
-        this.posts = posts
-        this.user = user
-        for (const dpt of user.dpt_cd.split(',')) {
-          this.$apollo.query({
-            query: gql`${Notice}`,
-            variables: {
-              code: dpt
+  watch: {
+    me (value) {
+      this.dpt_cds = this.me.dpt_cd.split(',')
+      for (const dpt of this.dpt_cds) {
+        this.$apollo.query({
+          query: gql`${Notice}`,
+          variables: {
+            code: dpt
+          }
+        }).then(({ data: { notice } }) => {
+          const template = (id, message, link) => ({
+            id,
+            message,
+            content (createElement, content) {
+              return createElement('a', {
+                attrs: {
+                  href: link,
+                  target: '_blank'
+                },
+                class: 'broadcast-content'
+              }, [
+                createElement('span', {
+                  style: {
+                    width: '80vw',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }
+                }, [`${content.message}`]),
+                createElement('feather', {
+                  props: {
+                    size: 16,
+                    type: 'chevron-right'
+                  }
+                })
+              ])
             }
-          }).then(({ data }) => {
-            const template = (id, message, link) => ({
-              id: id,
-              message: message,
-              content (createElement, content) {
-                return createElement('a', {
-                  attrs: {
-                    href: link,
-                    target: '_blank'
-                  },
-                  class: 'broadcast-content'
-                }, [
-                  createElement('span', {
-                    style: {
-                      width: '80vw',
-                      overflow: 'hidden',
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis'
-                    }
-                  }, [`${content.message}`]),
-                  createElement('feather', {
-                    props: {
-                      size: 16,
-                      type: 'chevron-right'
-                    }
-                  })
-                ])
-              }
-            })
-            data.notice.forEach((value, i) => {
-              this.carouselRadio.push(template(i, value.title, value.link))
-            })
           })
-        }
-      })
+          notice.forEach((value, i) => {
+            this.carouselRadio.push(template(i, value.title, value.link))
+          })
+        })
+      }
     }
+  },
+  beforeMount () {
+    this.$apollo.query({
+      query: gql`${Profile}`
+    }).then(({ data: { me } }) => {
+      this.me = me
+    })
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3

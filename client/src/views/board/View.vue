@@ -150,21 +150,19 @@ export default {
   },
   data () {
     return {
+      post_id: this.$route.params.post_id,
       meta: {},
       user_idx: null,
-      onReport: false,
-      post: {
-        title: '',
-        body: '',
-        user: {
-          user_idx: null,
-          nick_nm: ''
-        },
-        category: {
-          title: ''
-        },
-        view_cnt: 0,
-        comments: []
+      onReport: false
+    }
+  },
+  apollo: {
+    post: {
+      query: gql`${Post}`,
+      variables () {
+        return {
+          id: this.post_id
+        }
       }
     }
   },
@@ -181,25 +179,10 @@ export default {
   },
   beforeMount () {
     document.body.classList.add('loading')
-    this.$apollo.query({
-      query: gql`${Post}`,
-      variables: {
-        id: this.$route.params.post_id
-      }
-    }).then(({ data }) => {
-      if (data.post === null) {
-        this.$router.push('/error/404')
-      } else {
-        this.post = data.post
-      }
-    }).catch(error => {
-      console.error(error)
-      this.$router.push('/error/500')
-    })
     this.$apollo.mutate({
       mutation: gql`${IncrementViewCount}`,
       variables: {
-        id: parseInt(this.$route.params.post_id)
+        id: parseInt(this.post_id)
       }
     }).then(({ data: { postViewed: { view_cnt } } }) => {
       this.post.view_cnt = view_cnt

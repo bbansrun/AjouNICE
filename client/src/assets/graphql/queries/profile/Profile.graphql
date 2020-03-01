@@ -1,0 +1,24 @@
+{
+    me {
+        user_idx
+        user_nm
+        nick_nm
+        user_profile
+        email
+        admin_type
+        user_type
+        college_cd
+        dpt_cd
+        articles {
+            board_idx
+            category_idx
+            title
+            view_cnt
+            reg_dt
+        }
+        comments {
+            board_idx
+            text
+        }
+    }
+}

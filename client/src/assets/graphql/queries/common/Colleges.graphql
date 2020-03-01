@@ -2,5 +2,6 @@
     allColleges {
         college_nm
         college_cd
+        exist_yn
     }
 }

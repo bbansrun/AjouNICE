@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/DefaultImportSet'
+import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/index'
 
 export default {
   data () {

@@ -1,6 +1,0 @@
-{
-    colleges(exist_yn: "Y") {
-        college_cd
-        college_nm
-    }
-}

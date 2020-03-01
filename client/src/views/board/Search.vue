@@ -3,8 +3,8 @@
     <Navigation :scroll-base="scrollBase" />
     <Landing
       ref="scrollBase"
-      :title="$route.query.keyword"
-      :description="`${$route.query.keyword}에 대한 검색결과입니다.`"
+      :title="keyword"
+      :description="`${keyword}에 대한 검색결과입니다.`"
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif"
     />
     <BoardNav write-url="/board/new" />
@@ -20,7 +20,6 @@ import gql from 'graphql-tag'
 import { Landing, Navigation, PostList, BoardNav, Footer } from '@/components'
 import { PostsByKeyword } from '@/assets/graphql/queries'
 export default {
-  name: 'Board',
   components: {
     Landing,
     Navigation,
@@ -31,35 +30,22 @@ export default {
   data () {
     return {
       scrollBase: null,
-      posts: []
+      keyword: this.$route.query.keyword
     }
   },
-  beforeCreate () {
-    document.body.classList.toggle('loading')
-  },
-  beforeMount () {
-    this.queryPosts()
-  },
-  updated () {
-    this.queryPosts()
-  },
-  created () {
-    document.body.classList.toggle('loading')
+  apollo: {
+    posts: {
+      query: gql`${PostsByKeyword}`,
+      variables () {
+        return {
+          keyword: this.keyword
+        }
+      },
+      update: data => data.postsByKeyword
+    }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
-  },
-  methods: {
-    queryPosts () {
-      this.$apollo.query({
-        query: gql`${PostsByKeyword}`,
-        variables: {
-          keyword: this.$route.query.keyword
-        }
-      }).then(({ data }) => {
-        this.posts = data.postsByKeyword
-      })
-    }
   }
 }
 </script>

@@ -7,7 +7,7 @@
       description="여기여기, 아주맛집이야..."
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/31/191231_main_visual01.jpg"
     />
-    <IconNav :data="iconNav" />
+    <IconNav :data="boards" />
     <Footer />
   </div>
 </template>
@@ -25,16 +25,13 @@ export default {
   },
   data () {
     return {
-      scrollBase: null,
-      iconNav: []
+      scrollBase: null
     }
   },
-  beforeMount () {
-    this.$apollo.query({
+  apollo: {
+    boards: {
       query: gql`${GourmetCategories}`
-    }).then(({ data: { boards } }) => {
-      this.iconNav = boards
-    })
+    }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
