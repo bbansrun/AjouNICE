@@ -11,9 +11,9 @@
         <label for="category_idx">분류</label>
         <div class="input-form-wrapper">
           <v-select
-            v-model="category_idx"
+            v-model="form.category_idx"
             placeholder="등록하실 맛집 카테고리를 선택해주세요."
-            :value="category_idx"
+            :value="form.category_idx"
             :options="categories"
             :reduce="options => options.category_idx"
             label="category_nm"
@@ -222,7 +222,8 @@
         </b-button>
         <b-button
           size="is-small"
-          type="is-danger"
+          type="is-dark"
+          @click="$router.go(-1)"
         >
           <font-awesome-icon icon="times" />&nbsp;
           <span>취소</span>
@@ -235,14 +236,13 @@
 <script>
 import gql from 'graphql-tag'
 import { AllCates } from '@/assets/graphql/queries'
-import { addGourmetPlace, addGourmetResIcon, addGourmetResources } from '@/assets/graphql/mutations'
+import { addGourmetPlace, singleUpload, multiUpload } from '@/assets/graphql/mutations'
 
 export default {
   data () {
     return {
       tags: [],
       categories: [],
-      category_idx: '',
       icon: null,
       resources: [],
       form: {
@@ -270,21 +270,37 @@ export default {
       validated: null
     }
   },
-  computed: {
-    validatedForm () {
-      return this.category_idx && this.form.res_nm && this.form.res_menu && this.form.res_addr && this.form.res_phone && this.form.res_info
-    }
-  },
   watch: {
+    'form.res_nm' (value) {
+      this.validateInput('res_nm')
+    },
+    'form.res_menu' (value) {
+      this.validateInput('res_menu')
+    },
+    'form.res_info' (value) {
+      this.validateInput('res_info')
+    },
+    'form.res_addr' (value) {
+      this.validateInput('res_addr')
+    },
+    'form.res_phone' (value) {
+      this.validateInput('res_phone')
+    },
     tags (value) {
       this.form.res_menu = value.join(',')
     },
     icon (file) {
       this.$apollo.mutate({
-        mutation: gql`${addGourmetResIcon}`,
-        variables: { file }
-      }).then(({ data: { addGourmetResIcon } }) => {
-        this.form.res_icon = addGourmetResIcon
+        mutation: gql`${singleUpload}`,
+        variables: {
+          uploadType: 'REST_ST_ICON',
+          file,
+          options: {
+            REST_ST_ICON: true
+          }
+        }
+      }).then(({ data: { imageUpload } }) => {
+        this.form.res_icon = imageUpload
       })
     }
   },
@@ -310,7 +326,8 @@ export default {
       this.resources.splice(index, 1)
     },
     selectedCategory (value) {
-      this.category_idx = value
+      this.form.category_idx = value
+      this.validateInput('category_idx')
     },
     validateInput (key) {
       if (this.form[key]) {
@@ -333,68 +350,65 @@ export default {
     submitForm () {
       this.validate()
       if (this.validated) {
-        if (this.validatedForm) {
-          const self = this
-          this.$swal({
-            type: 'warning',
-            title: '최종 확인',
-            text: '승인 즉시 데이터가 서비스에 노출됩니다.',
-            footer: '<p>업소 정보가 올라가는만큼 신중히 검토하여주시기바랍니다.</p>',
-            showCancelButton: true,
-            cancelButtonText: '취소',
-            showLoaderOnConfirm: true,
-            preConfirm () {
-              document.body.classList.add('loading')
-              // 우선 게시물 생성하여 이를 바탕으로 하는 리소스 이미지 릴레이션 진행
-              self.form.category_idx = parseInt(self.category_idx)
-              self.form.user_idx = self.$store.state.user.idx
-              self.form.reg_ip = self.$store.state.user.access_loc
-              self.form.reg_dt = Date.now()
-              self.form.upt_ip = self.form.reg_ip
-              self.form.upt_dt = self.form.reg_dt
-              // 위도 경도 임시 조치
-              delete self.form.res_lat
-              delete self.form.res_lon
-              // 게시물 업로드
-              return self.$apollo.mutate({
-                mutation: gql`${addGourmetPlace}`,
-                variables: { ...self.form }
-              }).then(({ data: { addGourmetPlace } }) => {
-                return addGourmetPlace
-              })
-            }
-          }).then(({ value }) => {
-            if (value) {
+        const self = this
+        this.$swal({
+          type: 'warning',
+          title: '최종 확인',
+          text: '승인 즉시 데이터가 서비스에 노출됩니다.',
+          footer: '<p>업소 정보가 올라가는만큼 신중히 검토하여주시기바랍니다.</p>',
+          showCancelButton: true,
+          cancelButtonText: '취소',
+          showLoaderOnConfirm: true,
+          preConfirm () {
+            document.body.classList.add('loading')
+            // 우선 게시물 생성하여 이를 바탕으로 하는 리소스 이미지 릴레이션 진행
+            self.form.category_idx = parseInt(self.category_idx)
+            self.form.user_idx = self.$store.state.user.idx
+            self.form.reg_ip = self.$store.state.user.access_loc
+            self.form.reg_dt = Date.now()
+            self.form.upt_ip = self.form.reg_ip
+            self.form.upt_dt = self.form.reg_dt
+            // 위도 경도 임시 조치
+            delete self.form.res_lat
+            delete self.form.res_lon
+            // 게시물 업로드
+            return self.$apollo.mutate({
+              mutation: gql`${addGourmetPlace}`,
+              variables: { ...self.form }
+            }).then(({ data: { addGourmetPlace } }) => {
+              return addGourmetPlace
+            })
+          }
+        }).then(({ value }) => {
+          if (value) {
             // 업소 이미지 S3 업로드
-              this.$apollo.mutate({
-                mutation: gql`${addGourmetResources}`,
-                variables: {
-                  resId: parseInt(value.res_idx),
-                  files: self.resources,
-                  reg_ip: self.form.reg_ip,
-                  reg_dt: self.form.reg_dt,
-                  upt_ip: self.form.upt_ip,
-                  upt_dt: self.form.upt_dt
+            this.$apollo.mutate({
+              mutation: gql`${multiUpload}`,
+              variables: {
+                uploadType: 'POST_ATTACHMENTS',
+                files: self.resources,
+                options: {
+                  POST_ATTACHMENTS: {
+                    res_idx: parseInt(value.res_idx)
+                  }
                 }
-              }).then(({ data: { addGourmetResources } }) => {
-                if (addGourmetResources) {
-                  this.flashSuccess('게시물 생성 및 관련 이미지를 업로드하였습니다.')
-                  document.body.classList.remove('loading')
-                  this.$router.push('/gate/manager/boards/gourmet')
-                }
-              })
-            }
-          })
-        } else {
-          this.$swal({
-            type: 'error',
-            title: '유효성 검사 오류',
-            text: '입력하지 않은 항목이 있습니다.',
-            footer: '<p>항목을 채워주시기 바랍니다.</p>'
-          })
-        }
+              }
+            }).then(({ data: { batchImageUpload } }) => {
+              if (batchImageUpload) {
+                this.flashSuccess('게시물 생성 및 관련 이미지를 업로드하였습니다.')
+                document.body.classList.remove('loading')
+                this.$router.push('/gate/manager/boards/gourmet')
+              }
+            })
+          }
+        })
       } else {
-
+        this.$swal({
+          type: 'error',
+          title: '유효성 검사 오류',
+          text: '입력하지 않은 항목이 있습니다.',
+          footer: '<p>항목을 채워주시기 바랍니다.</p>'
+        })
       }
     }
   }

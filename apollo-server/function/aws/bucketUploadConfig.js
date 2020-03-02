@@ -16,6 +16,11 @@ exports.CATE_ICON = () => ({
   filename: defaultFilename,
 });
 
+exports.REST_ST_ICON = () => ({
+  key: 'restaurant/icons',
+  filename: defaultFilename,
+});
+
 exports.POST_ATTACHMENTS = (res_idx) => ({
   key: 'restaurant/resources',
   filename: `res_${res_idx}_${defaultFilename}`,

@@ -42,6 +42,7 @@
             <b-button
               type="is-danger"
               size="is-small"
+              @click="removeItem(props.row.id)"
             >
               <font-awesome-icon icon="trash" />&nbsp;
               <span>삭제</span>
@@ -58,6 +59,22 @@ export default {
   data () {
     return {
       notice: [{ id: 1 }]
+    }
+  },
+  methods: {
+    removeItem (id) {
+      this.$buefy.dialog.confirm({
+        title: '게시물 삭제',
+        message: '게시물을 삭제하시겠습니까?',
+        confirmText: '삭제',
+        cancelText: '취소',
+        type: 'is-danger',
+        hasIcon: true,
+        icon: 'exclamation-triangle',
+        onConfirm: () => {
+          document.body.classList.add('loading')
+        }
+      })
     }
   }
 }

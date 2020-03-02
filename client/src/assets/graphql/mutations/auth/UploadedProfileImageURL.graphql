@@ -1,3 +1,0 @@
-mutation UploadedProfileImageURL($file: Upload!) {
-    uploadedProfileImage(file: $file)
-}

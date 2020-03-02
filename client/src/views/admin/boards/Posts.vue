@@ -18,6 +18,7 @@
     <b-table
       :data="posts"
       :mobile-cards="false"
+      :loading="loading"
     >
       <template slot-scope="props">
         <b-table-column
@@ -78,32 +79,41 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import gql from 'graphql-tag'
 import { PostsByCate, CateById } from '@/assets/graphql/queries'
+import { removePost } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
-      board: {},
-      posts: []
+      loading: true
     }
   },
-  beforeMount () {
-    this.$apollo.query({
+  apollo: {
+    board: {
       query: gql`${CateById}`,
-      variables: {
-        id: parseInt(this.$route.params.category_idx)
-      }
-    }).then(({ data: { boardById } }) => {
-      this.board = boardById
-    })
-    this.$apollo.query({
+      variables () {
+        return {
+          id: parseInt(this.$route.params.category_idx)
+        }
+      },
+      update: data => data.boardById
+    },
+    posts: {
       query: gql`${PostsByCate}`,
-      variables: {
-        category_idx: parseInt(this.$route.params.category_idx)
+      variables () {
+        return {
+          category_idx: parseInt(this.$route.params.category_idx)
+        }
       }
-    }).then(({ data: { posts } }) => {
-      this.posts = posts
-    })
+    }
+  },
+  watch: {
+    posts (value) {
+      if (value) {
+        this.loading = false
+      }
+    }
   },
   methods: {
     removeItem (id) {
@@ -117,6 +127,19 @@ export default {
         icon: 'exclamation-triangle',
         onConfirm: () => {
           document.body.classList.add('loading')
+          this.$apollo.mutate({
+            mutation: gql`${removePost}`,
+            variables: {
+              id: parseInt(id)
+            }
+          }).then(({ data: { removePost } }) => {
+            document.body.classList.remove('loading')
+            this.flashSuccess('게시물과 부속 댓글을 삭제하였습니다.')
+            this.posts = _.filter(this.posts, (item) => (item.board_idx !== id))
+          }).catch(error => {
+            console.error(error)
+            this.flashError('알 수 없는 에러가 발생하였습니다.')
+          })
         }
       })
     }

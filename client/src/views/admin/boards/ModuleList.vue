@@ -97,17 +97,23 @@ export default {
       loading: true
     }
   },
-  mounted () {
-    this.$apollo.query({
+  apollo: {
+    boards: {
       query: gql`${AllCates}`,
-      variables: {
-        depth: 0,
-        category_type: 'NORMAL'
+      variables () {
+        return {
+          depth: 0,
+          category_type: 'NORMAL'
+        }
       }
-    }).then(({ data: { boards } }) => {
-      this.loading = false
-      this.boards = boards
-    })
+    }
+  },
+  watch: {
+    boards (value) {
+      if (value) {
+        this.loading = false
+      }
+    }
   },
   methods: {
     removeCategory (name, id) {

@@ -7,6 +7,7 @@
     <b-table
       :data="users"
       :mobile-cards="false"
+      :loading="loading"
     >
       <template slot-scope="props">
         <b-table-column
@@ -85,20 +86,21 @@ import { Users } from '@/assets/graphql/queries'
 export default {
   data () {
     return {
-      users: [],
-      columns: [
-        { field: 'user_idx', label: 'ID' },
-        { field: 'user_nm', label: '이름' },
-        { field: 'nick_nm', label: '닉네임' }
-      ]
+      loading: true
     }
   },
-  mounted () {
-    this.$apollo.query({
-      query: gql`${Users}`
-    }).then(({ data: { users } }) => {
-      this.users = users
-    })
+  apollo: {
+    users: {
+      query: gql`${Users}`,
+      fetchPolicy: 'network-only'
+    }
+  },
+  watch: {
+    users (value) {
+      if (value) {
+        this.loading = false
+      }
+    }
   },
   methods: {
     removeUser (user) {

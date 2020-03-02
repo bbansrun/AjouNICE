@@ -16,7 +16,8 @@ enum CategoryType {
 }
 
 enum S3UploadType {
-    CATE_ICON               # Regular Board, Gourmet, Realty, etc,.
+    CATE_ICON               # Category Icon for type (Board, Gourmet, Realty, etc,.)
+    REST_ST_ICON            # Standard Icon for Restaurant Resource
     EDITOR_ATTACHMENTS      # Board Attachments Using CKEditor
     POST_ATTACHMENTS        # Board Attachments except Editor Attachments
     PROFILE                 # Profile Images
@@ -25,7 +26,7 @@ enum S3UploadType {
 
 const input = `
 input ImgProfileInput {
-    raw: Boolean!
+    raw: Boolean!           # user_idx 없이 업로드 여부
     user_idx: Int
 }
 
@@ -38,10 +39,11 @@ input ImgGourmetResInput {
 }
 
 input S3UploadInput {
-    PROFILE: ImgProfileInput
     CATE_ICON: Boolean
-    POST_ATTACHMENTS: ImgGourmetResInput
+    REST_ST_ICON: Boolean
     EDITOR_ATTACHMENTS: ImgEditorInput
+    POST_ATTACHMENTS: ImgGourmetResInput
+    PROFILE: ImgProfileInput
 }
 `;
 

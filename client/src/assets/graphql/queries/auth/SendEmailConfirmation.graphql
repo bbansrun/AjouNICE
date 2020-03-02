@@ -1,0 +1,3 @@
+mutation SendEmailConfirmation($name: String!, $email: String!, $token: String!) {
+    sendRegisterAuthEmail(user_nm: $name, email: $email, auth_token: $token)
+}

@@ -1,3 +1,0 @@
-mutation addGourmetResIcon($file: Upload!) {
-    addGourmetResIcon(file: $file)
-}

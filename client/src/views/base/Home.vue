@@ -182,7 +182,7 @@ export default {
       query: gql`${Profile}`,
       variables () {
         return {
-          token: this.$store.state.accessToken
+          token: this.$store.state.accessToken || ''
         }
       }
     }

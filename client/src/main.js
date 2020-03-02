@@ -22,7 +22,6 @@ import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { WebSocketLink } from 'apollo-link-ws'
 import { ApolloLink, split } from 'apollo-link'
-import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
 import { getMainDefinition } from 'apollo-utilities'
 import { createUploadLink } from 'apollo-upload-client'
@@ -166,6 +165,10 @@ if (tokenExists) {
 
 // Apollo Client
 const link = ApolloLink.from([
+  // Upload Link
+  createUploadLink({
+    uri: `http://${require('ip').address()}:455/graphql`
+  }),
   split(
     // Subscription
     ({ query }) => {
@@ -175,6 +178,10 @@ const link = ApolloLink.from([
         definition.operation === 'subscription'
       )
     },
+    // Persisted Query Link
+    createPersistedQueryLink({
+      useGETForHashedQueries: true
+    }),
     // WebSocket Link
     new WebSocketLink({
       uri: `ws://${require('ip').address()}:455/graphql`,
@@ -184,14 +191,6 @@ const link = ApolloLink.from([
     }),
     // HTTP Link
     createHttpLink({
-      uri: `http://${require('ip').address()}:455/graphql`
-    }),
-    // Persisted Query Link
-    createPersistedQueryLink({
-      useGETForHashedQueries: true
-    }),
-    // Upload Link
-    createUploadLink({
       uri: `http://${require('ip').address()}:455/graphql`
     })
   )

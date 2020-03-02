@@ -135,7 +135,7 @@
           <span>신규 모듈 생성</span>
         </b-button>
         <b-button
-          type="is-danger"
+          type="is-dark"
           size="is-small"
           @click="$router.go(-1)"
         >
@@ -149,7 +149,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { UploadedCategoryIcon, addCategory } from '@/assets/graphql/mutations'
+import { singleUpload, addCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -168,9 +168,7 @@ export default {
       validation: {
         category_nm: null,
         title: null,
-        access_auth: null,
-        desc: null,
-        icon: null
+        desc: null
       },
       validated: false,
       private_yn_label: '공개',
@@ -187,10 +185,16 @@ export default {
     },
     icon (file) {
       this.$apollo.mutate({
-        mutation: gql`${UploadedCategoryIcon}`,
-        variables: { file }
-      }).then(({ data: { uploadedCategoryIcon } }) => {
-        this.form.category_icon = uploadedCategoryIcon
+        mutation: gql`${singleUpload}`,
+        variables: {
+          uploadType: 'CATE_ICON',
+          file,
+          options: {
+            CATE_ICON: true
+          }
+        }
+      }).then(({ data: { imageUpload } }) => {
+        this.form.category_icon = imageUpload
       })
     }
   },
@@ -199,25 +203,42 @@ export default {
     this.form.upt_ip = this.$store.state.user.access_loc
   },
   methods: {
+    validateInput (key, compare = null) {
+      // Form Data가 적절한 조건 만족하였는지 판단
+      // compare의 경우 object type data를 받을 경우,
+      // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
+      if (compare) {
+        if (Object.prototype.hasOwnProperty.call(compare, 'value') &&
+            Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
+          if (compare.checkIsCorrect) {
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] === item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
+            }
+          } else {
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] !== item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
+            }
+          }
+        } else {
+          throw Error('파라미터 compare 값이 유효하지 않습니다.')
+        }
+      } else {
+        if (this.form[key]) {
+          this.validation[key] = true
+        } else {
+          this.validation[key] = false
+        }
+      }
+    },
     validate () {
-      if (this.form.category_nm) {
-        this.validation.category_nm = true
-      } else {
-        this.validation.category_nm = false
-      }
-      if (this.form.title) {
-        this.validation.title = true
-      } else {
-        this.validation.title = false
-      }
-      if (this.form.desc) {
-        this.validation.desc = true
-      } else {
-        this.validation.desc = false
-      }
-      if (this.validation.category_nm && this.validation.title && this.validation.desc) {
-        this.validated = true
-      }
+      this.validateInput('category_nm')
+      this.validateInput('title')
+      this.validateInput('desc')
+      this.validated = Object.keys(this.validation).every((key) => this.validation[key])
     },
     createNewModule () {
       this.validate()

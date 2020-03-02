@@ -100,20 +100,28 @@ export default {
       loading: true
     }
   },
-  beforeMount () {
-    const data = []
-    this.$apollo.query({
-      query: gql`${Codes}`
-    }).then(({ data: { allColleges, departments } }) => {
-      allColleges.forEach(item => {
-        data.push({ id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
-      })
-      departments.forEach(item => {
-        data.push({ id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
-      })
-      this.data = data
-      this.loading = false
-    })
+  apollo: {
+    data: {
+      query: gql`${Codes}`,
+      update: ({ allColleges, departments }) => {
+        const data = []
+        allColleges.forEach(item => {
+          data.push({ id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
+        })
+        departments.forEach(item => {
+          data.push({ id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
+        })
+        return data
+      },
+      fetchPolicy: 'network-only'
+    }
+  },
+  watch: {
+    data (value) {
+      if (value) {
+        this.loading = false
+      }
+    }
   },
   methods: {
     removeItem (record) {

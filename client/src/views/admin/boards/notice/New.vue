@@ -92,7 +92,7 @@ export default {
       this.validateInput('title')
     },
     'form.content' (value) {
-      this.validateInput('content', { value: '<p></p>', checkIsCorrect: false })
+      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
     }
   },
   methods: {
@@ -101,18 +101,19 @@ export default {
       // compare의 경우 object type data를 받을 경우,
       // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
       if (compare) {
-        if (Object.prototype.hasOwnProperty.call(compare, 'value') && Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
+        if (Object.prototype.hasOwnProperty.call(compare, 'value') &&
+            Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
           if (compare.checkIsCorrect) {
-            if (this.form[key] === compare.value) {
-              this.validation[key] = true
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] === item)
             } else {
-              this.validation[key] = false
+              throw Error('compare.value는 Array이어야 합니다.')
             }
           } else {
-            if (this.form[key] !== compare.value) {
-              this.validation[key] = true
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] !== item)
             } else {
-              this.validation[key] = false
+              throw Error('compare.value는 Array이어야 합니다.')
             }
           }
         } else {
@@ -128,7 +129,7 @@ export default {
     },
     validate () {
       this.validateInput('title')
-      this.validateInput('content', { value: '<p></p>', checkIsCorrect: false })
+      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
       this.validated = Object.keys(this.validation).every((key) => this.validation[key])
     },
     submit () {

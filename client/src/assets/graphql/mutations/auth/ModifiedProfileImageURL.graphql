@@ -1,3 +1,0 @@
-mutation ModifiedProfileImageURL($file: Upload!, $user_idx: Int!) {
-    modifiedProfileImage(file: $file, user_idx: $user_idx)
-}

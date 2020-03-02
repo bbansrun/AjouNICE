@@ -27,6 +27,7 @@
     <b-table
       :data="boards"
       :mobile-cards="false"
+      :loading="loading"
     >
       <template slot-scope="props">
         <b-table-column
@@ -106,19 +107,25 @@ import { removeCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
-      boards: []
+      loading: true
     }
   },
-  mounted () {
-    this.$apollo.query({
+  apollo: {
+    boards: {
       query: gql`${AllCates}`,
       variables: {
         depth: 0,
         category_type: 'GOURMET'
+      },
+      fetchPolicy: 'network-only'
+    }
+  },
+  watch: {
+    boards (value) {
+      if (value) {
+        this.loading = false
       }
-    }).then(({ data: { boards } }) => {
-      this.boards = boards
-    })
+    }
   },
   methods: {
     removeCategory (name, id) {
