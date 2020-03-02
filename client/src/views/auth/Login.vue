@@ -99,10 +99,29 @@ export default {
     document.body.classList.add('auth')
   },
   methods: {
+    updateSignInLog (ip) {
+      const queries = this.$route.query
+      this.$apollo.mutate({
+        mutation: gql`${LoggedInLogger}`,
+        variables: {
+          id: this.userID,
+          ip
+        }
+      }).then(({ data: { lastLogin: { auth_email_yn } } }) => {
+        document.body.classList.remove('loading')
+        if (auth_email_yn === 'N') {
+          this.$store.dispatch('LOGOUT').then(() => {
+            this.$router.push('/error/401')
+          })
+        } else {
+          document.body.classList.remove('auth')
+          this.$router.push(Object.prototype.hasOwnProperty.call(queries, 'redirect') ? queries : '/')
+        }
+      })
+    },
     signin () {
-      const params = this.$route.params
       if (this.userID && this.password && this.password.length >= 8) {
-        document.body.classList.toggle('loading')
+        document.body.classList.add('loading')
         const userId = this.userID
         const password = this.password
         this.$store.dispatch('LOGIN', { userId, password })
@@ -111,29 +130,13 @@ export default {
               if (err) {
                 this.$router.push('/error/401')
               } else {
-                this.$apollo.mutate({
-                  mutation: gql`${LoggedInLogger}`,
-                  variables: {
-                    id: this.userID,
-                    ip: access_loc
-                  }
-                }).then(({ data: { lastLogin: { auth_email_yn } } }) => {
-                  document.body.classList.toggle('loading')
-                  if (auth_email_yn === 'N') {
-                    this.$store.dispatch('LOGOUT').then(() => {
-                      this.$router.push('/error/401')
-                    })
-                  } else {
-                    document.body.classList.remove('auth')
-                    this.$router.push('redirect' in params ? params.redirect : '/')
-                  }
-                })
+                this.updateSignInLog(access_loc)
               }
             })
           })
-          .catch(({ response }) => {
-            document.body.classList.toggle('loading')
-            if (response.status === 500) {
+          .catch(({ response: { status } }) => {
+            document.body.classList.remove('loading')
+            if (status === 500) {
               this.$router.push('/error/500')
             } else {
               this.$swal({

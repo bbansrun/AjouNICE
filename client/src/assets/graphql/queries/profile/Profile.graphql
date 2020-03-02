@@ -1,5 +1,5 @@
-{
-    me {
+query Profile($token: String!) {
+    me(token: $token) {
         user_idx
         user_nm
         nick_nm

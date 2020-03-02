@@ -1,23 +1,27 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import jwt from 'jsonwebtoken'
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  plugins: [createPersistedState({
+    storage: window.sessionStorage
+  })],
   state: {
     user: null,
-    accessToken: localStorage.getItem('accessToken') || null
+    accessToken: null
   },
   mutations: {
-    LOGIN (state, { result }) {
-      state.accessToken = result.access_token
-      localStorage.setItem('accessToken', result.access_token)
-      Vue.prototype.$Axios.defaults.headers.common.Authorization = `Bearer ${result.access_token}`
+    LOGIN (state, { result: { access_token } }) {
+      state.accessToken = access_token
+      Vue.prototype.$Axios.defaults.headers.common.Authorization = `Bearer ${access_token}`
     },
     LOGOUT (state) {
+      state.user = null
       state.accessToken = null
-      localStorage.removeItem('accessToken')
+      delete Vue.prototype.$Axios.defaults.headers.common.Authorization
     },
     verifiedToken (state, payload) {
       state.user = payload.user

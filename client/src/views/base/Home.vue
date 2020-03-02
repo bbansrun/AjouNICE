@@ -7,8 +7,9 @@
         ref="scrollBase"
         :data="carouselItems"
       />
+
       <Welcome
-        :anonymous="!$store.state.user"
+        :anonymous="!me"
         :user="me"
       />
       <IconNav :data="iconNav" />
@@ -26,15 +27,15 @@
         />
       </div>
       <!-- <PostList
-        show-header
-        show-thumbnail
-        :items="posts"
-      />
-      <PostList
-        show-header
-        show-thumbnail
-        :items="posts"
-      /> -->
+            show-header
+            show-thumbnail
+            :items="posts"
+          />
+          <PostList
+            show-header
+            show-thumbnail
+            :items="posts"
+          /> -->
     </main>
     <Footer />
   </div>
@@ -57,66 +58,64 @@ export default {
   },
   data () {
     return {
-      me: null,
       scrollBase: null,
-      iconNav: [
-        {
-          id: uuid(),
-          title: '커뮤니티',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/board/'
-        },
-        {
-          id: uuid(),
-          title: '학사일정',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/schedule'
-        },
-        {
-          id: uuid(),
-          title: 'Ajou버스',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/place/bus'
-        },
-        {
-          id: uuid(),
-          title: '아주맛집',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/place/gourmet'
-        },
-        {
-          id: uuid(),
-          title: '강의평가',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/lectures'
-        },
-        {
-          id: uuid(),
-          title: '시간표',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/timetable'
-        },
-        {
-          id: uuid(),
-          title: '부동산',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/place/realty'
-        },
-        {
-          id: uuid(),
-          title: '도서관',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/place/library'
-        },
-        {
-          id: uuid(),
-          title: '오늘의학식',
-          background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
-          link: '/restaurant'
-        }
+      iconNav: [{
+        id: uuid(),
+        title: '커뮤니티',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/board/'
+      },
+      {
+        id: uuid(),
+        title: '학사일정',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/schedule'
+      },
+      {
+        id: uuid(),
+        title: 'Ajou버스',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/place/bus'
+      },
+      {
+        id: uuid(),
+        title: '아주맛집',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/place/gourmet'
+      },
+      {
+        id: uuid(),
+        title: '강의평가',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/lectures'
+      },
+      {
+        id: uuid(),
+        title: '시간표',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/timetable'
+      },
+      {
+        id: uuid(),
+        title: '부동산',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/place/realty'
+      },
+      {
+        id: uuid(),
+        title: '도서관',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/place/library'
+      },
+      {
+        id: uuid(),
+        title: '오늘의학식',
+        background: 'https://avatars3.githubusercontent.com/u/51874554?s=200&v=4',
+        link: '/restaurant'
+      }
       ],
       carouselItems: [
-        `<a data-slide-item href="/#/">
+                `<a data-slide-item href="/#/">
             <div class="cover"></div>
             <div class="slide-content">
                 <h2 data-logo>AjouNICE!</h2>
@@ -130,74 +129,79 @@ export default {
   },
   watch: {
     me (value) {
-      this.dpt_cds = this.me.dpt_cd.split(',')
-      for (const dpt of this.dpt_cds) {
-        this.$apollo.query({
-          query: gql`${Notice}`,
-          variables: {
-            code: dpt
-          }
-        }).then(({ data: { notice } }) => {
-          const template = (id, message, link) => ({
-            id,
-            message,
-            content (createElement, content) {
-              return createElement('a', {
-                attrs: {
-                  href: link,
-                  target: '_blank'
-                },
-                class: 'broadcast-content'
-              }, [
-                createElement('span', {
-                  style: {
-                    width: '80vw',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis'
-                  }
-                }, [`${content.message}`]),
-                createElement('feather', {
-                  props: {
-                    size: 16,
-                    type: 'chevron-right'
-                  }
-                })
-              ])
+      if (value) {
+        this.dpt_cds = value.dpt_cd.split(',')
+        for (const dpt of this.dpt_cds) {
+          this.$apollo.query({
+            query: gql`${Notice}`,
+            variables: {
+              code: dpt
             }
+          }).then(({ data: { notice } }) => {
+            const template = (id, message, link) => ({
+              id,
+              message,
+              content (createElement, content) {
+                return createElement('a', {
+                  attrs: {
+                    href: link,
+                    target: '_blank'
+                  },
+                  class: 'broadcast-content'
+                }, [
+                  createElement('span', {
+                    style: {
+                      width: '80vw',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis'
+                    }
+                  }, [`${content.message}`]),
+                  createElement('feather', {
+                    props: {
+                      size: 16,
+                      type: 'chevron-right'
+                    }
+                  })
+                ])
+              }
+            })
+            notice.forEach((value, i) => {
+              this.carouselRadio.push(template(i, value.title, value.link))
+            })
           })
-          notice.forEach((value, i) => {
-            this.carouselRadio.push(template(i, value.title, value.link))
-          })
-        })
+        }
       }
     }
   },
-  beforeMount () {
-    this.$apollo.query({
-      query: gql`${Profile}`
-    }).then(({ data: { me } }) => {
-      this.me = me
-    })
-  },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
+  },
+  apollo: {
+    me: {
+      query: gql`${Profile}`,
+      variables () {
+        return {
+          token: this.$store.state.accessToken
+        }
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .carousel {
-  min-height: unset;
+    min-height: unset;
 }
 
 .icon-nav {
-  padding-top: 3rem;
+    padding-top: 3rem;
 }
 </style>
 
 <style>
 .broadcast-content {
-  font-family: 'KoPub Dotum';
+    font-family: 'KoPub Dotum';
 }
 </style>

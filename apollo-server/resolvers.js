@@ -3,7 +3,8 @@ const crypto = require('crypto');
 const fetch = require('node-fetch');
 const { Op, } = require('sequelize');
 const { sequelize, } = require('./models');
-const { PubSub, AuthenticationError, } = require('apollo-server-express');
+const { PubSub, } = require('apollo-server-express');
+const { tokenVerify, } = require('./function/jwt/verifier');
 const { PROFILE, EDITOR_ATTACHMENTS, CATE_ICON, POST_ATTACHMENTS, } = require('./function/aws/bucketUploadConfig');
 const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
 const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtils');
@@ -72,13 +73,13 @@ module.exports = {
   },
   Query: {
     // Common
-    async me (root, args, { db, user, }, info) {
-      if (!user) throw new AuthenticationError('인증이 필요합니다.');
+    async me (root, { token, }, { db, }, info) {
+      const verified = (await tokenVerify(token)).user;
       const include = [
         { model: db.Board, as: 'articles', },
         { model: db.BoardComment, as: 'comments', }
       ];
-      return await findOne(db.User, { user_idx: user.idx, }, info, include);
+      if (verified) return await findOne(db.User, { user_idx: verified.idx, }, info, include);
     },
     // College
     async college (root, args, { db, }, info) {

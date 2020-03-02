@@ -22,6 +22,7 @@ import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { WebSocketLink } from 'apollo-link-ws'
 import { ApolloLink, split } from 'apollo-link'
+import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
 import { getMainDefinition } from 'apollo-utilities'
 import { createUploadLink } from 'apollo-upload-client'
@@ -164,53 +165,47 @@ if (tokenExists) {
 }
 
 // Apollo Client
-const wsLink = new WebSocketLink({
-  uri: `ws://${require('ip').address()}:455/graphql`,
-  options: {
-    reconnect: true
-  }
-})
+const link = ApolloLink.from([
+  split(
+    // Subscription
+    ({ query }) => {
+      const definition = getMainDefinition(query)
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      )
+    },
+    // WebSocket Link
+    new WebSocketLink({
+      uri: `ws://${require('ip').address()}:455/graphql`,
+      options: {
+        reconnect: true
+      }
+    }),
+    // HTTP Link
+    createHttpLink({
+      uri: `http://${require('ip').address()}:455/graphql`
+    }),
+    // Persisted Query Link
+    createPersistedQueryLink({
+      useGETForHashedQueries: true
+    }),
+    // Upload Link
+    createUploadLink({
+      uri: `http://${require('ip').address()}:455/graphql`
+    })
+  )
+])
 
-const authLink = new ApolloLink((operation, forward) => {
-  operation.setContext(context => ({
-    headers: {
-      ...context.headers,
-      authorization: token
-    }
-  }))
-  return forward(operation)
-})
-
-const uploadLink = authLink.concat(createUploadLink({
-  uri: `http://${require('ip').address()}:455/graphql`
-}))
-
-const httpLink = uploadLink.concat(createPersistedQueryLink({ useGETForHashedQueries: true })
-  .concat(createHttpLink({
-    uri: `http://${require('ip').address()}:455/graphql`
-    // fetch
-  })))
-
-const link = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query)
-    return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    )
-  },
-  wsLink, // Websocket Link
-  httpLink // Http Link
-)
-const apolloClient = new ApolloClient({
+const defaultClient = new ApolloClient({
   link,
   cache: new InMemoryCache()
 })
 
-Vue.prototype.$Apollo = apolloClient
+Vue.prototype.$Apollo = defaultClient
 
 const apolloProvider = new VueApollo({
-  defaultClient: apolloClient
+  defaultClient
 })
 
 Vue.config.productionTip = false

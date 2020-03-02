@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '@/store.js'
+import store from '@/store'
 
 import {
   Home,
@@ -69,7 +69,7 @@ import LibraryHome from '@/views/place/library/Home.vue'
 Vue.use(Router)
 
 const checkHomeSignedIn = (to, from, next) => {
-  if (localStorage.accessToken) {
+  if (store.state.accessToken) {
     store.dispatch('checkTokenStatus').then(result => {
       return next()
     }).catch(error => {
@@ -91,7 +91,7 @@ const checkHomeSignedIn = (to, from, next) => {
 }
 
 const requireAuth = (to, from, next) => {
-  if (localStorage.accessToken) {
+  if (store.state.accessToken) {
     store.dispatch('checkTokenStatus').then(result => {
       return next()
     }).catch(error => {
@@ -121,7 +121,7 @@ const requireAuth = (to, from, next) => {
 }
 
 const requireAdminAuth = (to, from, next) => {
-  if (localStorage.accessToken) {
+  if (store.state.accessToken) {
     store.dispatch('checkTokenStatus').then(({ user }) => {
       if (user.managable) {
         return next()
@@ -149,7 +149,7 @@ const requireAdminAuth = (to, from, next) => {
 }
 
 const alreadySignedIn = (to, from, next) => {
-  if (!localStorage.accessToken) return next()
+  if (!store.state.accessToken) return next()
   next({
     path: '/'
   })

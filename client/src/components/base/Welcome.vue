@@ -4,7 +4,7 @@
     class="welcome signed-in-user"
   >
     <header>
-      <h4>{{ $store.state.user.name }}님, 환영합니다.</h4>
+      <h4>{{ user.user_nm }}님, 환영합니다.</h4>
     </header>
     <nav class="welcome-nav">
       <ul class="menu menu-horizontal">
@@ -46,7 +46,7 @@
 <script>
 export default {
   props: {
-    me: { type: Object, default: () => ({ user_nm: null }) },
+    user: { type: Object, default: () => ({ user_nm: null }) },
     anonymous: { type: Boolean, required: true }
   },
   methods: {

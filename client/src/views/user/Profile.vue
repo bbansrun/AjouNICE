@@ -168,7 +168,12 @@ export default {
   },
   apollo: {
     me: {
-      query: gql`${Profile}`
+      query: gql`${Profile}`,
+      variables () {
+        return {
+          token: this.$store.state.accessToken
+        }
+      }
     }
   },
   computed: {

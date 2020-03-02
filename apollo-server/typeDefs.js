@@ -292,7 +292,7 @@ type Subscription {
 
 const query = `
 type Query {
-    me: User
+    me(token: String!): User
     users: [User]
     user(user_idx: Int, nick_nm: String, email: String, token: String): User # Will be deprecdated
     allColleges: [College]
