@@ -4,20 +4,20 @@
       <strong>{{ content.length | numberWithCommas }}개의 댓글이 달렸습니다.</strong>
     </header>
     <form
-      class="reply edit"
+      class="reply"
       autocomplete="off"
       @submit.prevent
     >
-      <div class="input-form input-form-reply">
+      <div class="input-form-group input-form-reply">
         <input
           id="reply"
-          v-model="reply.content"
+          v-model="form.options.text"
           type="text"
           name="reply"
           required
-          :placeholder="!(reply.mode.edit || reply.mode.replyHierarchical) ? `댓글을 작성하세요.` : `수정하실 댓글을 입력해주세요.`"
+          :placeholder="inputMessage"
           no-validate
-          @keyup.enter="!(reply.mode.edit || reply.mode.replyHierarchical) ? makeReply : editReply"
+          @keyup.enter="modReply"
         >
         <b-switch
           v-model="anonymous"
@@ -27,17 +27,17 @@
         </b-switch>
         <b-button
           size="is-small"
-          :type="{ 'is-primary': !reply.mode.edit, 'is-warning': reply.mode.edit }"
-          @click="!(reply.mode.edit || reply.mode.replyHierarchical) ? makeReply() : editReply()"
+          :type="{ 'is-primary': mode !== 'EDIT', 'is-warning': mode === 'EDIT' }"
+          @click="modReply"
         >
           <font-awesome-icon icon="pen" />&nbsp;
-          <span>{{ reply.mode.edit ? '수정' : '작성' }}</span>
+          <span>{{ submitText }}</span>
         </b-button>
       </div>
     </form>
     <div class="replies-view">
       <div
-        v-show="content.length === 0"
+        v-show="!content"
         class="no-replies has-text-centered"
       >
         <h3>아직 댓글이 없어요.</h3>
@@ -48,7 +48,10 @@
         :key="comment.cmt_idx"
         :data-comment-id="comment.cmt_idx"
         class="reply"
-        :class="{ 'counterpart': !checkMyReply(comment.commenter.user_idx), 'my': checkMyReply(comment.commenter.user_idx), 'target': parseInt(reply.target) === parseInt(comment.cmt_idx) }"
+        :class="{
+          'counterpart': !checkMyReply(comment.commenter.user_idx),
+          'my': checkMyReply(comment.commenter.user_idx)
+        }"
       >
         <div class="meta">
           <header>{{ comment.commenter.nick_nm }}</header>
@@ -59,22 +62,25 @@
             {{ comment.text }}
           </p>
           <div class="controls">
-            <button class="reply">
+            <button
+              class="reply"
+              @click="toggleReply('CHILDREPLY', comment.cmt_idx)"
+            >
               <font-awesome-icon icon="reply" />&nbsp;
-              <span>대댓글</span>
+              <span>{{ mode === 'CHILDREPLY' ? '취소' : '대댓글' }}</span>
             </button>
             <button
               v-show="checkMyReply(comment.commenter.user_idx)"
               class="edit"
-              @click="toggleEditReply(comment.cmt_idx, comment.text)"
+              @click="toggleReply('EDIT', comment.cmt_idx, text = comment.text)"
             >
               <font-awesome-icon icon="pen" />&nbsp;
-              <span>수정</span>
+              <span>{{ mode === 'EDIT' ? '취소' : '수정' }}</span>
             </button>
             <button
               v-show="checkMyReply(comment.commenter.user_idx)"
               class="remove"
-              @click="removeReply(comment.cmt_idx)"
+              @click="toggleReply('DESTROY', comment.cmt_idx)"
             >
               <font-awesome-icon icon="trash" />&nbsp;
               <span>삭제</span>
@@ -88,7 +94,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { writeReply, removeReply, editReply } from '@/assets/graphql/mutations'
+import { modReply } from '@/assets/graphql/mutations'
 export default {
   props: {
     post: {
@@ -102,97 +108,165 @@ export default {
   },
   data () {
     return {
+      mode: 'CREATE', // CREATE, CHILDREPLY, EDIT
       anonymous: true,
-      reply: {
-        target: null,
-        mode: {
-          edit: false,
-          replyHierarchical: false
-        },
-        content: ''
-      }
+      form: {
+        mode: '', // Will be designated when the method triggered
+        options: {
+          board_idx: parseInt(this.post),
+          user_idx: this.$store.state.user.idx,
+          text: '',
+          ip: this.$store.state.user.access_loc
+        }
+      },
+      validated: false
+    }
+  },
+  computed: {
+    inputMessage () {
+      if (this.mode === 'CREATE') {
+        return '댓글을 입력해주세요.'
+      } else if (this.mode === 'EDIT') {
+        return '수정할 댓글 메시지를 입력해주세요.'
+      } else if (this.mode === 'CHILDREPLY') {
+        return '대댓글을 입력해주세요.'
+      } else return ''
+    },
+    submitText () {
+      if (this.mode === 'CREATE') {
+        return '등록'
+      } else if (this.mode === 'EDIT') {
+        return '수정'
+      } else if (this.mode === 'CHILDREPLY') {
+        return '등록'
+      } else return ''
     }
   },
   methods: {
+    checkExistKeyInForm (key) {
+      return Object.prototype.hasOwnProperty.call(this.form.options, key)
+    },
+    validate () {
+      if (this.mode === 'CREATE') {
+        const keys = ['board_idx', 'user_idx', 'text', 'ip']
+        if (keys.every(item => this.checkExistKeyInForm(item))) {
+          this.validated = true
+        }
+      } else if (this.mode === 'EDIT') {
+        const keys = ['cmt_idx', 'user_idx', 'text', 'ip']
+        if (keys.every(item => this.checkExistKeyInForm(item))) {
+          this.validated = true
+        }
+      } else if (this.mode === 'CHILDREPLY') {
+        const keys = ['cmt_idx', 'user_idx', 'parent_idx', 'text', 'ip']
+        if (keys.every(item => this.checkExistKeyInForm(item))) {
+          this.validated = true
+        }
+      }
+    },
     checkMyReply (id) {
       return parseInt(this.$store.state.user.idx) === parseInt(id)
     },
-    makeReply () {
-      if (!this.reply.mode.edit && this.reply.content && this.reply.content.length > 0) {
-        document.body.classList.add('loading')
-        this.$apollo.mutate({
-          mutation: gql`${writeReply}`,
-          variables: {
-            board: parseInt(this.post),
-            user: this.$store.state.user.idx,
-            nick: this.$store.state.user.nick_nm,
-            text: this.reply.content,
-            ip: this.$store.state.user.access_loc
-            // anonymous: this.anonymous
-          }
-        }).then(({ data }) => {
-          this.reply.content = ''
-          this.flashSuccess('댓글을 달았습니다.')
-        }).catch(error => {
-          console.error(error)
-        })
-      } else {
-        this.flashError('댓글을 입력해주세요.')
-      }
-    },
-    removeReply (id) {
-      const self = this
-      self.$swal({
-        title: '댓글을 삭제하시겠습니까?',
-        text: '삭제한 댓글은 복구할 수 없습니다.',
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        preConfirm () {
+    modReply (target = null) {
+      if (this.mode === 'CREATE') {
+        this.form.mode = 'CREATE'
+        this.validate()
+        if (this.validated) {
           document.body.classList.add('loading')
-          self.$apollo.mutate({
-            mutation: gql`${removeReply}`,
-            variables: {
-              id: parseInt(id)
-            }
+          this.$apollo.mutate({
+            mutation: gql`${modReply}`,
+            variables: { ...this.form }
           }).then(({ data }) => {
+            document.body.classList.remove('loading')
+            this.form.text = ''
+            this.flashSuccess('댓글을 달았습니다.')
+          }).catch(error => {
+            console.error(error)
+          })
+        } else {
+          this.flashError('댓글을 입력해주세요.')
+        }
+      } else if (this.mode === 'EDIT') {
+        this.form.mode = 'EDIT'
+        this.validate()
+        if (this.validated) {
+          document.body.classList.add('loading')
+          this.$apollo.mutate({
+            mutation: gql`${modReply}`,
+            variables: { ...this.form }
+          }).then(({ data }) => {
+            this.form.text = ''
+            this.flashSuccess('댓글을 수정했습니다.')
           }).catch(error => {
             console.error(error)
           })
         }
-      }).then((result) => {
-        if (result.value) {
-          self.flash('댓글을 삭제하였습니다.', 'success')
+      } else if (this.mode === 'CHILDREPLY') {
+        this.form.mode = 'CREATE'
+        this.form.options.parent_idx = parseInt(target)
+        this.validate()
+        if (this.validated) {
+          document.body.classList.add('loading')
+          this.$apollo.mutate({
+            mutation: gql`${modReply}`,
+            variables: { ...this.form }
+          }).then(({ data }) => {
+            this.form.text = ''
+            this.flashSuccess('대댓글을 달았습니다.')
+          }).catch(error => {
+            console.error(error)
+          })
         }
-      })
+      }
     },
-    editReply () {
-      document.body.classList.add('loading')
-      this.$apollo.mutate({
-        mutation: gql`${editReply}`,
-        variables: {
-          id: parseInt(this.reply.target),
-          text: this.reply.content
+    toggleReply (mode, target, text = '') {
+      if (mode === 'EDIT') {
+        if (this.mode === 'EDIT') {
+          this.mode = 'CREATE'
+          this.form.options.text = ''
+        } else {
+          this.mode = mode
+          this.form.options.cmt_idx = target
+          this.form.options.text = text
         }
-      }).then(({ data }) => {
-          this.reply.target = null
-          this.reply.mode.edit = false
-          this.reply.content = ''
-          this.flashSuccess('댓글을 수정했습니다.')
-      }).catch(error => {
-        console.error(error)
-      })
-    },
-    toggleEditReply (id, text) {
-      if (this.reply.mode.edit) {
-        this.reply.target = null
-        this.reply.mode.edit = false
-        this.reply.content = ''
-      } else {
-        this.reply.target = id
-        this.reply.mode.edit = true
-        this.reply.content = text
+      } else if (mode === 'CHILDREPLY') {
+        this.form.options.text = ''
+        if (this.mode === 'CHILDREPLY') {
+          this.mode = 'CREATE'
+        } else {
+          this.mode = mode
+          this.form.options.parent_idx = target
+        }
+      } else if (mode === 'DESTROY') {
+        this.form.mode = 'DESTROY'
+        this.$buefy.dialog.confirm({
+          title: '삭제하시겠습니까?',
+          message: '삭제한 댓글은 복구가 불가능합니다.',
+          confirmText: '삭제',
+          cancelText: '취소',
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'exclamation-triangle',
+          onConfirm: () => {
+            document.body.classList.add('loading')
+            this.$apollo.mutate({
+              mutation: gql`${modReply}`,
+              variables: {
+                mode: this.form.mode,
+                options: {
+                  cmt_idx: parseInt(target)
+                }
+              }
+            }).then(({ data: { modReply: { result } } }) => {
+              document.body.classList.remove('loading')
+              if (result) {
+                this.flashSuccess('댓글을 삭제하였습니다.')
+              }
+            }).catch(error => {
+              console.error(error)
+            })
+          }
+        })
       }
     }
   }

@@ -385,42 +385,6 @@ module.exports = {
       if (user) return true;
       else return false;
     },
-    // Board
-    writeReply: async (root, args, { db, }, info) => {
-      let result;
-      const created = await createOne(db.BoardComment, args);
-      if (created) {
-        const include = [
-          { model: db.User, as: 'commenter', }
-        ];
-        result = await findOne(db.BoardComment, args, info, include);
-        pubsub.publish(REPLY_WRITTEN, { replyWritten: result, });
-      }
-      return result;
-    },
-    removeReply: async (root, args, { db, }, info) => {
-      const target = await findOne(db.BoardComment, args, info);
-      const removed = await destroyOne(db.BoardComment, args);
-      pubsub.publish(REPLY_REMOVED, { replyRemoved: target, });
-      if (removed) {
-        return target;
-      } else {
-        return false;
-      }
-    },
-    editReply: async (root, args, { db, }, info) => {
-      const updated = await updateOne(db.BoardComment, { text: args.text, }, { cmt_idx: args.cmt_idx, });
-      if (updated) {
-        const include = [
-          { model: db.User, as: 'commenter', }
-        ];
-        const result = await findOne(db.BoardComment, args, info, include);
-        pubsub.publish(REPLY_MODIFIED, { replyModified: result, });
-        return result;
-      } else {
-        return {};
-      }
-    },
     addCategory: async (root, args, { db, }, info) => {
       const created = await createOne(db.BoardCategory, args);
       if (created) {

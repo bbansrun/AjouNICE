@@ -2,10 +2,6 @@
 import modPost from './post/modPost.graphql'
 import modReply from './post/modReply.graphql'
 import IncrementViewCount from './post/incrementView.graphql'
-// Will be deprecated
-import writeReply from './post/writeReply.graphql'
-import editReply from './post/editReply.graphql'
-import removeReply from './post/removeReply.graphql'
 
 // 인증
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
@@ -29,9 +25,6 @@ export {
   modPost,
   modReply,
   IncrementViewCount,
-  writeReply,
-  removeReply,
-  editReply,
   LoggedInLogger,
   Authorize,
   addCategory,

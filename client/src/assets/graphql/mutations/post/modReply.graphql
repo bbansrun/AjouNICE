@@ -1,5 +1,5 @@
 mutation modReply($mode: BoardManipulationMode!, $options: ReplyInput!) {
-    modPost(mode: $mode, options: $options) {
+    modReply(mode: $mode, options: $options) {
         result
         data {
             cmt_idx

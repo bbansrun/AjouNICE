@@ -3,7 +3,10 @@
     <Navigation is-static />
     <main>
       <div class="wrapper">
-        <section class="post">
+        <section
+          v-if="post"
+          class="post"
+        >
           <header>
             <div class="header grid">
               <h3>{{ post.title }}</h3>
@@ -80,7 +83,7 @@
                   v-show="articleWriter()"
                   tag="router-link"
                   size="is-small"
-                  type="is-warning"
+                  type="is-dark"
                   :to="editArticle"
                 >
                   <font-awesome-icon icon="pen" />&nbsp;
@@ -103,7 +106,7 @@
                 >
                   <b-button
                     size="is-small"
-                    :type="{ 'is-danger': !onReport, 'is-warning': onReport }"
+                    :type="{ 'is-warning': !onReport, 'is-danger': onReport }"
                     @click="toggleReport"
                   >
                     <font-awesome-icon icon="exclamation-triangle" />&nbsp;

@@ -1,5 +1,0 @@
-mutation removeReply($id: Int!) {
-    removeReply(cmt_idx: $id) {
-        cmt_idx
-    }
-}

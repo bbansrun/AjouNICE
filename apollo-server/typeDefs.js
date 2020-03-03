@@ -369,10 +369,6 @@ type Mutation {
     lastLogin(user_id: String!, ip: String!): User
     resetEmailToken(email: String!): Boolean
     sendContactMail(name: String!, email: String!, content: String!): Boolean
-    # Common (Will be deprecated)
-    writeReply(board_idx: Int!, user_idx: Int!, text: String, reg_ip: String!, upt_ip: String!): BoardComment
-    removeReply(cmt_idx: Int!): BoardComment
-    editReply(cmt_idx: Int!, text: String): BoardComment
     # Common
     modPost(mode: BoardManipulationMode!, options: BoardInput!): ModifiedPost
     modReply(mode: BoardManipulationMode!, options: ReplyInput!): ModifiedReply
