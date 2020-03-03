@@ -1,5 +1,0 @@
-mutation postViewed($id: Int!) {
-    postViewed(board_idx: $id) {
-        view_cnt
-    }
-}

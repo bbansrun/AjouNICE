@@ -1,0 +1,22 @@
+mutation modPost($mode: BoardManipulationMode!, $options: BoardInput!) {
+    modPost(mode: $mode, options: $options) {
+        result
+        data {
+            board_idx
+            category {
+                category_idx
+                category_nm
+            }
+            user {
+                nick_nm
+            }
+            title
+            body
+            view_cnt
+            reg_ip
+            reg_dt
+            upt_ip
+            upt_dt
+        }
+    }
+}

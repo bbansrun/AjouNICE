@@ -1,9 +1,8 @@
 const http = require('http');
-const app = require('./middlewares/app');
-const { encodeTextBody, } = require('./middlewares/securityModule');
-
+const colors = require('colors');
 const config = require('./config/config.json');
 
+const app = require('./middlewares/app');
 const { LoggerExtension, } = require('apollo-server-logger');
 const { RedisCache, } = require('apollo-server-cache-redis');
 const {
@@ -15,9 +14,12 @@ const db = require('./models');
 const typeDefs = gql(require('./typeDefs'));
 const resolvers = require('./resolvers');
 
-const depthLimit = require('graphql-depth-limit');
 const NoIntrospection = require('graphql-disable-introspection');
-const { createComplexityLimitRule, } = require('graphql-validation-complexity');
+const { encodeTextBody, } = require('./middlewares/securityModule');
+const depthLimitRule = require('graphql-depth-limit');
+const { createComplexityLimitRule, } = require('graphql-vawlidation-complexity');
+const depthLimit = 5;
+const complextityLimit = 800;
 
 const server = new ApolloServer({
   typeDefs,
@@ -27,9 +29,9 @@ const server = new ApolloServer({
   },
   validationRules: [
     // NoIntrospection, // When Production
-    depthLimit(5), // Limited GraphQL Query Depth
-    createComplexityLimitRule(800, { // Limited GraphQL Query Complexity
-      onCost: cost => console.log(`[Apollo] Query Costs: ${cost}`),
+    depthLimitRule(depthLimit), // Limited GraphQL Query Depth
+    createComplexityLimitRule(complextityLimit, { // Limited GraphQL Query Complexity
+      onCost: cost => console.log(colors.bgWhite(colors.black(`[Apollo] Query Costs: ${cost}`))),
     })
   ],
   engine: { // Connected to Apollo Engine

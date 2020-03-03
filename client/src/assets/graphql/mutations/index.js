@@ -1,11 +1,14 @@
 // 게시물
-import writePost from './post/writePost.graphql'
+import modPost from './post/modPost.graphql'
+import modReply from './post/modReply.graphql'
+import IncrementViewCount from './post/incrementView.graphql'
+// Will be deprecated
 import writeReply from './post/writeReply.graphql'
-import removeReply from './post/removeReply.graphql'
 import editReply from './post/editReply.graphql'
+import removeReply from './post/removeReply.graphql'
+import writePost from './post/writePost.graphql'
 import editPost from './post/editPost.graphql'
 import removePost from './post/removePost.graphql'
-import IncrementViewCount from './post/postViewed.graphql'
 
 // 인증
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
@@ -26,13 +29,15 @@ import singleUpload from './upload/singleUpload.graphql'
 import multiUpload from './upload/multiUpload.graphql'
 
 export {
+  modPost,
+  modReply,
+  IncrementViewCount,
   writeReply,
   removeReply,
   editReply,
   writePost,
   editPost,
   removePost,
-  IncrementViewCount,
   LoggedInLogger,
   Authorize,
   addCategory,

@@ -184,7 +184,7 @@ export default {
       variables: {
         id: parseInt(this.post_id)
       }
-    }).then(({ data: { postViewed: { view_cnt } } }) => {
+    }).then(({ data: { incrementView: { view_cnt } } }) => {
       this.post.view_cnt = view_cnt
     })
   },

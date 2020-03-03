@@ -22,9 +22,33 @@ enum S3UploadType {
     POST_ATTACHMENTS        # Board Attachments except Editor Attachments
     PROFILE                 # Profile Images
 }
+
+enum BoardManipulationMode {
+    CREATE
+    EDIT
+    DESTROY
+}
 `;
 
 const input = `
+input BoardInput {
+    board_idx: Int
+    category_idx: Int
+    user_idx: Int
+    title: String
+    body: String
+    ip: String
+}
+
+input ReplyInput {
+    cmt_idx: Int
+    board_idx: Int
+    user_idx: Int
+    parent_idx: Int
+    text: String
+    ip: Date
+}
+
 input ImgProfileInput {
     raw: Boolean!           # user_idx 없이 업로드 여부
     user_idx: Int
@@ -243,6 +267,17 @@ type Schedule {
     etc: String!
 }
 
+# Types when objects manipulated
+type ModifiedPost {
+    result: Boolean
+    data: Board
+}
+
+type ModifiedReply {
+    result: Boolean
+    data: BoardComment
+}
+
 # Types for pagination
 interface Edge {
     cursor: String
@@ -296,7 +331,6 @@ const query = `
 type Query {
     me(token: String!): User
     users: [User]
-    user(user_idx: Int, nick_nm: String, email: String, token: String): User # Will be deprecdated
     allColleges: [College]
     college(college_cd: String!): College
     colleges(exist_yn: String!): [College]
@@ -330,32 +364,36 @@ type Query {
 const mutation = `
 type Mutation {
     # Auth
-    sendContactMail(name: String!, email: String!, content: String!): Boolean
     sendRegisterAuthEmail(user_nm: String!, email: String!, auth_token: String!): Boolean
-    lastLogin(user_id: String!, ip: String!): User
     authorize(user_idx: Int!, auth_token: String!): Boolean
+    lastLogin(user_id: String!, ip: String!): User
     resetEmailToken(email: String!): Boolean
-    # Common
-    imageUpload(uploadType: S3UploadType!, file: Upload!, options: S3UploadInput!): String
-    batchImageUpload(uploadType: S3UploadType!, files: [Upload!]!, options: S3UploadInput!): [String]
+    sendContactMail(name: String!, email: String!, content: String!): Boolean
+    # Common (Will be deprecated)
     writePost(category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, reg_ip: String!, upt_ip: String!): Board
     removePost(board_idx: Int!): Boolean
     editPost(board_idx: Int!, category_idx: Int!, user_idx: Int!, nick_nm: String, title: String, body: String, upt_ip: String, upt_dt: Date): Board
-    postViewed(board_idx: Int!): Board
     writeReply(board_idx: Int!, user_idx: Int!, text: String, reg_ip: String!, upt_ip: String!): BoardComment
     removeReply(cmt_idx: Int!): BoardComment
     editReply(cmt_idx: Int!, text: String): BoardComment
-    removeGourmet(res_idx: Int!): Boolean
+    # Common
+    modPost(mode: BoardManipulationMode!, options: BoardInput!): ModifiedPost
+    modReply(mode: BoardManipulationMode!, options: ReplyInput!): ModifiedReply
+    incrementView(board_idx: Int!): Board
     # Admin
     addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, upt_ip: String!): BoardCategory
     removeCategory(category_idx: Int!): Boolean
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
+    removeGourmet(res_idx: Int!): Boolean
     addNewDepartment(dpt_nm: String!, dpt_cd: String!): Department
     addNewCollege(college_nm: String!, college_cd: String!): College
     modCollege(id: Int!, college_nm: String, college_cd: String): College
     modDepartment(id: Int!, dpt_nm: String, dpt_cd: String): Department
     createCollege(college_nm: String!, college_cd: String!, exist_yn: String!, reg_ip: String!, upt_ip: String!): College
     createDepartment(college_cd: String!, dpt_nm: String!, dpt_cd: String!, exist_yn: String!, reg_ip: String!, upt_ip: String!): Department
+    # File Uploads
+    imageUpload(uploadType: S3UploadType!, file: Upload!, options: S3UploadInput!): String              # Single File upload
+    batchImageUpload(uploadType: S3UploadType!, files: [Upload!]!, options: S3UploadInput!): [String]   # Multi Files upload
 }
 `;
 

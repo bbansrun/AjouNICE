@@ -24,7 +24,6 @@ const handleS3Upload = async (file, bucketDir, key) => {
     }, (err, data) => {
       if (err) {
         console.error(`[AWS] ${err}`);
-        console.log(err);
         reject(err);
       } else {
         console.log('[AWS] 성공적으로 데이터 업로드 완료');

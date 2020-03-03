@@ -1,0 +1,18 @@
+mutation modReply($mode: BoardManipulationMode!, $options: ReplyInput!) {
+    modPost(mode: $mode, options: $options) {
+        result
+        data {
+            cmt_idx
+            board_idx
+            commenter {
+                nick_nm
+            }
+            text
+            parent_idx
+            reg_ip
+            reg_dt
+            upt_ip
+            upt_dt
+        }
+    }
+}

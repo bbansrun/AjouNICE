@@ -1,0 +1,5 @@
+mutation incrementView($id: Int!) {
+    incrementView(board_idx: $id) {
+        view_cnt
+    }
+}

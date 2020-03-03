@@ -244,7 +244,7 @@ export default {
           variables: {
             id: parseInt(this.$route.params.post_id)
           }
-        }).then(({ data: { postViewed: { view_cnt } } }) => {
+        }).then(({ data: { incrementView: { view_cnt } } }) => {
           this.post.view_cnt = view_cnt
         })
       }

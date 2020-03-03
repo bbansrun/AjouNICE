@@ -3,12 +3,12 @@ const crypto = require('crypto');
 const fetch = require('node-fetch');
 const { Op, } = require('sequelize');
 const { sequelize, } = require('./models');
-const { PubSub, } = require('apollo-server-express');
+const { PubSub, ForbiddenError, } = require('apollo-server-express');
 const { tokenVerify, } = require('./function/jwt/verifier');
 const { PROFILE, EDITOR_ATTACHMENTS, CATE_ICON, POST_ATTACHMENTS, } = require('./function/aws/bucketUploadConfig');
 const { handleS3Upload, } = require('./function/aws/s3UploadHandler');
 const { sendConfirmMail, sendContactMail, } = require('./function/mailer/mailUtils');
-const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, } = require('./function/db/handler');
+const { findOne, findAll, createOne, destroyOne, updateOne, increaseOne, findById, } = require('./function/db/handler');
 
 sequelize.sync({});
 
@@ -100,14 +100,6 @@ module.exports = {
     },
     async departments (root, args, { db, }, info) {
       return await findAll(db.Department, args, info);
-    },
-    // User
-    async user (root, args, { db, }, info) {
-      const include = [
-        { model: db.Board, as: 'articles', },
-        { model: db.BoardComment, as: 'comments', }
-      ];
-      return await findOne(db.User, args, info, include);
     },
     // 관리자 단독!! 향후 권한 처리
     async users (root, args, { db, }, info) {
@@ -249,22 +241,115 @@ module.exports = {
     },
   },
   Mutation: {
-    async imageUpload (root, { uploadType, file, options, }, { db, }, info) {
-      // 단일 S3 업로드
-      const { key, filename, } = s3Config(uploadType, options);
-      const { Location, } = await handleS3Upload(file, key, filename);
-      return Location;
+    // Common
+    async modPost (root, { mode, options, }, { db, }, info) {
+      if (mode === 'CREATE') {
+        const { category_idx, user_idx, title, body, ip, } = options;
+        if (category_idx && user_idx && title && body && ip) {
+          const args = {
+            category_idx,
+            user_idx,
+            title,
+            body,
+            reg_ip: ip,
+            upt_ip: ip,
+          };
+          return {
+            result: true,
+            data: await createOne(db.Board, args),
+          };
+        }
+      } else if (mode === 'EDIT') {
+        const { board_idx, title, body, ip, } = options;
+        if (board_idx && title && body && ip) {
+          const args = {
+            title,
+            body,
+            upt_ip: ip,
+          };
+          const result = await updateOne(db.Board, args, { board_idx, });
+          if (result) {
+            return {
+              result: true,
+              data: await findById(db.Board, board_idx),
+            };
+          }
+        }
+      } else if (mode === 'DESTROY') {
+        const { board_idx, } = options;
+        if (board_idx) {
+          const data = await findById(db.Board, board_idx);
+          const result = await destroyOne(db.Board, { board_idx, });
+          if (result) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
+      }
+      throw new ForbiddenError('잘못된 요청입니다.');
     },
-    async batchImageUpload (root, { uploadType, files, options, }, { db, }, info) {
-      // 배치식 S3 업로드
-      const locations = [];
-      await Promise.all(files.map(async (file) => {
-        const { key, filename, } = s3Config(uploadType, options);
-        const { Location, } = await handleS3Upload(file, key, filename);
-        locations.push(Location);
-      }));
-      return locations;
+    async modReply (root, { mode, options, }, { db, }, info) {
+      if (mode === 'CREATE') {
+        const { board_idx, user_idx, parent_idx, text, ip, } = options;
+        if (board_idx && user_idx && text && ip) {
+          const args = {
+            board_idx,
+            user_idx,
+            text,
+            reg_ip: ip,
+            upt_ip: ip,
+            parent_idx,
+          };
+          const include = [
+            { model: db.User, as: 'commenter', }
+          ];
+          const data = await createOne(db.BoardComment, args);
+          pubsub.publish(REPLY_WRITTEN, { replyWritten: data, });
+          return {
+            result: true,
+            data: await findById(db.BoardComment, data.cmt_idx, include),
+          };
+        }
+      } else if (mode === 'EDIT') {
+        const { cmt_idx, text, ip, } = options;
+        if (cmt_idx && text && ip) {
+          const args = {
+            cmt_idx,
+            text,
+            upt_ip: ip,
+          };
+          const include = [
+            { model: db.User, as: 'commenter', }
+          ];
+          const data = await findById(db.BoardComment, cmt_idx, include);
+          const result = await updateOne(db.BoardComment, args);
+          pubsub.publish(REPLY_MODIFIED, { replyModified: data, });
+          if (result) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
+      } else if (mode === 'DESTROY') {
+        const { cmt_idx, } = options;
+        if (cmt_idx) {
+          const data = await findById(db.BoardComment, cmt_idx);
+          const result = await destroyOne(db.BoardComment, { cmt_idx, });
+          pubsub.publish(REPLY_REMOVED, { replyRemoved: data, });
+          if (result) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
+      }
+      throw new ForbiddenError('잘못된 요청입니다.');
     },
+    // Auth
     sendContactMail: async (root, { name, email, content, }) => {
       sendContactMail(name, email, content);
       return true;
@@ -355,7 +440,7 @@ module.exports = {
         return {};
       }
     },
-    postViewed: async (root, args, { db, }, info) => {
+    incrementView: async (root, args, { db, }, info) => {
       const updated = await increaseOne(db.Board, 'view_cnt', 1, { board_idx: args.board_idx, });
       if (updated) {
         return await findOne(db.Board, args, info);
@@ -426,6 +511,23 @@ module.exports = {
       } else {
         return {};
       }
+    },
+    // File Uploads
+    async imageUpload (root, { uploadType, file, options, }, { db, }, info) {
+      // 단일 S3 업로드
+      const { key, filename, } = s3Config(uploadType, options);
+      const { Location, } = await handleS3Upload(file, key, filename);
+      return Location;
+    },
+    async batchImageUpload (root, { uploadType, files, options, }, { db, }, info) {
+      // 배치식 S3 업로드
+      const locations = [];
+      await Promise.all(files.map(async (file) => {
+        const { key, filename, } = s3Config(uploadType, options);
+        const { Location, } = await handleS3Upload(file, key, filename);
+        locations.push(Location);
+      }));
+      return locations;
     },
   },
   Posts: connection,
