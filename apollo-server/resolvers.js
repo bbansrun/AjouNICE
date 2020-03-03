@@ -243,6 +243,11 @@ module.exports = {
   Mutation: {
     // Common
     async modPost (root, { mode, options, }, { db, }, info) {
+      const include = [
+        { model: db.BoardCategory, as: 'category', },
+        { model: db.User, as: 'user', },
+        { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
+      ];
       if (mode === 'CREATE') {
         const { category_idx, user_idx, title, body, ip, } = options;
         if (category_idx && user_idx && title && body && ip) {
@@ -254,11 +259,6 @@ module.exports = {
             reg_ip: ip,
             upt_ip: ip,
           };
-          const include = [
-            { model: db.BoardCategory, as: 'category', },
-            { model: db.User, as: 'user', },
-            { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
-          ];
           const created = await createOne(db.Board, args);
           if (created) {
             return {
@@ -279,14 +279,14 @@ module.exports = {
           if (result) {
             return {
               result: true,
-              data: await findById(db.Board, board_idx),
+              data: await findById(db.Board, board_idx, include),
             };
           }
         }
       } else if (mode === 'DESTROY') {
         const { board_idx, } = options;
         if (board_idx) {
-          const data = await findById(db.Board, board_idx);
+          const data = await findById(db.Board, board_idx, include);
           const result = await destroyOne(db.Board, { board_idx, });
           if (result) {
             return {
@@ -386,9 +386,6 @@ module.exports = {
       else return false;
     },
     // Board
-    writePost: async (root, args, { db, }, info) => {
-      return await createOne(db.Board, args);
-    },
     writeReply: async (root, args, { db, }, info) => {
       let result;
       const created = await createOne(db.BoardComment, args);
@@ -422,22 +419,6 @@ module.exports = {
         return result;
       } else {
         return {};
-      }
-    },
-    editPost: async (root, args, { db, }, info) => {
-      const updated = await updateOne(db.Board, { ...args, }, { board_idx: args.board_idx, });
-      if (updated) {
-        return await findOne(db.Board, args, info);
-      } else {
-        return {};
-      }
-    },
-    removePost: async (root, args, { db, }, info) => {
-      const removed = await destroyOne(db.Board, args);
-      if (removed) {
-        return true;
-      } else {
-        return false;
       }
     },
     addCategory: async (root, args, { db, }, info) => {

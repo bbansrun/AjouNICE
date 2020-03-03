@@ -11,45 +11,62 @@
           autocomplete="off"
           @submit.prevent
         >
-          <div class="content-wrapper">
-            <div class="input-form">
-              <label for="title">제목</label>
+          <div class="input-form-group">
+            <label for="title">제목</label>
+            <div class="input-form-wrapper">
               <input
                 id="title"
-                v-model="form.title"
+                v-model="form.options.title"
                 type="text"
                 name="title"
                 placeholder="제목을 입력하세요"
                 required
+                :class="{'error': validation.options.title === false}"
               >
+              <p
+                v-show="validation.options.title === false"
+                class="auto-validate-noti"
+                :class="{'error': validation.options.title === false}"
+              >
+                제목을 입력하지 않았습니다.
+              </p>
             </div>
-            <div class="input-form editor">
-              <label for="textarea">내용</label>
+          </div>
+          <div class="input-form-group">
+            <label for="textarea">내용</label>
+            <div class="input-form-wrapper">
               <ckeditor
-                v-model="form.editorData"
-                name="textarea"
+                v-model="form.options.body"
                 :editor="editor"
                 :config="editorConfig"
+                name="textarea"
               />
-            </div>
-            <div class="input-form-controls buttons">
-              <b-button
-                size="is-small"
-                type="is-info"
-                @click="editPost()"
+              <p
+                v-show="validation.options.body === false"
+                class="auto-validate-noti"
+                :class="{'error': validation.options.body === false}"
               >
-                <font-awesome-icon icon="pen" />&nbsp;
-                <span>수정</span>
-              </b-button>
-              <b-button
-                size="is-small"
-                type="is-danger"
-                @click="goBack()"
-              >
-                <font-awesome-icon icon="times" />&nbsp;
-                <span>취소</span>
-              </b-button>
+                내용이 입력되지 않았습니다.
+              </p>
             </div>
+          </div>
+          <div class="input-form-controls buttons">
+            <b-button
+              size="is-small"
+              type="is-primary"
+              @click="writePost()"
+            >
+              <font-awesome-icon icon="pen" />&nbsp;
+              <span>작성</span>
+            </b-button>
+            <b-button
+              size="is-small"
+              type="is-dark"
+              @click="$router.go(-1)"
+            >
+              <font-awesome-icon icon="times" />&nbsp;
+              <span>취소</span>
+            </b-button>
           </div>
         </form>
       </div>
@@ -60,14 +77,10 @@
 
 <script>
 import gql from 'graphql-tag'
-import urljoin from 'url-join'
-
 import { Navigation, Footer } from '@/components'
-import { Post, SubCates, AllCates, CateInfo } from '@/assets/graphql/queries'
-import { editPost } from '@/assets/graphql/mutations'
-
-import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/index'
-
+import { BriefPost } from '@/assets/graphql/queries'
+import { modPost } from '@/assets/graphql/mutations'
+import { ClassicEditor, editorConfig } from '@/vendor/ckeditor'
 export default {
   components: {
     Navigation,
@@ -76,71 +89,111 @@ export default {
   data () {
     return {
       scrollBase: null,
-      category: '',
-      category_idx: null,
-      sub_category: '',
-      sub_category_idx: null,
       editor: ClassicEditor,
       editorConfig,
-      title: '',
       form: {
-        post: {},
-        title: '',
-        editorData: '<p></p>'
-      }
+        mode: 'EDIT',
+        options: {
+          board_idx: parseInt(this.$route.params.post_id),
+          title: '',
+          body: '<p></p>',
+          ip: this.$store.state.user.access_loc
+        }
+      },
+      validation: {
+        options: {
+          title: null,
+          body: null
+        }
+      },
+      validated: false
     }
   },
-  computed: {
-    landingDescription () {
-      return this.form.title
+  watch: {
+    'form.options.title' (value) {
+      if (value) {
+        this.validation.options.title = true
+      }
+    },
+    'form.options.body' (value) {
+      this.validateInput('body', { value: ['<p></p>', ''], checkIsCorrect: false })
     }
   },
-  beforeMount () {
-    document.body.classList.toggle('loading')
-    this.title = '게시물 수정'
-    this.$apollo.query({
-      query: gql`${Post}`,
-      variables: {
-        id: this.$route.params.post_id
+  apollo: {
+    post: {
+      query: gql`${BriefPost}`,
+      variables () {
+        return {
+          id: this.$route.params.post_id
+        }
+      },
+      result ({ data: { post: { title, body } }, loading, networkStatus, stale }) {
+        this.form.options.title = title
+        this.form.options.body = body
       }
-    }).then(({ data }) => {
-      this.form.post = data.post
-      this.form.title = data.post.title
-      this.form.editorData = data.post.body
-      document.body.classList.toggle('loading')
-    })
+    }
   },
   methods: {
-    editPost () {
-      const user = this.$store.state.user
-      document.body.classList.toggle('loading')
-      this.$apollo.mutate({
-        mutation: gql`${editPost}`,
-        variables: {
-          board_idx: parseInt(this.$route.params.post_id),
-          category_idx: parseInt(this.form.post.category.category_idx),
-          user_idx: user.idx,
-          title: this.form.title,
-          body: this.form.editorData,
-          upt_ip: user.access_loc,
-          upt_dt: Date.now()
+    validateInput (key, compare = null) {
+      // Form Data가 적절한 조건 만족하였는지 판단
+      // compare의 경우 object type data를 받을 경우,
+      // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
+      if (compare) {
+        if (Object.prototype.hasOwnProperty.call(compare, 'value') &&
+            Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
+          if (compare.checkIsCorrect) {
+            if (compare.value instanceof Array) {
+              this.validation.options[key] = compare.value.every(item => this.form.options[key] === item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
+            }
+          } else {
+            if (compare.value instanceof Array) {
+              this.validation.options[key] = compare.value.every(item => this.form.options[key] !== item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
+            }
+          }
+        } else {
+          throw Error('파라미터 compare 값이 유효하지 않습니다.')
         }
-      }).then(({ data }) => {
-        document.body.classList.toggle('loading')
-        this.$swal({
-          type: 'success',
-          title: '게시!',
-          text: '게시물이 수정되었습니다.'
-        }).then(() => {
-          let url = this.$route.path
-          url = url.split('/')
-          url.pop()
-          this.$router.push(urljoin(url.join('/'), 'view'))
-        })
-      })
+      } else {
+        if (this.form.options[key]) {
+          this.validation.options[key] = true
+        } else {
+          this.validation.options[key] = false
+        }
+      }
     },
-    goBack () {
-      this.$router.go(-1)
+    validate () {
+      this.validateInput('title')
+      this.validateInput('body', { value: ['<p></p>', ''], checkIsCorrect: false })
+      this.validated = Object.keys(this.validation.options).every((key) => this.validation.options[key])
+    },
+    writePost () {
+      this.validate()
+      if (this.validated) {
+        document.body.classList.add('loading')
+        this.$apollo.mutate({
+          mutation: gql`${modPost}`,
+          variables: { ...this.form }
+        }).then(({ data: { modPost: { result, data } } }) => {
+          document.body.classList.remove('loading')
+          this.flashSuccess('수정되었습니다.')
+          this.$router.push(`/board/${data.board_idx}/view`)
+        })
+      } else {
+        this.$buefy.dialog.alert({
+          title: '에러',
+          message: '<span>작성하지 않은 항목이 있습니다.</span><br><small>누락된 부분을 확인 후 다시 시도해주시기 바랍니다.</small>',
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+          confirmText: '확인'
+        })
+      }
     }
   }
 }

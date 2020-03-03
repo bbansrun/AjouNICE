@@ -1,0 +1,6 @@
+query Post($id: ID!) {
+    post(board_idx: $id) {
+        title
+        body
+    }
+}

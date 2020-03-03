@@ -136,7 +136,7 @@ import urljoin from 'url-join'
 import VueClipBoard from 'vue-clipboard2'
 import gql from 'graphql-tag'
 import { Post } from '@/assets/graphql/queries'
-import { removePost, IncrementViewCount } from '@/assets/graphql/mutations'
+import { modPost, IncrementViewCount } from '@/assets/graphql/mutations'
 import { Navigation, Report, Replies, Footer } from '@/components'
 import { replyWritten, replyRemoved, replyModified } from '@/assets/graphql/subscriptions'
 VueClipBoard.config.autoSetContainer = true
@@ -163,6 +163,11 @@ export default {
         return {
           id: this.post_id
         }
+      },
+      fetchPolicy: 'network-only',
+      error (error) {
+        console.error(error)
+        this.$router.push('/error/404')
       }
     }
   },
@@ -260,33 +265,33 @@ export default {
       return parseInt(this.$store.state.user.idx) === parseInt(this.post.user.user_idx)
     },
     removeArticle () {
-      const self = this
-      self.$swal({
+      this.$buefy.dialog.confirm({
         title: '삭제하시겠습니까?',
-        text: '삭제 후 복구가 불가능합니다.',
-        type: 'question',
-        showCancelButton: true,
-        showLoaderOnConfirm: true,
-        confirmButtonText: '삭제',
-        cancelButtonText: '취소',
-        preConfirm () {
+        message: '삭제한 게시물은 복구가 불가능합니다.',
+        confirmText: '삭제',
+        cancelText: '취소',
+        type: 'is-danger',
+        hasIcon: true,
+        icon: 'exclamation-triangle',
+        onConfirm: () => {
           document.body.classList.add('loading')
-          self.$apollo.mutate({
-            mutation: gql`${removePost}`,
+          this.$apollo.mutate({
+            mutation: gql`${modPost}`,
             variables: {
-              id: parseInt(self.$route.params.post_id)
+              mode: 'DESTROY',
+              options: {
+                board_idx: parseInt(this.$route.params.post_id)
+              }
             }
-          }).then(({ data }) => {
-            return data
+          }).then(({ data: { modPost: { result } } }) => {
+            if (result) {
+              this.flashSuccess('삭제되었습니다.')
+              document.body.classList.remove('loading')
+              this.$router.push('/board')
+            }
           }).catch(error => {
             console.error(error)
           })
-        }
-      }).then((result) => {
-        if (result.value) {
-          this.flashSuccess('삭제되었습니다.')
-          document.body.classList.remove('loading')
-          this.$router.push('/board')
         }
       })
     }

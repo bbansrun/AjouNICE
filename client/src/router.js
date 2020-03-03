@@ -261,23 +261,8 @@ export default new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/board/:category/new',
-      component: BoardNew,
-      beforeEnter: requireAuth
-    },
-    {
       path: '/board/:category/:name',
       component: Board,
-      beforeEnter: requireAuth
-    },
-    {
-      path: '/board/:category/:name/new',
-      component: BoardNew,
-      beforeEnter: requireAuth
-    },
-    {
-      path: '/board/:category/:name/new',
-      component: BoardNew,
       beforeEnter: requireAuth
     },
     {

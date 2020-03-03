@@ -6,9 +6,6 @@ import IncrementViewCount from './post/incrementView.graphql'
 import writeReply from './post/writeReply.graphql'
 import editReply from './post/editReply.graphql'
 import removeReply from './post/removeReply.graphql'
-import writePost from './post/writePost.graphql'
-import editPost from './post/editPost.graphql'
-import removePost from './post/removePost.graphql'
 
 // 인증
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
@@ -35,9 +32,6 @@ export {
   writeReply,
   removeReply,
   editReply,
-  writePost,
-  editPost,
-  removePost,
   LoggedInLogger,
   Authorize,
   addCategory,
