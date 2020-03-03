@@ -254,10 +254,18 @@ module.exports = {
             reg_ip: ip,
             upt_ip: ip,
           };
-          return {
-            result: true,
-            data: await createOne(db.Board, args),
-          };
+          const include = [
+            { model: db.BoardCategory, as: 'category', },
+            { model: db.User, as: 'user', },
+            { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
+          ];
+          const created = await createOne(db.Board, args);
+          if (created) {
+            return {
+              result: true,
+              data: await findOne(db.Board, { board_idx: created.board_idx, }, info, include),
+            };
+          }
         }
       } else if (mode === 'EDIT') {
         const { board_idx, title, body, ip, } = options;
