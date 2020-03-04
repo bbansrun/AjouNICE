@@ -78,7 +78,7 @@
             <b-button
               type="is-danger"
               size="is-small"
-              @click="removeItem(props.row.id)"
+              @click="removeItem(props.row.id, props.row.uid)"
             >
               <font-awesome-icon icon="trash" />&nbsp;
               <span>삭제</span>
@@ -91,8 +91,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import gql from 'graphql-tag'
 import { Codes } from '@/assets/graphql/queries'
+import { modCollege, modDepartment } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -106,10 +108,10 @@ export default {
       update: ({ allColleges, departments }) => {
         const data = []
         allColleges.forEach(item => {
-          data.push({ id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
+          data.push({ uid: item.id, id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
         })
         departments.forEach(item => {
-          data.push({ id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
+          data.push({ uid: item.id, id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
         })
         return data
       },
@@ -124,7 +126,7 @@ export default {
     }
   },
   methods: {
-    removeItem (record) {
+    removeItem (itemId, id) {
       this.$buefy.dialog.prompt({
         title: '코드 데이터 삭제',
         message: '삭제하시겠습니까?<br><strong>이 데이터 삭제는 서비스의 모든 사용자에게<br>중대한 영향을 미칠 수 있습니다.</strong><br>신중히 선택해주시기 바랍니다.<br>계속 진행하시려면 <strong>확인</strong>을 입력해주세요.',
@@ -141,23 +143,45 @@ export default {
         onConfirm: (value) => {
           if (value === '확인') {
             document.body.classList.add('loading')
-            const [type, value] = atob(record).split('|')
-            let variables
-            if (type === 'college') {
-              variables = {
-                college_cd: value
-              }
-            } else if (type === 'dpt') {
-              variables = {
-                dpt_cd: value
+            const type = atob(itemId).split('|')[0]
+            const variables = {
+              mode: 'DESTROY',
+              options: {
+                id
               }
             }
-            // return this.$apollo.mutate({
-            //   mutation: gql`${}`,
-            //   variables
-            // }).then(({ data }) => {
-
-          // })
+            if (type === 'college') {
+              this.$apollo.mutate({
+                mutation: gql`${modCollege}`,
+                variables
+              }).then(({ data: { modCollege } }) => {
+                if (modCollege) {
+                  document.body.classList.remove('loading')
+                  this.data = _.filter(this.data, item => item.id !== itemId)
+                  this.$buefy.toast.open('삭제하였습니다.')
+                  this.$router.go(0)
+                }
+              }).catch(error => {
+                console.error(error)
+                document.body.classList.remove('loading')
+                this.$buefy.toast.open('알 수 없는 오류로 삭제하지 못했습니다.')
+              })
+            } else if (type === 'dpt') {
+              this.$apollo.mutate({
+                mutation: gql`${modDepartment}`,
+                variables
+              }).then(({ data: { modDepartment } }) => {
+                if (modDepartment) {
+                  document.body.classList.remove('loading')
+                  this.data = _.filter(this.data, item => item.id !== itemId)
+                  this.$buefy.toast.open('삭제하였습니다.')
+                }
+              }).catch(error => {
+                console.error(error)
+                document.body.classList.remove('loading')
+                this.$buefy.toast.open('알 수 없는 오류로 삭제하지 못했습니다.')
+              })
+            }
           } else {
             this.$buefy.toast.open('입력값 오류. 취소되었습니다.')
           }

@@ -14,8 +14,6 @@ import addGourmetPlace from './admin/addGourmetPlace.graphql'
 import removeGourmet from './admin/removeGourmet.graphql'
 import modCollege from './admin/modCollege.graphql'
 import modDepartment from './admin/modDepartment.graphql'
-import createCollege from './admin/createCollege.graphql'
-import createDepartment from './admin/createDepartment.graphql'
 
 // 파일 업로드 트리거
 import singleUpload from './upload/singleUpload.graphql'
@@ -33,8 +31,6 @@ export {
   removeGourmet,
   modCollege,
   modDepartment,
-  createCollege,
-  createDepartment,
   singleUpload,
   multiUpload
 }

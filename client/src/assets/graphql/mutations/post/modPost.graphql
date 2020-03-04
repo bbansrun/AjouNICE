@@ -1,4 +1,4 @@
-mutation modPost($mode: BoardManipulationMode!, $options: BoardInput!) {
+mutation modPost($mode: ManipulationMode!, $options: BoardInput!) {
     modPost(mode: $mode, options: $options) {
         result
         data {

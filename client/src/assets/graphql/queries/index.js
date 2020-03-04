@@ -29,21 +29,17 @@ import Users from './admin/Users.graphql'
 import Post from './posts/PostDetail.graphql'
 import BriefPost from './posts/BriefPost.graphql'
 import PostsByCate from './posts/PostsByCate.graphql'
+import CateInfo from './posts/CateInfo.graphql'
+import AllCates from './posts/AllCates.graphql'
 import CateById from './posts/CateById.graphql'
+import SubCates from './posts/SubCates.graphql'
 import BoardByType from './posts/BoardByType.graphql'
 import PaginationPosts from './posts/PaginatedPosts.graphql'
 import PaginationGourmets from './posts/gourmet/PaginatedGourmets.graphql'
+import PostsByKeyword from './posts/Search.graphql'
 // -- 맛집
 import GourmetCategories from './posts/gourmet/AllCategories.graphql'
 import GourmetById from './posts/gourmet/GourmetById.graphql'
-
-// 정리 필요
-import CateInfo from './CateInfo.graphql'
-import PostsByKeyword from './PostsSearch.graphql'
-import SubCates from './SubCates.graphql'
-import AllCates from './AllCates.graphql'
-import UserModify from './UserModify.graphql'
-import BoardsAndPosts from './BoardsAndPosts.graphql'
 
 export {
   Profile,
@@ -58,8 +54,6 @@ export {
   PostsByCate,
   SubCates,
   AllCates,
-  BoardsAndPosts,
-  UserModify,
   Schedule,
   Notice,
   AdminStatus,

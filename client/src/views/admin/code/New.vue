@@ -17,7 +17,8 @@
             @input="selectedType"
           >
             <template v-slot:no-options>
-              일치하는 옵션이 없어요.
+              <font-awesome-icon icon="times" />&nbsp;
+              <span>일치하는 옵션이 없어요.</span>
             </template>
           </v-select>
           <p
@@ -25,7 +26,7 @@
             class="auto-validate-noti"
             :class="{'error': validation.mode === false }"
           >
-            구분을 선택하지 않았습니다.
+            {{ invalidMsg.mode }}
           </p>
         </div>
       </div>
@@ -54,41 +55,46 @@
             class="auto-validate-noti"
             :class="{'error': validation.dptParent === false }"
           >
-            소속대학을 선택하지 않았습니다.
+            {{ invalidMsg.dptParent }}
           </p>
         </div>
       </div>
-      <div class="input-form-group">
+      <div
+        v-show="mode === 'college' || (mode === 'dpt' && validation.dptParent)"
+        class="input-form-group"
+      >
         <label for="code">코드</label>
         <div class="input-form-wrapper">
           <input
             id="code"
-            v-model="form.code"
+            v-model="code"
             type="text"
             name="code"
             autocapitalize="on"
-            no-validate
             :class="{'error': validation.code === false }"
             :placeholder="placeholder.code"
             :maxlength="maxLength"
+            :pattern="regex[mode]"
+            @blur="validateCode"
           >
           <p
             v-show="validation.code === false"
             class="auto-validate-noti"
             :class="{'error': validation.code === false }"
           >
-            <span v-if="mode === 'college'">코드명은 학과 특징을 드러내는 영문와 _으로 이루어진 4자리로 구성되어야합니다.</span>
-            <span v-if="mode === 'dpt'">코드명은 학과코드와 일련번호(숫자)를 포함한 6자리로 구성되어야합니다. {{ form.college_cd ? ` (학과코드: ${form.college_cd})` : '' }}</span>
-            <span v-else>구분 선택 후 코드를 입력하시기 바랍니다.</span>
+            {{ invalidMsg.code }}
           </p>
         </div>
       </div>
-      <div class="input-form-group">
+      <div
+        v-show="mode === 'college' || (mode === 'dpt' && validation.dptParent)"
+        class="input-form-group"
+      >
         <label for="name">명칭</label>
         <div class="input-form-wrapper">
           <input
             id="name"
-            v-model="form.name"
+            v-model="name"
             type="text"
             name="name"
             no-validate
@@ -100,11 +106,14 @@
             class="auto-validate-noti"
             :class="{'error': validation.name === false }"
           >
-            명칭을 입력해주세요.
+            {{ invalidMsg.name }}
           </p>
         </div>
       </div>
-      <div class="input-form-group">
+      <div
+        v-show="mode === 'college' || (mode === 'dpt' && validation.dptParent)"
+        class="input-form-group"
+      >
         <label for="title">현재 존재여부</label>
         <b-switch
           v-model="form.exist_yn"
@@ -138,8 +147,8 @@
 
 <script>
 import gql from 'graphql-tag'
-import { AllColleges } from '@/assets/graphql/queries'
-import { createCollege, createDepartment } from '@/assets/graphql/mutations'
+import { AllColleges, College, Department } from '@/assets/graphql/queries'
+import { modCollege, modDepartment } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -154,14 +163,20 @@ export default {
         code: '사용할 코드를 명명해주세요. 예) 학부: C_AX, 학과: C_AX01',
         name: '이 코드는 어떤 곳을 의미하나요? 예) OO학과, OO대학'
       },
+      code: '',
+      name: '',
       maxLength: 6,
+      regex: {
+        college: '[A-Z]{1}_[A-Z]{2}',
+        dpt: '[A-Z]{1}_[A-Z]{2}[0-9]{2}'
+      },
       form: {
+        college_nm: '',
         college_cd: '',
+        dpt_cd: '',
+        dpt_nm: '',
         exist_yn: 'Y',
-        code: '',
-        name: '',
-        reg_ip: '',
-        upt_ip: ''
+        ip: this.$store.state.user.access_loc
       },
       validation: {
         mode: null,
@@ -169,28 +184,21 @@ export default {
         name: null,
         dptParent: null
       },
+      invalidMsg: {
+        mode: '',
+        code: '',
+        name: '',
+        dptParent: ''
+      },
       validated: false
     }
   },
   watch: {
-    'form.name' (value) {
-      this.validateInput('name')
+    name (value) {
+      this.validateName()
     },
-    'form.code' (value) {
-      // Custom Validation
-      if (value) {
-        if (value.includes(this.form.college_cd)) {
-          if (value.length === this.maxLength) {
-            this.validation.code = true
-          } else {
-            this.validation.code = false
-          }
-        } else {
-          this.validation.code = false
-        }
-      } else {
-        this.validation.code = false
-      }
+    code (value) {
+      this.validateCode()
     },
     'form.exist_yn' (value) {
       if (value === 'Y') {
@@ -209,40 +217,77 @@ export default {
       }
     }
   },
-  mounted () {
-    this.form.reg_ip = this.$store.state.user.access_loc
-    this.form.upt_ip = this.$store.state.user.access_loc
-  },
   methods: {
-    validateInput (key, compare = null) {
-      // Form Data가 적절한 조건 만족하였는지 판단
-      // compare의 경우 object type data를 받을 경우,
-      // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
-      if (compare) {
-        if (Object.prototype.hasOwnProperty.call(compare, 'value') &&
-            Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
-          if (compare.checkIsCorrect) {
-            if (compare.value instanceof Array) {
-              this.validation[key] = compare.value.every(item => this.form[key] === item)
-            } else {
-              throw Error('compare.value는 Array이어야 합니다.')
-            }
+    toggleInputValid (key, bool, msg = '') {
+      if (!bool) {
+        this.validated = false
+      }
+      this.validation[key] = bool
+      if (msg) {
+        this.invalidMsg[key] = msg
+      }
+    },
+    validateDptParent () {
+      if (this.mode === 'dpt' && this.form.college_cd) {
+        this.toggleInputValid('dptParent', true)
+      } else {
+        this.toggleInputValid('dptParent', false, '소속 학부를 선택해주세요.')
+      }
+    },
+    validateName () {
+      if (this.name) {
+        this.toggleInputValid('name', true)
+      } else {
+        this.toggleInputValid('name', false, '명칭을 입력하지 않았습니다.')
+      }
+    },
+    validateCode () {
+      if (this.mode === 'college') {
+        if (new RegExp(this.regex[this.mode]).test(this.code)) {
+          this.checkCodeExists()
+        } else {
+          this.toggleInputValid('code', false, '코드 명명 규칙에 어긋납니다. (예. 학부: C_TS, 학과: C_TS01)')
+        }
+      } else if (this.mode === 'dpt') {
+        if (new RegExp(this.regex[this.mode]).test(this.code)) {
+          if (this.code.includes(this.form.college_cd)) {
+            this.checkCodeExists()
           } else {
-            if (compare.value instanceof Array) {
-              this.validation[key] = compare.value.every(item => this.form[key] !== item)
-            } else {
-              throw Error('compare.value는 Array이어야 합니다.')
-            }
+            this.toggleInputValid('code', false, `학과 코드는 학부 코드를 포함해야합니다. 포함: ${this.form.college_cd}`)
           }
         } else {
-          throw Error('파라미터 compare 값이 유효하지 않습니다.')
+          this.toggleInputValid('code', false, '코드 명명 규칙에 어긋납니다. (예. 학부: C_TS, 학과: C_TS01)')
         }
-      } else {
-        if (this.form[key]) {
-          this.validation[key] = true
-        } else {
-          this.validation[key] = false
-        }
+      }
+    },
+    checkCodeExists () {
+      // 학과 학부 코드 중복 여부 확인
+      if (this.mode === 'college') {
+        this.$apollo.query({
+          query: gql`${College}`,
+          variables: {
+            code: this.code
+          }
+        }).then(({ data: { college } }) => {
+          if (college) {
+            this.toggleInputValid('code', false, '이미 존재하는 코드입니다.')
+          } else {
+            this.toggleInputValid('code', true)
+          }
+        })
+      } else if (this.mode === 'dpt') {
+        this.$apollo.query({
+          query: gql`${Department}`,
+          variables: {
+            code: this.code
+          }
+        }).then(({ data: { department } }) => {
+          if (department) {
+            this.toggleInputValid('code', false, '이미 존재하는 코드입니다.')
+          } else {
+            this.toggleInputValid('code', true)
+          }
+        })
       }
     },
     selectedType ({ code }) {
@@ -256,63 +301,69 @@ export default {
         this.placeholder.name = '이 코드는 어떤 곳을 의미하나요? 예) OO학과'
         this.maxLength = 6
       }
-      this.validation.mode = true
+      this.toggleInputValid('mode', true)
     },
     selectedCollegeCd (value) {
+      this.code = value
       this.form.college_cd = value
-      this.form.code = value
-      this.validation.dptParent = true
+      this.toggleInputValid('dptParent', true)
     },
     validate () {
-      this.validateInput('code')
-      this.validateInput('name')
+      let checkValidKeys
       if (this.mode) {
-        this.validation.mode = true
-        if (this.mode === 'dpt') {
-          if (this.form.college_cd) {
-            this.validation.dptParent = true
-          } else {
-            this.validation.dptParent = false
-          }
-        }
-      } else {
-        this.validation.mode = false
-      }
-      if (this.mode) {
+        this.toggleInputValid('mode', true)
         if (this.mode === 'college') {
-          if (this.form.code && this.form.name) {
-            this.validated = true
-          }
+          checkValidKeys = ['mode', 'code', 'name']
+          this.validateName()
+          this.validateCode()
         } else if (this.mode === 'dpt') {
-          if (this.form.code && this.form.name && this.form.college_cd) {
-            this.validated = true
-          }
+          checkValidKeys = ['mode', 'code', 'name', 'dptParent']
+          this.validateName()
+          this.validateCode()
+          this.validateDptParent()
         }
+        this.validated = checkValidKeys.every(key => this.validation[key])
+      } else {
+        this.toggleInputValid('mode', false, '학부 / 학과 구분을 선택해주세요.')
+        this.validated = false
       }
     },
     submit () {
       this.validate()
       if (this.validated) {
         if (this.mode === 'college') {
+          this.form.college_cd = this.code
+          this.form.college_nm = this.name
+          delete this.form.dpt_nm
+          delete this.form.dpt_cd
           this.$apollo.mutate({
-            mutation: gql`${createCollege}`,
+            mutation: gql`${modCollege}`,
             variables: {
-              ...this.form
+              mode: 'CREATE',
+              options: {
+                ...this.form
+              }
             }
-          }).then(({ data: { createCollege } }) => {
-            if (createCollege) {
+          }).then(({ data: { modCollege } }) => {
+            if (modCollege) {
               this.$buefy.toast.open('코드를 생성하였습니다.')
               this.$router.push('/gate/manager/codes')
             }
           })
         } else if (this.mode === 'dpt') {
+          this.form.dpt_cd = this.code
+          this.form.dpt_nm = this.name
+          delete this.form.college_nm
           this.$apollo.mutate({
-            mutation: gql`${createDepartment}`,
+            mutation: gql`${modDepartment}`,
             variables: {
-              ...this.form
+              mode: 'CREATE',
+              options: {
+                ...this.form
+              }
             }
-          }).then(({ data: { createDepartment } }) => {
-            if (createDepartment) {
+          }).then(({ data: { modDepartment } }) => {
+            if (modDepartment) {
               this.$buefy.toast.open('코드를 생성하였습니다.')
               this.$router.push('/gate/manager/codes')
             }
@@ -321,7 +372,7 @@ export default {
       } else {
         this.$buefy.dialog.alert({
           title: '에러',
-          message: '작성하지 않은 항목이 있습니다.',
+          message: '작성하지 않거나 잘못된 입력 항목이 있습니다.',
           type: 'is-danger',
           hasIcon: true,
           icon: 'times-circle',
@@ -334,7 +385,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

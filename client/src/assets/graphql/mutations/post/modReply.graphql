@@ -1,4 +1,4 @@
-mutation modReply($mode: BoardManipulationMode!, $options: ReplyInput!) {
+mutation modReply($mode: ManipulationMode!, $options: ReplyInput!) {
     modReply(mode: $mode, options: $options) {
         result
         data {

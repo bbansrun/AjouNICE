@@ -1,5 +1,6 @@
 {
     allColleges {
+        id
         college_cd
         college_nm
         reg_dt
@@ -7,6 +8,7 @@
     }
 
     departments {
+        id
         dpt_cd
         dpt_nm
         reg_dt

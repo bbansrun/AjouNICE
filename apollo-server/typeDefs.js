@@ -23,7 +23,7 @@ enum S3UploadType {
     PROFILE                 # Profile Images
 }
 
-enum BoardManipulationMode {
+enum ManipulationMode {
     CREATE
     EDIT
     DESTROY
@@ -47,6 +47,23 @@ input ReplyInput {
     parent_idx: Int
     text: String
     ip: Date
+}
+
+input CollegeInput {
+    id: ID
+    college_nm: String
+    college_cd: String
+    exist_yn: String
+    ip: String
+}
+
+input DepartmentInput {
+    id: ID
+    college_cd: String
+    dpt_nm: String
+    dpt_cd: String
+    exist_yn: String
+    ip: String
 }
 
 input ImgProfileInput {
@@ -269,13 +286,23 @@ type Schedule {
 
 # Types when objects manipulated
 type ModifiedPost {
-    result: Boolean
+    result: Boolean!
     data: Board
 }
 
 type ModifiedReply {
-    result: Boolean
+    result: Boolean!
     data: BoardComment
+}
+
+type ModifiedCollege {
+    result: Boolean!
+    data: College
+}
+
+type ModifiedDepartment {
+    result: Boolean!
+    data: Department
 }
 
 # Types for pagination
@@ -370,20 +397,16 @@ type Mutation {
     resetEmailToken(email: String!): Boolean
     sendContactMail(name: String!, email: String!, content: String!): Boolean
     # Common
-    modPost(mode: BoardManipulationMode!, options: BoardInput!): ModifiedPost
-    modReply(mode: BoardManipulationMode!, options: ReplyInput!): ModifiedReply
+    modPost(mode: ManipulationMode!, options: BoardInput!): ModifiedPost
+    modReply(mode: ManipulationMode!, options: ReplyInput!): ModifiedReply
     incrementView(board_idx: Int!): Board
     # Admin
     addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, upt_ip: String!): BoardCategory
     removeCategory(category_idx: Int!): Boolean
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
     removeGourmet(res_idx: Int!): Boolean
-    addNewDepartment(dpt_nm: String!, dpt_cd: String!): Department
-    addNewCollege(college_nm: String!, college_cd: String!): College
-    modCollege(id: Int!, college_nm: String, college_cd: String): College
-    modDepartment(id: Int!, dpt_nm: String, dpt_cd: String): Department
-    createCollege(college_nm: String!, college_cd: String!, exist_yn: String!, reg_ip: String!, upt_ip: String!): College
-    createDepartment(college_cd: String!, dpt_nm: String!, dpt_cd: String!, exist_yn: String!, reg_ip: String!, upt_ip: String!): Department
+    modCollege(mode: ManipulationMode!, options: CollegeInput!): ModifiedCollege
+    modDepartment(mode: ManipulationMode!, options: DepartmentInput!): ModifiedDepartment
     # File Uploads
     imageUpload(uploadType: S3UploadType!, file: Upload!, options: S3UploadInput!): String              # Single File upload
     batchImageUpload(uploadType: S3UploadType!, files: [Upload!]!, options: S3UploadInput!): [String]   # Multi Files upload

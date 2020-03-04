@@ -357,6 +357,14 @@ module.exports = {
       }
       throw new ForbiddenError('잘못된 요청입니다.');
     },
+    async incrementView (root, args, { db, }, info) {
+      const updated = await increaseOne(db.Board, 'view_cnt', 1, { board_idx: args.board_idx, });
+      if (updated) {
+        return await findOne(db.Board, args, info);
+      } else {
+        return {};
+      }
+    },
     // Auth
     sendContactMail: async (root, { name, email, content, }) => {
       sendContactMail(name, email, content);
@@ -385,18 +393,11 @@ module.exports = {
       if (user) return true;
       else return false;
     },
+    // Admin
     addCategory: async (root, args, { db, }, info) => {
       const created = await createOne(db.BoardCategory, args);
       if (created) {
         return await findOne(db.BoardCategory, args, info);
-      } else {
-        return {};
-      }
-    },
-    incrementView: async (root, args, { db, }, info) => {
-      const updated = await increaseOne(db.Board, 'view_cnt', 1, { board_idx: args.board_idx, });
-      if (updated) {
-        return await findOne(db.Board, args, info);
       } else {
         return {};
       }
@@ -419,51 +420,111 @@ module.exports = {
         return {};
       }
     },
-    modCollege: async (root, { id, college_cd, college_nm, }, { db, }, info) => {
-      const variables = {};
-      if (college_cd) {
-        variables.college_cd = college_cd;
+    async modCollege (root, { mode, options, }, { db, }, info) {
+      if (mode === 'CREATE') {
+        const { college_nm, college_cd, exist_yn, ip, } = options;
+        if (college_nm && college_cd && exist_yn && ip) {
+          const args = {
+            college_nm,
+            college_cd,
+            exist_yn,
+            reg_ip: ip,
+            upt_ip: ip,
+          };
+          const data = await createOne(db.College, args);
+          if (data) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
+      } else if (mode === 'EDIT') {
+        const { id, college_nm, college_cd, exist_yn, ip, } = options;
+        if (id && college_nm && college_cd && exist_yn && ip) {
+          const args = {
+            id,
+            college_nm,
+            college_cd,
+            exist_yn,
+            upt_ip: ip,
+          };
+          const updated = await updateOne(db.College, args, { id, });
+          if (updated) {
+            return {
+              result: true,
+              data: await findById(db.College, id),
+            };
+          }
+        }
+      } else if (mode === 'DESTROY') {
+        const { id, } = options;
+        if (id) {
+          const data = await findById(db.College, id);
+          const removed = await destroyOne(db.College, { id, });
+          if (removed) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
       }
-      if (college_nm) {
-        variables.college_nm = college_nm;
-      }
-      const updated = await updateOne(db.College, variables, { id, });
-      if (updated) {
-        return await findOne(db.College, { id, college_cd, college_nm, }, info);
-      } else {
-        return {};
-      }
+      throw new ForbiddenError('잘못된 요청입니다.');
     },
-    modDepartment: async (root, { id, dpt_cd, dpt_nm, }, { db, }, info) => {
-      const variables = {};
-      if (dpt_cd) {
-        variables.dpt_cd = dpt_cd;
+    async modDepartment (root, { mode, options, }, { db, }, info) {
+      if (mode === 'CREATE') {
+        const { college_cd, dpt_nm, dpt_cd, exist_yn, ip, } = options;
+        if (college_cd && dpt_nm && dpt_cd && exist_yn && ip) {
+          const args = {
+            college_cd,
+            dpt_nm,
+            dpt_cd,
+            exist_yn,
+            reg_ip: ip,
+            upt_ip: ip,
+          };
+          const data = await createOne(db.Department, args);
+          if (data) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
+      } else if (mode === 'EDIT') {
+        const { id, college_cd, dpt_nm, dpt_cd, exist_yn, ip, } = options;
+        if (id && college_cd && dpt_nm && dpt_cd && exist_yn && ip) {
+          const args = {
+            id,
+            college_cd,
+            dpt_nm,
+            dpt_cd,
+            exist_yn,
+            upt_ip: ip,
+          };
+          const updated = await updateOne(db.Department, args, { id, });
+          if (updated) {
+            return {
+              result: true,
+              data: await findById(db.Department, id),
+            };
+          }
+        }
+      } else if (mode === 'DESTROY') {
+        const { id, } = options;
+        if (id) {
+          const data = await findById(db.Department, id);
+          const removed = await destroyOne(db.Department, { id, });
+          if (removed) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
       }
-      if (dpt_nm) {
-        variables.dpt_nm = dpt_nm;
-      }
-      const updated = await updateOne(db.Department, variables, { id, });
-      if (updated) {
-        return await findOne(db.Department, { id, dpt_cd, dpt_nm, }, info);
-      } else {
-        return {};
-      }
-    },
-    createCollege: async (root, args, { db, }, info) => {
-      const created = await createOne(db.College, args);
-      if (created) {
-        return await findOne(db.College, args, info);
-      } else {
-        return {};
-      }
-    },
-    createDepartment: async (root, args, { db, }, info) => {
-      const created = await createOne(db.Department, args);
-      if (created) {
-        return await findOne(db.Department, args, info);
-      } else {
-        return {};
-      }
+      throw new ForbiddenError('잘못된 요청입니다.');
     },
     // File Uploads
     async imageUpload (root, { uploadType, file, options, }, { db, }, info) {

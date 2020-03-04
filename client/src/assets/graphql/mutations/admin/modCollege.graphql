@@ -1,7 +1,15 @@
-mutation modCollege($id: Int!, $code: String, $name: String) {
-    modCollege(id: $id, college_cd: $code, college_nm: $name) {
-        id
-        college_cd
-        college_nm
+mutation modCollege($mode: ManipulationMode!, $options: CollegeInput!) {
+    modCollege(mode: $mode, options: $options) {
+        result
+        data {
+            id
+            college_nm
+            college_cd
+            exist_yn
+            reg_ip
+            reg_dt
+            upt_ip
+            upt_dt
+        }
     }
 }

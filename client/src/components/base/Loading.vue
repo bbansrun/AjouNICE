@@ -45,6 +45,7 @@ body.loading .loader {
 
 svg {
   width: 50vw;
+  max-width: 120px;
 }
 
 path {

@@ -1,5 +1,0 @@
-query UserModify($id: Int!) {
-    user(user_idx: $id) {
-        email
-    }
-}

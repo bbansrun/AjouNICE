@@ -1,7 +1,16 @@
-mutation modDepartment($id: Int!, $code: String, $name: String) {
-    modDepartment(id: $id, dpt_cd: $code, dpt_nm: $name) {
-        id
-        dpt_cd
-        dpt_nm
+mutation modDepartment($mode: ManipulationMode!, $options: DepartmentInput!) {
+    modDepartment(mode: $mode, options: $options) {
+        result
+        data {
+            id
+            college_cd
+            dpt_nm
+            dpt_cd
+            exist_yn
+            reg_ip
+            reg_dt
+            upt_ip
+            upt_dt
+        }
     }
 }
