@@ -129,7 +129,6 @@ export default {
   },
   methods: {
     removeCategory (name, id) {
-      const self = this
       this.$buefy.dialog.prompt({
         title: `'${name}' 삭제`,
         message: `맛집 <strong>${name}</strong> 모듈을 삭제하시겠습니까?<br>관련 게시물 모두 함께 삭제됩니다.<br>진행하시려면 <strong>확인</strong>을 입력해주세요.`,
@@ -146,16 +145,16 @@ export default {
         onConfirm: (value) => {
           if (value === '확인') {
             document.body.classList.add('loading')
-            self.$apollo.mutate({
+            this.$apollo.mutate({
               mutation: gql`${removeCategory}`,
               variables: {
                 category_idx: parseInt(id)
               }
             }).then(({ data: { removeCategory } }) => {
               if (removeCategory) {
-                self.boards = _.remove(self.boards, (item) => (item.category_idx !== id))
+                this.boards = _.remove(this.boards, (item) => (item.category_idx !== id))
                 document.body.classList.remove('loading')
-                self.$buefy.toast.open(`${name} 모듈이 삭제되었습니다.`)
+                this.$buefy.toast.open(`${name} 모듈이 삭제되었습니다.`)
               }
             }).catch(error => {
               console.error(error)

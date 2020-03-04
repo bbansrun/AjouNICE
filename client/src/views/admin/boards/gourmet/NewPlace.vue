@@ -257,17 +257,16 @@ export default {
         res_icon: ''
       },
       validation: {
-        category_idx: '',
-        res_nm: '',
-        res_menu: '',
-        res_addr: '',
-        res_phone: '',
-        res_info: '',
-        res_lat: '',
-        res_lon: '',
-        res_icon: ''
+        category_idx: null,
+        res_nm: null,
+        res_menu: null,
+        res_addr: null,
+        res_phone: null,
+        res_info: null
+        // res_lat: '',
+        // res_lon: '',
       },
-      validated: null
+      validated: false
     }
   },
   watch: {
@@ -329,11 +328,35 @@ export default {
       this.form.category_idx = value
       this.validateInput('category_idx')
     },
-    validateInput (key) {
-      if (this.form[key]) {
-        this.validation[key] = true
+    validateInput (key, compare = null) {
+      // Form Data가 적절한 조건 만족하였는지 판단
+      // compare의 경우 object type data를 받을 경우,
+      // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
+      if (compare) {
+        if (Object.prototype.hasOwnProperty.call(compare, 'value') &&
+            Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
+          if (compare.checkIsCorrect) {
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] === item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
+            }
+          } else {
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] !== item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
+            }
+          }
+        } else {
+          throw Error('파라미터 compare 값이 유효하지 않습니다.')
+        }
       } else {
-        this.validation[key] = false
+        if (this.form[key]) {
+          this.validation[key] = true
+        } else {
+          this.validation[key] = false
+        }
       }
     },
     validate () {
@@ -343,71 +366,71 @@ export default {
       this.validateInput('res_addr')
       this.validateInput('res_phone')
       this.validateInput('res_info')
-      this.validateInput('res_lat')
-      this.validateInput('res_lon')
-      this.validateInput('res_icon')
+      // this.validateInput('res_lat')
+      // this.validateInput('res_lon')
+      this.validated = Object.keys(this.validation).every((key) => this.validation[key])
     },
     submitForm () {
       this.validate()
       if (this.validated) {
-        const self = this
-        this.$swal({
-          type: 'warning',
+        this.$buefy.dialog.confirm({
           title: '최종 확인',
-          text: '승인 즉시 데이터가 서비스에 노출됩니다.',
-          footer: '<p>업소 정보가 올라가는만큼 신중히 검토하여주시기바랍니다.</p>',
-          showCancelButton: true,
-          cancelButtonText: '취소',
-          showLoaderOnConfirm: true,
-          preConfirm () {
+          message: '<span>승인 즉시 데이터가 서비스에 노출됩니다.</span><br/><strong>(업소 정보가 올라가는만큼 신중히 검토하여주시기바랍니다.)</strong>',
+          confirmText: '업로드',
+          cancelText: '취소',
+          type: 'is-warning',
+          hasIcon: true,
+          icon: 'exclamation-triangle',
+          onConfirm: () => {
             document.body.classList.add('loading')
             // 우선 게시물 생성하여 이를 바탕으로 하는 리소스 이미지 릴레이션 진행
-            self.form.category_idx = parseInt(self.category_idx)
-            self.form.user_idx = self.$store.state.user.idx
-            self.form.reg_ip = self.$store.state.user.access_loc
-            self.form.reg_dt = Date.now()
-            self.form.upt_ip = self.form.reg_ip
-            self.form.upt_dt = self.form.reg_dt
+            this.form.category_idx = parseInt(this.form.category_idx)
+            this.form.user_idx = this.$store.state.user.idx
+            this.form.reg_ip = this.$store.state.user.access_loc
+            this.form.reg_dt = Date.now()
+            this.form.upt_ip = this.form.reg_ip
+            this.form.upt_dt = this.form.reg_dt
             // 위도 경도 임시 조치
-            delete self.form.res_lat
-            delete self.form.res_lon
+            delete this.form.res_lat
+            delete this.form.res_lon
             // 게시물 업로드
-            return self.$apollo.mutate({
-              mutation: gql`${addGourmetPlace}`,
-              variables: { ...self.form }
-            }).then(({ data: { addGourmetPlace } }) => {
-              return addGourmetPlace
-            })
-          }
-        }).then(({ value }) => {
-          if (value) {
-            // 업소 이미지 S3 업로드
             this.$apollo.mutate({
-              mutation: gql`${multiUpload}`,
-              variables: {
-                uploadType: 'POST_ATTACHMENTS',
-                files: self.resources,
-                options: {
-                  POST_ATTACHMENTS: {
-                    res_idx: parseInt(value.res_idx)
+              mutation: gql`${addGourmetPlace}`,
+              variables: { ...this.form }
+            }).then(({ data: { addGourmetPlace } }) => {
+              if (addGourmetPlace) {
+                this.$apollo.mutate({
+                  mutation: gql`${multiUpload}`,
+                  variables: {
+                    uploadType: 'POST_ATTACHMENTS',
+                    files: this.resources,
+                    options: {
+                      POST_ATTACHMENTS: {
+                        res_idx: parseInt(addGourmetPlace.res_idx)
+                      }
+                    }
                   }
-                }
-              }
-            }).then(({ data: { batchImageUpload } }) => {
-              if (batchImageUpload) {
-                this.flashSuccess('게시물 생성 및 관련 이미지를 업로드하였습니다.')
-                document.body.classList.remove('loading')
-                this.$router.push('/gate/manager/boards/gourmet')
+                }).then(({ data: { batchImageUpload } }) => {
+                  if (batchImageUpload) {
+                    document.body.classList.remove('loading')
+                    this.$buefy.toast.open('게시물 생성 및 관련 이미지를 업로드하였습니다.')
+                    this.$router.push('/gate/manager/boards/gourmet')
+                  }
+                })
               }
             })
           }
         })
       } else {
-        this.$swal({
-          type: 'error',
-          title: '유효성 검사 오류',
-          text: '입력하지 않은 항목이 있습니다.',
-          footer: '<p>항목을 채워주시기 바랍니다.</p>'
+        this.$buefy.dialog.alert({
+          title: '에러',
+          message: '작성하지 않거나 잘못된 입력 항목이 있습니다.',
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+          confirmText: '확인'
         })
       }
     }
