@@ -8,8 +8,7 @@ import LoggedInLogger from './auth/LoggedInLogger.graphql'
 import Authorize from './auth/Authorize.graphql'
 
 // 관리자
-import addCategory from './admin/addCategory.graphql'
-import removeCategory from './admin/removeCategory.graphql'
+import modCategory from './admin/modCategory.graphql'
 import addGourmetPlace from './admin/addGourmetPlace.graphql'
 import removeGourmet from './admin/removeGourmet.graphql'
 import modCollege from './admin/modCollege.graphql'
@@ -25,8 +24,7 @@ export {
   IncrementViewCount,
   LoggedInLogger,
   Authorize,
-  addCategory,
-  removeCategory,
+  modCategory,
   addGourmetPlace,
   removeGourmet,
   modCollege,

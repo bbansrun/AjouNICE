@@ -66,6 +66,20 @@ input DepartmentInput {
     ip: String
 }
 
+input CategoryInput {
+    category_type: CategoryType
+    category_idx: Int
+    category_nm: String
+    title: String
+    depth: Int
+    parent: Int
+    access_auth: String
+    private_yn: String
+    category_icon: String
+    desc: String
+    ip: String
+}
+
 input ImgProfileInput {
     raw: Boolean!           # user_idx 없이 업로드 여부
     user_idx: Int
@@ -305,6 +319,11 @@ type ModifiedDepartment {
     data: Department
 }
 
+type ModifiedCategory {
+    result: Boolean!
+    data: BoardCategory
+}
+
 # Types for pagination
 interface Edge {
     cursor: String
@@ -401,8 +420,9 @@ type Mutation {
     modReply(mode: ManipulationMode!, options: ReplyInput!): ModifiedReply
     incrementView(board_idx: Int!): Board
     # Admin
-    addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, upt_ip: String!): BoardCategory
-    removeCategory(category_idx: Int!): Boolean
+    modCategory(mode: ManipulationMode!, options: CategoryInput!): ModifiedCategory
+    addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, upt_ip: String!): BoardCategory # will be deprecated
+    removeCategory(category_idx: Int!): Boolean # will be deprecated
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
     removeGourmet(res_idx: Int!): Boolean
     modCollege(mode: ManipulationMode!, options: CollegeInput!): ModifiedCollege

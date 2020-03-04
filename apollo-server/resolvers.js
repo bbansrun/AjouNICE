@@ -394,18 +394,67 @@ module.exports = {
       else return false;
     },
     // Admin
-    addCategory: async (root, args, { db, }, info) => {
-      const created = await createOne(db.BoardCategory, args);
-      if (created) {
-        return await findOne(db.BoardCategory, args, info);
-      } else {
-        return {};
+    async modCategory (root, { mode, options, }, { db, }, info) {
+      if (mode === 'CREATE') {
+        const { category_nm, category_type, title, parent, depth, access_auth, private_yn, category_icon, desc, ip, } = options;
+        if (category_nm && category_type && title && Number.isInteger(depth) && access_auth && private_yn && desc && ip) {
+          const args = {
+            category_nm,
+            category_type,
+            category_icon,
+            title,
+            depth,
+            parent,
+            access_auth,
+            private_yn,
+            desc,
+            reg_ip: ip,
+            upt_ip: ip,
+          };
+          const created = await createOne(db.BoardCategory, args);
+          if (created) {
+            return {
+              result: true,
+              data: await findOne(db.BoardCategory, { category_idx: created.category_idx, }, info),
+            };
+          }
+        }
+      } else if (mode === 'EDIT') {
+        const { category_idx, category_nm, title, depth, access_auth, private_yn, category_icon, desc, ip, } = options;
+        if (category_idx && category_nm && title && Number.isInteger(depth) && access_auth && private_yn && desc && ip) {
+          const args = {
+            category_idx,
+            category_nm,
+            category_icon,
+            title,
+            depth,
+            access_auth,
+            private_yn,
+            desc,
+            upt_ip: ip,
+          };
+          const updated = await updateOne(db.BoardCategory, args, { category_idx, });
+          if (updated) {
+            return {
+              result: true,
+              data: await findById(db.BoardCategory, category_idx),
+            };
+          }
+        }
+      } else if (mode === 'DESTROY') {
+        const { category_idx, } = options;
+        if (category_idx) {
+          const data = await findById(db.BoardCategory, category_idx);
+          const removed = await destroyOne(db.BoardCategory, { category_idx, });
+          if (removed) {
+            return {
+              result: true,
+              data,
+            };
+          }
+        }
       }
-    },
-    removeCategory: async (root, args, { db, }, info) => {
-      const removed = await destroyOne(db.BoardCategory, args);
-      if (removed) return true;
-      else return false;
+      throw new ForbiddenError('잘못된 요청입니다.');
     },
     removeGourmet: async (root, args, { db, }, info) => {
       const removed = await destroyOne(db.RestaurantBoard, args);

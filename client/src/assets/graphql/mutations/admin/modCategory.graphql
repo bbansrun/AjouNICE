@@ -1,0 +1,19 @@
+mutation modCategory($mode: ManipulationMode!, $options: CategoryInput!) {
+    modCategory(mode: $mode, options: $options) {
+        result
+        data {
+            category_idx
+            category_nm
+            category_icon
+            parent
+            title
+            access_auth
+            private_yn
+            desc
+            reg_ip
+            reg_dt
+            upt_ip
+            upt_dt
+        }
+    }
+}

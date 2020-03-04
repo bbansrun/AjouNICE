@@ -9,6 +9,43 @@
       @submit.prevent
     >
       <div class="input-form-group">
+        <label for="inherited">대분류</label>
+        <div class="input-form-wrapper">
+          <v-select
+            v-model="selectedParent"
+            :value="selectedParent"
+            :options="categories"
+            :reduce="item => item.category_idx"
+            label="category_nm"
+            placeholder="모듈 대분류를 선택하세요."
+            :class="{'error': validation.depth === false}"
+            @input="selectedParentInput"
+          >
+            <template v-slot:no-options>
+              <font-awesome-icon icon="times" />&nbsp;
+              <span>일치하는 옵션이 없어요.</span>
+            </template>
+          </v-select>
+          <b-notification
+            type="is-info"
+            has-icon
+            aria-close-label="닫기"
+          >
+            모듈 hierarchy level은 1까지만 지원합니다.
+          </b-notification>
+          <p
+            v-show="validation.depth === false"
+            class="auto-validate-noti"
+            :class="{'error': validation.depth === false}"
+          >
+            카테고리 Hierarchy 레벨이 선택되지 않았습니다.
+          </p>
+        </div>
+      </div>
+      <div
+        v-show="Number.isInteger(selectedParent)"
+        class="input-form-group"
+      >
         <label for="category_nm">모듈명</label>
         <div class="input-form-wrapper">
           <input
@@ -30,17 +67,10 @@
           </p>
         </div>
       </div>
-      <div class="input-form-group">
-        <label for="inherited">대분류</label>
-        <div class="input-form-wrapper">
-          <v-select placeholder="모듈 대분류를 선택하세요.">
-            <template v-slot:no-options>
-              일치하는 옵션이 없어요.
-            </template>
-          </v-select>
-        </div>
-      </div>
-      <div class="input-form-group">
+      <div
+        v-show="Number.isInteger(selectedParent)"
+        class="input-form-group"
+      >
         <label for="title">영문명</label>
         <div class="input-form-wrapper">
           <input
@@ -57,15 +87,21 @@
             class="auto-validate-noti"
             :class="{'error': validation.title === false}"
           >
-            URL 구분자가 입력되지 않았습니다.
+            {{ invalidMsg.title }}
           </p>
         </div>
       </div>
-      <div class="input-form-group">
+      <div
+        v-show="Number.isInteger(selectedParent)"
+        class="input-form-group"
+      >
         <label for="title">특정그룹 접속제한</label>
         <div class="input-form-wrapper" />
       </div>
-      <div class="input-form-group">
+      <div
+        v-show="Number.isInteger(selectedParent)"
+        class="input-form-group"
+      >
         <label for="title">모듈 공개여부</label>
         <div class="input-form-wrapper">
           <b-switch
@@ -77,7 +113,10 @@
           </b-switch>
         </div>
       </div>
-      <div class="input-form-group">
+      <div
+        v-show="Number.isInteger(selectedParent)"
+        class="input-form-group"
+      >
         <label for="desc">모듈부가설명</label>
         <div class="input-form-wrapper">
           <input
@@ -98,7 +137,10 @@
           </p>
         </div>
       </div>
-      <div class="input-form-group">
+      <div
+        v-show="Number.isInteger(selectedParent)"
+        class="input-form-group"
+      >
         <label for="icon">아이콘 업로드</label>
         <div class="input-form-wrapper">
           <figure>
@@ -112,7 +154,7 @@
             </div>
             <img
               v-show="icon"
-              :src="form.icon_src"
+              :src="form.category_icon"
               alt="카테고리 대표 이미지"
             >
             <v-gravatar
@@ -153,29 +195,50 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import gql from 'graphql-tag'
-import { UploadedCategoryIcon, addCategory } from '@/assets/graphql/mutations'
+import { AllCates } from '@/assets/graphql/queries'
+import { singleUpload, modCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
       private_yn_label: '공개',
       icon: null,
+      selectedParent: '',
       form: {
         category_nm: '',
         category_type: 'NORMAL',
         access_auth: 'ALL',
-        depth: 0,
+        depth: null,
         title: '',
         desc: '',
-        icon_src: '',
-        private_yn: 'Y'
+        category_icon: '',
+        private_yn: 'Y',
+        parent: '',
+        ip: this.$store.state.user.access_loc
       },
       validation: {
         category_nm: null,
         title: null,
-        desc: null
+        desc: null,
+        depth: null
+      },
+      invalidMsg: {
+        title: ''
       },
       validated: false
+    }
+  },
+  apollo: {
+    categories: {
+      query: gql`${AllCates}`,
+      variables: {
+        depth: 0,
+        category_type: 'NORMAL'
+      },
+      update (data) {
+        return [{ category_nm: '최상위 카테고리 생성', category_idx: 0 }].concat(_.each(data.boards, (item) => { item.category_idx = parseInt(item.category_idx) }))
+      }
     }
   },
   watch: {
@@ -183,10 +246,24 @@ export default {
       this.validateInput('category_nm')
     },
     'form.title' (value) {
-      this.validateInput('title')
+      if (value) {
+        if (value.includes('/')) {
+          this.validation.title = false
+          this.invalidMsg.title = '모듈명에 / 가 포함될 수 없습니다.'
+        } else {
+          this.validateInput('title')
+        }
+      } else {
+        this.validation.title = false
+        this.invalidMsg.title = 'URL 구분자가 입력되지 않았습니다.'
+      }
     },
     'form.desc' (value) {
       this.validateInput('desc')
+    },
+    selectedParent (value) {
+      this.selectedParentInput()
+      this.validateInput('depth', null, true)
     },
     private_yn (value) {
       if (value === 'Y') {
@@ -197,19 +274,23 @@ export default {
     },
     icon (file) {
       this.$apollo.mutate({
-        mutation: gql`${UploadedCategoryIcon}`,
-        variables: { file }
-      }).then(({ data: { uploadedCategoryIcon } }) => {
-        this.icon_src = uploadedCategoryIcon
+        mutation: gql`${singleUpload}`,
+        variables: {
+          uploadType: 'CATE_ICON',
+          file,
+          options: {
+            CATE_ICON: true
+          }
+        }
+      }).then(({ data: { imageUpload } }) => {
+        if (imageUpload) {
+          this.form.category_icon = imageUpload
+        }
       })
     }
   },
-  mounted () {
-    this.form.reg_ip = this.$store.state.user.access_loc
-    this.form.upt_ip = this.$store.state.user.access_loc
-  },
   methods: {
-    validateInput (key, compare = null) {
+    validateInput (key, compare = null, dictValueIsNumber = false) {
       // Form Data가 적절한 조건 만족하였는지 판단
       // compare의 경우 object type data를 받을 경우,
       // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
@@ -233,32 +314,72 @@ export default {
           throw Error('파라미터 compare 값이 유효하지 않습니다.')
         }
       } else {
-        if (this.form[key]) {
-          this.validation[key] = true
+        if (dictValueIsNumber) {
+          if (Number.isInteger(this.form[key])) {
+            this.validation[key] = true
+          } else {
+            this.validation[key] = false
+          }
         } else {
-          this.validation[key] = false
+          if (this.form[key]) {
+            this.validation[key] = true
+          } else {
+            this.validation[key] = false
+          }
         }
       }
     },
     validate () {
       this.validateInput('category_nm')
-      this.validateInput('title')
       this.validateInput('desc')
+      this.validateInput('depth', null, true)
+      // Custom Validation
+      if (this.form.title) {
+        if (this.form.title.includes('/')) {
+          this.validation.title = false
+          this.invalidMsg.title = '모듈명에 / 가 포함될 수 없습니다.'
+        } else {
+          this.validateInput('title')
+        }
+      } else {
+        this.validation.title = false
+        this.invalidMsg.title = 'URL 구분자가 입력되지 않았습니다.'
+      }
       this.validated = Object.keys(this.validation).every((key) => this.validation[key])
+    },
+    selectedParentInput () {
+      if (this.selectedParent === 0) {
+        this.form.depth = 0
+      } else {
+        this.form.depth = 1
+        this.form.parent = this.selectedParent
+      }
     },
     createNewModule () {
       this.validate()
       if (this.validated) {
+        if (this.selectedParent === 0) {
+          delete this.form.parent
+        }
+        document.body.classList.add('loading')
         this.$apollo.mutate({
-          mutation: gql`${addCategory}`,
+          mutation: gql`${modCategory}`,
           variables: {
-            ...this.form
+            mode: 'CREATE',
+            options: {
+              ...this.form
+            }
           }
-        }).then(({ data: { addCategory } }) => {
-          console.log(addCategory)
+        }).then(({ data: { modCategory } }) => {
+          document.body.classList.remove('loading')
+          if (modCategory) {
+            this.$buefy.toast.open('모듈을 생성하였습니다.')
+            this.$router.push('/gate/manager/boards')
+          }
         }).catch(error => {
+          document.body.classList.remove('loading')
           console.error(error)
-          this.$router.push('/error/404')
+          this.$router.push('/error/500')
         })
       } else {
         this.$buefy.dialog.alert({

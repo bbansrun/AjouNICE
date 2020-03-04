@@ -89,7 +89,7 @@
 import _ from 'lodash'
 import gql from 'graphql-tag'
 import { AllCates } from '@/assets/graphql/queries'
-import { removeCategory } from '@/assets/graphql/mutations'
+import { removeCategory, modCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -105,7 +105,8 @@ export default {
           depth: 0,
           category_type: 'NORMAL'
         }
-      }
+      },
+      fetchPolicy: 'network-only'
     }
   },
   watch: {
@@ -117,7 +118,6 @@ export default {
   },
   methods: {
     removeCategory (name, id) {
-      const self = this
       this.$buefy.dialog.prompt({
         title: `'${name}' 삭제`,
         message: `게시판 <strong>${name}</strong> 모듈을 삭제하시겠습니까?<br>관련 게시물 모두 함께 삭제됩니다.<br>신중히 선택해주세요.<br>진행하시려면 <strong>확인</strong>을 입력해주세요.`,
@@ -134,16 +134,19 @@ export default {
         onConfirm: (value) => {
           if (value === '확인') {
             document.body.classList.add('loading')
-            self.$apollo.mutate({
-              mutation: gql`${removeCategory}`,
+            this.$apollo.mutate({
+              mutation: gql`${modCategory}`,
               variables: {
-                category_idx: parseInt(id)
+                mode: 'DESTROY',
+                options: {
+                  category_idx: parseInt(id)
+                }
               }
-            }).then(({ data: { removeCategory } }) => {
-              if (removeCategory) {
+            }).then(({ data: { modCategory } }) => {
+              if (modCategory) {
                 document.body.classList.remove('loading')
-                self.boards = _.remove(self.boards, (item) => (item.category_idx !== id))
-                self.$buefy.toast.open(`${name} 모듈이 삭제되었습니다.`)
+                this.boards = _.remove(this.boards, (item) => (item.category_idx !== id))
+                this.$buefy.toast.open(`${name} 모듈이 삭제되었습니다.`)
               }
             }).catch(error => {
               console.error(error)

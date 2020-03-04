@@ -149,7 +149,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { singleUpload, addCategory } from '@/assets/graphql/mutations'
+import { singleUpload, modCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -162,8 +162,7 @@ export default {
         category_icon: '',
         category_type: 'GOURMET',
         depth: 0,
-        reg_ip: '',
-        upt_ip: ''
+        ip: this.$store.state.user.access_loc
       },
       validation: {
         category_nm: null,
@@ -197,10 +196,6 @@ export default {
         this.form.category_icon = imageUpload
       })
     }
-  },
-  mounted () {
-    this.form.reg_ip = this.$store.state.user.access_loc
-    this.form.upt_ip = this.$store.state.user.access_loc
   },
   methods: {
     validateInput (key, compare = null) {
@@ -245,11 +240,14 @@ export default {
       if (this.validated) {
         document.body.classList.add('loading')
         this.$apollo.mutate({
-          mutation: gql`${addCategory}`,
+          mutation: gql`${modCategory}`,
           variables: {
-            ...this.form
+            mode: 'CREATE',
+            options: {
+              ...this.form
+            }
           }
-        }).then(({ data: { addCategory } }) => {
+        }).then(({ data: { modCategory } }) => {
           document.body.classList.remove('loading')
           this.$buefy.toast.open('모듈을 생성하였습니다.')
           this.$router.push('/gate/manager/boards/gourmet')

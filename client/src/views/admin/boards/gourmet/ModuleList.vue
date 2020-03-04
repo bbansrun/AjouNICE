@@ -103,7 +103,7 @@
 import _ from 'lodash'
 import gql from 'graphql-tag'
 import { AllCates } from '@/assets/graphql/queries'
-import { removeCategory } from '@/assets/graphql/mutations'
+import { modCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -146,14 +146,17 @@ export default {
           if (value === '확인') {
             document.body.classList.add('loading')
             this.$apollo.mutate({
-              mutation: gql`${removeCategory}`,
+              mutation: gql`${modCategory}`,
               variables: {
-                category_idx: parseInt(id)
+                mode: 'DESTROY',
+                options: {
+                  category_idx: parseInt(id)
+                }
               }
-            }).then(({ data: { removeCategory } }) => {
-              if (removeCategory) {
-                this.boards = _.remove(this.boards, (item) => (item.category_idx !== id))
+            }).then(({ data: { modCategory } }) => {
+              if (modCategory) {
                 document.body.classList.remove('loading')
+                this.boards = _.remove(this.boards, (item) => (item.category_idx !== id))
                 this.$buefy.toast.open(`${name} 모듈이 삭제되었습니다.`)
               }
             }).catch(error => {
