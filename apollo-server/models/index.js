@@ -161,6 +161,19 @@ db.Board.belongsTo(db.BoardCategory, {
   targetKey: 'category_idx',
 });
 
+// --- BoardCategory to Self (parent column -> category_idx) (1:N)
+db.BoardCategory.hasMany(db.BoardCategory, {
+  as: 'childCategories',
+  foreignKey: 'parent',
+  sourceKey: 'category_idx',
+});
+
+db.BoardCategory.belongsTo(db.BoardCategory, {
+  as: 'parentCategory',
+  foreignKey: 'parent',
+  targetKey: 'category_idx',
+});
+
 // --- BoardCategory -> RestaurantBoard (1:N)
 db.BoardCategory.hasMany(db.RestaurantBoard, {
   as: 'category',

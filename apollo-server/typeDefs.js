@@ -195,6 +195,7 @@ type BoardCategory {
     upt_ip: String
     upt_dt: Date
     posts: [Board]
+    childCategories: [BoardCategory]
 }
 
 type BoardComment {
@@ -376,6 +377,7 @@ type Subscription {
 const query = `
 type Query {
     me(token: String!): User
+    categories(category_type: CategoryType!, depth: Int!): [BoardCategory]
     users: [User]
     allColleges: [College]
     college(college_cd: String!): College

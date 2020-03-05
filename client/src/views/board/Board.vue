@@ -8,39 +8,15 @@
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif"
     />
     <BoardNav :write-url="write_url" />
-    <section v-if="$route.params.category">
-      <ul
-        v-show="sub_categories"
-        class="board-nav"
-      >
+    <nav class="category">
+      <ul class="category-menu">
         <li class="active">
-          <a href="#">전체</a>
-        </li>
-        <li
-          v-for="category in sub_categories"
-          :key="category.category_idx"
-        >
-          <router-link :to="`/board/${$route.params.category}/${category.title}`">
-            {{ category.category_nm }}
+          <router-link to="/board">
+            전체
           </router-link>
         </li>
-      </ul>
-      <table class="list">
-        <thead />
-        <tbody />
-        <tfoot />
-      </table>
-    </section>
-    <section v-else>
-      <ul
-        v-show="categories"
-        class="board-nav"
-      >
-        <li class="active">
-          <a href="#">전체</a>
-        </li>
         <li
-          v-for="category in categories"
+          v-for="category in navCategories"
           :key="category.category_idx"
         >
           <router-link :to="`/board/${category.title}`">
@@ -48,10 +24,10 @@
           </router-link>
         </li>
       </ul>
-    </section>
+    </nav>
     <div class="container">
       <PostList :items="posts" />
-      <infinite-loading
+      <!-- <infinite-loading
         spinner="waveDots"
         @infinite="infiniteHandler"
       >
@@ -62,17 +38,18 @@
         <div slot="no-results">
           찾으시는 게시물이 없어요.
         </div>
-      </infinite-loading>
+      </infinite-loading> -->
     </div>
     <Footer />
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import { Landing, Navigation, PostList, BoardNav, Footer } from '@/components'
-import { CateInfo, PostsByCate, SubCates, PaginationPosts } from '@/assets/graphql/queries'
+import { Categories, AllCates, CateInfo, PostsByCate, SubCates, PaginationPosts } from '@/assets/graphql/queries'
 export default {
   components: {
     Landing,
@@ -84,17 +61,19 @@ export default {
   data () {
     return {
       scrollBase: null,
-      categories: [],
-      sub_categories: [],
-      category: '',
-      category_desc: '',
-      category_idx: null,
-      sub_category: '',
-      sub_category_desc: '',
-      sub_category_idx: null,
       write_url: urljoin(this.$route.path, '/new'),
       posts: [],
+      navCategories: [],
       cursor: ''
+    }
+  },
+  apollo: {
+    categories: {
+      query: gql`${Categories}`,
+      variables: {
+        type: 'NORMAL',
+        depth: 0
+      }
     }
   },
   computed: {
@@ -117,95 +96,50 @@ export default {
       }
     }
   },
-  beforeCreate () {
-    document.body.classList.add('loading')
-  },
-  beforeMount () {
-    this.init()
-  },
-  created () {
-    document.body.classList.remove('loading')
+  watch: {
+    categories (value) {
+      if (value) {
+        this.initCategory()
+      }
+    }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
   updated () {
-    this.init()
+    this.initCategory()
   },
   methods: {
-    infiniteHandler ($state) {
-      // Get Pagination Data
-      this.$apollo.query({
-        query: gql`${PaginationPosts}`,
-        variables: {
-          cateType: 2,
-          cursor: this.cursor
-        }
-      }).then(({ data: { paginatedPosts: { pageInfo, edges } } }) => {
-        this.posts = this.posts.concat(edges)
-        if (pageInfo.hasNext) {
-          this.cursor = pageInfo.after
-          $state.loaded() // 중간 지점 데이터 로드 완료시
-        } else {
-          $state.complete() // 최종 데이터 로드 완료시
-        }
-      })
-    },
-    init () {
+    initCategory () {
       if (this.$route.params.category) {
         // 특정 Depth 카테고리 내 전체 게시물 조회
-        this.getCateInfo(this.$route.params.category)
+        const cateIdx = _.findIndex(this.categories, (category) => (category.title === this.$route.params.category))
+        this.navCategories = this.categories[cateIdx].childCategories
         if (this.$route.params.name) {
           // 특정 Depth 하위 카테고리 내 전체 게시물 조회
-          this.getSubCateInfo(this.category_idx, this.$route.params.name)
         }
       } else {
-        // 전체 게시판, 게시물 조회
-        // this.getAll()
+        this.navCategories = this.categories
       }
-    },
-    getCateInfo (name) {
-      this.$apollo.query({
-        query: gql`${CateInfo}`,
-        variables: {
-          title: name
-        }
-      }).then(({ data }) => {
-        try {
-          const { categoryNm, categoryIdx } = data.boards[0]
-          this.category = categoryNm
-          this.category_idx = categoryIdx
-          this.getSubCateInfo(data.boards[0].depth + 1, data.boards[0].category_idx, name)
-        } catch (e) {
-          throw Error(e)
-        }
-      }).catch((error) => {
-        console.log(error)
-        this.$router.push('/error/500')
-      })
-    },
-    getSubCateInfo (depth, parent, name) {
-      this.$apollo.query({
-        query: gql`${SubCates}`,
-        variables: {
-          depth: depth,
-          parent: parseInt(parent)
-        }
-      }).then(({ data }) => {
-        this.sub_categories = data.boards
-        this.getPosts(depth, parent)
-      })
-    },
-    getPosts (depth, parent) {
-      this.$apollo.query({
-        query: gql`${PostsByCate}`,
-        variables: {
-          category_idx: parent
-        }
-      }).then(({ data }) => {
-        this.posts = data.posts
-      })
     }
+    // infiniteHandler ($state) {
+    //   // Get Pagination Data
+    //   this.$apollo.query({
+    //     query: gql`${PaginationPosts}`,
+    //     variables: {
+    //       cateType: 2,
+    //       cursor: this.cursor
+    //     }
+    //   }).then(({ data: { paginatedPosts: { pageInfo, edges } } }) => {
+    //     this.posts = this.posts.concat(edges)
+    //     if (pageInfo.hasNext) {
+    //       this.cursor = pageInfo.after
+    //       $state.loaded() // 중간 지점 데이터 로드 완료시
+    //     } else {
+    //       $state.complete() // 최종 데이터 로드 완료시
+    //     }
+    //   })
+    // },
   }
 }
 </script>

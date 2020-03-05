@@ -81,6 +81,12 @@ module.exports = {
       ];
       if (verified) return await findOne(db.User, { user_idx: verified.idx, }, info, include);
     },
+    async categories (root, args, { db, }, info) {
+      const include = [
+        { model: db.BoardCategory, as: 'childCategories', }
+      ];
+      return await findAll(db.BoardCategory, args, info, include);
+    },
     // College
     async college (root, args, { db, }, info) {
       return await findOne(db.College, args, info);

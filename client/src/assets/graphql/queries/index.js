@@ -28,6 +28,7 @@ import Users from './admin/Users.graphql'
 // 게시물
 import Post from './posts/PostDetail.graphql'
 import BriefPost from './posts/BriefPost.graphql'
+import Categories from './posts/Categories.graphql'
 import PostsByCate from './posts/PostsByCate.graphql'
 import CateInfo from './posts/CateInfo.graphql'
 import AllCates from './posts/AllCates.graphql'
@@ -49,6 +50,7 @@ export {
   Department,
   Post,
   BriefPost,
+  Categories,
   PostsByKeyword,
   CateInfo,
   PostsByCate,

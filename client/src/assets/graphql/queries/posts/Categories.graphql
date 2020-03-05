@@ -1,0 +1,21 @@
+# Write your query or mutation here
+query Categories($type: CategoryType!, $depth: Int!) {
+  categories(category_type: $type, depth: $depth) {
+    category_nm
+    category_icon
+    title
+    desc
+    access_auth
+    private_yn
+    upt_dt
+    childCategories {
+      category_nm
+      category_icon
+      title
+      desc
+      access_auth
+      private_yn
+      upt_dt
+    }
+  }
+}
