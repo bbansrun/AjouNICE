@@ -225,17 +225,21 @@ module.exports = {
     },
     // Pagination
     async paginatedPosts (root, { category_idx, limit, end_cursor, }, { db, }, info) {
-      return await db.Board.paginate({
+      const paginateOptions = {
         limit,
         desc: true,
-        where: { category_idx, },
         after: end_cursor,
         include: [
           { model: db.BoardCategory, as: 'category', },
           { model: db.User, as: 'user', },
           { model: db.BoardComment, as: 'comments', include: [{ model: db.User, as: 'commenter', }], }
         ],
-      });
+      };
+      if (parseInt(category_idx) !== 0) {
+        paginateOptions.where = { category_idx, };
+      }
+      console.log(paginateOptions);
+      return await db.Board.paginate(paginateOptions);
     },
     async paginatedGourmets (root, { category_idx, limit, end_cursor, }, { db, }, info) {
       return await db.RestaurantBoard.paginate({

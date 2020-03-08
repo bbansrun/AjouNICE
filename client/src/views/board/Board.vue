@@ -3,15 +3,15 @@
     <Navigation :scroll-base="scrollBase" />
     <Landing
       ref="scrollBase"
-      :title="boardTitle"
-      :description="boardDescription"
+      :title="title"
+      :description="desc"
       background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif"
     />
     <BoardNav :write-url="write_url" />
     <nav class="category">
       <ul class="category-menu">
         <li class="active">
-          <router-link to="/board">
+          <router-link :to="`/board`">
             전체
           </router-link>
         </li>
@@ -19,7 +19,7 @@
           v-for="category in navCategories"
           :key="category.category_idx"
         >
-          <router-link :to="`/board/${category.title}`">
+          <router-link :to="$route.params.category ? `/board/${$route.params.category}/${category.title}` : `/board/${category.title}`">
             {{ category.category_nm }}
           </router-link>
         </li>
@@ -27,18 +27,20 @@
     </nav>
     <div class="container">
       <PostList :items="posts" />
-      <!-- <infinite-loading
+      <infinite-loading
+        ref="infinitePostLoader"
         spinner="waveDots"
-        @infinite="infiniteHandler"
+        @infinite="loadPosts"
       >
         <div slot="no-more">
           <font-awesome-icon icon="times" />&nbsp;
           <span>더 이상 게시물이 없어요.</span>
         </div>
         <div slot="no-results">
-          찾으시는 게시물이 없어요.
+          <font-awesome-icon icon="times" />&nbsp;
+          <span>찾으시는 게시물이 없어요.</span>
         </div>
-      </infinite-loading> -->
+      </infinite-loading>
     </div>
     <Footer />
   </div>
@@ -49,7 +51,7 @@ import _ from 'lodash'
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
 import { Landing, Navigation, PostList, BoardNav, Footer } from '@/components'
-import { Categories, AllCates, CateInfo, PostsByCate, SubCates, PaginationPosts } from '@/assets/graphql/queries'
+import { Categories, PaginationPosts } from '@/assets/graphql/queries'
 export default {
   components: {
     Landing,
@@ -64,7 +66,10 @@ export default {
       write_url: urljoin(this.$route.path, '/new'),
       posts: [],
       navCategories: [],
-      cursor: ''
+      cursor: '',
+      cateIdx: null,
+      title: '게시판',
+      desc: '아주나이스 커뮤니티'
     }
   },
   apollo: {
@@ -77,23 +82,14 @@ export default {
     }
   },
   computed: {
-    boardTitle () {
-      if (!this.$route.params.category) {
-        return '게시판'
-      } else {
+    categoryLink (moduleName) {
+      let url
+      if (this.$route.params.category) {
         if (!this.$route.params.name) {
-          return this.category
-        } else {
-          return this.sub_category
+          url = `/board/${this.$route.params.category}/${moduleName}`
         }
       }
-    },
-    boardDescription () {
-      if (!this.$route.params.name) {
-        return this.category_desc
-      } else {
-        return this.sub_category_desc
-      }
+      return url
     }
   },
   watch: {
@@ -101,45 +97,56 @@ export default {
       if (value) {
         this.initCategory()
       }
+    },
+    '$route' (value) {
+      this.$router.go(0)
     }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
-  updated () {
-    this.initCategory()
-  },
   methods: {
     initCategory () {
       if (this.$route.params.category) {
-        // 특정 Depth 카테고리 내 전체 게시물 조회
-        const cateIdx = _.findIndex(this.categories, (category) => (category.title === this.$route.params.category))
-        this.navCategories = this.categories[cateIdx].childCategories
+        const idx = _.findIndex(this.categories, (category) => (category.title === this.$route.params.category))
         if (this.$route.params.name) {
-          // 특정 Depth 하위 카테고리 내 전체 게시물 조회
+          // Depth 1 카테고리 조회
+          const depth1Idx = _.findIndex(this.categories[idx].childCategories, (category) => (category.title === this.$route.params.name))
+          const depth1Category = this.categories[idx].childCategories[depth1Idx]
+          this.title = depth1Category.category_nm
+          this.desc = depth1Category.desc
+          this.cateIdx = depth1Category.category_idx
+          this.navCategories = []
+        } else {
+          // Depth 0 카테고리 조회
+          const depth0Category = this.categories[idx]
+          this.title = depth0Category.category_nm
+          this.desc = depth0Category.desc
+          this.cateIdx = depth0Category.category_idx
+          this.navCategories = depth0Category.childCategories
         }
       } else {
         this.navCategories = this.categories
       }
+    },
+    loadPosts ($state) {
+      this.$apollo.query({
+        query: gql`${PaginationPosts}`,
+        variables: {
+          cursor: this.cursor,
+          cateType: this.cateIdx || 0
+        },
+        fetchPolicy: 'network-only'
+      }).then(({ data: { paginatedPosts: { pageInfo, edges } } }) => {
+        this.posts = this.posts.concat(edges)
+        if (pageInfo.hasNext) {
+          this.cursor = pageInfo.after
+          $state.loaded() // 중간 지점 데이터 로드 완료시
+        } else {
+          $state.complete() // 최종 데이터 로드 완료시
+        }
+      })
     }
-    // infiniteHandler ($state) {
-    //   // Get Pagination Data
-    //   this.$apollo.query({
-    //     query: gql`${PaginationPosts}`,
-    //     variables: {
-    //       cateType: 2,
-    //       cursor: this.cursor
-    //     }
-    //   }).then(({ data: { paginatedPosts: { pageInfo, edges } } }) => {
-    //     this.posts = this.posts.concat(edges)
-    //     if (pageInfo.hasNext) {
-    //       this.cursor = pageInfo.after
-    //       $state.loaded() // 중간 지점 데이터 로드 완료시
-    //     } else {
-    //       $state.complete() // 최종 데이터 로드 완료시
-    //     }
-    //   })
-    // },
   }
 }
 </script>
