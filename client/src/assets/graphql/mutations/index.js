@@ -1,6 +1,7 @@
 // 게시물
 import modPost from './post/modPost.graphql'
 import modReply from './post/modReply.graphql'
+import modReport from './post/modReport.graphql'
 import IncrementViewCount from './post/incrementView.graphql'
 
 // 인증
@@ -21,6 +22,7 @@ import multiUpload from './upload/multiUpload.graphql'
 export {
   modPost,
   modReply,
+  modReport,
   IncrementViewCount,
   LoggedInLogger,
   Authorize,

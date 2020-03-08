@@ -1,0 +1,10 @@
+mutation modReport($mode: ManipulationMode!, $options: ReportInput!) {
+    modReport(mode: $mode, options: $options) {
+        result
+        data {
+            report_idx
+            reg_ip
+            reg_dt
+        }
+    }
+}

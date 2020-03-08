@@ -10,6 +10,7 @@ enum Role {
 }
 
 enum CategoryType {
+    NOTICE
     NORMAL
     GOURMET
     REALTY
@@ -31,6 +32,15 @@ enum ManipulationMode {
 `;
 
 const input = `
+input ReportInput {
+    report_idx: Int
+    board_idx: Int
+    res_idx: Int
+    user_idx: Int
+    text: String
+    ip: String
+}
+
 input BoardInput {
     board_idx: Int
     category_idx: Int
@@ -147,6 +157,7 @@ type College {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
+    link: Link
     departments: [Department]
 }
 
@@ -161,6 +172,7 @@ type Department {
     reg_dt: Date
     upt_ip: String
     upt_dt: Date
+    link: Link
 }
 
 type Board {
@@ -299,6 +311,30 @@ type Schedule {
     etc: String!
 }
 
+type Report {
+    report_idx: ID!
+    board_idx: Int
+    res_idx: Int
+    text: String
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
+}
+
+type Link {
+    link_idx: ID!
+    name: String
+    col_idx: Int
+    dpt_idx: Int
+    link_url: String
+    crawl_type: String
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
+}
+
 # Types when objects manipulated
 type ModifiedPost {
     result: Boolean!
@@ -323,6 +359,11 @@ type ModifiedDepartment {
 type ModifiedCategory {
     result: Boolean!
     data: BoardCategory
+}
+
+type ModifiedReport {
+    result: Boolean!
+    data: Report
 }
 
 # Types for pagination
@@ -390,6 +431,7 @@ type Query {
     boards(depth: Int, title: String, parent: Int, category_type: CategoryType): [BoardCategory]
     post(board_idx: ID!): Board
     postsByKeyword(keyword: String!): [Board]
+    postsByType(category_type: CategoryType): [Board]
     posts(category_idx: ID): [Board]
     boardById(category_idx: ID): BoardCategory
     boardByType(category_type: CategoryType, title: String): BoardCategory
@@ -423,12 +465,11 @@ type Mutation {
     incrementView(board_idx: Int!): Board
     # Admin
     modCategory(mode: ManipulationMode!, options: CategoryInput!): ModifiedCategory
-    addCategory(category_nm: String!, category_type: CategoryType!, title: String!, depth: Int!, access_auth: String!, private_yn: String!, category_icon: String, desc: String, reg_ip: String!, upt_ip: String!): BoardCategory # will be deprecated
-    removeCategory(category_idx: Int!): Boolean # will be deprecated
-    addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
-    removeGourmet(res_idx: Int!): Boolean
     modCollege(mode: ManipulationMode!, options: CollegeInput!): ModifiedCollege
     modDepartment(mode: ManipulationMode!, options: DepartmentInput!): ModifiedDepartment
+    modReport(mode: ManipulationMode!, options: ReportInput!): ModifiedReport
+    addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
+    removeGourmet(res_idx: Int!): Boolean
     # File Uploads
     imageUpload(uploadType: S3UploadType!, file: Upload!, options: S3UploadInput!): String              # Single File upload
     batchImageUpload(uploadType: S3UploadType!, files: [Upload!]!, options: S3UploadInput!): [String]   # Multi Files upload

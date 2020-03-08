@@ -16,9 +16,11 @@
     </div>
     <hr>
     <b-table
-      :data="boards"
+      :data="categories"
       :loading="loading"
       :mobile-cards="false"
+      detailed
+      custom-detail-row
     >
       <template slot-scope="props">
         <b-table-column
@@ -36,9 +38,7 @@
           sortable
           width="50%"
         >
-          <router-link :to="`/gate/manager/boards/${props.row.category_idx}`">
-            <strong>{{ props.row.category_nm }}</strong>
-          </router-link>
+          <strong>{{ props.row.category_nm }}</strong>
         </b-table-column>
         <b-table-column
           field="title"
@@ -81,6 +81,49 @@
           </div>
         </b-table-column>
       </template>
+
+      <template
+        slot="detail"
+        slot-scope="props"
+      >
+        <tr
+          v-for="item in props.row.childCategories"
+          :key="item.category_idx"
+        >
+          <td />
+          <td>{{ item.category_idx }}</td>
+          <td>
+            <router-link
+              :to="`/gate/manager/boards/${item.category_idx}`"
+            >
+              <strong>{{ item.category_nm }}</strong>
+            </router-link>
+          </td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.depth }}</td>
+          <td>
+            <div class="buttons">
+              <b-button
+                type="is-light"
+                size="is-small"
+                tag="router-link"
+                :to="`/gate/manager/boards/${itemcategory_idx}/edit`"
+              >
+                <font-awesome-icon icon="pen" />&nbsp;
+                <span>수정</span>
+              </b-button>
+              <b-button
+                type="is-danger"
+                size="is-small"
+                @click="removeCategory(item.category_nm, item.category_idx)"
+              >
+                <font-awesome-icon icon="trash" />&nbsp;
+                <span>삭제</span>
+              </b-button>
+            </div>
+          </td>
+        </tr>
+      </template>
     </b-table>
   </section>
 </template>
@@ -88,29 +131,27 @@
 <script>
 import _ from 'lodash'
 import gql from 'graphql-tag'
-import { AllCates } from '@/assets/graphql/queries'
+import { Categories } from '@/assets/graphql/queries'
 import { removeCategory, modCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
-      boards: [],
+      categories: [],
       loading: true
     }
   },
   apollo: {
-    boards: {
-      query: gql`${AllCates}`,
-      variables () {
-        return {
-          depth: 0,
-          category_type: 'NORMAL'
-        }
+    categories: {
+      query: gql`${Categories}`,
+      variables: {
+        depth: 0,
+        type: 'NORMAL'
       },
       fetchPolicy: 'network-only'
     }
   },
   watch: {
-    boards (value) {
+    categories (value) {
       if (value) {
         this.loading = false
       }

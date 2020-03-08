@@ -15,16 +15,39 @@
       </b-button>
     </div>
     <b-table
-      :data="notice"
+      :data="posts"
       :mobile-cards="false"
+      :loading="loading"
     >
       <template slot-scope="props">
         <b-table-column
-          field="id"
+          field="board_idx"
           label="ID"
         >
-          {{ props.row.id }}
+          {{ props.row.board_idx }}
         </b-table-column>
+
+        <b-table-column
+          field="title"
+          label="제목"
+        >
+          <strong>{{ props.row.title }}</strong>
+        </b-table-column>
+
+        <b-table-column
+          field="view_cnt"
+          label="조회수"
+        >
+          {{ props.row.view_cnt }}
+        </b-table-column>
+
+        <b-table-column
+          field="user_nm"
+          label="작성자"
+        >
+          {{ props.row.user.user_nm }}
+        </b-table-column>
+
         <b-table-column
           field="settings"
           label="설정"
@@ -34,7 +57,7 @@
               type="is-light"
               size="is-small"
               tag="router-link"
-              :to="`/gate/manager/notice/${props.row.id}/edit`"
+              :to="`/gate/manager/notice/${props.row.board_idx}/edit`"
             >
               <font-awesome-icon icon="pen" />&nbsp;
               <span>수정</span>
@@ -55,10 +78,23 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+import { ServiceNotice } from '@/assets/graphql/queries'
 export default {
   data () {
     return {
-      notice: [{ id: 1 }]
+      posts: [],
+      loading: true
+    }
+  },
+  apollo: {
+    posts: {
+      query: gql`${ServiceNotice}`,
+      result ({ data }) {
+        this.posts = data.boards[0].posts
+        this.loading = false
+      },
+      fetchPolicy: 'network-only'
     }
   },
   methods: {

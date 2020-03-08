@@ -25,6 +25,7 @@
           field="type"
           label="구분"
           sortable
+          searchable
         >
           {{ props.row.type }}
         </b-table-column>
@@ -33,6 +34,7 @@
           field="code"
           label="코드"
           sortable
+          searchable
         >
           {{ props.row.code }}
         </b-table-column>
@@ -41,24 +43,17 @@
           field="value"
           label="값"
           sortable
+          searchable
         >
           <strong>{{ props.row.value }}</strong>
         </b-table-column>
 
         <b-table-column
-          field="reg_dt"
-          label="생성일"
+          field="link"
+          label="공지사항 링크"
           sortable
         >
-          {{ props.row.reg_dt | formatDateTime }}
-        </b-table-column>
-
-        <b-table-column
-          field="upt_dt"
-          label="최종수정"
-          sortable
-        >
-          {{ props.row.upt_dt | formatDateTime }}
+          {{ props.row.link }}
         </b-table-column>
 
         <b-table-column
@@ -108,10 +103,10 @@ export default {
       update: ({ allColleges, departments }) => {
         const data = []
         allColleges.forEach(item => {
-          data.push({ uid: item.id, id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
+          data.push({ uid: item.id, id: btoa(`college|${item.college_cd}`), type: '학부', code: item.college_cd, value: item.college_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt, link: item.link.link_url })
         })
         departments.forEach(item => {
-          data.push({ uid: item.id, id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt })
+          data.push({ uid: item.id, id: btoa(`dpt|${item.dpt_cd}`), type: '학과', code: item.dpt_cd, value: item.dpt_nm, reg_dt: item.reg_dt, upt_dt: item.upt_dt, link: item.link.link_url })
         })
         return data
       },

@@ -1,5 +1,6 @@
 // Common
 // -- 공지사항
+import ServiceNotice from './common/ServiceNotice.graphql'
 import Notice from './common/Notice.graphql'
 // -- 학부 / 학과
 import College from './common/College.graphql'
@@ -58,6 +59,7 @@ export {
   AllCates,
   Schedule,
   Notice,
+  ServiceNotice,
   AdminStatus,
   DupIDCheck,
   DupEmailCheck,

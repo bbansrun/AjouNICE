@@ -4,6 +4,7 @@ query Categories($type: CategoryType!, $depth: Int!) {
     category_idx
     category_nm
     category_icon
+    depth
     title
     desc
     access_auth
@@ -13,6 +14,7 @@ query Categories($type: CategoryType!, $depth: Int!) {
       category_idx
       category_nm
       category_icon
+      depth
       title
       desc
       access_auth

@@ -92,7 +92,10 @@ module.exports = {
       return await findOne(db.College, args, info);
     },
     async allColleges (root, args, { db, }, info) {
-      return await findAll(db.College, args, info);
+      const include = [
+        { model: db.Link, as: 'link', }
+      ];
+      return await findAll(db.College, args, info, include);
     },
     async colleges (root, args, { db, }, info) {
       const include = [
@@ -105,7 +108,10 @@ module.exports = {
       return await findOne(db.Department, args, info);
     },
     async departments (root, args, { db, }, info) {
-      return await findAll(db.Department, args, info);
+      const include = [
+        { model: db.Link, as: 'link', }
+      ];
+      return await findAll(db.Department, args, info, include);
     },
     // 관리자 단독!! 향후 권한 처리
     async users (root, args, { db, }, info) {
@@ -118,7 +124,7 @@ module.exports = {
     // Board
     async boards (root, args, { db, }, info) {
       const include = [
-        { model: db.Board, as: 'posts', }
+        { model: db.Board, as: 'posts', include: [{ model: db.User, as: 'user', }], }
       ];
       return await findAll(db.BoardCategory, args, info, include);
     },
@@ -364,6 +370,16 @@ module.exports = {
             };
           }
         }
+      }
+      throw new ForbiddenError('잘못된 요청입니다.');
+    },
+    async modReport (root, { mode, options, }, { db, }, info) {
+      if (mode === 'CREATE') {
+
+      } else if (mode === 'MODIFY') {
+
+      } else if (mode === 'DESTROY') {
+
       }
       throw new ForbiddenError('잘못된 요청입니다.');
     },

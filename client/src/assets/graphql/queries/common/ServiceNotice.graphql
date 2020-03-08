@@ -1,0 +1,17 @@
+{
+    boards(category_type: NOTICE) {
+        category_nm
+        posts {
+            board_idx
+            user {
+                user_nm
+            }
+            title
+            view_cnt
+            reg_ip
+            reg_dt
+            upt_ip
+            upt_dt
+        }
+    }
+}

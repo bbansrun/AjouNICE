@@ -40,55 +40,29 @@
           >
             <template slot-scope="props">
               <b-table-column
-                field="original_title"
-                label="Title"
-                sortable
+                field="title"
+                label="제목"
               >
-                {{ props.row.original_title }}
+                <router-link :to="`/board/${props.row.board_idx}/view`">
+                  <strong>{{ props.row.title }}</strong>
+                </router-link>
               </b-table-column>
 
               <b-table-column
-                field="vote_average"
-                label="Vote Average"
-                numeric
-                sortable
+                field="view_cnt"
+                label="조회수"
               >
-                <span
-                  class="tag"
-                  :class="type(props.row.vote_average)"
-                >
-                  {{ props.row.vote_average }}
-                </span>
+                {{ props.row.view_cnt }}
               </b-table-column>
 
               <b-table-column
-                field="vote_count"
-                label="Vote Count"
-                numeric
-                sortable
+                field="user_nm"
+                label="작성자"
               >
-                {{ props.row.vote_count }}
-              </b-table-column>
-
-              <b-table-column
-                field="release_date"
-                label="Release Date"
-                sortable
-                centered
-              >
-                {{ props.row.release_date ? new Date(props.row.release_date).toLocaleDateString() : '' }}
-              </b-table-column>
-
-              <b-table-column
-                label="Overview"
-                width="500"
-              >
-                {{ props.row.overview | truncate(80) }}
+                {{ props.row.user.user_nm }}
               </b-table-column>
             </template>
           </b-table>
-          </strong>
-          </header></strong>
         </section>
       </div>
     </main>
@@ -97,6 +71,8 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+import { ServiceNotice } from '@/assets/graphql/queries'
 import { Navigation, Landing, Footer } from '@/components'
 export default {
   components: {
@@ -107,72 +83,33 @@ export default {
   data () {
     return {
       scrollBase: null,
-      data: [],
       total: 0,
       loading: false,
-      sortField: 'vote_count',
+      sortField: 'board_idx',
       sortOrder: 'desc',
       defaultSortOrder: 'desc',
       page: 1,
       perPage: 20
     }
   },
+  apollo: {
+    data: {
+      query: gql`${ServiceNotice}`,
+      result ({ data }) {
+        this.data = data.boards[0].posts
+      }
+    }
+  },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
-    this.loadAsyncData()
   },
   methods: {
-    loadAsyncData () {
-      const params = [
-        'api_key=bb6f51bef07465653c3e553d6ab161a8',
-        'language=en-US',
-        'include_adult=false',
-        'include_video=false',
-            `sort_by=${this.sortField}.${this.sortOrder}`,
-            `page=${this.page}`
-      ].join('&')
-
-      this.loading = true
-      this.$Axios.get(`https://api.themoviedb.org/3/discover/movie?${params}`)
-        .then(({ data }) => {
-          // api.themoviedb.org manage max 1000 pages
-          this.data = []
-          let currentTotal = data.total_results
-          if (data.total_results / this.perPage > 1000) {
-            currentTotal = this.perPage * 1000
-          }
-          this.total = currentTotal
-          data.results.forEach((item) => {
-            item.release_date = item.release_date.replace(/-/g, '/')
-            this.data.push(item)
-          })
-          this.loading = false
-        })
-        .catch((error) => {
-          this.data = []
-          this.total = 0
-          this.loading = false
-          throw error
-        })
-    },
     onPageChange (page) {
       this.page = page
-      this.loadAsyncData()
     },
     onSort (field, order) {
       this.sortField = field
       this.sortOrder = order
-      this.loadAsyncData()
-    },
-    type (value) {
-      const number = parseFloat(value)
-      if (number < 6) {
-        return 'is-danger'
-      } else if (number >= 6 && number < 8) {
-        return 'is-warning'
-      } else if (number >= 8) {
-        return 'is-success'
-      }
     }
   }
 }

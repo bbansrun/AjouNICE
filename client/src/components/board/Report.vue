@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+import { modReport } from '@/assets/graphql/mutations'
 export default {
   props: {
     id: {
@@ -36,15 +38,26 @@ export default {
   methods: {
     report () {
       if (this.reasonReport) {
-        this.$swal({
+        this.$buefy.dialog.confirm({
+          confirmText: '삭제',
+          cancelText: '취소',
+          type: 'is-warning',
+          hasIcon: true,
+          icon: 'exclamation-triangle',
           title: '신고하시겠습니까?',
-          text: '검토 후 관리자가 조치하도록 하겠습니다.',
-          footer: '신고 이후 취소가 어려우니 신중히 선택해주세요.',
-          type: 'question',
-          showCancelButton: true
-        }).then(result => {
-          if (result.value) {
-            this.flashSuccess('신고되었습니다.')
+          message: '검토 후 관리자가 조치하도록 하겠습니다. 신고 이후 취소가 어려우니 신중히 선택해주세요.',
+          onConfirm () {
+            this.$apollo.mutate({
+              mutation: gql`${modReport}`,
+              variables: {
+                mode: 'CREATE',
+                options: {
+                  user_idx: this.$store.state.user.idx,
+                  text: this.reasonReport,
+                  ip: this.$store.state.user.access_loc
+                }
+              }
+            })
           }
         })
       } else {

@@ -32,14 +32,14 @@
         <label for="content">내용</label>
         <div class="input-form-wrapper">
           <ckeditor
-            v-model="form.content"
+            v-model="form.body"
             name="textarea"
             :editor="editor"
             :config="editorConfig"
           />
           <p
-            v-show="validation.content === false"
-            :class="{'error': validation.content === false}"
+            v-show="validation.body === false"
+            :class="{'error': validation.body === false}"
             class="auto-validate-noti"
           >
             입력된 내용이 없습니다.
@@ -69,8 +69,9 @@
 </template>
 
 <script>
-import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/index'
-
+import gql from 'graphql-tag'
+import { modPost } from '@/assets/graphql/mutations'
+import { ClassicEditor, editorConfig } from '@/vendor/ckeditor'
 export default {
   data () {
     return {
@@ -78,11 +79,13 @@ export default {
       editorConfig,
       form: {
         title: '',
-        content: '<p></p>'
+        body: '<p></p>',
+        user_idx: this.$store.state.user.idx,
+        ip: this.$store.state.user.access_loc
       },
       validation: {
         title: null,
-        content: null
+        body: null
       },
       validated: false
     }
@@ -91,8 +94,8 @@ export default {
     'form.title' (value) {
       this.validateInput('title')
     },
-    'form.content' (value) {
-      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
+    'form.body' (value) {
+      this.validateInput('body', { value: ['<p></p>', ''], checkIsCorrect: false })
     }
   },
   methods: {
@@ -129,13 +132,27 @@ export default {
     },
     validate () {
       this.validateInput('title')
-      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
+      this.validateInput('body', { value: ['<p></p>', ''], checkIsCorrect: false })
       this.validated = Object.keys(this.validation).every((key) => this.validation[key])
     },
     submit () {
       this.validate()
       if (this.validated) {
-
+        this.$apollo.mutate({
+          mutation: gql`${modPost}`,
+          variables: {
+            mode: 'CREATE',
+            options: {
+              ...this.form,
+              category_idx: 1
+            }
+          }
+        }).then(({ data: { modPost } }) => {
+          if (modPost) {
+            this.flashSuccess('공지사항이 게시되었습니다.')
+            this.$router.push('/gate/manager/notice')
+          }
+        })
       } else {
         this.$buefy.dialog.alert({
           title: '에러',
