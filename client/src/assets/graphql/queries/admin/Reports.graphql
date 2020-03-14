@@ -24,6 +24,7 @@
             res_idx
             res_nm
         }
+        text
         reg_ip
         reg_dt
     }

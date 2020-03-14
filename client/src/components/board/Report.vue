@@ -22,7 +22,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { modReport } from '@/assets/graphql/mutations'
+import { modReport, modResReport } from '@/assets/graphql/mutations'
 export default {
   props: ['board_idx', 'res_idx'],
   data () {
@@ -50,16 +50,29 @@ export default {
           message: '검토 후 관리자가 조치하도록 하겠습니다. 신고 이후 취소가 어려우니 신중히 선택해주세요.',
           onConfirm: () => {
             document.body.classList.add('loading')
-            this.$apollo.mutate({
-              mutation: gql`${modReport}`,
-              variables
-            }).then(({ data: { modReport } }) => {
-              document.body.classList.remove('loading')
-              if (modReport) {
-                this.flashSuccess('신고처리되었습니다. 관리자가 추후 조치하도록하겠습니다.')
-                this.$router.go(0)
-              }
-            })
+            if (this.board_idx) {
+              this.$apollo.mutate({
+                mutation: gql`${modReport}`,
+                variables
+              }).then(({ data: { modReport } }) => {
+                document.body.classList.remove('loading')
+                if (modReport) {
+                  this.flashSuccess('신고처리되었습니다. 관리자가 추후 조치하도록하겠습니다.')
+                  this.$router.go(0)
+                }
+              })
+            } else if (this.res_idx) {
+              this.$apollo.mutate({
+                mutation: gql`${modResReport}`,
+                variables
+              }).then(({ data: { modResReport } }) => {
+                document.body.classList.remove('loading')
+                if (modResReport) {
+                  this.flashSuccess('신고처리되었습니다. 관리자가 추후 조치하도록하겠습니다.')
+                  this.$router.go(0)
+                }
+              })
+            }
           }
         })
       } else {

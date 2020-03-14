@@ -45,6 +45,20 @@
           </b-table-column>
 
           <b-table-column
+            field="text"
+            label="신고사유"
+          >
+            {{ props.row.text }}
+          </b-table-column>
+
+          <b-table-column
+            field="reg_dt"
+            label="등록일"
+          >
+            {{ props.row.reg_dt | formatDateTime }}
+          </b-table-column>
+
+          <b-table-column
             field="settings"
             label="조작"
           >
@@ -111,11 +125,11 @@
           </b-table-column>
 
           <b-table-column
-            field="post.title"
+            field="resource.res_nm"
             label="게시물"
           >
-            <router-link :to="`/board/${props.row.post.board_idx}/view`">
-              {{ rops.row.post.title }}
+            <router-link :to="`/board/${props.row.resource.res_idx}/view`">
+              {{ props.row.resource.res_nm }}
             </router-link>
           </b-table-column>
 
@@ -127,12 +141,56 @@
           </b-table-column>
 
           <b-table-column
+            field="text"
+            label="신고사유"
+          >
+            {{ props.row.text }}
+          </b-table-column>
+
+          <b-table-column
+            field="reg_dt"
+            label="등록일"
+          >
+            {{ props.row.reg_dt | formatDateTime }}
+          </b-table-column>
+
+          <b-table-column
             field="settings"
             label="조작"
           >
             <div class="buttons">
-              <b-button>제재</b-button>
-              <b-button>삭제</b-button>
+              <b-dropdown
+                hoverable
+                aria-role="list"
+              >
+                <b-button
+                  slot="trigger"
+                  type="is-warning"
+                  size="is-small"
+                >
+                  <font-awesome-icon icon="user-cog" />&nbsp;
+                  <span>수정</span>
+                </b-button>
+                <b-dropdown-item aria-role="listitem">
+                  영구정지
+                </b-dropdown-item>
+                <b-dropdown-item aria-role="listitem">
+                  탈퇴복원
+                </b-dropdown-item>
+                <b-dropdown-item aria-role="listitem">
+                  일시잠금
+                </b-dropdown-item>
+                <b-dropdown-item aria-role="listitem">
+                  계정복원(암호 초기화)
+                </b-dropdown-item>
+              </b-dropdown>&nbsp;
+              <b-button
+                type="is-danger"
+                size="is-small"
+              >
+                <font-awesome-icon icon="times" />&nbsp;
+                <span>삭제</span>
+              </b-button>
             </div>
           </b-table-column>
         </template>
