@@ -116,7 +116,7 @@
               </div>
               <Report
                 v-show="onReport"
-                :id="parseInt($route.params.post_id)"
+                :board_idx="parseInt($route.params.post_id)"
               />
             </div>
             <hr>

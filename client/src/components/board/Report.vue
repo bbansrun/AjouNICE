@@ -24,12 +24,7 @@
 import gql from 'graphql-tag'
 import { modReport } from '@/assets/graphql/mutations'
 export default {
-  props: {
-    id: {
-      type: Number,
-      required: true
-    }
-  },
+  props: ['board_idx', 'res_idx'],
   data () {
     return {
       reasonReport: ''
@@ -37,6 +32,13 @@ export default {
   },
   methods: {
     report () {
+      const variables = {
+        user_idx: this.$store.state.user.idx,
+        text: this.reasonReport,
+        ip: this.$store.state.user.access_loc
+      }
+      if (this.board_idx) variables.board_idx = this.board_idx
+      if (this.res_idx) variables.res_idx = this.res_idx
       if (this.reasonReport) {
         this.$buefy.dialog.confirm({
           confirmText: '삭제',
@@ -46,16 +48,16 @@ export default {
           icon: 'exclamation-triangle',
           title: '신고하시겠습니까?',
           message: '검토 후 관리자가 조치하도록 하겠습니다. 신고 이후 취소가 어려우니 신중히 선택해주세요.',
-          onConfirm () {
+          onConfirm: () => {
+            document.body.classList.add('loading')
             this.$apollo.mutate({
               mutation: gql`${modReport}`,
-              variables: {
-                mode: 'CREATE',
-                options: {
-                  user_idx: this.$store.state.user.idx,
-                  text: this.reasonReport,
-                  ip: this.$store.state.user.access_loc
-                }
+              variables
+            }).then(({ data: { modReport } }) => {
+              document.body.classList.remove('loading')
+              if (modReport) {
+                this.flashSuccess('신고처리되었습니다. 관리자가 추후 조치하도록하겠습니다.')
+                this.$router.go(0)
               }
             })
           }

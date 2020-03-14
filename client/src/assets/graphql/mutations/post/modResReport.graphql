@@ -1,0 +1,7 @@
+mutation modResReport($user_idx: Int!, $res_idx: Int!, $text: String!, $ip: String!) {
+    modResReport(user_idx: $user_idx, res_idx: $res_idx, text: $text, ip: $ip) {
+        report_idx
+        reg_dt
+        reg_ip
+    }
+}

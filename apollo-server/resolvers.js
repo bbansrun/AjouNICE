@@ -373,15 +373,23 @@ module.exports = {
       }
       throw new ForbiddenError('잘못된 요청입니다.');
     },
-    async modReport (root, { mode, options, }, { db, }, info) {
-      if (mode === 'CREATE') {
-
-      } else if (mode === 'MODIFY') {
-
-      } else if (mode === 'DESTROY') {
-
+    async modReport (root, args, { db, }, info) {
+      const params = { text: args.text, user_idx: args.user_idx, board_idx: args.board_idx, reg_ip: args.ip, upt_ip: args.ip, };
+      const created = await createOne(db.BoardReport, params);
+      if (created) {
+        return await findOne(db.BoardReport, params, info);
+      } else {
+        return {};
       }
-      throw new ForbiddenError('잘못된 요청입니다.');
+    },
+    async modResReport (root, args, { db, }, info) {
+      const params = { text: args.text, user_idx: args.user_idx, res_idx: args.res_idx, reg_ip: args.ip, upt_ip: args.ip, };
+      const created = await createOne(db.RestaurantReport, params);
+      if (created) {
+        return await findOne(db.RestaurantReport, params, info);
+      } else {
+        return {};
+      }
     },
     async incrementView (root, args, { db, }, info) {
       const updated = await increaseOne(db.Board, 'view_cnt', 1, { board_idx: args.board_idx, });

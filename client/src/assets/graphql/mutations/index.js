@@ -2,6 +2,7 @@
 import modPost from './post/modPost.graphql'
 import modReply from './post/modReply.graphql'
 import modReport from './post/modReport.graphql'
+import modResReport from './post/modResReport.graphql'
 import IncrementViewCount from './post/incrementView.graphql'
 
 // 인증
@@ -23,6 +24,7 @@ export {
   modPost,
   modReply,
   modReport,
+  modResReport,
   IncrementViewCount,
   LoggedInLogger,
   Authorize,

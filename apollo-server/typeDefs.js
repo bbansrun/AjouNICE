@@ -32,15 +32,6 @@ enum ManipulationMode {
 `;
 
 const input = `
-input ReportInput {
-    report_idx: Int
-    board_idx: Int
-    res_idx: Int
-    user_idx: Int
-    text: String
-    ip: String
-}
-
 input BoardInput {
     board_idx: Int
     category_idx: Int
@@ -314,6 +305,15 @@ type Schedule {
 type Report {
     report_idx: ID!
     board_idx: Int
+    text: String
+    reg_ip: String
+    reg_dt: Date
+    upt_ip: String
+    upt_dt: Date
+}
+
+type ResReport {
+    report_idx: ID!
     res_idx: Int
     text: String
     reg_ip: String
@@ -359,11 +359,6 @@ type ModifiedDepartment {
 type ModifiedCategory {
     result: Boolean!
     data: BoardCategory
-}
-
-type ModifiedReport {
-    result: Boolean!
-    data: Report
 }
 
 # Types for pagination
@@ -467,7 +462,8 @@ type Mutation {
     modCategory(mode: ManipulationMode!, options: CategoryInput!): ModifiedCategory
     modCollege(mode: ManipulationMode!, options: CollegeInput!): ModifiedCollege
     modDepartment(mode: ManipulationMode!, options: DepartmentInput!): ModifiedDepartment
-    modReport(mode: ManipulationMode!, options: ReportInput!): ModifiedReport
+    modReport(user_idx: Int!, board_idx: Int!, text: String!, ip: String!): Report
+    modResReport(user_idx: Int!, res_idx: Int!, text: String!, ip: String!): ResReport
     addGourmetPlace(res_nm: String!, category_idx: Int!, user_idx: Int!, res_info: String, res_menu: String, res_phone: String, res_addr: String, res_icon: String, reg_ip: String!, upt_ip: String!): RestaurantBoard
     removeGourmet(res_idx: Int!): Boolean
     # File Uploads
