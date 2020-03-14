@@ -82,7 +82,7 @@
 import _ from 'lodash'
 import gql from 'graphql-tag'
 import { PostsByCate, CateById } from '@/assets/graphql/queries'
-import { removePost } from '@/assets/graphql/mutations'
+import { modPost } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -128,9 +128,12 @@ export default {
         onConfirm: () => {
           document.body.classList.add('loading')
           this.$apollo.mutate({
-            mutation: gql`${removePost}`,
+            mutation: gql`${modPost}`,
             variables: {
-              id: parseInt(id)
+              mode: 'DESTROY',
+              options: {
+                board_idx: parseInt(id)
+              }
             }
           }).then(({ data: { removePost } }) => {
             document.body.classList.remove('loading')

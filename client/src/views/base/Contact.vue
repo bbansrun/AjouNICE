@@ -17,7 +17,7 @@
             data-post-form
             @submit.prevent
           >
-            <div class="input-form">
+            <div class="input-form-group">
               <label for="name">이름</label>
               <input
                 id="name"
@@ -29,9 +29,9 @@
                 pattern=".{1,}"
               >
             </div>
-            <div class="input-form">
+            <div class="input-form-group">
               <label for="email">이메일</label>
-              <div class="input-form-group">
+              <div class="input-form-wrapper">
                 <input
                   id="email"
                   v-model="email"
@@ -50,9 +50,9 @@
                 </p>
               </div>
             </div>
-            <div class="input-form editor">
+            <div class="input-form-group editor">
               <label for="textarea">내용</label>
-              <div class="input-form-group">
+              <div class="input-form-wrapper">
                 <ckeditor
                   v-model="editorData"
                   name="textarea"
@@ -160,21 +160,27 @@ export default {
             }
           })
         } else {
-          this.$swal({
-            title: '오류!',
-            text: '내용이 비어있습니다.',
-            footer: '<p>문의주실 내용을 입력하여 주시기 바랍니다.</p>',
-            type: 'error',
-            width: '90vw'
+          this.$buefy.dialog.alert({
+            title: '에러',
+            message: '작성하지 않은 항목이 있습니다.',
+            type: 'is-danger',
+            hasIcon: true,
+            icon: 'times-circle',
+            ariaRole: 'alertdialog',
+            ariaModal: true,
+            confirmText: '확인'
           })
         }
       } else {
-        this.$swal({
-          title: '오류!',
-          text: '빈 항목이 있습니다.',
-          footer: '<p>해당 항목을 입력하여 주시기 바랍니다.</p>',
-          type: 'error',
-          width: '90vw'
+        this.$buefy.dialog.alert({
+          title: '에러',
+          message: '작성하지 않은 항목이 있습니다.',
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+          confirmText: '확인'
         })
       }
     }

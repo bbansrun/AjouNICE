@@ -139,11 +139,15 @@ export default {
             if (status === 500) {
               this.$router.push('/error/500')
             } else {
-              this.$swal({
-                title: '오류!',
-                text: '입력하신 정보가 올바르지 않습니다.',
-                type: 'error',
-                width: '90vw'
+              this.$buefy.dialog.alert({
+                title: '에러',
+                message: '입력하신 정보가 올바르지 않습니다.',
+                type: 'is-danger',
+                hasIcon: true,
+                icon: 'times-circle',
+                ariaRole: 'alertdialog',
+                ariaModal: true,
+                confirmText: '확인'
               })
             }
           })

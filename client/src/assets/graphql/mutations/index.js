@@ -8,6 +8,7 @@ import IncrementViewCount from './post/incrementView.graphql'
 // 인증
 import LoggedInLogger from './auth/LoggedInLogger.graphql'
 import Authorize from './auth/Authorize.graphql'
+import SendEmailConfirmation from './auth/SendEmailConfirmation.graphql'
 
 // 관리자
 import modCategory from './admin/modCategory.graphql'
@@ -28,6 +29,7 @@ export {
   IncrementViewCount,
   LoggedInLogger,
   Authorize,
+  SendEmailConfirmation,
   modCategory,
   addGourmetPlace,
   removeGourmet,

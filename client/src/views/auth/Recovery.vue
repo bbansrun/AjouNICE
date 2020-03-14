@@ -96,8 +96,8 @@ export default {
             if (doesEmailExists) {
               this.$apollo.mutate({
                 mutation: gql`mutation { resetEmailToken(email: "${this.email}") }`
-              }).then(result => {
-                if (result.data.resetEmailToken) {
+              }).then(({ data: { resetEmailToken } }) => {
+                if (resetEmailToken) {
                   this.$swal({
                     type: 'success',
                     width: '90vw',
