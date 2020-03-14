@@ -32,6 +32,7 @@
         >
           {{ props.row.category_idx }}
         </b-table-column>
+
         <b-table-column
           field="category_nm"
           label="모듈명"
@@ -40,6 +41,7 @@
         >
           <strong>{{ props.row.category_nm }}</strong>
         </b-table-column>
+
         <b-table-column
           field="title"
           label="영문명"
@@ -48,6 +50,7 @@
         >
           {{ props.row.title }}
         </b-table-column>
+
         <b-table-column
           field="depth"
           label="Depth"
@@ -55,6 +58,14 @@
         >
           {{ props.row.depth }}
         </b-table-column>
+
+        <b-table-column
+          field="access_auth"
+          label="접속그룹범위"
+        >
+          {{ groupAccessTypes(props.row.access_auth) }}
+        </b-table-column>
+
         <b-table-column
           field="settings"
           label="설정"
@@ -101,6 +112,7 @@
           </td>
           <td>{{ item.title }}</td>
           <td>{{ item.depth }}</td>
+          <td>{{ groupAccessTypes(item.access_auth) }}</td>
           <td>
             <div class="buttons">
               <b-button
@@ -132,7 +144,7 @@
 import _ from 'lodash'
 import gql from 'graphql-tag'
 import { Categories } from '@/assets/graphql/queries'
-import { removeCategory, modCategory } from '@/assets/graphql/mutations'
+import { modCategory } from '@/assets/graphql/mutations'
 export default {
   data () {
     return {
@@ -158,6 +170,21 @@ export default {
     }
   },
   methods: {
+    groupAccessTypes (value) {
+      let retn = ''
+      const options = [
+        { value: 'ALL', label: '전체' },
+        { value: 'R', label: '재학' },
+        { value: 'M', label: '대학원' },
+        { value: 'G', label: '졸업' },
+        { value: 'E', label: '교원' },
+        { value: 'U', label: '일반' }
+      ]
+      String.prototype.split.call(value, '_').forEach(item => {
+        retn += `${options.find((option) => (option.value === item)).label},`
+      })
+      return retn.slice(0, -1)
+    },
     removeCategory (name, id) {
       this.$buefy.dialog.prompt({
         title: `'${name}' 삭제`,

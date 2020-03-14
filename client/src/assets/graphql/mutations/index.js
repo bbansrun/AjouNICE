@@ -1,3 +1,6 @@
+// Common
+import Contact from './common/Contact.graphql'
+
 // 게시물
 import modPost from './post/modPost.graphql'
 import modReply from './post/modReply.graphql'
@@ -22,6 +25,7 @@ import singleUpload from './upload/singleUpload.graphql'
 import multiUpload from './upload/multiUpload.graphql'
 
 export {
+  Contact,
   modPost,
   modReply,
   modReport,

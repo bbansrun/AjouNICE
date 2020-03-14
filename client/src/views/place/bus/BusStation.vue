@@ -13,6 +13,34 @@
           <header class="underline underline-inline-block">
             <strong>학교 셔틀버스</strong>
           </header>
+          <b-collapse
+            class="card"
+            animation="slide"
+            aria-id="contentIdForA11y3"
+          >
+            <div
+              slot="trigger"
+              slot-scope="props"
+              class="card-header"
+              role="button"
+              aria-controls="contentIdForA11y3"
+            >
+              <p class="card-header-title">
+                광교중앙역(1번출구)
+              </p>
+              <a class="card-header-icon">
+                <b-icon
+                  :icon="props.open ? 'menu-down' : 'menu-up'"
+                />
+              </a>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+                <a>#buefy</a>.
+              </div>
+            </div>
+          </b-collapse>
           <b-table
             :data="schoolBus.data.gwanggyo"
             :columns="schoolBus.columns.gwanggyo"

@@ -19,34 +19,44 @@
           >
             <div class="input-form-group">
               <label for="name">이름</label>
-              <input
-                id="name"
-                v-model="name"
-                type="text"
-                name="name"
-                placeholder="이름을 입력해주세요"
-                required
-                pattern=".{1,}"
-              >
+              <div class="input-form-wrapper">
+                <input
+                  id="name"
+                  v-model="form.name"
+                  type="text"
+                  name="name"
+                  placeholder="이름을 입력해주세요"
+                  required
+                  :class="{'error': validation.name === false }"
+                  pattern=".{1,}"
+                >
+                <p
+                  v-show="validation.name === false"
+                  class="auto-validate-noti"
+                  :class="{'error': validation.name === false }"
+                >
+                  이름이 입력되지 않았습니다.
+                </p>
+              </div>
             </div>
             <div class="input-form-group">
               <label for="email">이메일</label>
               <div class="input-form-wrapper">
                 <input
                   id="email"
-                  v-model="email"
+                  v-model="form.email"
                   type="email"
                   name="email"
                   placeholder="이메일 주소를 입력해주세요"
                   required
-                  :class="{ 'error': emailError }"
+                  :class="{'error': validation.email === false }"
                 >
                 <p
-                  v-if="emailError"
+                  v-show="validation.email === false"
                   class="auto-validate-noti"
-                  :class="{ 'error': emailError }"
+                  :class="{'error': validation.email === false }"
                 >
-                  {{ emailErrorMsg }}
+                  이메일이 입력되지 않았습니다.
                 </p>
               </div>
             </div>
@@ -54,17 +64,18 @@
               <label for="textarea">내용</label>
               <div class="input-form-wrapper">
                 <ckeditor
-                  v-model="editorData"
+                  v-model="form.content"
                   name="textarea"
                   :editor="editor"
                   :config="editorConfig"
+                  :class="{'error': validation.content === false }"
                 />
                 <p
-                  v-if="editorError"
+                  v-show="validation.content === false"
                   class="auto-validate-noti"
-                  :class="{ 'error': editorError }"
+                  :class="{'error': validation.content === false }"
                 >
-                  {{ editorErrorMsg }}
+                  내용이 입력되지 않았습니다.
                 </p>
               </div>
             </div>
@@ -88,7 +99,8 @@
 <script>
 import gql from 'graphql-tag'
 import { Navigation, Landing, Footer } from '@/components'
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
+import { ClassicEditor, editorConfig } from '@/vendor/ckeditor'
+import { Contact } from '@/assets/graphql/mutations'
 export default {
   components: {
     Navigation,
@@ -98,79 +110,94 @@ export default {
   data () {
     return {
       scrollBase: null,
-      name: '',
       editor: ClassicEditor,
-      editorData: '',
-      editorConfig: {
-        toolbar: []
+      editorConfig,
+      form: {
+        name: '',
+        email: '',
+        content: '<p></p>'
       },
-      editorError: false,
-      editorErrorMsg: '',
-      email: '',
-      emailError: false,
-      emailErrorMsg: ''
+      validation: {
+        name: null,
+        email: null,
+        content: null
+      },
+      validated: false
     }
   },
   watch: {
-    email (value) {
-      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-      if (value) {
-        if (!re.test(value)) {
-          this.emailError = true
-          this.emailErrorMsg = '이메일 형식이 잘못되었습니다.'
-        } else {
-          this.emailError = false
-          this.emailErrorMsg = ''
-        }
-      } else {
-        this.emailError = false
-        this.emailErrorMsg = ''
-      }
+    'form.name' (value) {
+      this.validateInput('name')
     },
-    editorData (value) {
-      if (!value) {
-        this.editorError = true
-        this.editorErrorMsg = '내용이 비어있습니다.'
-      } else {
-        this.editorError = false
-        this.editorErrorMsg = ''
-      }
+    'form.email' (value) {
+      this.validateInput('email')
+    },
+    'form.content' (value) {
+      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
     }
   },
   mounted () {
     this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
   },
   methods: {
-    contact () {
-      if (this.name && (this.email && !this.emailError)) {
-        if (this.editorData) {
-          this.$apollo.mutate({
-            mutation: gql`mutation { sendContactMail(name: "${this.name}", email: "${this.email}", content: "${this.editorData}") }`
-          }).then(({ data }) => {
-            if (data) {
-              this.$swal({
-                title: '성공!',
-                text: '이메일 발신에 성공하였습니다.',
-                footer: '<p>빠른 시일 내에 입력해주신 이메일 주소로 답변을 보내드리겠습니다.</p>',
-                type: 'success',
-                width: '90vw'
-              }).then(() => {
-                this.$router.push('/contact')
-              })
+    validateInput (key, compare = null) {
+      // Form Data가 적절한 조건 만족하였는지 판단
+      // compare의 경우 object type data를 받을 경우,
+      // 비교값인 value와 일치/불일치 비교 여부 checkIsCorrect (Boolean)를 전달하여야함
+      if (compare) {
+        if (Object.prototype.hasOwnProperty.call(compare, 'value') &&
+            Object.prototype.hasOwnProperty.call(compare, 'checkIsCorrect')) {
+          if (compare.checkIsCorrect) {
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] === item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
             }
-          })
+          } else {
+            if (compare.value instanceof Array) {
+              this.validation[key] = compare.value.every(item => this.form[key] !== item)
+            } else {
+              throw Error('compare.value는 Array이어야 합니다.')
+            }
+          }
         } else {
-          this.$buefy.dialog.alert({
-            title: '에러',
-            message: '작성하지 않은 항목이 있습니다.',
-            type: 'is-danger',
-            hasIcon: true,
-            icon: 'times-circle',
-            ariaRole: 'alertdialog',
-            ariaModal: true,
-            confirmText: '확인'
-          })
+          throw Error('파라미터 compare 값이 유효하지 않습니다.')
         }
+      } else {
+        if (this.form[key]) {
+          this.validation[key] = true
+        } else {
+          this.validation[key] = false
+        }
+      }
+    },
+    validate () {
+      this.validateInput('name')
+      this.validateInput('email')
+      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
+      this.validated = Object.keys(this.validation).every((key) => this.validation[key])
+    },
+    contact () {
+      this.validate()
+      if (this.validated) {
+        this.$apollo.mutate({
+          mutation: gql`${Contact}`,
+          variables: {
+            ...this.form
+          }
+        }).then(({ data: { sendContactMail } }) => {
+          if (sendContactMail) {
+            this.$swal({
+              title: '성공!',
+              text: '이메일 발신에 성공하였습니다.',
+              footer: '<p>빠른 시일 내에 입력해주신 이메일 주소로 답변을 보내드리겠습니다.</p>',
+              type: 'success',
+              width: '90vw'
+            }).then(() => {
+              this.$router.go(0)
+            })
+          }
+        })
       } else {
         this.$buefy.dialog.alert({
           title: '에러',
