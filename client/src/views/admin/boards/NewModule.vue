@@ -96,7 +96,42 @@
         class="input-form-group"
       >
         <label for="title">특정그룹 접속제한</label>
-        <div class="input-form-wrapper" />
+        <div class="input-form-wrapper">
+          <b-switch
+            v-model="allAccessable"
+            :value="allAccessable"
+            type="is-danger"
+          >
+            {{ allAccessable ? '전체 그룹 열람 허용' : '특정 그룹 열람 허용' }}
+          </b-switch>
+          <div
+            v-show="!allAccessable"
+            class="wrapper"
+          >
+            <b-field>
+              <b-select
+                v-model="selectedGroupAccess"
+                multiple
+                :native-size="groupOptions.length"
+              >
+                <option
+                  v-for="item in groupOptions"
+                  :key="item.label"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                </option>
+              </b-select>
+            </b-field>
+            <b-notification
+              type="is-info"
+              has-icon
+              aria-close-label="닫기"
+            >
+              드래그, Ctrl, 혹은 Shift를 사용하여 Multi-select가 가능합니다.
+            </b-notification>
+          </div>
+        </div>
       </div>
       <div
         v-show="Number.isInteger(selectedParent)"
@@ -205,6 +240,15 @@ export default {
       private_yn_label: '공개',
       icon: null,
       selectedParent: '',
+      allAccessable: true,
+      selectedGroupAccess: [],
+      groupOptions: [
+        { value: 'R', label: '재학' },
+        { value: 'M', label: '대학원' },
+        { value: 'G', label: '졸업' },
+        { value: 'E', label: '교원' },
+        { value: 'U', label: '일반' }
+      ],
       form: {
         category_nm: '',
         category_type: 'NORMAL',
@@ -242,6 +286,14 @@ export default {
     }
   },
   watch: {
+    allAccessable (value) {
+      if (value === true) {
+        this.form.access_auth = 'ALL'
+      }
+    },
+    selectedGroupAccess (value) {
+      this.form.access_auth = Array.prototype.join.call(value, '_')
+    },
     'form.category_nm' (value) {
       this.validateInput('category_nm')
     },
