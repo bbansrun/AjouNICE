@@ -102,7 +102,7 @@ db.User.hasMany(db.BoardReport, {
 });
 
 db.BoardReport.belongsTo(db.User, {
-  as: 'reporter',
+  as: 'user',
   foreignKey: 'user_idx',
   targetKey: 'user_idx',
 });
@@ -115,7 +115,7 @@ db.User.hasMany(db.RestaurantReport, {
 });
 
 db.RestaurantReport.belongsTo(db.User, {
-  as: 'resReporter',
+  as: 'user',
   foreignKey: 'user_idx',
   targetKey: 'user_idx',
 });
@@ -150,6 +150,19 @@ db.BoardVote.belongsTo(db.Board, {
   targetKey: 'board_idx',
 });
 
+// --- Board -> BoardReport (1:N)
+db.Board.hasMany(db.BoardReport, {
+  as: 'reports',
+  foreignKey: 'board_idx',
+  sourceKey: 'board_idx',
+});
+
+db.BoardReport.belongsTo(db.Board, {
+  as: 'post',
+  foreignKey: 'board_idx',
+  targetKey: 'board_idx',
+});
+
 // - From RestaurantBoard
 // --- RestaurantBoard -> RestaurantComment (1:N)
 db.RestaurantBoard.hasMany(db.RestaurantComment, {
@@ -173,6 +186,19 @@ db.RestaurantBoard.hasMany(db.RestaurantImg, {
 
 db.RestaurantImg.belongsTo(db.RestaurantBoard, {
   as: 'resources',
+  foreignKey: 'res_idx',
+  targetKey: 'res_idx',
+});
+
+// --- RestaurantBoard -> RestaurantReport (1:N)
+db.RestaurantBoard.hasMany(db.RestaurantReport, {
+  as: 'reports',
+  foreignKey: 'res_idx',
+  sourceKey: 'res_idx',
+});
+
+db.RestaurantReport.belongsTo(db.RestaurantBoard, {
+  as: 'resource',
   foreignKey: 'res_idx',
   targetKey: 'res_idx',
 });

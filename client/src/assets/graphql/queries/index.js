@@ -25,6 +25,7 @@ import AdminStatus from './admin/AdminStatus.graphql'
 import GourmetListByCate from './admin/listGourmetById.graphql'
 import Codes from './admin/Codes.graphql'
 import Users from './admin/Users.graphql'
+import Reports from './admin/Reports.graphql'
 
 // 게시물
 import Post from './posts/PostDetail.graphql'
@@ -70,6 +71,7 @@ export {
   GourmetListByCate,
   Codes,
   Users,
+  Reports,
   BoardByType,
   PaginationPosts,
   PaginationGourmets,

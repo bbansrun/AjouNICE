@@ -304,6 +304,8 @@ type Schedule {
 
 type Report {
     report_idx: ID!
+    user: User
+    post: Board
     board_idx: Int
     text: String
     reg_ip: String
@@ -314,6 +316,8 @@ type Report {
 
 type ResReport {
     report_idx: ID!
+    user: User
+    resource: RestaurantBoard
     res_idx: Int
     text: String
     reg_ip: String
@@ -433,6 +437,8 @@ type Query {
     comment(cmt_idx: ID!): BoardComment
     schedule: [Schedule]
     notice(code: String!): [Notice]
+    reports: [Report]
+    resReports: [ResReport]
     # Common
     CateById(category_idx: Int!): BoardCategory
     # Auth

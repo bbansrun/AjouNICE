@@ -220,6 +220,20 @@ module.exports = {
     async CateById (root, args, { db, }, info) {
       return await findOne(db.BoardCategory, args, info);
     },
+    async reports (root, args, { db, }, info) {
+      const include = [
+        { model: db.User, as: 'user', },
+        { model: db.Board, as: 'post', }
+      ];
+      return await findAll(db.BoardReport, args, info, include);
+    },
+    async resReports (root, args, { db, }, info) {
+      const include = [
+        { model: db.User, as: 'user', },
+        { model: db.RestaurantBoard, as: 'resource', }
+      ];
+      return await findAll(db.RestaurantReport, args, info, include);
+    },
     // Gourmet
     async gourmetById (root, args, { db, }, info) {
       const include = [
