@@ -29,17 +29,17 @@
         </div>
       </div>
       <div class="input-form-group">
-        <label for="content">내용</label>
+        <label for="body">내용</label>
         <div class="input-form-wrapper">
           <ckeditor
-            v-model="form.content"
+            v-model="form.body"
             name="textarea"
             :editor="editor"
             :config="editorConfig"
           />
           <p
-            v-show="validation.content === false"
-            :class="{'error': validation.content === false}"
+            v-show="validation.body === false"
+            :class="{'error': validation.body === false}"
             class="auto-validate-noti"
           >
             입력된 내용이 없습니다.
@@ -69,7 +69,10 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import { ClassicEditor, editorConfig } from '@/vendor/ckeditor/index'
+import { Post } from '@/assets/graphql/queries'
+import { modPost } from '@/assets/graphql/mutations'
 
 export default {
   data () {
@@ -78,21 +81,35 @@ export default {
       editorConfig,
       form: {
         title: '',
-        content: '<p></p>'
+        body: '<p></p>'
       },
       validation: {
         title: null,
-        content: null
+        body: null
       },
       validated: false
+    }
+  },
+  apollo: {
+    post: {
+      query: gql`${Post}`,
+      variables () {
+        return {
+          id: this.$route.params.notice_idx
+        }
+      },
+      result ({ data: { post } }) {
+        this.form.title = post.title
+        this.form.body = post.body
+      }
     }
   },
   watch: {
     'form.title' (value) {
       this.validateInput('title')
     },
-    'form.content' (value) {
-      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
+    'form.body' (value) {
+      this.validateInput('body', { value: ['<p></p>', ''], checkIsCorrect: false })
     }
   },
   methods: {
@@ -129,7 +146,7 @@ export default {
     },
     validate () {
       this.validateInput('title')
-      this.validateInput('content', { value: ['<p></p>', ''], checkIsCorrect: false })
+      this.validateInput('body', { value: ['<p></p>', ''], checkIsCorrect: false })
       this.validated = Object.keys(this.validation).every((key) => this.validation[key])
     },
     submit () {
@@ -145,7 +162,23 @@ export default {
           icon: 'question',
           onConfirm: () => {
             document.body.classList.add('loading')
-            // 공지사항 수정 trigger
+            this.$apollo.mutate({
+              mutation: gql`${modPost}`,
+              variables: {
+                mode: 'EDIT',
+                options: {
+                  ...this.form,
+                  board_idx: parseInt(this.$route.params.notice_idx),
+                  ip: this.$store.state.user.access_loc
+                }
+              }
+            }).then(({ data: { modPost } }) => {
+              document.body.classList.remove('loading')
+              if (modPost) {
+                this.flashSuccess('수정되었습니다.')
+                this.$router.push('/gate/manager/notice')
+              }
+            })
           }
         })
       } else {
