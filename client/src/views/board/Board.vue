@@ -1,30 +1,60 @@
 <template>
   <div class="wrapper">
-    <Navigation :scroll-base="scrollBase" />
-    <Landing
-      ref="scrollBase"
-      :title="title"
-      :description="desc"
-      background="http://www.ajou.ac.kr/_attach/new/_images/2019/12/23/191223_main_visual05_bg.gif"
-    />
-    <BoardNav :write-url="write_url" />
-    <nav class="category">
-      <ul class="category-menu">
-        <li class="active">
-          <router-link :to="`/board`">
-            전체
-          </router-link>
-        </li>
-        <li
-          v-for="category in navCategories"
-          :key="category.category_idx"
+    <Navigation is-static />
+    <InfinitySwipe
+      class="categories"
+      :current-page="1"
+      :item-width="224"
+      @move="onMoveCategory"
+      @touch-end="onTouchEnd"
+      @change-page="onChangePage"
+    >
+      <div
+        v-for="(category, index) in categories"
+        :key="index"
+        class="infinity-swipe-item"
+      >
+        <h2
+          :class="{'active': activeCategory === category.category_idx}"
+          @click="onCategoryClicked(category.category_idx)"
         >
-          <router-link :to="$route.params.category ? `/board/${$route.params.category}/${category.title}` : `/board/${category.title}`">
-            {{ category.category_nm }}
-          </router-link>
-        </li>
-      </ul>
-    </nav>
+          {{ category.category_nm }}
+        </h2>
+        <h2
+          :class="{'active': activeCategory === category.category_idx}"
+          @click="onCategoryClicked(category.category_idx)"
+        >
+          {{ category.category_nm }}
+        </h2>
+      </div>
+    </InfinitySwipe>
+    <InfinitySwipe
+      class="categories"
+      :current-page="1"
+      :item-width="224"
+      @move="onMoveCategory"
+      @touch-end="onTouchEnd"
+      @change-page="onChangePage"
+    >
+      <div
+        v-for="(category, index) in childCategories"
+        :key="index"
+        class="infinity-swipe-item"
+      >
+        <h2
+          :class="{'active': activeCategory === category.category_idx}"
+          @click="onCategoryClicked(category.category_idx)"
+        >
+          {{ category.category_nm }}
+        </h2>
+        <h2
+          :class="{'active': activeCategory === category.category_idx}"
+          @click="onCategoryClicked(category.category_idx)"
+        >
+          {{ category.category_nm }}
+        </h2>
+      </div>
+    </InfinitySwipe>
     <div class="container">
       <PostList :items="posts" />
       <infinite-loading
@@ -50,15 +80,16 @@
 import _ from 'lodash'
 import gql from 'graphql-tag'
 import urljoin from 'url-join'
-import { Landing, Navigation, PostList, BoardNav, Footer } from '@/components'
+import { Navigation, PostList, Footer } from '@/components'
 import { Categories, PaginationPosts } from '@/assets/graphql/queries'
+import InfinitySwipe from 'vue-swipe-menu'
+import 'vue-swipe-menu/dist/vue-swipe-menu.css'
 export default {
   components: {
-    Landing,
     Navigation,
     PostList,
-    BoardNav,
-    Footer
+    Footer,
+    InfinitySwipe
   },
   data () {
     return {
@@ -69,7 +100,8 @@ export default {
       cursor: '',
       cateIdx: null,
       title: '게시판',
-      desc: '아주나이스 커뮤니티'
+      desc: '아주나이스 커뮤니티',
+      activeCategory: 2
     }
   },
   apollo: {
@@ -102,10 +134,13 @@ export default {
       this.$router.go(0)
     }
   },
-  mounted () {
-    this.scrollBase = this.$refs.scrollBase.$el.getBoundingClientRect().bottom / 3
-  },
   methods: {
+    onCategoryClicked (index) {
+      console.log(index)
+    },
+    onMoveCategory () {},
+    onChangePage () {},
+    onTouchEnd () {},
     initCategory () {
       if (this.$route.params.category) {
         const idx = _.findIndex(this.categories, (category) => (category.title === this.$route.params.category))
@@ -150,3 +185,21 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.categories {
+  width: 100vw;
+  background: #6400FF;
+  color: #fff;
+  & .infinity-swipe-item {
+    padding: .5rem 0;
+    > h2 {
+      display: inline-block;
+      margin: 0 15px;
+      &.active {
+        text-shadow: 0 0 5px rgba(0,0,0,.5);
+      }
+    }
+  }
+}
+</style>

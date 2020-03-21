@@ -13,70 +13,60 @@
           <header class="underline underline-inline-block">
             <strong>학교 셔틀버스</strong>
           </header>
-          <b-collapse
-            class="card"
-            animation="slide"
-            aria-id="contentIdForA11y3"
-          >
-            <div
-              slot="trigger"
-              slot-scope="props"
-              class="card-header"
-              role="button"
-              aria-controls="contentIdForA11y3"
-            >
-              <p class="card-header-title">
-                광교중앙역(1번출구)
-              </p>
-              <a class="card-header-icon">
-                <b-icon
-                  :icon="props.open ? 'menu-down' : 'menu-up'"
-                />
-              </a>
-            </div>
-            <div class="card-content">
-              <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                <a>#buefy</a>.
-              </div>
-            </div>
-          </b-collapse>
-          <b-table
-            :data="schoolBus.data.gwanggyo"
-            :columns="schoolBus.columns.gwanggyo"
-          >
-            <template slot="footer">
-              <div class="has-text-right">
-                학교버스 등하교노선
-              </div>
-            </template>
-          </b-table>
-          <b-table
-            :data="schoolBus.data.regional"
-            :columns="schoolBus.columns.regional"
-          >
-            <template slot="footer">
-              <div class="has-text-right">
-                학교버스 등하교노선
-              </div>
-            </template>
-          </b-table>
+          <b-tabs v-model="activeTabs">
+            <b-tab-item label="학기">
+              <b-collapse
+                v-for="item in busRoutes"
+                :key="item.label"
+                class="card"
+                animation="slide"
+              >
+                <div
+                  slot="trigger"
+                  slot-scope="props"
+                  class="card-header"
+                  role="button"
+                >
+                  <p class="card-header-title">
+                    {{ item.label }}
+                  </p>
+                  <a class="card-header-icon">
+                    <b-icon
+                      :icon="props.open ? 'menu-down' : 'menu-up'"
+                    />
+                  </a>
+                </div>
+                <div class="card-content">
+                  <div class="content">
+                    <b-table
+                      :data="item.data"
+                      :columns="item.columns"
+                    />
+                  </div>
+                </div>
+              </b-collapse>
+            </b-tab-item>
+          </b-tabs>
         </section>
         <hr>
         <section class="ord-bus">
           <header class="underline underline-inline-block">
             <strong>마을버스</strong>
           </header>
-          <b-table
-            :data="schoolBus.data.townShuttle"
-            :columns="schoolBus.columns.townShuttle"
+          <b-message
+            title="비고"
           >
-            <template slot="footer">
-              <div class="has-text-right">
-                학교버스 등하교노선
-              </div>
-            </template>
-          </b-table>
+            광교중앙역 출발 기준 시간입니다. 도서관까지 약 10분 소요됩니다.
+          </b-message>
+          <b-taglist>
+            <b-tag
+              v-for="item in schoolBus.data.townShuttle"
+              :key="item.route"
+              type="is-warning"
+            >
+              <strong>{{ item.route }}</strong>
+            </b-tag>
+          </b-taglist>
           <header class="underline underline-inline-block">
             <strong>일반 시내/광역버스</strong>
           </header>
@@ -145,6 +135,191 @@ export default {
   data () {
     return {
       scrollBase: null,
+      activeTabs: 0,
+      busRoutes: [
+        {
+          label: '광교중앙역(1번출구)',
+          columns: [
+            {
+              field: 'startsAt',
+              label: '도서관 -> 광교중앙역'
+            },
+            {
+              field: 'arrivesAt',
+              label: '광교중앙역 -> 학교'
+            }
+          ],
+          data: [
+            { id: 1, startsAt: '08:22', arrivesAt: '08:30' },
+            { id: 2, startsAt: '08:42', arrivesAt: '08:50' },
+            { id: 3, startsAt: '08:52', arrivesAt: '09:00' },
+            { id: 4, startsAt: '09:22', arrivesAt: '09:30' },
+            { id: 5, startsAt: '09:52', arrivesAt: '10:00' },
+            { id: 6, startsAt: '10:07', arrivesAt: '10:15' },
+            { id: 7, startsAt: '10:52', arrivesAt: '11:00' },
+            { id: 8, startsAt: '11:37', arrivesAt: '11:45' },
+            { id: 9, startsAt: '12:52', arrivesAt: '13:00' },
+            { id: 10, startsAt: '13:52', arrivesAt: '14:00' },
+            { id: 11, startsAt: '14:37', arrivesAt: '14:45' },
+            { id: 12, startsAt: '15:52', arrivesAt: '16:00' },
+            { id: 13, startsAt: '16:52', arrivesAt: '17:00' },
+            { id: 14, startsAt: '18:10', arrivesAt: '-' }
+          ]
+        },
+        {
+          label: '사당',
+          columns: [
+            {
+              field: 'placeStart',
+              label: '출발장소'
+            },
+            {
+              field: 'timeStart',
+              label: '출발시간'
+            },
+            {
+              field: 'timeArrive',
+              label: '도착시간'
+            }
+          ],
+          data: [
+            { placeStart: '이수역(14번 출구)', timeStart: '07:45', timeArrive: '08:40' },
+            { placeStart: '총신대역(7번 출구)', timeStart: '07:48', timeArrive: '08:40' },
+            { placeStart: '사당역(4번 출구 홈플러스 앞)', timeStart: '07:51', timeArrive: '08:40' },
+            { placeStart: '과천(과천주공 6~7단지 사이)', timeStart: '07:56', timeArrive: '08:40' }
+          ]
+        },
+        {
+          label: '목동',
+          columns: [
+            {
+              field: 'placeStart',
+              label: '출발장소'
+            },
+            {
+              field: 'timeStart',
+              label: '출발시간'
+            },
+            {
+              field: 'timeArrive',
+              label: '도착시간'
+            }
+          ],
+          data: [
+            { placeStart: '오목교(오목교역 1번 출구 마을버스 회차지점 앞)', timeStart: '07:10', timeArrive: '08:40' },
+            { placeStart: '목동오거리 (목동역 7번 출구)', timeStart: '07:12', timeArrive: '08:40' }
+          ]
+        },
+        {
+          label: '금정',
+          columns: [
+            {
+              field: 'placeStart',
+              label: '출발장소'
+            },
+            {
+              field: 'timeStart',
+              label: '출발시간'
+            },
+            {
+              field: 'timeArrive',
+              label: '도착시간'
+            }
+          ],
+          data: [
+            { placeStart: '금정역(금정농협 맞은편)', timeStart: '07:50', timeArrive: '08:50' },
+            { placeStart: '1번국도 범계사거리 버스정류장', timeStart: '07:58', timeArrive: '08:50' },
+            { placeStart: '고천육교 전 기아자동차 대리점 앞', timeStart: '08:08', timeArrive: '08:50' }
+          ]
+        },
+        {
+          label: '잠실',
+          columns: [
+            {
+              field: 'placeStart',
+              label: '출발장소'
+            },
+            {
+              field: 'timeStart',
+              label: '출발시간'
+            },
+            {
+              field: 'timeArrive',
+              label: '도착시간'
+            }
+          ],
+          data: [
+            { placeStart: '잠실역 롯데 백화점앞(주공522동 건너편)', timeStart: '07:40', timeArrive: '08:40' },
+            { placeStart: '가락시장 신 동문 앞', timeStart: '07:45', timeArrive: '07:45' },
+            { placeStart: '복정역 3번출구(완불주유소 앞)', timeStart: '07:58', timeArrive: '08:40' }
+          ]
+        },
+        {
+          label: '분당',
+          columns: [
+            {
+              field: 'placeStart',
+              label: '출발장소'
+            },
+            {
+              field: 'timeStart',
+              label: '출발시간'
+            },
+            {
+              field: 'timeArrive',
+              label: '도착시간'
+            }
+          ],
+          data: [
+            { placeStart: '정자역(5번 출구)', timeStart: '08:05', timeArrive: '08:40' },
+            { placeStart: '미금역(7번 출구)', timeStart: '', timeArrive: '08:40' }
+          ]
+        },
+        {
+          label: '안산',
+          columns: [
+            {
+              field: 'placeStart',
+              label: '출발장소'
+            },
+            {
+              field: 'timeStart',
+              label: '출발시간'
+            },
+            {
+              field: 'timeArrive',
+              label: '도착시간'
+            }
+          ],
+          data: [
+            { placeStart: '안산역 롯데리아 앞 통근버스 승강장', timeStart: '07:30', timeArrive: '08:40' },
+            { placeStart: '중앙역앞 시내버스정류장', timeStart: '07:37', timeArrive: '08:40' },
+            { placeStart: '한대앞역 1번출구앞', timeStart: '07:42', timeArrive: '08:40' },
+            { placeStart: '상록수역 길건너 통근버스승강장', timeStart: '07:47', timeArrive: '08:40' }
+          ]
+        },
+        {
+          label: '수원역(등하교)',
+          columns: [
+            {
+              field: 'placeStart',
+              label: '출발장소'
+            },
+            {
+              field: 'timeStart',
+              label: '출발시간'
+            },
+            {
+              field: 'timeArrive',
+              label: '도착시간'
+            }
+          ],
+          data: [
+            { placeStart: '수원역 (오전) 9/10번 출구 사이 학생버스승강장', timeStart: '08:15 / 08:20 / 09:30 / 10:30 / 11:30', timeArrive: '' },
+            { placeStart: '학교 (오후)', timeStart: '15:00 / 16:00 / 17:00 / 18:10', timeArrive: '' }
+          ]
+        }
+      ],
       buses: {
         types: [
           { label: '시내버스', type: 1 },
@@ -218,156 +393,63 @@ export default {
       stopsInfo: [],
       schoolBus: {
         data: {
-          gwanggyo: [
-            { id: 1, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '08:22', arrivesAt: '08:30', type: '학교버스' },
-            { id: 2, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '08:42', arrivesAt: '08:50', type: '학교버스' },
-            { id: 3, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '08:52', arrivesAt: '09:00', type: '학교버스' },
-            { id: 4, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '09:22', arrivesAt: '09:30', type: '학교버스' },
-            { id: 5, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '09:52', arrivesAt: '10:00', type: '학교버스' },
-            { id: 6, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '10:07', arrivesAt: '10:15', type: '학교버스' },
-            { id: 7, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '10:52', arrivesAt: '11:00', type: '학교버스' },
-            { id: 8, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '11:37', arrivesAt: '11:45', type: '학교버스' },
-            { id: 9, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '12:52', arrivesAt: '13:00', type: '학교버스' },
-            { id: 10, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '13:52', arrivesAt: '14:00', type: '학교버스' },
-            { id: 11, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '14:37', arrivesAt: '14:45', type: '학교버스' },
-            { id: 12, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '15:52', arrivesAt: '16:00', type: '학교버스' },
-            { id: 13, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '16:52', arrivesAt: '17:00', type: '학교버스' },
-            { id: 14, startsFrom: '광교중앙(아주대)역 1번출구', startsAt: '18:10', arrivesAt: '-', type: '학교버스' }
-          ],
           regional: [
-            { route: '사당역(등교)', placeStart: '이수역(14번 출구)', timeStart: '07:45', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '사당역(등교)', placeStart: '총신대역(7번 출구)', timeStart: '07:48', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '사당역(등교)', placeStart: '사당역(4번 출구 홈플러스 앞)', timeStart: '07:51', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '사당역(등교)', placeStart: '과천(과천주공 6~7단지 사이)', timeStart: '07:56', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '목동(등교)', placeStart: '오목교(오목교역 1번 출구 마을버스 회차지점 앞)', timeStart: '07:10', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '목동(등교)', placeStart: '목동오거리 (목동역 7번 출구)', timeStart: '07:12', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '금정역(등교)', placeStart: '금정역(금정농협 맞은편)', timeStart: '07:50', timeArrive: '08:50', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '금정역(등교)', placeStart: '1번국도 범계사거리 버스정류장', timeStart: '07:58', timeArrive: '08:50', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '금정역(등교)', placeStart: '고천육교 전 기아자동차 대리점 앞', timeStart: '08:08', timeArrive: '08:50', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '잠실(등교)', placeStart: '잠실역 롯데 백화점앞(주공522동 건너편)', timeStart: '07:40', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '잠실(등교)', placeStart: '가락시장 신 동문 앞', timeStart: '07:45', timeArrive: '07:45', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '잠실(등교)', placeStart: '복정역 3번출구(완불주유소 앞)', timeStart: '07:58', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '안산(등교)', placeStart: '안산역 롯데리아 앞 통근버스 승강장', timeStart: '07:30', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '안산(등교)', placeStart: '중앙역앞 시내버스정류장', timeStart: '07:37', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '안산(등교)', placeStart: '한대앞역 1번출구앞', timeStart: '07:42', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '안산(등교)', placeStart: '상록수역 길건너 통근버스승강장', timeStart: '07:47', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '분당/정자역(등교)', placeStart: '정자역(5번 출구)', timeStart: '08:05', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '분당/정자역(등교)', placeStart: '미금역(7번 출구)', timeStart: '', timeArrive: '08:40', fareTicket: '1,300', fareCredit: '1,500' },
-            { route: '수원역(등하교)', placeStart: '수원역 로터리 9/10번 출구 사이 학생버스 승강장', timeStart: '주간 수시운행 오전 (수원역) 08:15 / 08:20 / 09:30 / 10:30 / 11:30 오후(학교) 15:00 / 16:00 / 17:00 / 18:10', timeArrive: '', fareTicket: '무료운행', fareCredit: '무료운행' },
-            { route: '하교', placeStart: '율곡관 출발버스: 수원역 / 광교중앙역 그외 하교차량 없음', timeStart: '18:10', timeArrive: '', fareTicket: '1,300', fareCredit: '1,500' }
+            { route: '하교', placeStart: '율곡관 출발버스: 수원역 / 광교중앙역 그외 하교차량 없음', timeStart: '18:10', timeArrive: '' }
           ],
           townShuttle: [
-            { route: '06:00', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '06:19', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '06:38', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '06:57', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '07:16', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '07:35', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '07:54', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '08:13', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '08:32', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '08:51', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '09:10', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '09:29', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '10:00', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '10:30', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '11:00', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '11:25', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '11:44', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '12:03', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '12:22', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '12:41', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '13:00', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '13:19', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '13:38', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '13:57', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '14:16', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '14:35', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '14:54', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '15:13', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '15:45', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '16:15', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '16:45', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '17:09', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '17:28', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '17:47', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '18:06', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '18:25', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '18:44', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '19:03', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '19:28', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '19:56', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '20:21', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '20:46', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '21:11', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '21:36', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '21:51', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' },
-            { route: '22:30', etc: '1. 좌측 시간표는 광교중앙역 출발시간입니다. 2. 아주대 도서관 앞 도착 소요시간(약 10분 소요)' }
+            { route: '06:00' },
+            { route: '06:19' },
+            { route: '06:38' },
+            { route: '06:57' },
+            { route: '07:16' },
+            { route: '07:35' },
+            { route: '07:54' },
+            { route: '08:13' },
+            { route: '08:32' },
+            { route: '08:51' },
+            { route: '09:10' },
+            { route: '09:29' },
+            { route: '10:00' },
+            { route: '10:30' },
+            { route: '11:00' },
+            { route: '11:25' },
+            { route: '11:44' },
+            { route: '12:03' },
+            { route: '12:22' },
+            { route: '12:41' },
+            { route: '13:00' },
+            { route: '13:19' },
+            { route: '13:38' },
+            { route: '13:57' },
+            { route: '14:16' },
+            { route: '14:35' },
+            { route: '14:54' },
+            { route: '15:13' },
+            { route: '15:45' },
+            { route: '16:15' },
+            { route: '16:45' },
+            { route: '17:09' },
+            { route: '17:28' },
+            { route: '17:47' },
+            { route: '18:06' },
+            { route: '18:25' },
+            { route: '18:44' },
+            { route: '19:03' },
+            { route: '19:28' },
+            { route: '19:56' },
+            { route: '20:21' },
+            { route: '20:46' },
+            { route: '21:11' },
+            { route: '21:36' },
+            { route: '21:51' },
+            { route: '22:30' }
           ]
         },
         columns: {
-          gwanggyo: [
-            {
-              field: 'id',
-              label: '회차',
-              width: '10',
-              numeric: true
-            },
-            {
-              field: 'startsFrom',
-              label: '출발장소',
-              width: '15'
-            },
-            {
-              field: 'startsAt',
-              label: '학교 승차장 출발시간 (도서관옆)',
-              width: '30'
-            },
-            {
-              field: 'arrivesAt',
-              label: '광교중앙역 출발시간 (학교행)',
-              width: '30'
-            },
-            {
-              field: 'type',
-              label: '운영구분',
-              width: '15'
-            }
-          ],
-          regional: [
-            {
-              field: 'route',
-              label: '노선'
-            },
-            {
-              field: 'placeStart',
-              label: '출발장소'
-            },
-            {
-              field: 'timeStart',
-              label: '출발시간'
-            },
-            {
-              field: 'timeArrive',
-              label: '도착시간'
-            },
-            {
-              field: 'fareTicket',
-              label: '승차권'
-            },
-            {
-              field: 'fareCredit',
-              label: '현금'
-            }
-          ],
           townShuttle: [
             {
               field: 'route',
-              label: '광교중앙역 출발 -> 아주대학교 경유 -> 지동시장'
-            },
-            {
-              field: 'etc',
-              label: '비고'
+              label: '시간'
             }
           ]
         }
