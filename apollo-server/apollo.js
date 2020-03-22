@@ -19,7 +19,7 @@ const { encodeTextBody, } = require('./middlewares/securityModule');
 const depthLimitRule = require('graphql-depth-limit');
 const { createComplexityLimitRule, } = require('graphql-validation-complexity');
 const depthLimit = 5;
-const complexityLimit = 1200;
+const complexityLimit = 1500;
 
 const server = new ApolloServer({
   typeDefs,

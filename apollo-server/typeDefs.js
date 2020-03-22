@@ -198,6 +198,7 @@ type BoardCategory {
     upt_ip: String
     upt_dt: Date
     posts: [Board]
+    parentCategory: BoardCategory
     childCategories: [BoardCategory]
 }
 
@@ -447,7 +448,7 @@ type Query {
     doesNickExists(nick_nm: String!): Boolean
     checkTokenValid(auth_token: String!): User
     # Pagination
-    paginatedPosts(category_idx: ID!, limit: Int!, end_cursor: String): Posts
+    paginatedPosts(category_idx: Int!, limit: Int!, end_cursor: String): Posts
     paginatedGourmets(category_idx: ID!, limit: Int!, end_cursor: String): Gourmets
 }
 `;

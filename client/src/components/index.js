@@ -14,8 +14,8 @@ import Welcome from './base/Welcome.vue'
 import Popup from './base/Popup.vue'
 
 // Board
+import Posts from './board/Posts.vue'
 import BoardNav from './board/BoardNav.vue'
-import PostList from './board/PostList.vue'
 import Replies from './board/Replies.vue'
 import Report from './board/Report.vue'
 
@@ -42,7 +42,7 @@ export {
   Welcome,
   Popup,
   BoardNav,
-  PostList,
+  Posts,
   Report,
   Replies,
   MyReviews,
