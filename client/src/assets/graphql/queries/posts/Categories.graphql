@@ -20,6 +20,9 @@ query Categories($type: CategoryType!, $depth: Int!) {
       access_auth
       private_yn
       upt_dt
+      parentCategory {
+        title
+      }
     }
   }
 }

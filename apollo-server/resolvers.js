@@ -83,7 +83,7 @@ module.exports = {
     },
     async categories (root, args, { db, }, info) {
       const include = [
-        { model: db.BoardCategory, as: 'childCategories', }
+        { model: db.BoardCategory, as: 'childCategories', include: [{ model: db.BoardCategory, as: 'parentCategory', }], }
       ];
       return await findAll(db.BoardCategory, args, info, include);
     },
