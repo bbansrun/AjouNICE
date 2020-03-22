@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Navigation is-static />
+    <!-- <Navigation is-static /> -->
     <InfinitySwipe
       class="categories"
       :current-page="1"
@@ -15,16 +15,10 @@
         class="infinity-swipe-item"
       >
         <h2
-          :class="{'active': activeCategory === category.category_idx}"
+          :class="{'active': activeCategory === parseInt(category.category_idx)}"
           @click="onCategoryClicked(category.category_idx)"
         >
-          {{ category.category_nm }}
-        </h2>
-        <h2
-          :class="{'active': activeCategory === category.category_idx}"
-          @click="onCategoryClicked(category.category_idx)"
-        >
-          {{ category.category_nm }}
+          {{ category.category_nm }} ({{ category.category_idx }})
         </h2>
       </div>
     </InfinitySwipe>
@@ -198,6 +192,12 @@ export default {
       margin: 0 15px;
       &.active {
         text-shadow: 0 0 5px rgba(0,0,0,.5);
+      }
+      &:not(.active) {
+        font: {
+          weight: 100;
+        }
+        opacity: .4;
       }
     }
   }
