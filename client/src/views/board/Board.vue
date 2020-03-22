@@ -3,8 +3,7 @@
     <!-- <Navigation is-static /> -->
     <InfinitySwipe
       class="categories"
-      :current-page="1"
-      :item-width="224"
+      :current-page="activeCategory"
       @move="onMoveCategory"
       @touch-end="onTouchEnd"
       @change-page="onChangePage"
@@ -15,32 +14,25 @@
         class="infinity-swipe-item"
       >
         <h2
-          :class="{'active': activeCategory === parseInt(category.category_idx)}"
+          :class="{'active': activeCategory == category.category_idx}"
           @click="onCategoryClicked(category.category_idx)"
         >
-          {{ category.category_nm }} ({{ category.category_idx }})
+          {{ category.category_nm }}
         </h2>
       </div>
     </InfinitySwipe>
     <InfinitySwipe
-      class="categories"
+      class="categories sub_categories"
       :current-page="1"
-      :item-width="224"
       @move="onMoveCategory"
       @touch-end="onTouchEnd"
       @change-page="onChangePage"
     >
       <div
-        v-for="(category, index) in childCategories"
+        v-for="(category, index) in getChildCategories[0].childCategories"
         :key="index"
         class="infinity-swipe-item"
       >
-        <h2
-          :class="{'active': activeCategory === category.category_idx}"
-          @click="onCategoryClicked(category.category_idx)"
-        >
-          {{ category.category_nm }}
-        </h2>
         <h2
           :class="{'active': activeCategory === category.category_idx}"
           @click="onCategoryClicked(category.category_idx)"
@@ -108,6 +100,9 @@ export default {
     }
   },
   computed: {
+    getChildCategories () {
+      return this.categories.filter((item) => (item.category_idx == this.activeCategory))
+    },
     categoryLink (moduleName) {
       let url
       if (this.$route.params.category) {
@@ -130,7 +125,7 @@ export default {
   },
   methods: {
     onCategoryClicked (index) {
-      console.log(index)
+      this.activeCategory = index
     },
     onMoveCategory () {},
     onChangePage () {},
@@ -185,6 +180,9 @@ export default {
   width: 100vw;
   background: #6400FF;
   color: #fff;
+  &.sub_categories {
+    background: red;
+  }
   & .infinity-swipe-item {
     padding: .5rem 0;
     > h2 {
